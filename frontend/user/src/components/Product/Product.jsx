@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import './Product.css';
-import AddIcon from '@material-ui/icons/Add'
+import AddIcon from '@material-ui/icons/Add';
+import localForage from 'localforage';
 
 class Product extends Component {
     constructor(props) {
@@ -9,9 +10,20 @@ class Product extends Component {
     }
 
     addItem() {
-
+        localForage.getItem('products')
+            .then((products) => {
+                if (products) {
+                    products.push(this.props.id);
+                    localForage.setItem('products', products)
+                } else {
+                    localForage.setItem('products', [this.props.id]);
+                }
+            })
+            .catch((err) => {
+                console.log(err);
+            })
     }
-    
+
     render() {
         return (
             <div className='Product-wrapper'>

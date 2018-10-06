@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import Product from '../Product/Product.jsx';
+import Product from '../Product/Product';
 import { Grid } from 'react-bootstrap';
 import axios from 'axios';
 
@@ -24,15 +24,15 @@ class ProductList extends Component {
     render() {
         return (
             <Grid id='Menu-wrapper'>
-                {this.state.products.length && this.state.products.map(p => {
-                    return <Product
+                {this.state.products.length && this.state.products.map(p =>
+                    <Product
                         key={p._id}
+                        id={p._id}
                         name={p.name}
                         desc={p.desc}
                         price={p.price}
                         img={p.img}
                     />
-                }
                 )}
             </Grid>
         );
