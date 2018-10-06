@@ -12,13 +12,19 @@
 }
 
 #addicon {
-    float:left;
+    float: left;
     margin-left: 1em;
     cursor: pointer;
 }
 
+#removeicon {
+    float: left;
+    margin-left: 0;
+    cursor: pointer;
+}
+
 h2 {
-    font-weight:  300;
+    font-weight: 300;
 }
 
 p {
@@ -31,4 +37,3 @@ img {
     height: 256px;
     margin: 5px;
 }
-
