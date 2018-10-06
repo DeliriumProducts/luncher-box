@@ -8,7 +8,9 @@ import './Category.css';
 class Category extends Component {
     constructor(props) {
         super(props);
-
+        this.state = {
+            wasDeleted: false
+        }
         this.handleClick = this.handleClick.bind(this);
     }
 
