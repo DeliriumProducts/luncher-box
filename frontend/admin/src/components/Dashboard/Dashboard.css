@@ -2,7 +2,7 @@
     text-align: center;
     width: 100%;
     margin-top: 3%;
-    position: absolute;
+    position: fixed;
     background-color: #F8F9FA;
     animation: fadein 1.3s;
     transition-timing-function: ease-in;

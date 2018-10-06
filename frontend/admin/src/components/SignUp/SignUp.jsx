@@ -65,7 +65,7 @@ class SignUp extends Component {
                 <br />
                 <label htmlFor="SignIn-password">Password</label>
                 <input type="password" name="password" id="SignIn-password" />
-                <button id="sign-in-btn">Sign in</button>
+                <button id="sign-in-btn">Sign up</button>
             </form>
         )
     }
