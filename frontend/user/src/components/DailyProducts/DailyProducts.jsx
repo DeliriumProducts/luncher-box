@@ -28,7 +28,7 @@ class DailyProducts extends Component {
                     {this.state.products.length && this.state.products.map(p =>
                         <Product
                             key={p._id}
-                            id={p._id}
+                            _id={p._id}
                             name={p.name}
                             desc={p.desc}
                             price={p.price}
