@@ -1,0 +1,33 @@
+.Product-wrapper {
+    background-color: #ffffff;
+    box-shadow: 0 0 10px 1px #272727;
+    text-align: center;
+    border-radius: 7px;
+    display: inline-block;
+}
+
+#price {
+    float: right;
+    margin-right: 1em;
+}
+
+#addicon {
+    float:left;
+    margin-left: 1em;
+}
+
+h2 {
+    font-weight:  300;
+}
+
+p {
+    font-weight: 100;
+}
+
+img {
+    object-fit: cover;
+    width: 256px;
+    height: 256px;
+    margin: 5px;
+}
+

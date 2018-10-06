@@ -1,0 +1,34 @@
+#Dashboard-wrapper {
+    text-align: center;
+    width: 100%;
+    margin-top: 3%;
+    position: absolute;
+    background-color: #F8F9FA;
+    animation: fadein 1.3s;
+    transition-timing-function: ease-in;
+}
+
+@keyframes fadein {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+
+#Dashboard-wrapper > * {
+    margin: 30px 30px;
+}
+
+#icon-wrapper {
+    background-color: #fff;
+    box-shadow: 0 0 10px 5px #ebebeb;
+    width: 50px;
+    height: 50px;
+    margin: auto;
+    margin-bottom: 30px;
+    cursor: pointer;
+    border-radius: 7px;
+}
+
+#add-icon {
+    font-size: 3em !important;
+    color: #272727;
+}
