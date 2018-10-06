@@ -8,7 +8,7 @@ module.exports = (app) => {
     app.post('/products', product.create);
 
     // Retrieve all products
-    app.get('/products/:categoryId', product.findAllByCategory);
+    app.get('/products/category/:categoryId', product.findAllByCategory);
 
     // Retrieve a single product with productId
     app.get('/products/:productId', product.findOne);

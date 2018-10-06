@@ -76,7 +76,6 @@ class SignIn extends Component {
                     <button id="sign-in-btn">Sign in</button>
                 </form>
             </div>
-
         )
     }
 }

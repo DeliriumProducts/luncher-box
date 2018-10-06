@@ -46,7 +46,7 @@ class Dashboard extends Component {
                 )}
                 <br />
                 <div id="icon-wrapper" >
-                    <NavLink to='/addItems'>
+                    <NavLink to='/additems'>
                         <AddIcon id="add-icon" />
                     </NavLink>
                 </div>

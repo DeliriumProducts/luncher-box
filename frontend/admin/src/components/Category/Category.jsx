@@ -21,8 +21,9 @@ class Category extends Component {
                     </h2>
                     <img src={this.props.img} alt={this.props.name} />
                 </NavLink>
-                <p></p>
-                <EditIcon className="icons" />
+                <div>
+                    <EditIcon className="icons" />
+                </div>
             </div>
         );
     }

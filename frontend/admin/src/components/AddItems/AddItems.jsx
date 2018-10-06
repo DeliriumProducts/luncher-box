@@ -104,4 +104,4 @@ class AddItems extends Component {
     }
 }
 
-export default AddItems
+export default AddItems;

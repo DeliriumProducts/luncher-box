@@ -12,8 +12,7 @@ class ProductList extends Component {
 
     componentDidMount() {
         let categoryId = this.props.match.params.id;
-
-        fetch(`http://localhost:8000/products/${categoryId}`)
+        fetch(`http://localhost:8000/products/category/${categoryId}`)
             .then(res => res.json())
             .then(products => {
                 this.setState({
@@ -28,6 +27,7 @@ class ProductList extends Component {
                 {this.state.products.length && this.state.products.map(p => {
                     return <Product
                         key={p._id}
+                        id={p._id}
                         name={p.name}
                         desc={p.desc}
                         price={p.price}
