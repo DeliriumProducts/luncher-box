@@ -3,6 +3,6 @@ body {
     padding: 0;
     font-family: Roboto;
     background-image: url(https://i.imgur.com/b9s0xag.jpg);
+    background-attachment: fixed;
     background-repeat: no-repeat;
-  
 }
