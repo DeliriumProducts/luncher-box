@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { NavLink } from 'react-router-dom';
 import EditIcon from '@material-ui/icons/Create';
-import '../assets/css/Category.css';
+import './Category.css';
 
 class Category extends Component {
     constructor(props) {

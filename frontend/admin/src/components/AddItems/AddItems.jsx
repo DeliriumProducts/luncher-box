@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Redirect } from 'react-router-dom';
 import axios from 'axios';
-import '../assets/css/AddItems.css';
+import './AddItems.css';
 
 class AddItems extends Component {
     constructor(props) {

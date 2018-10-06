@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import '../assets/css/Product.css';
+import './Product.css';
 import EditIcon from '@material-ui/icons/Create';
 
 

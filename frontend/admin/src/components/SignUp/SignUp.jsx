@@ -43,7 +43,7 @@ class SignUp extends Component {
                 console.log(response);
                 if (response.status === 200) {
                     this.props.handleAuthentication(true);
-                    this.setState({
+                    this.setSextendstate({
                         redirectToDashboard: true
                     })
                 }

@@ -1,11 +1,11 @@
 import React, { Component } from 'react'
 import { Route, Redirect } from 'react-router-dom';
-import AdminTopBar from './AdminTopBar';
-import SignIn from './SignIn';
-import SignUp from './SignUp';
-import Dashboard from './Dashboard';
-import AddItems from './AddItems';
-import ProductList from './ProductList';
+import AdminTopBar from '../AdminTopBar/AdminTopBar.jsx';
+import SignIn from '../SignIn/SignIn.jsx';
+import SignUp from '../SignUp/SignUp.jsx';
+import Dashboard from '../Dashboard/Dashboard.jsx';
+import AddItems from '../AddItems/AddItems.jsx';
+import ProductList from '../ProductList/ProductList.jsx';
 
 class Admin extends Component {
     constructor(props) {

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { NavLink } from 'react-router-dom';
-import '../assets/css/AdminTopBar.css';
+import './AdminTopBar.css';
 import LockIcon from '@material-ui/icons/Lock';
 import RegIcon from '@material-ui/icons/HowToReg';
 import DashboardIcon from '@material-ui/icons/Dashboard';

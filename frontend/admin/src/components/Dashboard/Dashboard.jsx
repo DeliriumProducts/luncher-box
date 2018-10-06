@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import { Grid } from 'react-bootstrap';
 import { NavLink, Redirect } from 'react-router-dom';
-import Category from './Category';
 import AddIcon from '@material-ui/icons/Add';
-import '../assets/css/Dashboard.css';
+import Category from '../Category/Category.jsx';
+import './Dashboard.css';
 
 
 class Dashboard extends Component {
