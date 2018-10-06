@@ -3,6 +3,7 @@ import { Grid } from 'react-bootstrap';
 import axios from 'axios';
 import findKey from '../../utils/utils.js'
 import localForage from 'localforage';
+import MonetizationOn from '@material-ui/icons/MonetizationOn';
 import Product from '../Product/Product.jsx';
 import './Order.css';
 
@@ -14,7 +15,9 @@ class Order extends Component {
         }
 
         this.fetchProducts = this.fetchProducts.bind(this);
-        this.iterate = this.iterate.bind(this);
+        this.increment = this.increment.bind(this);
+        this.decrement = this.decrement.bind(this);
+        this.calculateTotalSum = this.calculateTotalSum.bind(this);
     }
 
     componentDidMount() {
@@ -43,7 +46,7 @@ class Order extends Component {
         }
     }
 
-    iterate(productId) {
+    increment(productId) {
         let index = findKey(this.state.products, productId);
 
         if (index !== undefined) {
@@ -53,37 +56,63 @@ class Order extends Component {
                 products: arr
             });
         }
-        // this.setState({
-        //     products: []
-        // });
-        // localForage.getItem('products')
-        //     .then((products) => {
-        //         if (products) {
-        //             this.fetchProducts(products);
-        //         }
-        //     })
-        //     .catch((err) => {
-        //         console.log(err);
-        //     })
+    }
+
+    decrement(productId) {
+        let index = findKey(this.state.products, productId);
+
+        if (index !== undefined) {
+            let arr = this.state.products;
+            if (arr[index] - 1 <= 0) {
+                arr.splice(index, 1);
+            } else {
+                arr[index].quantity--;
+            }
+            this.setState({
+                products: arr
+            });
+        }
+    }
+
+    calculateTotalSum() {
+        let products = this.state.products;
+        let totalSum = 0;
+
+        for (let product of products) {
+            totalSum += product.price * product.quantity;
+        }
+
+        return totalSum;
     }
 
     render() {
         return (
-            <Grid id='Order-wrapper'>
-                {
-                    this.state.products.length > 0 && this.state.products.map(p =>
-                        <Product
-                            key={p._id}
-                            _id={p._id}
-                            name={(p.quantity > 1 ? p.quantity + 'x ' : '') + p.name}
-                            desc={p.desc}
-                            price={p.price}
-                            img={p.img}
-                            iterate={this.iterate}
-                        />
-                    )
-                }
-            </Grid >
+            <div>
+                <Grid id='Order-wrapper'>
+                    {
+                        this.state.products.length > 0 && this.state.products.map(p =>
+                            <Product
+                                key={p._id}
+                                _id={p._id}
+                                name={(p.quantity > 1 ? p.quantity + 'x ' : '') + p.name}
+                                desc={p.desc}
+                                price={p.price}
+                                img={p.img}
+                                increment={this.increment}
+                                decrement={this.decrement}
+                                quantity={p.quantity}
+                            />
+                        )
+
+                    }
+                    {
+                        this.state.products.length > 0 &&
+                        <div className='OrderBar-Wrapper'>
+                            Place order! Your total is: {this.calculateTotalSum().toFixed(2)}
+                        </div>
+                    }
+                </Grid >
+            </div>
         );
     }
 }
