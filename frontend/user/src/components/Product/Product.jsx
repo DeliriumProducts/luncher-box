@@ -13,10 +13,18 @@ class Product extends Component {
         localForage.getItem('products')
             .then((products) => {
                 if (products) {
-                    products.push(this.props.id);
+                    if (products.findKey() != undefined) {
+
+                    }
+                    products.push({
+
+                    });
                     localForage.setItem('products', products)
                 } else {
-                    localForage.setItem('products', [this.props.id]);
+                    localForage.setItem('products',[{
+                        id: this.props.id,
+                        quantity: 1
+                    }]);
                 }
             })
             .catch((err) => {
