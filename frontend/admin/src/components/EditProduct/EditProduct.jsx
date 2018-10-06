@@ -34,7 +34,6 @@ class EditProduct extends Component {
         axios.put(`http://localhost:8000/products/${productId}`, data)
             .then(response => {
                 if (response.status === 200) {
-                    console.log('Product created.');
                     this.setState({
                         hasFinished: true
                     })
@@ -83,16 +82,16 @@ class EditProduct extends Component {
                 <input type="text" name="name" id="AddItems-name" onChange={this.handleChange('productName')} value={this.state.productName} />
                 <br />
                 <label htmlFor="AddItems-img">Image</label>
-                <input type="text" name="img" id="AddItems-img" value={this.state.productImg} />
+                <input type="text" name="img" id="AddItems-img" onChange={this.handleChange('productImg')} value={this.state.productImg} />
                 <br />
                 <label htmlFor="EditProduct-description">Description</label>
-                <input type="text" name="description" id="AddItems-description" value={this.state.productDesc} />
+                <input type="text" name="description" id="AddItems-description" onChange={this.handleChange('productDesc')} value={this.state.productDesc} />
                 <br />
                 <label htmlFor="AddItems-category">Category</label>
-                <input type="text" name="category" id="AddItems-category" value={this.state.productCategory} />
+                <input type="text" name="category" id="AddItems-category" onChange={this.handleChange('productCategory')} value={this.state.productCategory} />
                 <br />
                 <label htmlFor="AddItems-price">Price</label>
-                <input type="number" name="price" id="AddItems-price" value={this.state.productPrice} />
+                <input type="number" name="price" id="AddItems-price" onChange={this.handleChange('productPrice')} value={this.state.productPrice} />
                 <button id="add-btn">Edit Product</button>
             </form>
         )

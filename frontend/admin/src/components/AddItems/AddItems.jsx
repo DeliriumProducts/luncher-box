@@ -53,7 +53,6 @@ class AddItems extends Component {
             axios.post('http://localhost:8000/categories', data)
                 .then(response => {
                     if (response.status === 200) {
-                        console.log('Category created.');
                         this.setState({
                             hasFinished: true
                         })

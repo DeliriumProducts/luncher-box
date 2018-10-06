@@ -18,17 +18,16 @@ class EditCategory extends Component {
 
     handleSubmit(e) {
         e.preventDefault();
-        let productId = this.props.match.params.id;
+        let categoryId = this.props.match.params.id;
 
         const data = {
             name: e.target.elements.name.value,
             img: e.target.elements.img.value
         }
 
-        axios.put(`http://localhost:8000/products/${productId}`, data)
+        axios.put(`http://localhost:8000/categories/${categoryId}`, data)
             .then(response => {
                 if (response.status === 200) {
-                    console.log('Product created.');
                     this.setState({
                         hasFinished: true
                     })
@@ -48,13 +47,13 @@ class EditCategory extends Component {
     }
 
     componentDidMount() {
-        let productId = this.props.match.params.id;
+        let categoryId = this.props.match.params.id;        
 
-        axios.get(`http://localhost:8000/categories/${productId}`)
+        axios.get(`http://localhost:8000/categories/${categoryId}`)
             .then(result => {
                 this.setState({
-                    categoryName: result.data.product.name,
-                    categoryImg: result.data.product.img,
+                    categoryName: result.data.category.name,
+                    categoryImg: result.data.category.img,
                 })
             })
     }
@@ -71,10 +70,10 @@ class EditCategory extends Component {
         return (
             <form className="EditCategory-form-wrapper" onSubmit={this.handleSubmit}>
                 <label htmlFor="EditCategory-name">Name</label>
-                <input type="text" name="name" id="AddItems-name" onChange={this.handleChange('productName')} value={this.state.productName} />
+                <input type="text" name="name" id="AddItems-name" onChange={this.handleChange('categoryName')} value={this.state.categoryName} />
                 <br />
                 <label htmlFor="AddCategory-img">Image</label>
-                <input type="text" name="img" id="AddItems-img" value={this.state.productImg} />
+                <input type="text" name="img" id="AddItems-img" onChange={this.handleChange('categoryImg')}value={this.state.categoryImg} />
                 <br />
                 <button id="add-btn">Edit Category</button>
             </form>

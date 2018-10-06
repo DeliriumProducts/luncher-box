@@ -24,6 +24,9 @@ module.exports = (app) => {
 
     // Retrieve all categories
     app.get('/categories', category.findAll);
+    
+    // Retrieve a single category with categoryId
+    app.get('/categories/:categoryId', category.findOne);
 
     // Update a category with categoryId
     app.put('/categories/:categoryId', category.edit);
