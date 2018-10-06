@@ -87,12 +87,12 @@ module.exports = {
     },
 
     delete: (req, res) => {
-        if (!req.isAuthenticated()) {
-            handleError({
-                status: 403,
-                msg: 'Unauthorized user.'
-            }, res);
-        }
+        // if (!req.isAuthenticated()) {
+        //     handleError({
+        //         status: 403,
+        //         msg: 'Unauthorized user.'
+        //     }, res);
+        // }
 
         Category.findById(req.params.categoryId)
             .then(category => {

@@ -48,9 +48,7 @@ class Product extends Component {
                     <NavLink to={`/editproduct/${this.props._id}`} >
                         <EditIcon className='icons' />
                     </NavLink>
-                    <NavLink to={`/deleteproduct/${this.props._id}`} >
-                        <TrashIcon className='icons' onClick={this.handleClick} />
-                    </NavLink>
+                    <TrashIcon className='icons' onClick={this.handleClick} />
                 </p>
             </div>
         );
