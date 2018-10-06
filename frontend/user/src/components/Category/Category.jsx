@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import '../assets/css/Category.css';
+import './Category.css';
 import { NavLink } from 'react-router-dom';
 
 class Category extends Component {

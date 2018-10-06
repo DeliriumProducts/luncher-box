@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Grid } from 'react-bootstrap';
-import Category from './Category';
-import '../assets/css/Menu.css'
+import Category from '../Category/Category.jsx';
+import './Menu.css'
 
 class Menu extends Component {
     constructor(props) {

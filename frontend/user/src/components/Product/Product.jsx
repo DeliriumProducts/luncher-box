@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import '../assets/css/Product.css';
+import './Product.css';
 import AddIcon from '@material-ui/icons/Add'
 
 class Product extends Component {
