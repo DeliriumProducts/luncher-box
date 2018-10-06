@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import axios from 'axios';
 import './DailyProducts.css';
 import { Grid } from 'react-bootstrap';
 import Product from '../Product/Product.jsx';
@@ -12,11 +13,10 @@ class DailyProducts extends Component {
     }
 
     componentDidMount() {
-        fetch('http://localhost:8000/products/5b98d453cea786602f88a002')
-            .then(res => res.json())
-            .then(products => {
+        axios.get('http://localhost:8000/products/category/5b98d453cea786602f88a002')
+            .then(result => {
                 this.setState({
-                    products: products.products
+                    products: result.data.products
                 })
             });
     }

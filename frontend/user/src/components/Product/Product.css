@@ -14,6 +14,7 @@
 #addicon {
     float:left;
     margin-left: 1em;
+    cursor: pointer;
 }
 
 h2 {

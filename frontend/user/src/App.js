@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { HashRouter, Route, Switch } from 'react-router-dom';
 import './App.css';
 import Home from './components/Home/Home.jsx';
+import { CookiesProvider } from 'react-cookie';
 
 class App extends Component {
   constructor(props) {
@@ -11,11 +12,11 @@ class App extends Component {
   render() {
     return (
       <HashRouter>
-        <div>
-          <Switch>
-            <Route path='/' component={Home} />
-          </Switch>
-        </div>
+        <CookiesProvider>
+            <Switch>
+              <Route path='/' component={Home} />
+            </Switch>
+        </CookiesProvider>
       </HashRouter>
     );
   }
