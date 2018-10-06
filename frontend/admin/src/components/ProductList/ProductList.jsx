@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import Product from './Product';
+import Product from '../Product/Product.jsx';
 import { Grid } from 'react-bootstrap';
 
 class ProductList extends Component {
