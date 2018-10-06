@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import '../assets/css/DailyProducts.css';
+import './DailyProducts.css';
 import { Grid } from 'react-bootstrap';
-import Product from './Product';
+import Product from '../Product/Product.jsx';
 
 class DailyProducts extends Component {
     constructor(props) {

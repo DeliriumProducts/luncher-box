@@ -1,11 +1,10 @@
 import React, { Component } from 'react'
 import { Route, Redirect } from 'react-router-dom';
-import { Grid } from 'react-bootstrap';
-import DailyProducts from './DailyProducts';
-import Menu from './Menu';
-import Order from './Order';
-import HomeTopBar from './HomeTopBar';
-import ProductList from './ProductList';
+import DailyProducts from '../DailyProducts/DailyProducts.jsx';
+import Menu from '../Menu/Menu.jsx';
+import Order from '../Order/Order.jsx';
+import HomeTopBar from '../HomeTopBar/HomeTopBar.jsx';
+import ProductList from '../ProductList/ProductList.jsx';
 
 class Home extends Component {
 
