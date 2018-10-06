@@ -27,14 +27,15 @@ class Order extends Component {
             })
     }
 
-    fetchProducts(productIds) {
-        for (const productId of productIds) {
-            axios.get(`http://localhost:8000/products/${productId}`)
+    fetchProducts(products) {
+        for (const product of products) {
+            axios.get(`http://localhost:8000/products/${product.id}`)
                 .then(result => {
-                    let products = this.state.products;
-                    products.push(result.data.product);
+                    let newProducts = this.state.products;
+                    result.data.product.quantity = product.quantity;
+                    newProducts.push(result.data.product);
                     this.setState({
-                        products: products
+                        products: newProducts
                     })
                 });
         }
@@ -48,7 +49,7 @@ class Order extends Component {
                         <Product
                             key={p._id}
                             id={p._id}
-                            name={p.name}
+                            name={(p.quantity > 1 ? p.quantity + 'x ' : '') + p.name}
                             desc={p.desc}
                             price={p.price}
                             img={p.img}
