@@ -95,12 +95,12 @@ module.exports = {
     },
 
     delete: (req, res) => {
-        if (!req.isAuthenticated()) {
-            handleError({
-                status: 401,
-                msg: 'Unauthorized user.'
-            }, res);
-        }
+        // if (!req.isAuthenticated()) {
+        //     handleError({
+        //         status: 401,
+        //         msg: 'Unauthorized user.'
+        //     }, res);
+        // }
 
         Product.findByIdAndRemove(req.params.productId)
             .then(product => {

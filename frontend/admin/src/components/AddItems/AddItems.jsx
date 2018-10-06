@@ -8,6 +8,7 @@ class AddItems extends Component {
         super(props);
 
         this.state = {
+            categories: [],
             isProduct: true,
             hasFinished: false
         }
@@ -61,6 +62,17 @@ class AddItems extends Component {
         }
     }
 
+    componentDidMount() {
+        axios.get('http://localhost:8000/categories')
+            .then(response => {
+                if (response.status === 200) {
+                    this.setState({
+                        categories: response.data.categories
+                    })
+                }
+            })
+    }
+
     render() {
         if (!this.props.isAuthenticated) {
             return <Redirect to='/signin' />
@@ -91,7 +103,7 @@ class AddItems extends Component {
                 {this.state.isProduct && <input type="text" name="description" id="AddItems-description" />}
                 <br />
                 {this.state.isProduct && <label htmlFor="AddItems-category">Category</label>}
-                {this.state.isProduct && <input type="text" name="category" id="AddItems-category" />}
+                {this.state.isProduct && <select name="category"> {this.state.categories.length && this.state.categories.map(p => <option value={p.name}> {p.name} </option>)}</select>}
                 <br />
                 {this.state.isProduct && <label htmlFor="AddItems-price">Price</label>}
                 {this.state.isProduct && <input type="number" name="price" id="AddItems-price" />}

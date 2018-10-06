@@ -47,7 +47,7 @@ class EditCategory extends Component {
     }
 
     componentDidMount() {
-        let categoryId = this.props.match.params.id;        
+        let categoryId = this.props.match.params.id;
 
         axios.get(`http://localhost:8000/categories/${categoryId}`)
             .then(result => {

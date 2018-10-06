@@ -24,12 +24,14 @@
 
 input[type=text],
 input[type=password],
-input[type=number] {
+input[type=number],
+select {
     width: 100%;
     padding: 12px 20px;
     margin: 8px 0;
     display: inline-block;
     border: 1px solid #ccc;
+    background-color: #FFF;
     box-sizing: border-box;
     border-radius: 5px;
 }
