@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import axios from 'axios';
 import { Grid } from 'react-bootstrap';
 import Category from '../Category/Category.jsx';
 import './Menu.css'
@@ -12,11 +13,10 @@ class Menu extends Component {
     }
 
     componentDidMount() {
-        fetch('http://localhost:8000/categories/')
-            .then(res => res.json())
-            .then(categories => {
+        axios.get('http://localhost:8000/categories/')
+            .then(result => {
                 this.setState({
-                    categories: categories.categories
+                    categories: result.data.categories
                 })
             });
     }
