@@ -1,0 +1,78 @@
+.EditProduct-form-wrapper {
+    text-align: center;
+    left: 50%;
+    transform: translateX(-50%);
+    position: absolute;
+    background-color: #F8F9FA;
+    padding: 100px;
+    margin-top: 3%;
+    margin-bottom: 3%;
+    height: auto;
+    animation: fadein 1.3s;
+    transition-timing-function: ease-in;
+    box-shadow: 0 0 10px 5px #ebebeb;
+}
+
+@keyframes fadein {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+input[type=text],
+input[type=password],
+input[type=number] {
+    width: 100%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+    border-radius: 5px;
+}
+
+button {
+    background-color: #4CAF50;
+    color: white;
+    padding: 14px 20px;
+    margin: 8px 0;
+    border: none;
+    cursor: pointer;
+    width: 100%;
+    border-radius: 5px;
+}
+
+button:hover {
+    opacity: 0.8;
+}
+
+label {
+    text-align: center;
+    font-weight: 300;
+    font-size: 1em;
+    color: #272727;
+}
+
+#EditCategory-text {
+    text-align: center;
+    font-weight: 200;
+    margin: 0px !important;
+    margin-top: -80px !important;
+    font-size: 1.8em;
+    color: #272727;
+}
+
+@media screen and (max-width: 768px) {
+    .SignIn-form-wrapper {
+        width: 80%;
+    }
+}
+
+@media screen and (min-width: 1920px) {
+    .SignIn-form-wrapper {
+        height: 30%;
+    }
+}

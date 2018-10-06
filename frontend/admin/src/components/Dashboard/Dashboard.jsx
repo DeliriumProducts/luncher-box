@@ -39,6 +39,7 @@ class Dashboard extends Component {
                 {this.state.categories.length && this.state.categories.map(p =>
                     <Category
                         key={p._id}
+                        id={p._id}
                         name={p.name}
                         img={p.img}
                         url={`/category/${p._id}`}

@@ -41,22 +41,6 @@ class SignIn extends Component {
                     })
                 }
             })
-        //     fetch('http://localhost:8000/login', {
-        //         method: "POST", // 
-        //         headers: {
-        //             'Content-Type': 'application/json',
-        //             'Accept': 'application/json'
-        //         },
-        //         body: JSON.stringify(data),
-        //     })
-        //         .then(response => {
-        //             if (response.status === 200) {
-        //                 this.props.handleAuthentication(true);
-        //                 this.setState({
-        //                     redirectToDashboard: true
-        //                 })
-        //             }
-        //         })
     }
 
     render() {

@@ -54,13 +54,12 @@ class AddItems extends Component {
                 .then(response => {
                     if (response.status === 200) {
                         console.log('Category created.');
+                        this.setState({
+                            hasFinished: true
+                        })
                     }
                 })
-            this.setState({
-                hasFinished: true
-            })
         }
-
     }
 
     render() {

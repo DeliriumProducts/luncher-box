@@ -1,18 +1,15 @@
 import React, { Component } from 'react';
 import { Redirect } from 'react-router-dom';
-import './EditProduct.css';
+import './EditCategory.css';
 import axios from 'axios';
 
-class EditProduct extends Component {
+class EditCategory extends Component {
 
     constructor(props) {
         super(props);
         this.state = {
-            productName: null,
+            categoryName: null,
             productImg: null,
-            productDesc: null,
-            productCategory: null,
-            productPrice: null,
             hasFinished: false
         }
         this.handleSubmit = this.handleSubmit.bind(this);
@@ -25,10 +22,7 @@ class EditProduct extends Component {
 
         const data = {
             name: e.target.elements.name.value,
-            category: e.target.elements.category.value,
-            desc: e.target.elements.description.value,
-            price: e.target.elements.price.value,
-            img: e.target.elements.img.value,
+            img: e.target.elements.img.value
         }
 
         axios.put(`http://localhost:8000/products/${productId}`, data)
@@ -56,14 +50,11 @@ class EditProduct extends Component {
     componentDidMount() {
         let productId = this.props.match.params.id;
 
-        axios.get(`http://localhost:8000/products/${productId}`)
+        axios.get(`http://localhost:8000/categories/${productId}`)
             .then(result => {
                 this.setState({
-                    productName: result.data.product.name,
-                    productImg: result.data.product.img,
-                    productDesc: result.data.product.desc,
-                    productCategory: result.data.product.category,
-                    productPrice: result.data.product.price
+                    categoryName: result.data.product.name,
+                    categoryImg: result.data.product.img,
                 })
             })
     }
@@ -78,25 +69,17 @@ class EditProduct extends Component {
         }
 
         return (
-            <form className="EditProduct-form-wrapper" onSubmit={this.handleSubmit}>
-                <label htmlFor="EditProduct-name">Name</label>
+            <form className="EditCategory-form-wrapper" onSubmit={this.handleSubmit}>
+                <label htmlFor="EditCategory-name">Name</label>
                 <input type="text" name="name" id="AddItems-name" onChange={this.handleChange('productName')} value={this.state.productName} />
                 <br />
-                <label htmlFor="AddItems-img">Image</label>
+                <label htmlFor="AddCategory-img">Image</label>
                 <input type="text" name="img" id="AddItems-img" value={this.state.productImg} />
                 <br />
-                <label htmlFor="EditProduct-description">Description</label>
-                <input type="text" name="description" id="AddItems-description" value={this.state.productDesc} />
-                <br />
-                <label htmlFor="AddItems-category">Category</label>
-                <input type="text" name="category" id="AddItems-category" value={this.state.productCategory} />
-                <br />
-                <label htmlFor="AddItems-price">Price</label>
-                <input type="number" name="price" id="AddItems-price" value={this.state.productPrice} />
-                <button id="add-btn">Edit Product</button>
+                <button id="add-btn">Edit Category</button>
             </form>
         )
     }
 }
 
-export default EditProduct;
+export default EditCategory;

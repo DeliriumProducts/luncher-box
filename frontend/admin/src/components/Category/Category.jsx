@@ -22,7 +22,9 @@ class Category extends Component {
                     <img src={this.props.img} alt={this.props.name} />
                 </NavLink>
                 <div>
-                    <EditIcon className="icons" />
+                    <NavLink to={`/editcategory/${this.props.id}`} >
+                        <EditIcon className='icons' />
+                    </NavLink>
                 </div>
             </div>
         );

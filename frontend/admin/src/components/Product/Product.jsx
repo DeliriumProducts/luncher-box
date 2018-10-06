@@ -19,8 +19,7 @@ class Product extends Component {
                 <p id='price' >
                     {this.props.price}
                 </p>
-                <p >
-
+                <p>
                     <NavLink to={`/editproduct/${this.props.id}`} >
                         <EditIcon className='icons' />
                     </NavLink>
