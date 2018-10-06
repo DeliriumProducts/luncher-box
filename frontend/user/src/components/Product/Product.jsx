@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { Cookies } from 'react-cookie';
 import './Product.css';
 import AddIcon from '@material-ui/icons/Add'
 
@@ -9,8 +8,8 @@ class Product extends Component {
         this.addItem = this.addItem.bind(this);
     }
 
-    addItem(e) {
-         Cookies.save("")   
+    addItem() {
+
     }
     
     render() {
