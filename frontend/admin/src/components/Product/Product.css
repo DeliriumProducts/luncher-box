@@ -11,13 +11,8 @@
     margin-right: 1em;
 }
 
-#editicon {
-    float:left;
-    margin-left: 1em;
-}
-
 h2 {
-    font-weight:  300;
+    font-weight: 300;
 }
 
 p {
@@ -30,4 +25,3 @@ img {
     height: 256px;
     margin: 5px;
 }
-

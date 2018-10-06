@@ -13,17 +13,18 @@ class Product extends Component {
                     {this.props.name}
                 </h2>
                 <img src={this.props.img} alt={this.props.name} />
-                <div>
+                <p>
                     {this.props.desc}
-                </div>
-                <div id='price' >
+                </p>
+                <p id='price' >
                     {this.props.price}
-                </div>
-                <div id='editproduct'>
+                </p>
+                <p >
+
                     <NavLink to={`/editproduct/${this.props.id}`} >
-                        <EditIcon />
+                        <EditIcon className='icons' />
                     </NavLink>
-                </div>
+                </p>
             </div>
         );
     }
