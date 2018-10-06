@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import utils from '../../utils/utils.js';
 import './Product.css';
 import AddIcon from '@material-ui/icons/Add';
 import localForage from 'localforage';
@@ -13,15 +14,18 @@ class Product extends Component {
         localForage.getItem('products')
             .then((products) => {
                 if (products) {
-                    if (products.findKey() != undefined) {
-
+                    let index = products.findKey(this.props.id);
+                    if (index == undefined) {
+                        products.push({
+                            id: this.props.id,
+                            quantity: 1
+                        });
+                    } else {
+                        products[index].quantity++;
                     }
-                    products.push({
-
-                    });
                     localForage.setItem('products', products)
                 } else {
-                    localForage.setItem('products',[{
+                    localForage.setItem('products', [{
                         id: this.props.id,
                         quantity: 1
                     }]);

@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import utils from './utils/utils.js';
 import { HashRouter, Route, Switch } from 'react-router-dom';
 import './App.css';
 import Home from './components/Home/Home.jsx'; 
