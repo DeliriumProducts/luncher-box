@@ -9,17 +9,19 @@ class Product extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            quantity: 0
+            quantity: 0,
+            animate: ''
         };
 
         this.addItem = this.addItem.bind(this);
         this.removeItem = this.removeItem.bind(this);
+        this.animate = this.animate.bind(this);
     }
 
     componentDidMount() {
         if (this.props.quantity) {
             this.setState({
-                quantity: this.props.quantity
+                quantity: this.props.quantity,
             });
         }
     }
@@ -55,6 +57,7 @@ class Product extends Component {
                         quantity: 1
                     }]);
                 }
+                this.animate('On-Add-Animation', 600);
             })
             .catch((err) => {
                 console.log(err);
@@ -81,6 +84,7 @@ class Product extends Component {
                         }
                     }
                     localForage.setItem('products', products)
+                    this.animate('On-Decrement-Animation', 600);
                 }
             })
             .catch((err) => {
@@ -89,9 +93,20 @@ class Product extends Component {
 
     }
 
+    animate(classValue, time) {
+        setTimeout(() => {
+            this.setState({
+                animate: ''
+            });
+        }, time);
+        this.setState({
+            animate: classValue
+        });
+    }
+
     render() {
         return (
-            <div className='Product-wrapper'>
+            <div className={`Product-wrapper ${this.state.animate}`}>
                 <h2>
                     {this.props.name}
                 </h2>

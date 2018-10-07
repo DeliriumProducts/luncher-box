@@ -6,6 +6,42 @@
     display: inline-block;
 }
 
+.On-Decrement-Animation {
+    animation: zoomout 0.6s;
+    transition-timing-function: ease-in-out;
+}
+
+@keyframes zoomout {
+    0% {
+        transform: scale(1.0);
+    }
+
+    50% {
+        transform: scale(0.75);
+    }
+
+    100% {
+        transform: scale(1.0);
+    }
+}
+
+.On-Add-Animation {
+    animation: zoomin 0.6s;
+    transition-timing-function: ease-in-out;
+}
+
+@keyframes zoomin {
+    0% {
+        transform: scale(1.0);
+    }
+    50% {
+        transform: scale(1.2);
+    }
+    100% {
+        transform: scale(1.0);
+    }
+}
+
 #price {
     float: right;
     margin-right: 1em;

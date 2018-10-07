@@ -10,7 +10,7 @@ class Order extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            products: []
+            products: [],
         }
 
         this.fetchProducts = this.fetchProducts.bind(this);
