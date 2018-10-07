@@ -62,7 +62,7 @@ class Order extends Component {
 
         if (index !== undefined) {
             let arr = this.state.products;
-            if (arr[index] - 1 <= 0) {
+            if (arr[index].quantity - 1 < 1) {
                 arr.splice(index, 1);
             } else {
                 arr[index].quantity--;
@@ -103,7 +103,8 @@ class Order extends Component {
                             />
                         )
                     }
-                    {this.state.products.length > 0 &&
+                    {
+                        this.state.products.length > 0 &&
                         <div className='OrderBar-Wrapper'>
                             Place order! Your total is: {this.calculateTotalSum().toFixed(2)}
                         </div>

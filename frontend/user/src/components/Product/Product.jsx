@@ -68,16 +68,16 @@ class Product extends Component {
                 if (products) {
                     let index = findKey(products, this.props._id);
                     if (index !== undefined) {
-                        if (products[index].quantity - 1 <= 0) {
+                        if (products[index].quantity - 1 < 1) {
                             products.splice(index, 1);
                         } else {
                             products[index].quantity--;
-                            if (this.props.decrement) {
-                                this.props.decrement(this.props._id);
-                            }
                             this.setState({
                                 quantity: products[index].quantity
                             });
+                        }
+                        if (this.props.decrement) {
+                            this.props.decrement(this.props._id);
                         }
                     }
                     localForage.setItem('products', products)
