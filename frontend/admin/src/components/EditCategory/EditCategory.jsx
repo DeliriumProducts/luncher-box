@@ -33,9 +33,6 @@ class EditCategory extends Component {
                     })
                 }
             })
-        this.setState({
-            hasFinished: true
-        })
     }
 
     handleChange(field) {
