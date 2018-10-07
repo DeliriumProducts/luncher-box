@@ -9,7 +9,7 @@ class EditCategory extends Component {
         super(props);
         this.state = {
             categoryName: null,
-            productImg: null,
+            categoryImg: null,
             hasFinished: false
         }
         this.handleSubmit = this.handleSubmit.bind(this);

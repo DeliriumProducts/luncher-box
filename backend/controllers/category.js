@@ -66,24 +66,25 @@ module.exports = {
                 return category;
             })
             .then(category => {
+                let oldCategoryName = category.name;
+
                 category.set({
                     name: editedCategory.name,
                     img: editedCategory.img
                 });
                 category.save();
-                return Product.find({ category: category.name });
-            })
-            .then(products => {
-                for (let product of products) {
-                    product.set({ category: editedCategory.name });
-                    product.save();
-                }
-            })
-            .then(() => {
                 res.status(200).send({
                     msg: 'Category updated successfully!',
                     category: category
                 });
+                return Product.find({ category: oldCategoryName });
+            })
+            .then(products => {
+                for (let product of products) {
+
+                    product.set({ category: editedCategory.name });
+                    product.save();
+                }
             })
             .catch((err) => handleError(err, res));
     },

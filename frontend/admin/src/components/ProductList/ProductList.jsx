@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import Product from '../Product/Product.jsx';
 import { Grid } from 'react-bootstrap';
+import axios from 'axios';
 
 class ProductList extends Component {
     constructor(props) {
@@ -12,11 +13,10 @@ class ProductList extends Component {
 
     componentDidMount() {
         let categoryId = this.props.match.params.id;
-        fetch(`http://localhost:8000/products/category/${categoryId}`)
-            .then(res => res.json())
-            .then(products => {
+        axios.get(`http://localhost:8000/products/category/${categoryId}`, { withCredentials: true })
+            .then(response => {
                 this.setState({
-                    products: products.products
+                    products: response.data.products
                 })
             });
     }
