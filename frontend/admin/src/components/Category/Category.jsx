@@ -17,7 +17,7 @@ class Category extends Component {
     handleClick(e) {
         e.preventDefault();
         let categoriesId = this.props._id;
-        axios.delete(`http://localhost:8000/categories/${categoriesId}`)
+        axios.delete(`http://localhost:8000/categories/${categoriesId}`, { withCredentials: true })
             .then(response => {
                 if (response.status === 200) {
                     this.setState({

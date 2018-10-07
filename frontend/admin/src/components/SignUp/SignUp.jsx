@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Redirect } from 'react-router-dom';
+import axios from 'axios';
 
 class SignUp extends Component {
     constructor(props) {
@@ -31,19 +32,12 @@ class SignUp extends Component {
             email: email,
             password: password,
         }
-        fetch('http://localhost:8000/register', {
-            method: "POST", // 
-            headers: {
-                'Content-Type': 'application/json',
-                'Accept': 'application/json'
-            },
-            body: JSON.stringify(data),
-        })
+        axios.post('http://localhost:8000/register', data)
             .then(response => {
                 console.log(response);
                 if (response.status === 200) {
                     this.props.handleAuthentication(true);
-                    this.setSextendstate({
+                    this.setState({
                         redirectToDashboard: true
                     })
                 }

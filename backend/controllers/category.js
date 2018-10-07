@@ -4,12 +4,13 @@ const { handleError } = require('../utils/handleError');
 
 module.exports = {
     create: (req, res) => {
-        // if (!req.isAuthenticated()) {
-        //     handleError({
-        //         status: 550,
-        //         msg: 'Unauthorized user.'
-        //     }, res);
-        // }
+        if (!req.isAuthenticated()) {
+            handleError({
+                status: 550,
+                msg: 'Unauthorized user.'
+            }, res);
+            return;
+        }
 
         if (!req.body.name || !req.body.img) {
             handleError({
@@ -32,12 +33,13 @@ module.exports = {
     },
 
     edit: (req, res) => {
-        // if (!req.isAuthenticated()) {
-        //     handleError({
-        //         staus: 403,
-        //         msg: 'Unauthorized user.'
-        //     }, res);
-        // }
+        if (!req.isAuthenticated()) {
+            handleError({
+                staus: 403,
+                msg: 'Unauthorized user.'
+            }, res);
+            return;
+        }
 
         if (!req.body.name || !req.body.img) {
             handleError({
@@ -87,12 +89,13 @@ module.exports = {
     },
 
     delete: (req, res) => {
-        // if (!req.isAuthenticated()) {
-        //     handleError({
-        //         status: 403,
-        //         msg: 'Unauthorized user.'
-        //     }, res);
-        // }
+        if (!req.isAuthenticated()) {
+            handleError({
+                status: 403,
+                msg: 'Unauthorized user.'
+            }, res);
+            return;
+        }
 
         Category.findById(req.params.categoryId)
             .then(category => {

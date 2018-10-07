@@ -31,7 +31,7 @@ class EditProduct extends Component {
             img: e.target.elements.img.value,
         }
 
-        axios.put(`http://localhost:8000/products/${productId}`, data)
+        axios.put(`http://localhost:8000/products/${productId}`, data, { withCredentials: true })
             .then(response => {
                 if (response.status === 200) {
                     this.setState({
@@ -55,7 +55,7 @@ class EditProduct extends Component {
     componentDidMount() {
         let productId = this.props.match.params.id;
 
-        axios.get(`http://localhost:8000/products/${productId}`)
+        axios.get(`http://localhost:8000/products/${productId}`, { withCredentials: true })
             .then(result => {
                 this.setState({
                     productName: result.data.product.name,

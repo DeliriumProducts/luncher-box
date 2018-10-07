@@ -21,7 +21,6 @@ class AddItems extends Component {
         this.setState({
             isProduct: !this.state.isProduct
         })
-        console.log(this.state.isProduct);
     }
 
     handleSubmit(e) {
@@ -36,7 +35,7 @@ class AddItems extends Component {
                 img: e.target.elements.img.value,
             }
 
-            axios.post('http://localhost:8000/products', data)
+            axios.post('http://localhost:8000/products', data, { withCredentials: true })
                 .then(response => {
                     if (response.status === 200) {
                         console.log('Product created.');
@@ -51,7 +50,7 @@ class AddItems extends Component {
                 name: e.target.elements.name.value,
                 img: e.target.elements.img.value,
             }
-            axios.post('http://localhost:8000/categories', data)
+            axios.post('http://localhost:8000/categories', data, { withCredentials: true })
                 .then(response => {
                     if (response.status === 200) {
                         this.setState({
@@ -63,7 +62,7 @@ class AddItems extends Component {
     }
 
     componentDidMount() {
-        axios.get('http://localhost:8000/categories')
+        axios.get('http://localhost:8000/categories', { withCredentials: true })
             .then(response => {
                 if (response.status === 200) {
                     this.setState({
@@ -106,7 +105,7 @@ class AddItems extends Component {
                 {this.state.isProduct && <select name="category"> {this.state.categories.length && this.state.categories.map(p => <option value={p.name}> {p.name} </option>)}</select>}
                 <br />
                 {this.state.isProduct && <label htmlFor="AddItems-price">Price</label>}
-                {this.state.isProduct && <input type="number" name="price" id="AddItems-price" />}
+                {this.state.isProduct && <input type="number" step="0.1" name="price" id="AddItems-price" />}
                 <button id="add-btn">Add</button>
             </form>
         )

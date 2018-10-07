@@ -25,7 +25,7 @@ class EditCategory extends Component {
             img: e.target.elements.img.value
         }
 
-        axios.put(`http://localhost:8000/categories/${categoryId}`, data)
+        axios.put(`http://localhost:8000/categories/${categoryId}`, data, { withCredentials: true })
             .then(response => {
                 if (response.status === 200) {
                     this.setState({
@@ -49,7 +49,7 @@ class EditCategory extends Component {
     componentDidMount() {
         let categoryId = this.props.match.params.id;
 
-        axios.get(`http://localhost:8000/categories/${categoryId}`)
+        axios.get(`http://localhost:8000/categories/${categoryId}`, { withCredentials: true })
             .then(result => {
                 this.setState({
                     categoryName: result.data.category.name,
@@ -73,7 +73,7 @@ class EditCategory extends Component {
                 <input type="text" name="name" id="AddItems-name" onChange={this.handleChange('categoryName')} value={this.state.categoryName} />
                 <br />
                 <label htmlFor="AddCategory-img">Image</label>
-                <input type="text" name="img" id="AddItems-img" onChange={this.handleChange('categoryImg')}value={this.state.categoryImg} />
+                <input type="text" name="img" id="AddItems-img" onChange={this.handleChange('categoryImg')} value={this.state.categoryImg} />
                 <br />
                 <button id="add-btn">Edit Category</button>
             </form>

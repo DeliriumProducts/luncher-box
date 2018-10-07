@@ -4,18 +4,20 @@ const { handleError } = require('../utils/handleError');
 
 module.exports = {
     create: (req, res) => {
-        // if (!req.isAuthenticated()) {
-        //     handleError({
-        //         status: 401,
-        //         msg: 'Unauthorized user.'
-        //     }, res);
-        // }
+        if (!req.isAuthenticated()) {
+            handleError({
+                status: 401,
+                msg: 'Unauthorized user.'
+            }, res);
+            return;
+        }
 
         if (!req.body.name || !req.body.price) {
             handleError({
                 status: 400,
                 msg: 'Product info can not be empty.'
             }, res);
+            return;
         }
 
         let product = new Product({
@@ -51,6 +53,7 @@ module.exports = {
                 status: 401,
                 msg: 'Unauthorized user.'
             }, res);
+            return;
         }
 
         if (!req.body.name && !req.body.price) {
@@ -95,12 +98,13 @@ module.exports = {
     },
 
     delete: (req, res) => {
-        // if (!req.isAuthenticated()) {
-        //     handleError({
-        //         status: 401,
-        //         msg: 'Unauthorized user.'
-        //     }, res);
-        // }
+        if (!req.isAuthenticated()) {
+            handleError({
+                status: 401,
+                msg: 'Unauthorized user.'
+            }, res);
+            return;
+        }
 
         Product.findByIdAndRemove(req.params.productId)
             .then(product => {
