@@ -3,7 +3,6 @@ import { Grid } from 'react-bootstrap';
 import axios from 'axios';
 import findKey from '../../utils/utils.js'
 import localForage from 'localforage';
-import MonetizationOn from '@material-ui/icons/MonetizationOn';
 import Product from '../Product/Product.jsx';
 import './Order.css';
 
@@ -103,10 +102,8 @@ class Order extends Component {
                                 quantity={p.quantity}
                             />
                         )
-
                     }
-                    {
-                        this.state.products.length > 0 &&
+                    {this.state.products.length > 0 &&
                         <div className='OrderBar-Wrapper'>
                             Place order! Your total is: {this.calculateTotalSum().toFixed(2)}
                         </div>
