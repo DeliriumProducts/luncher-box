@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Grid } from 'react-bootstrap';
 import { NavLink, Redirect } from 'react-router-dom';
 import AddIcon from '@material-ui/icons/Add';
+import axios from 'axios';
 import Category from '../Category/Category.jsx';
 import './Dashboard.css';
 
@@ -21,11 +22,10 @@ class Dashboard extends Component {
             return;
         }
 
-        fetch('http://localhost:8000/categories/')
-            .then(res => res.json())
-            .then(categories => {
+        axios.get('http://localhost:8000/categories/', { withCredentials: true })
+            .then(response => {
                 this.setState({
-                    categories: categories.categories
+                    categories: response.data.categories
                 })
             });
     }

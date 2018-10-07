@@ -18,7 +18,7 @@ class Product extends Component {
     handleClick(e) {
         e.preventDefault();
         let productId = this.props._id;
-        axios.delete(`http://localhost:8000/products/${productId}`)
+        axios.delete(`http://localhost:8000/products/${productId}`, { withCredentials: true })
             .then(response => {
                 if (response.status === 200) {
                     this.setState({

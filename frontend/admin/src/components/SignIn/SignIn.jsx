@@ -14,7 +14,7 @@ class SignIn extends Component {
         this.handleSignIn = this.handleSignIn.bind(this);
     }
 
-    componentDidMount() {
+    componentDidUpdate() {
         if (this.props.isAuthenticated) {
             this.setState({
                 redirectToDashboard: true
@@ -32,7 +32,7 @@ class SignIn extends Component {
             password: password,
         }
 
-        axios.post('http://localhost:8000/login', data)
+        axios.post('http://localhost:8000/login', data, { withCredentials: true })
             .then(response => {
                 if (response.status === 200) {
                     this.props.handleAuthentication(true);
