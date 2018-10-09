@@ -4,12 +4,13 @@ const { handleError } = require('../utils/handleError');
 
 module.exports = {
     create: (req, res) => {
-        // if (!req.isAuthenticated()) {
-        //     handleError({
-        //         status: 550,
-        //         msg: 'Unauthorized user.'
-        //     }, res);
-        // }
+        if (!req.isAuthenticated()) {
+            handleError({
+                status: 550,
+                msg: 'Unauthorized user.'
+            }, res);
+            return;
+        }
 
         if (!req.body.name || !req.body.img) {
             handleError({
@@ -37,6 +38,7 @@ module.exports = {
                 staus: 403,
                 msg: 'Unauthorized user.'
             }, res);
+            return;
         }
 
         if (!req.body.name || !req.body.img) {
@@ -44,6 +46,7 @@ module.exports = {
                 status: 400,
                 msg: 'Category name or img can not be empty.'
             }, res);
+            return;
         }
 
         const editedCategory = {
@@ -51,7 +54,7 @@ module.exports = {
             img: req.body.img
         };
 
-        Category.findByIdAndUpdate(req.params.categoryId, editedCategory, { new: true })
+        Category.findById(req.params.categoryId)
             .then(category => {
                 if (!category) {
                     throw {
@@ -59,10 +62,29 @@ module.exports = {
                         msg: 'Category not found: ' + req.body.name
                     };
                 }
+
+                return category;
+            })
+            .then(category => {
+                let oldCategoryName = category.name;
+
+                category.set({
+                    name: editedCategory.name,
+                    img: editedCategory.img
+                });
+                category.save();
                 res.status(200).send({
                     msg: 'Category updated successfully!',
                     category: category
                 });
+                return Product.find({ category: oldCategoryName });
+            })
+            .then(products => {
+                for (let product of products) {
+
+                    product.set({ category: editedCategory.name });
+                    product.save();
+                }
             })
             .catch((err) => handleError(err, res));
     },
@@ -73,6 +95,7 @@ module.exports = {
                 status: 403,
                 msg: 'Unauthorized user.'
             }, res);
+            return;
         }
 
         Category.findById(req.params.categoryId)
@@ -90,6 +113,23 @@ module.exports = {
             .then(() => {
                 res.status(200).send({
                     msg: 'Category deleted successfully!'
+                });
+            })
+            .catch((err) => handleError(err, res));
+    },
+
+    findOne: (req, res) => {
+        Category.findById(req.params.categoryId)
+            .then(category => {
+                if (!category) {
+                    throw {
+                        status: 404,
+                        msg: 'Category not found: ' + req.params.categoryId + '.'
+                    };
+                }
+
+                res.status(200).send({
+                    category: category
                 });
             })
             .catch((err) => handleError(err, res));
