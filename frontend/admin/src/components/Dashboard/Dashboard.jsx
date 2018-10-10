@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { backend } from '../../config.js'
 import { Grid } from 'react-bootstrap';
 import { NavLink, Redirect } from 'react-router-dom';
 import AddIcon from '@material-ui/icons/Add';
@@ -22,7 +23,7 @@ class Dashboard extends Component {
             return;
         }
 
-        axios.get('http://localhost:8000/categories/', { withCredentials: true })
+        axios.get(`${backend}/categories`, { withCredentials: true })
             .then(response => {
                 this.setState({
                     categories: response.data.categories

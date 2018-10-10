@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { backend } from '../../config.js';
 import { Redirect } from 'react-router-dom';
 import axios from 'axios';
 import './SignIn.css';
@@ -32,7 +33,7 @@ class SignIn extends Component {
             password: password,
         }
 
-        axios.post('http://localhost:8000/login', data, { withCredentials: true })
+        axios.post(`${backend}/login`, data, { withCredentials: true })
             .then(response => {
                 if (response.status === 200) {
                     this.props.handleAuthentication(true);

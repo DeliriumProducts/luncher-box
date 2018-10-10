@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { backend } from '../../config.js'
 import { Route, Redirect } from 'react-router-dom';
 import AdminTopBar from '../AdminTopBar/AdminTopBar.jsx';
 import SignIn from '../SignIn/SignIn.jsx';
@@ -19,9 +20,8 @@ class Admin extends Component {
         this.handleAuthentication = this.handleAuthentication.bind(this);
     }
     componentDidMount() {
-        axios.get('http://localhost:8000/login', { withCredentials: true })
+        axios.get(`${backend}/login`, { withCredentials: true })
             .then(response => {
-
                 this.setState({
                     isAuthenticated: response.data.isAuthenticated
                 })

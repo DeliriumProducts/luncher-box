@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import axios from 'axios';
+import { backend } from '../../config.js';
 import { Grid } from 'react-bootstrap';
 import Category from '../Category/Category.jsx';
 import './Menu.css'
@@ -13,7 +14,7 @@ class Menu extends Component {
     }
 
     componentDidMount() {
-        axios.get('http://localhost:8000/categories/')
+        axios.get(`${backend}/categories/`)
             .then(result => {
                 this.setState({
                     categories: result.data.categories
