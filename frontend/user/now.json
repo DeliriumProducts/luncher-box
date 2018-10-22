@@ -1,0 +1,8 @@
+{
+    "name": "luncherbox-frontend",
+    "alias": "luncherbox",
+    "public": true,
+    "files": [
+        "build"
+    ]
+}

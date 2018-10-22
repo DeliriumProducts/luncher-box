@@ -1,0 +1,8 @@
+{
+    "name": "luncherbox-admin",
+    "alias": "luncherbox-admin",
+    "public": true,
+    "files": [
+        "build"
+    ]
+}
