@@ -1,6 +1,6 @@
 {
-    "name": "luncherbox-frontend",
-    "alias": "luncherbox",
+    "name": "luncherbox-api",
+    "alias": "luncherbox-api",
     "public": true,
     "dotenv": true,
     "scale": {

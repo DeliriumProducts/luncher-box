@@ -2,6 +2,7 @@
     "name": "luncherbox-admin",
     "alias": "luncherbox-admin",
     "public": true,
+    "type":"static",
     "files": [
         "build"
     ]
