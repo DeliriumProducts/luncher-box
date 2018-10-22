@@ -8,16 +8,16 @@ class Register extends Component {
         super(props);
 
         this.state = {
-            redirectToDashboard: false
+            redirectToLogin: false
         }
 
-        this.handleReigster = this.handleRegister.bind(this);
+        this.handleRegister = this.handleRegister.bind(this);
     }
 
     componentDidMount() {
         if (this.props.isAuthenticated) {
             this.setState({
-                redirectToDashboard: true
+                redirectToLogin: true
             })
         }
     }
@@ -36,16 +36,16 @@ class Register extends Component {
         axios.post(`${backend}/register`, data)
             .then(response => {
                 if (response.status === 200) {
-                    this.props.handleAuthentication(true);
                     this.setState({
-                        redirectToDashboard: true
+                        redirectToLogin: true
                     })
                 }
             })
     }
+
     render() {
-        if (this.state.redirectToDashboard) {
-            return <Redirect to='/dashboard' />
+        if (this.state.redirectToLogin) {
+            return <Redirect to='/login' />
         }
         return (
             <form className="Login-form-wrapper" onSubmit={this.handleRegister}>
