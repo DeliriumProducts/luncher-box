@@ -1,15 +1,14 @@
-import React, { Component } from 'react'
-import { backend } from '../../config.js'
-import { Route, Redirect } from 'react-router-dom';
+import axios from 'axios';
+import React, { Component } from 'react';
+import { Redirect, Route } from 'react-router-dom';
+import AddItems from '../AddItems/AddItems.jsx';
 import AdminTopBar from '../AdminTopBar/AdminTopBar.jsx';
+import Dashboard from '../Dashboard/Dashboard.jsx';
+import EditCategory from '../EditCategory/EditCategory.jsx';
+import EditProduct from '../EditProduct/EditProduct.jsx';
+import ProductList from '../ProductList/ProductList.jsx';
 import SignIn from '../SignIn/SignIn.jsx';
 import SignUp from '../SignUp/SignUp.jsx';
-import Dashboard from '../Dashboard/Dashboard.jsx';
-import AddItems from '../AddItems/AddItems.jsx';
-import EditProduct from '../EditProduct/EditProduct.jsx';
-import EditCategory from '../EditCategory/EditCategory.jsx';
-import ProductList from '../ProductList/ProductList.jsx';
-import axios from 'axios';
 
 class Admin extends Component {
     constructor(props) {
@@ -20,7 +19,7 @@ class Admin extends Component {
         this.handleAuthentication = this.handleAuthentication.bind(this);
     }
     componentDidMount() {
-        axios.get(`${backend}/login`, { withCredentials: true })
+        axios.get(`/login`, { withCredentials: true })
             .then(response => {
                 this.setState({
                     isAuthenticated: response.data.isAuthenticated

@@ -1,9 +1,8 @@
+import axios from 'axios';
+import localForage from 'localforage';
 import React, { Component } from 'react';
 import { Grid } from 'react-bootstrap';
-import { backend } from '../../config.js';
-import axios from 'axios';
-import findKey from '../../utils/utils.js'
-import localForage from 'localforage';
+import findKey from '../../utils/utils.js';
 import Product from '../Product/Product.jsx';
 import './Order.css';
 
@@ -34,7 +33,7 @@ class Order extends Component {
 
     fetchProducts(products) {
         for (const product of products) {
-            axios.get(`${backend}/products/${product._id}`)
+            axios.get(`/products/${product._id}`)
                 .then(result => {
                     let newProducts = this.state.products;
                     result.data.product.quantity = product.quantity;

@@ -1,9 +1,8 @@
-import React, { Component } from 'react';
 import axios from 'axios';
-import { backend } from '../../config.js';
-import './DailyProducts.css';
+import React, { Component } from 'react';
 import { Grid } from 'react-bootstrap';
 import Product from '../Product/Product.jsx';
+import './DailyProducts.css';
 
 class DailyProducts extends Component {
     constructor(props) {
@@ -14,7 +13,7 @@ class DailyProducts extends Component {
     }
 
     componentDidMount() {
-        axios.get(`${backend}/products/category/5b98d453cea786602f88a002`)
+        axios.get(`/products/category/5b98d453cea786602f88a002`)
             .then(result => {
                 this.setState({
                     products: result.data.products

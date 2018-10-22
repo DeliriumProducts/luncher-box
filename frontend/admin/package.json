@@ -13,6 +13,7 @@
     "react-scripts": "1.1.5",
     "typeface-roboto": "0.0.54"
   },
+  "proxy":"https://luncherbox-api.now.sh",
   "scripts": {
     "start": "PORT=5500 react-scripts start",
     "build": "react-scripts build",

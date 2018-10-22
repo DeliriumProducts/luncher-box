@@ -1,9 +1,8 @@
-import React, { Component } from 'react';
-import { NavLink, Redirect } from 'react-router-dom';
-import { backend } from '../../config.js'
 import EditIcon from '@material-ui/icons/Create';
 import TrashIcon from '@material-ui/icons/DeleteOutline';
 import axios from 'axios';
+import React, { Component } from 'react';
+import { NavLink, Redirect } from 'react-router-dom';
 import './Product.css';
 
 class Product extends Component {
@@ -19,7 +18,7 @@ class Product extends Component {
     handleClick(e) {
         e.preventDefault();
         let productId = this.props._id;
-        axios.delete(`${backend}/products/${productId}`, { withCredentials: true })
+        axios.delete(`/products/${productId}`, { withCredentials: true })
             .then(response => {
                 if (response.status === 200) {
                     this.setState({

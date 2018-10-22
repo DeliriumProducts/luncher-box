@@ -1,8 +1,7 @@
+import axios from 'axios';
 import React, { Component } from 'react';
-import { backend } from '../../config.js'
 import { Redirect } from 'react-router-dom';
 import './EditCategory.css';
-import axios from 'axios';
 
 class EditCategory extends Component {
 
@@ -26,7 +25,7 @@ class EditCategory extends Component {
             img: e.target.elements.img.value
         }
 
-        axios.put(`${backend}/categories/${categoryId}`, data, { withCredentials: true })
+        axios.put(`/categories/${categoryId}`, data, { withCredentials: true })
             .then(response => {
                 if (response.status === 200) {
                     this.setState({
@@ -47,7 +46,7 @@ class EditCategory extends Component {
     componentDidMount() {
         let categoryId = this.props.match.params.id;
 
-        axios.get(`${backend}/categories/${categoryId}`, { withCredentials: true })
+        axios.get(`/categories/${categoryId}`, { withCredentials: true })
             .then(result => {
                 this.setState({
                     categoryName: result.data.category.name,
