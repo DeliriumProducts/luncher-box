@@ -3,6 +3,7 @@ import localForage from 'localforage';
 import React, { Component } from 'react';
 import { Grid } from 'react-bootstrap';
 import { backend } from '../../config.js';
+import OrderBar from '../OrderBar/OrderBar.jsx';
 import findKey from '../../utils/utils.js';
 import Product from '../Product/Product.jsx';
 import './Order.css';
@@ -106,9 +107,15 @@ class Order extends Component {
                     }
                     {
                         this.state.products.length > 0 &&
-                        <div className='OrderBar-Wrapper'>
+                        <OrderBar>
                             Place order! Your total is: {this.calculateTotalSum().toFixed(2)}
-                        </div>
+                        </OrderBar>
+                    }
+                    {
+                        this.state.products.length == 0 &&
+                        <OrderBar>
+                            You don't have any products added yet!
+                        </OrderBar>
                     }
                 </Grid >
             </div>
