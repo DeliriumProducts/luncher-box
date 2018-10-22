@@ -7,7 +7,7 @@ module.exports = (app) => {
     // Create a product
     app.post('/products', product.create);
 
-    // Retrieve all products
+    // Retrieve all products by category
     app.get('/products/category/:categoryId', product.findAllByCategory);
 
     // Retrieve a single product with productId

@@ -5,7 +5,6 @@ const passport = require('passport');
 const cors = require('cors');
 
 module.exports = (app) => {
-
     app.use(cors({ origin: true, credentials: true }));
 
     app.use(bodyParser.json());
