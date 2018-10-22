@@ -67,10 +67,8 @@ module.exports = {
 
     loginPost: (req, res) => {
         let loginArgs = req.body;
-        console.log(loginArgs.email);
         User.findOne({ email: loginArgs.email })
             .then(user => {
-                console.log(loginArgs);
                 if (!user || !user.authenticate(loginArgs.password)) {
                     throw {
                         status: 401,

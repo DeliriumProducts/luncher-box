@@ -35,7 +35,6 @@ class SignUp extends Component {
         }
         axios.post(`${backend}/register`, data)
             .then(response => {
-                console.log(response);
                 if (response.status === 200) {
                     this.props.handleAuthentication(true);
                     this.setState({

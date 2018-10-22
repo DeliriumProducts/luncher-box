@@ -38,7 +38,6 @@ class AddItems extends Component {
             axios.post(`${backend}/products`, data, { withCredentials: true })
                 .then(response => {
                     if (response.status === 200) {
-                        console.log('Product created.');
                         this.setState({
                             hasFinished: true
                         })
