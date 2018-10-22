@@ -2,6 +2,7 @@ import AddIcon from '@material-ui/icons/Add';
 import axios from 'axios';
 import React, { Component } from 'react';
 import { Grid } from 'react-bootstrap';
+import { backend } from '../../config.js';
 import { NavLink, Redirect } from 'react-router-dom';
 import Category from '../Category/Category.jsx';
 import './Dashboard.css';
@@ -22,7 +23,7 @@ class Dashboard extends Component {
             return;
         }
 
-        axios.get(`/categories`, { withCredentials: true })
+        axios.get(`${backend}/categories`, { withCredentials: true })
             .then(response => {
                 this.setState({
                     categories: response.data.categories

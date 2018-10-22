@@ -1,5 +1,6 @@
 import axios from 'axios';
 import React, { Component } from 'react';
+import { backend } from '../../config.js';
 import { Redirect } from 'react-router-dom';
 
 class SignUp extends Component {
@@ -32,7 +33,7 @@ class SignUp extends Component {
             email: email,
             password: password,
         }
-        axios.post(`/register`, data)
+        axios.post(`${backend}/register`, data)
             .then(response => {
                 console.log(response);
                 if (response.status === 200) {

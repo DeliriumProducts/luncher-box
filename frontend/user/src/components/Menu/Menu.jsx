@@ -2,6 +2,7 @@ import axios from 'axios';
 import React, { Component } from 'react';
 import { Grid } from 'react-bootstrap';
 import Category from '../Category/Category.jsx';
+import { backend } from '../../config.js';
 import './Menu.css';
 
 class Menu extends Component {
@@ -13,7 +14,7 @@ class Menu extends Component {
     }
 
     componentDidMount() {
-        axios.get(`/categories/`)
+        axios.get(`${backend}/categories/`)
             .then(result => {
                 this.setState({
                     categories: result.data.categories

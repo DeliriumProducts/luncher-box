@@ -5,6 +5,7 @@ import AddItems from '../AddItems/AddItems.jsx';
 import AdminTopBar from '../AdminTopBar/AdminTopBar.jsx';
 import Dashboard from '../Dashboard/Dashboard.jsx';
 import EditCategory from '../EditCategory/EditCategory.jsx';
+import { backend } from '../../config.js';
 import EditProduct from '../EditProduct/EditProduct.jsx';
 import ProductList from '../ProductList/ProductList.jsx';
 import SignIn from '../SignIn/SignIn.jsx';
@@ -19,7 +20,7 @@ class Admin extends Component {
         this.handleAuthentication = this.handleAuthentication.bind(this);
     }
     componentDidMount() {
-        axios.get(`/login`, { withCredentials: true })
+        axios.get(`${backend}/login`, { withCredentials: true })
             .then(response => {
                 this.setState({
                     isAuthenticated: response.data.isAuthenticated

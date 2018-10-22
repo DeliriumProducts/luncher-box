@@ -3,6 +3,7 @@ import TrashIcon from '@material-ui/icons/DeleteOutline';
 import axios from 'axios';
 import React, { Component } from 'react';
 import { NavLink, Redirect } from 'react-router-dom';
+import { backend } from '../../config.js';
 import './Category.css';
 
 class Category extends Component {
@@ -17,7 +18,7 @@ class Category extends Component {
     handleClick(e) {
         e.preventDefault();
         let categoriesId = this.props._id;
-        axios.delete(`/categories/${categoriesId}`, { withCredentials: true })
+        axios.delete(`${backend}/categories/${categoriesId}`, { withCredentials: true })
             .then(response => {
                 if (response.status === 200) {
                     this.setState({

@@ -2,6 +2,7 @@ import axios from 'axios';
 import React, { Component } from 'react';
 import { Grid } from 'react-bootstrap';
 import Product from '../Product/Product';
+import { backend } from '../../config.js';
 
 class ProductList extends Component {
     constructor(props) {
@@ -13,7 +14,7 @@ class ProductList extends Component {
 
     componentDidMount() {
         let categoryId = this.props.match.params.id;
-        axios.get(`/products/category/${categoryId}`)
+        axios.get(`${backend}/products/category/${categoryId}`)
             .then(result => {
                 this.setState({
                     products: result.data.products

@@ -1,6 +1,7 @@
 import axios from 'axios';
 import React, { Component } from 'react';
 import { Redirect } from 'react-router-dom';
+import { backend } from '../../config.js';
 import './AddItems.css';
 
 class AddItems extends Component {
@@ -34,7 +35,7 @@ class AddItems extends Component {
                 img: e.target.elements.img.value,
             }
 
-            axios.post(`/products`, data, { withCredentials: true })
+            axios.post(`${backend}/products`, data, { withCredentials: true })
                 .then(response => {
                     if (response.status === 200) {
                         console.log('Product created.');
@@ -49,7 +50,7 @@ class AddItems extends Component {
                 name: e.target.elements.name.value,
                 img: e.target.elements.img.value,
             }
-            axios.post(`/categories`, data, { withCredentials: true })
+            axios.post(`${backend}/categories`, data, { withCredentials: true })
                 .then(response => {
                     if (response.status === 200) {
                         this.setState({
@@ -61,7 +62,7 @@ class AddItems extends Component {
     }
 
     componentDidMount() {
-        axios.get(`/categories`, { withCredentials: true })
+        axios.get(`${backend}/categories`, { withCredentials: true })
             .then(response => {
                 if (response.status === 200) {
                     this.setState({

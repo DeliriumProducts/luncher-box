@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { backend } from '../../config.js';
 import React, { Component } from 'react';
 import { Redirect } from 'react-router-dom';
 import './EditProduct.css';
@@ -31,7 +32,7 @@ class EditProduct extends Component {
             img: e.target.elements.img.value,
         }
 
-        axios.put(`/products/${productId}`, data, { withCredentials: true })
+        axios.put(`${backend}/products/${productId}`, data, { withCredentials: true })
             .then(response => {
                 if (response.status === 200) {
                     this.setState({
@@ -55,7 +56,7 @@ class EditProduct extends Component {
     componentDidMount() {
         let productId = this.props.match.params.id;
 
-        axios.get(`/products/${productId}`, { withCredentials: true })
+        axios.get(`${backend}/products/${productId}`, { withCredentials: true })
             .then(result => {
                 this.setState({
                     productName: result.data.product.name,
