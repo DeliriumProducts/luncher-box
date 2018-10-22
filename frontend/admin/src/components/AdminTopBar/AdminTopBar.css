@@ -13,8 +13,8 @@
     padding: 0;
 }
 
-#AdminTopBar-sign-in,
-#AdminTopBar-sign-up,
+#AdminTopBar-login,
+#AdminTopBar-Register,
 #AdminTopBar-dashboard {
     display: inline-block;
     vertical-align: top;
@@ -22,11 +22,11 @@
     color: #272727;
 }
 
-#AdminTopBar-sign-in {
+#AdminTopBar-login {
     width: 25%
 }
 
-#AdminTopBar-sign-up {
+#AdminTopBar-Register {
     width: 25%
 }
 

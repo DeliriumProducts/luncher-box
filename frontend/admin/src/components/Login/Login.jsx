@@ -2,9 +2,9 @@ import axios from 'axios';
 import React, { Component } from 'react';
 import { Redirect } from 'react-router-dom';
 import { backend } from '../../config.js';
-import './SignIn.css';
+import './Login.css';
 
-class SignIn extends Component {
+class Login extends Component {
     constructor(props) {
         super(props);
 
@@ -12,7 +12,7 @@ class SignIn extends Component {
             redirectToDashboard: false
         }
 
-        this.handleSignIn = this.handleSignIn.bind(this);
+        this.handleLogin = this.handleLogin.bind(this);
     }
 
     componentDidUpdate() {
@@ -23,7 +23,7 @@ class SignIn extends Component {
         }
     }
 
-    handleSignIn(e) {
+    handleLogin(e) {
         e.preventDefault();
         const email = e.target.elements.email.value;
         const password = e.target.elements.password.value;
@@ -50,19 +50,19 @@ class SignIn extends Component {
         }
         return (
             <div>
-                <form className="SignIn-form-wrapper" onSubmit={this.handleSignIn}>
-                    <p id="text">Sign in to create, update or delete items </p>
+                <form className="Login-form-wrapper" onSubmit={this.handleLogin}>
+                    <p id="text">Login to create, update or delete items </p>
                     <br />
-                    <label htmlFor="SignIn-email">Email</label>
-                    <input type="text" name="email" id="SignIn-email" />
+                    <label htmlFor="Login-email">Email</label>
+                    <input type="text" name="email" id="Login-email" />
                     <br />
-                    <label htmlFor="SignIn-password">Password</label>
-                    <input type="password" name="password" id="SignIn-password" />
-                    <button id="sign-in-btn">Sign in</button>
+                    <label htmlFor="Login-password">Password</label>
+                    <input type="password" name="password" id="Login-password" />
+                    <button id="login-btn">Login</button>
                 </form>
             </div>
         )
     }
 }
 
-export default SignIn;
+export default Login;

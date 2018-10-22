@@ -33,7 +33,7 @@ class Dashboard extends Component {
 
     render() {
         if (!this.props.isAuthenticated) {
-            return <Redirect to='/signin' />
+            return <Redirect to='/login' />
         }
         return (
             <Grid id='Dashboard-wrapper'>

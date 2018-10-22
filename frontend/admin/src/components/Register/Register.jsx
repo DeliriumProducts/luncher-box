@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import { backend } from '../../config.js';
 import { Redirect } from 'react-router-dom';
 
-class SignUp extends Component {
+class Register extends Component {
     constructor(props) {
         super(props);
 
@@ -11,7 +11,7 @@ class SignUp extends Component {
             redirectToDashboard: false
         }
 
-        this.handleSignUp = this.handleSignUp.bind(this);
+        this.handleReigster = this.handleRegister.bind(this);
     }
 
     componentDidMount() {
@@ -22,7 +22,7 @@ class SignUp extends Component {
         }
     }
 
-    handleSignUp(e) {
+    handleRegister(e) {
         e.preventDefault();
         const name = e.target.elements.name.value;
         const email = e.target.elements.email.value;
@@ -48,21 +48,21 @@ class SignUp extends Component {
             return <Redirect to='/dashboard' />
         }
         return (
-            <form className="SignIn-form-wrapper" onSubmit={this.handleSignUp}>
-                <p id="text">Sign up to create, update or delete items </p>
+            <form className="Login-form-wrapper" onSubmit={this.handleRegister}>
+                <p id="text">Register to create, update or delete items </p>
                 <br />
-                <label htmlFor="SignIn-email">Full name</label>
-                <input type="text" name="name" id="SignIn-name" />
+                <label htmlFor="Login-email">Full name</label>
+                <input type="text" name="name" id="Login-name" />
                 <br />
-                <label htmlFor="SignIn-email">Email</label>
-                <input type="text" name="email" id="SignIn-email" />
+                <label htmlFor="Login-email">Email</label>
+                <input type="text" name="email" id="Login-email" />
                 <br />
-                <label htmlFor="SignIn-password">Password</label>
-                <input type="password" name="password" id="SignIn-password" />
-                <button id="sign-in-btn">Sign up</button>
+                <label htmlFor="Login-password">Password</label>
+                <input type="password" name="password" id="Login-password" />
+                <button id="login-btn">Register</button>
             </form>
         )
     }
 }
 
-export default SignUp;
+export default Register;

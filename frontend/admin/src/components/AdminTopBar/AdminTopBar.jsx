@@ -10,8 +10,8 @@ class AdminTopBar extends Component {
     render() {
         return (
             <div className="AdminTopBar-wrapper">
-                {!this.props.isAuthenticated && <NavLink to='/signin' className="AdminTopBar-navlink" id="AdminTopBar-sign-in"><LockIcon className="AdminTopBar-icon"/>Sign in</NavLink>}
-                {!this.props.isAuthenticated && <NavLink to='/signup' className="AdminTopBar-navlink" id="AdminTopBar-sign-up"><RegIcon  className="AdminTopBar-icon"/>Sign up</NavLink>}
+                {!this.props.isAuthenticated && <NavLink to='/login' className="AdminTopBar-navlink" id="AdminTopBar-login"><LockIcon className="AdminTopBar-icon"/>Login</NavLink>}
+                {!this.props.isAuthenticated && <NavLink to='/register' className="AdminTopBar-navlink" id="AdminTopBar-Register"><RegIcon  className="AdminTopBar-icon"/>Register</NavLink>}
                 {this.props.isAuthenticated && <NavLink to='/dashboard' id="AdminTopBar-dashboard"><DashboardIcon/>Dashboard </NavLink>}
             </div>
         )

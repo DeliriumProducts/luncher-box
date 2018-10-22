@@ -8,8 +8,8 @@ import EditCategory from '../EditCategory/EditCategory.jsx';
 import { backend } from '../../config.js';
 import EditProduct from '../EditProduct/EditProduct.jsx';
 import ProductList from '../ProductList/ProductList.jsx';
-import SignIn from '../SignIn/SignIn.jsx';
-import SignUp from '../SignUp/SignUp.jsx';
+import Login from '../Login/Login.jsx';
+import Register from '../Register/Register.jsx';
 
 class Admin extends Component {
     constructor(props) {
@@ -38,13 +38,13 @@ class Admin extends Component {
         return (
             <div>
                 <AdminTopBar isAuthenticated={this.state.isAuthenticated} />
-                <Redirect to='/signin' />
+                <Redirect to='/login' />
                 <Route path='/category/:id' component={ProductList} />
                 <Route path='/additems' render={() => <AddItems isAuthenticated={this.state.isAuthenticated} />} />
                 <Route path='/editproduct/:id' render={({ match }) => <EditProduct match={match} isAuthenticated={this.state.isAuthenticated} />} />
                 <Route path='/editcategory/:id' render={({ match }) => <EditCategory match={match} isAuthenticated={this.state.isAuthenticated} />} />
-                <Route path='/signin' render={() => <SignIn isAuthenticated={this.state.isAuthenticated} handleAuthentication={this.handleAuthentication} />} />
-                <Route path='/signup' render={() => <SignUp isAuthenticated={this.state.isAuthenticated} handleAuthentication={this.handleAuthentication} />} />
+                <Route path='/login' render={() => <Login isAuthenticated={this.state.isAuthenticated} handleAuthentication={this.handleAuthentication} />} />
+                <Route path='/register' render={() => <Register isAuthenticated={this.state.isAuthenticated} handleAuthentication={this.handleAuthentication} />} />
                 <Route path='/dashboard' render={() => <Dashboard isAuthenticated={this.state.isAuthenticated} />} />
             </div>
         );

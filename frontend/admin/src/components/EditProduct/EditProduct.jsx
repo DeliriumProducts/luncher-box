@@ -70,7 +70,7 @@ class EditProduct extends Component {
 
     render() {
         if (!this.props.isAuthenticated) {
-            return <Redirect to='/signin' />
+            return <Redirect to='/login' />
         }
 
         if (this.state.hasFinished) {

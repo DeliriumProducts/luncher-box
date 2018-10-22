@@ -68,13 +68,13 @@ label {
 }
 
 @media screen and (max-width: 768px) {
-    .SignIn-form-wrapper {
+    .Login-form-wrapper {
         width: 80%;
     }
 }
 
 @media screen and (min-width: 1920px) {
-    .SignIn-form-wrapper {
+    .Login-form-wrapper {
         height: 30%;
     }
 }
