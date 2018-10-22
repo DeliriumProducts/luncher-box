@@ -24,7 +24,7 @@ class Menu extends Component {
     render() {
         return (
             <Grid id='Menu-wrapper'>
-                {this.state.categories.length && this.state.categories.map(c =>
+                {this.state.categories.length > 0 && this.state.categories.map(c =>
                     <Category
                         key={c._id}
                         name={c.name}

@@ -25,7 +25,7 @@ class DailyProducts extends Component {
         return (
             <div>
                 <Grid id='Daily-wrapper'>
-                    {this.state.products.length && this.state.products.map(p =>
+                    {this.state.products.length > 0 && this.state.products.map(p =>
                         <Product
                             key={p._id}
                             _id={p._id}

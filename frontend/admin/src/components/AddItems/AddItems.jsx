@@ -101,7 +101,7 @@ class AddItems extends Component {
                 {this.state.isProduct && <input type="text" name="description" id="AddItems-description" />}
                 <br />
                 {this.state.isProduct && <label htmlFor="AddItems-category">Category</label>}
-                {this.state.isProduct && <select name="category"> {this.state.categories.length && this.state.categories.map(p => <option value={p.name}> {p.name} </option>)}</select>}
+                {this.state.isProduct && <select name="category"> {this.state.categories.length > 0 && this.state.categories.map(p => <option value={p.name}> {p.name} </option>)}</select>}
                 <br />
                 {this.state.isProduct && <label htmlFor="AddItems-price">Price</label>}
                 {this.state.isProduct && <input type="number" step="0.1" name="price" id="AddItems-price" />}

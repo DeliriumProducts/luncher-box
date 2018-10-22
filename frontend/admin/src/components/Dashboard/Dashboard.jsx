@@ -36,7 +36,7 @@ class Dashboard extends Component {
         }
         return (
             <Grid id='Dashboard-wrapper'>
-                {this.state.categories.length && this.state.categories.map(p =>
+                {this.state.categories.length > 0 && this.state.categories.map(p =>
                     <Category
                         key={p._id}
                         _id={p._id}

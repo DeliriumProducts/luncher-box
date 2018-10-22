@@ -24,7 +24,7 @@ class ProductList extends Component {
     render() {
         return (
             <Grid id='Dashboard-wrapper'>
-                {this.state.products.length && this.state.products.map(p => {
+                {this.state.products.length > 0 && this.state.products.map(p => {
                     return <Product
                         key={p._id}
                         _id={p._id}
