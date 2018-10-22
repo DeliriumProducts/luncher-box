@@ -2,8 +2,6 @@
     "name": "luncherbox-frontend",
     "alias": "luncherbox",
     "public": true,
-    "type":"static",
-    "files": [
-        "build"
-    ]
+    "type":"static"
+    }
 }

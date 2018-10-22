@@ -18,7 +18,7 @@
   "proxy":"https://luncherbox-api.now.sh",
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build",
+    "build": "react-scripts build && cp now.json build/now.json",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
   }
