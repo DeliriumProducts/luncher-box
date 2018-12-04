@@ -1,6 +1,6 @@
 {
     "name": "luncherbox-admin",
     "alias": "luncherbox-admin",
-    "public": true,
+    "public": false,
     "type":"static"
 }

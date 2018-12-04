@@ -1,7 +1,7 @@
 {
     "name": "luncherbox-api",
     "alias": "luncherbox-api",
-    "public": true,
+    "public": false,
     "dotenv": true,
     "scale": {
         "sfo1": {
