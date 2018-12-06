@@ -1,35 +1,34 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
+const bcrypt = require('bcryptjs');
 const encryption = require("../utils/encryption");
 
-const User = mongoose.Schema({
+const User = mongoose.Schema(
+  {
     email: {
-        type: String,
-        required: true,
-        unique: true,
+      type: String,
+      required: true,
+      unique: true
     },
     passwordHash: {
-        type: String,
-        required: true
+      type: String,
+      required: true
     },
     name: {
-        type: String,
-        required: true
-    },
-    salt: {
-        type: String,
-        required: true
+      type: String,
+      required: true
     },
     isVerified: {
-        type: Boolean,
-        default: false
+      type: Boolean,
+      default: false
     }
-}, {
-        timestamps: true
-    });
+  },
+  {
+    timestamps: true
+  }
+);
 
-User.methods.authenticate = function (password) {
-    let inputPasswordHash = encryption.hashPassword(password, this.salt);
-    return inputPasswordHash === this.passwordHash;
+User.methods.authenticate = function(password) {
+  return bcrypt.compareSync(password, this.passwordHash);
 };
 
-module.exports = mongoose.model('User', User);    
+module.exports = mongoose.model("User", User);

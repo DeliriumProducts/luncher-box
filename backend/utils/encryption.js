@@ -1,12 +1,13 @@
 const crypto = require('crypto');
+const bcrypt = require('bcryptjs');
 
 module.exports = {
   generateSalt: () => {
-      let salt = crypto.randomBytes(128).toString('base64');
+      let salt = bcrypt.genSaltSync(11);
       return salt;
   },
   hashPassword: (password, salt) => {
-      let passwordHash = crypto.createHmac('sha256', salt).update(password).digest('hex');
+      let passwordHash = bcrypt.hashSync(password, salt);
       return passwordHash;
   }
 };
