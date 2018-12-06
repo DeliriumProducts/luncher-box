@@ -1,1 +1,0 @@
-export const backend = 'https://luncherbox-api.now.sh'
