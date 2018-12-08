@@ -1,38 +1,59 @@
 {
-  "name": "luncherbox-backend",
+  "name": "luncherbox-api",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
-  "scripts": {
-    "start": "tsc --watch & nodemon dist"
-  },
-  "author": "",
-  "license": "GPL-3.0",
+  "main": "src/server.ts",
   "dependencies": {
-    "@types/bcrypt": "^3.0.0",
-    "@types/cors": "^2.8.4",
-    "@types/mongoose": "^5.3.3",
-    "@types/node": "^10.12.12",
-    "@types/passport": "^0.4.7",
     "bcryptjs": "^2.4.3",
+    "bluebird": "^3.5.3",
     "body-parser": "^1.18.3",
-    "connect-mongo": "^2.0.1",
+    "compression": "^1.7.3",
     "cookie-parser": "^1.4.3",
-    "cors": "^2.8.4",
-    "crypto": "^1.0.1",
-    "dotenv": "^6.0.0",
-    "express": "^4.16.3",
+    "cors": "^2.8.5",
+    "dotenv": "^6.2.0",
+    "express": "^4.16.4",
     "express-session": "^1.15.6",
-    "jsonwebtoken": "^8.3.0",
-    "mongoose": "^5.2.13",
-    "nodemailer": "^4.6.8",
+    "express-validator": "^5.3.0",
+    "jest": "^23.6.0",
+    "jsonwebtoken": "^8.4.0",
+    "lusca": "^1.6.1",
+    "mongoose": "^5.3.15",
+    "nodemailer": "^4.7.0",
     "nodemon": "^1.18.7",
     "passport": "^0.4.0",
     "passport-local": "^1.0.0",
+    "supertest": "^3.3.0",
     "tslint": "^5.11.0",
-    "typegoose": "^5.4.1"
+    "typegoose": "^5.4.1",
+    "typescript": "^3.2.2"
   },
   "devDependencies": {
-    "eslint": "^5.5.0"
-  }
+    "@types/bluebird": "^3.5.24",
+    "@types/body-parser": "^1.17.0",
+    "@types/compression": "0.0.36",
+    "@types/cookie-parser": "^1.4.1",
+    "@types/cors": "^2.8.4",
+    "@types/dotenv": "^6.1.0",
+    "@types/express": "^4.16.0",
+    "@types/express-session": "^1.15.11",
+    "@types/jest": "^23.3.10",
+    "@types/lusca": "^1.5.0",
+    "@types/mongoose": "^5.3.4",
+    "@types/passport": "^0.4.7",
+    "@types/passport-local": "^1.0.33",
+    "@types/supertest": "^2.0.6"
+  },
+  "scripts": {
+    "start": "tsc --watch & nodemon dist/server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/deliriumproducts/luncher-box.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/deliriumproducts/luncher-box/issues"
+  },
+  "homepage": "https://github.com/deliriumproducts/luncher-box#readme"
 }

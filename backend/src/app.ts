@@ -1,12 +1,12 @@
-import * as express from 'express';
+import express from 'express';
+import configureExpress from './config/express';
+import configureRoutes from './config/routes';
+
+// create express app
 const app = express();
 
-import expressConfig from './config/express'; 
-import routesConfig from './config/routes';
-import passportConfig from './config/passport'; 
-
-expressConfig(app);
-routesConfig(app);
-passportConfig();
+// configure settings and routes
+configureExpress(app);
+configureRoutes(app);
 
 export default app;
