@@ -3,7 +3,7 @@ import { Button } from 'antd';
 
 class Login extends Component {
   render() {
-    return <Button>Lainaa</Button>;
+    return <Button type="primary">Primary</Button>
   }
 }
 

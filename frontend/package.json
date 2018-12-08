@@ -6,6 +6,7 @@
     "start": "next start"
   },
   "dependencies": {
+    "@zeit/next-css": "^1.0.1",
     "antd": "^3.11.0",
     "next": "^7.0.2",
     "react": "^16.6.3",
@@ -14,6 +15,7 @@
   },
   "devDependencies": {
     "babel-plugin-import": "^1.11.0",
+    "babel-plugin-inline-import": "^3.0.0",
     "babel-plugin-styled-components": "^1.9.2"
   }
 }
