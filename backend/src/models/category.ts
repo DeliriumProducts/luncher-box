@@ -1,6 +1,6 @@
-const mongoose = require('mongoose');
+import * as mongoose from 'mongoose';
 
-const CategorySchema = mongoose.Schema({
+const CategorySchema = new mongoose.Schema({
     name: {
         type: String,
         unique: true,
@@ -16,4 +16,4 @@ const CategorySchema = mongoose.Schema({
     }
 );
 
-module.exports = mongoose.model('Category', CategorySchema);    
+export default mongoose.model('Category', CategorySchema);    

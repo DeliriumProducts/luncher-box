@@ -1,10 +1,9 @@
-#!/usr/bin/env node
-const app = require('../app');
-const http = require('http');
-const usedPort = '8000';
-const mongoose = require('mongoose');
-const cfg = require('../config/config.js');
+import app from './app.js';
+import * as http from 'http';
+import * as mongoose from 'mongoose';
+import cfg from './config';
 
+const usedPort = '8000';
 let port = normalizePort(process.env.PORT || usedPort);
 app.set('port', port);
 
@@ -14,15 +13,12 @@ server.listen(port);
 server.on('error', onError);
 server.on('listening', onListening);
 
-mongoose.Promise = global.Promise;
-
-// Connecting to the database
 mongoose.connect(cfg.dbUrl, {
     useNewUrlParser: true
 }).then(() => {
     console.log("Successfully connected to the database");
 }).catch(err => {
-    console.log('Could not connect to the database. Exiting now...');
+    console.log('Could not connect to the database. Exiting now...' + err);
     process.exit();
 });
 
@@ -64,5 +60,6 @@ function onError(error) {
 }
 
 function onListening() {
-    console.log(`Luncher-box backend running on http://localhost:${port}`);
+    console.clear();
+    console.log(`🥩 Luncher-box backend running on http://localhost:${port}`);
 }

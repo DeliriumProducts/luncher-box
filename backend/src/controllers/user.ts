@@ -3,9 +3,9 @@ const crypto = require('crypto');
 const nodemailer = require('nodemailer');
 const User = require('../models/user');
 const Token = require('../models/token');
-const { handleError } = require('../utils/handleError');
+const  handleError = require('../utils/handleError');
 
-module.exports = {
+export default {
 
     register: (req, res) => {
         let salt = encryption.generateSalt();

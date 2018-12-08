@@ -1,0 +1,18 @@
+{
+  "compilerOptions": {
+    "target": "es6",
+    "module": "commonjs",
+    "outDir": "dist",
+    "allowSyntheticDefaultImports": true,
+    "sourceMap": true
+  },
+  "files": [
+    "./node_modules/@types/node/index.d.ts",
+    "./node_modules/@types/cors/index.d.ts",
+    "./node_modules/@types/bcrypt/index.d.ts",
+    "./node_modules/@types/passport/index.d.ts",
+    "./node_modules/@types/mongoose/index.d.ts"
+  ],
+  "include": ["src/**/*.ts"],
+  "exclude": ["node_modules"]
+}

@@ -2,8 +2,7 @@ const User = require('../models/user');
 const Token = require('../models/token');
 const { handleError } = require('../utils/handleError');
 
-module.exports = {
-
+export default {
     confirm: (req, res) => {
         Token.findOne({ token: req.params.token })
             .then(token => {

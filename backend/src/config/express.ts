@@ -1,10 +1,11 @@
-const cookieParser = require('cookie-parser');
-const bodyParser = require('body-parser');
-const session = require('express-session');
-const passport = require('passport');
-const cors = require('cors');
+import * as cookieParser from 'cookie-parser';
+import * as bodyParser from 'body-parser';
+import * as session from 'express-session';
+import * as passport from 'passport';
+import * as cors from 'cors';
 
-module.exports = (app) => {
+export default function(app) {
+
     app.use(cors({ origin: true, credentials: true }));
 
     app.use(bodyParser.json());
@@ -24,4 +25,5 @@ module.exports = (app) => {
         }
         next();
     });
-};
+}
+
