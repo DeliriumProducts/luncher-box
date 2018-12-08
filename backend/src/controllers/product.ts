@@ -94,10 +94,11 @@ export default {
           };
         }
       })
-      .then(() =>
-        Product.findByIdAndUpdate(req.params.productId, editedProduct, {
-          new: true
-        })
+      .then(
+        (): any =>
+          Product.findByIdAndUpdate(req.params.productId, editedProduct, {
+            new: true
+          })
       )
       .then(product => {
         if (!product) {
@@ -165,7 +166,7 @@ export default {
 
   findAllByCategory: (req, res) => {
     Category.findById(req.params.categoryId)
-      .then(category => Product.find({ category: category.name }))
+      .then((category: any): any => Product.find({ category: category.name }))
       .then(products => {
         if (!products) {
           throw {

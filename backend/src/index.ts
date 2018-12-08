@@ -18,7 +18,7 @@ mongoose.connect(cfg.dbUrl, {
 }).then(() => {
     console.log("Successfully connected to the database");
 }).catch(err => {
-    console.log('Could not connect to the database. Exiting now...' + err);
+    console.log('Could not connect to the database. Exiting now...\n' + err);
     process.exit();
 });
 

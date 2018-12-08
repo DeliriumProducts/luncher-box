@@ -1,6 +1,6 @@
-import bcrypt from "bcryptjs";
+import * as bcrypt from "bcryptjs";
 
-module.exports = {
+export default {
   generateSalt: () => {
     let salt = bcrypt.genSaltSync(11);
     return salt;

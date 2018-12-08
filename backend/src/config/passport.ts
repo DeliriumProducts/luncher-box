@@ -1,5 +1,5 @@
-import passport from "passport";
-import LocalPassport from "passport-local";
+import * as passport from "passport";
+import * as LocalPassport from "passport-local";
 import User from "../models/user";
 
 const authenticateUser = (username, password, done) => {
@@ -27,7 +27,7 @@ export default () => {
     )
   );
 
-  passport.serializeUser((user: any, done) =>
+  passport.serializeUser((user: any, done: Function) =>
     !user ? done(null, false) : done(null, user.id)
   );
 

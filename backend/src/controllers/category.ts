@@ -80,20 +80,22 @@ export default {
 
         return category;
       })
-      .then((category: any) => {
-        let oldCategoryName = category.name;
+      .then(
+        (category: any): any => {
+          let oldCategoryName = category.name;
 
-        category.set({
-          name: editedCategory.name,
-          img: editedCategory.img
-        });
-        category.save();
-        res.status(200).send({
-          msg: "Category updated successfully!",
-          category: category
-        });
-        return Product.find({ category: oldCategoryName });
-      })
+          category.set({
+            name: editedCategory.name,
+            img: editedCategory.img
+          });
+          category.save();
+          res.status(200).send({
+            msg: "Category updated successfully!",
+            category: category
+          });
+          return Product.find({ category: oldCategoryName });
+        }
+      )
       .then(products => {
         for (let product of products) {
           product.set({ category: editedCategory.name });
@@ -126,9 +128,9 @@ export default {
         return category;
       })
       .then((category: any) => Product.deleteMany({ category: category.name }))
-      .then(() => {
-        Category.findByIdAndRemove(req.params.categoryId);
-      })
+      .then(
+        (): any => Category.findByIdAndDelete({ _id: req.params.categoryId })
+      )
       .then(() => {
         res.status(200).send({
           msg: "Category deleted successfully!"

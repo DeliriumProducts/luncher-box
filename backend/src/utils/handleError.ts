@@ -7,6 +7,8 @@ export default (err, res) => {
     err.msg = err.message;
   }
 
+  console.error(err);
+
   res.status(err.status).send({
     msg: err.msg
   });
