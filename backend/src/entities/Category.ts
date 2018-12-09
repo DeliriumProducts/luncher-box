@@ -1,13 +1,16 @@
-import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, MinKey } from 'typeorm';
+import { Length } from 'class-validator';
 
 @Entity()
 export class Category {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
+  @Column('text')
+  @Length(5, 50)
   name: string;
 
-  @Column()
+  @Length(5, 255)
+  @Column('text')
   image: string;
 }

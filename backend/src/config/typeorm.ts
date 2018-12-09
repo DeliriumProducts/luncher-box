@@ -9,7 +9,7 @@ const options: ConnectionOptions = {
   password: DB_PASS,
   database: DB_NAME,
   synchronize: true, // don't use in production!
-  logging: true,
+  logging: false,
   entities: ['src/entities/*.ts']
 };
 

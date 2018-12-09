@@ -37,7 +37,7 @@ app.use(
 );
 app.use(
   lusca({
-    csrf: true,
+    csrf: false, // should be true (is false only temporarily)
     xframe: 'SAMEORIGIN', // could cause CORS issues?
     p3p: 'ABCDEF',
     hsts: { maxAge: 31536000, includeSubDomains: true, preload: true },
