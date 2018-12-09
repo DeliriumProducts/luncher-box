@@ -1,16 +1,23 @@
 import bodyParser from "body-parser";
 import cookieParser from "cookie-parser";
 import session from "express-session";
-import express from "express";
 import passport from "passport";
-import cors from "cors";
-import { SESSION_SECRET } from "./env";
 import { Request, Response, Application, NextFunction } from "express";
+import { createExpressServer } from "routing-controllers";
+import expressValidator from "express-validator";
 import compression from "compression";
 import lusca from "lusca";
-import expressValidator from "express-validator";
+import cors from "cors";
+import 'reflect-metadata';
+import { SESSION_SECRET } from "./env";
+import { UserController } from "../controller/UserController";
+import { CategoryController } from "../controller/CategoryController";
+import { ProductController } from "../controller/ProductController";
+import { TokenController } from "../controller/TokenController";
 
-const app : Application = express();
+const app: Application = createExpressServer({
+  controllers: [UserController, CategoryController, ProductController, TokenController]
+});
 
 app.use(cors({ origin: true, credentials: true }));
 app.use(compression());
