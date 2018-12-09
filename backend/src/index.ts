@@ -1,19 +1,18 @@
-import "reflect-metadata";
-import { createConnection } from "typeorm";
-import { PORT, ENV } from "./config/env";
-import dbConfig from "./config/typeorm";
-import { User } from "./entity/User";
-import app from "./config/express";
+import 'reflect-metadata';
+import { createConnection, Connection } from 'typeorm';
+import { PORT, ENV } from './config/env';
+import dbConfig from './config/typeorm';
+import app from './config/express';
 
-// establish db connection
-createConnection(dbConfig) 
-  .then(async connection => {
+const startServer = async () => {
+  // establish db connection
+  const connection: Connection = await createConnection(dbConfig);
+  app.listen(PORT);
+  console.log(
+    `🥩 Luncher-box backend running on http://localhost:${PORT} in ${ENV}`
+  );
+};
 
-    // start server
-    app.listen(PORT);
-    console.clear();
-    console.log(
-      `🥩 Luncher-box backend running on http://localhost:${PORT} in ${ENV}`
-    );
-  })
-  .catch(error => console.log(error));
+startServer();
+
+export default startServer;
