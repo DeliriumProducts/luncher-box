@@ -7,7 +7,7 @@ export class Category {
   id: number;
 
   @Column('text')
-  @Length(5, 50)
+  @Length(4, 50)
   name: string;
 
   @Length(5, 255)

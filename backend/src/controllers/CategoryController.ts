@@ -10,7 +10,8 @@ import {
   BadRequestError,
   Patch,
   Param,
-  Body
+  Body,
+  Put
 } from 'routing-controllers';
 import {
   EntityFromBody,
@@ -72,24 +73,19 @@ export class CategoryController {
   }
 
   /**
-   * PATCH /categories
+   * PUT /categories
    *
    * Updates a category based on the request's body and id paramter
    * @param id
    * @param newCategory
    */
-  @Patch('/categories/:categoryId')
+  @Put('/categories/:categoryId')
   async update(@Param('categoryId') id: number, @Body() newCategory: Category) {
-    const oldCategory: Category = await this.categoryRepository.findOneOrFail(
-      id
-    );
-    newCategory = { ...oldCategory, ...newCategory };
-
     const errors: ValidationError[] = await validate(newCategory);
     if (errors.length > 0) {
       throw new BadRequestError(formatValidationMessage(errors).toString());
     } else {
-      return this.categoryRepository.save(newCategory);
+      return this.categoryRepository.update(id, newCategory);
     }
   }
 }
