@@ -4,7 +4,6 @@ import styled from 'styled-components';
 const FormItem = Form.Item;
 
 const Container = styled.div`
-
   background-color: rgb(245, 245, 245);
   padding: 30px;
   box-shadow: 0 0 10px 5px #ebebeb;
@@ -41,9 +40,8 @@ class LoginForm extends React.Component {
     const { getFieldDecorator } = this.props.form;
     return (
       <Container>
-        <p id="info">Login to Create, Update or Delete products</p>
-
         <Form onSubmit={this.handleSubmit} className="login-form">
+          <p id="info">Login to Create, Update or Delete products</p>
           <FormItem>
             {getFieldDecorator('email', {
               rules: [
@@ -94,7 +92,7 @@ class LoginForm extends React.Component {
               htmlType="submit"
               className="login-form-button"
             >
-              Log in
+              Login
             </Button>
             Or <a href="">register now!</a>
           </FormItem>
