@@ -4,21 +4,23 @@ import 'reflect-metadata';
 import session from 'express-session';
 import passport from 'passport';
 import { Request, Response, Application, NextFunction } from 'express';
-import { createExpressServer, useContainer } from 'routing-controllers';
+import { useExpressServer } from 'routing-controllers';
 import expressValidator from 'express-validator';
 import compression from 'compression';
 import lusca from 'lusca';
 import 'reflect-metadata';
 import { SESSION_SECRET } from './env';
+import express = require('express');
+import cors = require('cors');
 
-const app: Application = createExpressServer({
-  cors: {
+const app: Application = express();
+
+app.use(
+  cors({
     origin: true,
     credentials: true
-  },
-  controllers: [`${__dirname}/../controllers/*.ts`]
-});
-
+  })
+);
 app.use(compression());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -49,6 +51,10 @@ app.use((req: Request, res: Response, next: NextFunction) => {
     res.locals.user = req.user;
   }
   next();
+});
+
+useExpressServer(app, {
+  controllers: [`${__dirname}/../controllers/*.ts`]
 });
 
 export default app;

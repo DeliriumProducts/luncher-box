@@ -5,7 +5,7 @@ import { Get, JsonController } from 'routing-controllers';
 @JsonController()
 export class CategoryController {
   @Get('/categories')
-  getAll() {
-    return getManager().find(Category);
+  async getAll() {
+    return await getManager().find(Category);
   }
 }
