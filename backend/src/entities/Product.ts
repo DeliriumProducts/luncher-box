@@ -24,7 +24,7 @@ export class Product {
   @Column('double')
   price: number;
 
-  @ManyToMany(() => Category)
+  @ManyToMany(type => Category)
   @JoinTable()
   categories: Category[];
 }
