@@ -4,8 +4,8 @@ import styled from 'styled-components';
 const FormItem = Form.Item;
 
 const Container = styled.div`
+
   background-color: rgb(245, 245, 245);
-  max-width: 300px;
   padding: 30px;
   box-shadow: 0 0 10px 5px #ebebeb;
   border-radius: 10px;
@@ -17,9 +17,11 @@ const Container = styled.div`
   .login-form {
     max-width: 300px;
   }
+
   .login-form-forgot {
     float: right;
   }
+
   .login-form-button {
     width: 100%;
   }
@@ -47,11 +49,11 @@ class LoginForm extends React.Component {
               rules: [
                 {
                   type: 'email',
-                  message: 'The input is not valid E-mail!'
+                  message: 'The input is not valid Email!'
                 },
                 {
                   required: true,
-                  message: 'Please input your E-mail!'
+                  message: 'Please input your Email!'
                 }
               ]
             })(
