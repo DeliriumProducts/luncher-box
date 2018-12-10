@@ -110,7 +110,7 @@ export class CategoryController {
   /**
    * DELETE /categories/:categoryId
    *
-   * Updates a category based on the request's body and id paramter
+   * Deletes a category based on the request's body and id paramter
    * @param id
    * @param newCategory
    */

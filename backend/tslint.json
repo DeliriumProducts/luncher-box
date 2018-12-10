@@ -9,6 +9,7 @@
     "ordered-imports": false,
     "quotemark": [true, "single", "jsx-double"],
     "trailing-comma": false,
+    "max-classes-per-file": false,
     "no-unused-variable": false,
     "interface-name": false,
     "arrow-parens": false,

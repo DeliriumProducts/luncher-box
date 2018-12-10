@@ -15,7 +15,6 @@ export class Category {
 
   @Column('text')
   @Length(4, 50)
-  @IsEmail()
   name: string;
 
   @Length(5, 255)
