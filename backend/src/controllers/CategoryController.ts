@@ -73,15 +73,17 @@ export class CategoryController {
   }
 
   /**
-   * PUT /categories
+   * PATCH /categories
    *
    * Updates a category based on the request's body and id paramter
    * @param id
    * @param newCategory
    */
-  @Put('/categories/:categoryId')
+  @Patch('/categories/:categoryId')
   async update(@Param('categoryId') id: number, @Body() newCategory: Category) {
-    const errors: ValidationError[] = await validate(newCategory);
+    const errors: ValidationError[] = await validate(newCategory, {
+      skipMissingProperties: true
+    });
     if (errors.length > 0) {
       throw new BadRequestError(formatValidationMessage(errors).toString());
     } else {

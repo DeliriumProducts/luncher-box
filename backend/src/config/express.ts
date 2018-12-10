@@ -13,10 +13,14 @@ import { SESSION_SECRET } from './env';
 import express = require('express');
 import cors = require('cors');
 
-// create express app
+/**
+ * Create express app
+ */
 const app: Application = express();
 
-// configure express app
+/**
+ * Configure express app
+ */
 app.use(
   cors({
     origin: true,
@@ -55,7 +59,9 @@ app.use((req: Request, res: Response, next: NextFunction) => {
   next();
 });
 
-// set up routing-controllers
+/**
+ * Set up routing-controllers
+ */
 useExpressServer(app, {
   controllers: [`${__dirname}/../controllers/*.ts`]
 });
