@@ -1,9 +1,15 @@
 import { ValidationError } from 'class-validator';
 
-export default (errors: ValidationError[]) => {
-  const formattedErrors: Array<{}> = [];
+export default (errors: ValidationError[]): string => {
+  let formattedErrors: string = '';
   for (const error of errors) {
-    formattedErrors.push(error.constraints);
+    const constraints = error.constraints;
+    for (const constraint of Object.values(constraints)) {
+      if (constraint) {
+        console.log(constraint);
+        formattedErrors += constraint + '; ';
+      }
+    }
   }
 
   return formattedErrors;

@@ -63,6 +63,8 @@ app.use((req: Request, res: Response, next: NextFunction) => {
  * Set up routing-controllers
  */
 useExpressServer(app, {
+  validation: true,
+  classTransformer: true,
   controllers: [`${__dirname}/../controllers/*.ts`]
 });
 

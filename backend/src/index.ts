@@ -8,10 +8,14 @@ import app from './config/express';
 const startServer = async () => {
   console.clear();
 
-  // establish db connection
+  /**
+   * Establish database connection
+   */
   const connection: Connection = await createConnection(dbConfig);
 
-  // start listening
+  /**
+   * Start server
+   */
   app.listen(PORT);
   console.log(
     `🥩 Luncher-box backend running on http://localhost:${PORT} in ${ENV}`

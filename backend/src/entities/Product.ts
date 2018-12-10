@@ -24,7 +24,10 @@ export class Product {
   @Column('double')
   price: number;
 
-  @ManyToMany(type => Category)
+  @ManyToMany(type => Category, category => category.products, {
+    cascade: true,
+    onDelete: 'CASCADE'
+  })
   @JoinTable()
   categories: Category[];
 }

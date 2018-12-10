@@ -24,6 +24,7 @@
     "@types/bcryptjs": "^2.4.2",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.18.3",
+    "class-transformer": "^0.2.0",
     "class-validator": "^0.9.1",
     "compression": "^1.7.3",
     "cookie-parser": "^1.4.3",
