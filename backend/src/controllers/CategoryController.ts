@@ -68,7 +68,10 @@ export class CategoryController {
     if (errors.length > 0) {
       throw new BadRequestError(formatValidationMessage(errors).toString());
     } else {
-      return this.categoryRepository.save(category);
+      await this.categoryRepository.save(category);
+      return {
+        status: 'Success!'
+      };
     }
   }
 
@@ -87,7 +90,10 @@ export class CategoryController {
     if (errors.length > 0) {
       throw new BadRequestError(formatValidationMessage(errors).toString());
     } else {
-      return this.categoryRepository.update(id, newCategory);
+      await this.categoryRepository.update(id, newCategory);
+      return {
+        status: 'Success!'
+      };
     }
   }
 }
