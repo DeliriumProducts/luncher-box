@@ -1,19 +1,20 @@
-module.exports = {
-  webpack: config => {
-    // Fixes npm packages that depend on `fs` module
-    config.node = {
-      fs: 'empty'
-    }
+const withCss = require('@zeit/next-css');
 
-    return config
+module.exports = withCss({
+  webpack(config) {
+    config.module.rules.push({
+      test: /\.(png|svg|eot|otf|ttf|woff|woff2)$/i,
+      use: {
+        loader: 'url-loader',
+        options: {
+          limit: 8192,
+          publicPath: './',
+          outputPath: 'static/css/',
+          name: '[name].[ext]'
+        }
+      }
+    });
+
+    return config;
   }
-}
-/* eslint-disable */
-const withCss = require('@zeit/next-css')
-
-// fix: prevents error when .css files are required by node
-if (typeof require !== 'undefined') {
-  require.extensions['.css'] = (file) => {}
-}
-
-module.exports = withCss()
+});
