@@ -13,11 +13,9 @@ import {
   Body,
   Put
 } from 'routing-controllers';
-import {
-  EntityFromBody,
-  EntityFromParam
-} from 'typeorm-routing-controllers-extensions';
 import { validate, ValidationError } from 'class-validator';
+
+type CategoryOrUndefined = Category | undefined;
 
 @JsonController()
 export class CategoryController {
@@ -48,7 +46,9 @@ export class CategoryController {
    */
   @Get('/categories/:categoryId')
   async getOne(@Param('categoryId') id: number) {
-    const category = await this.categoryRepository.findOne(id);
+    const category: CategoryOrUndefined = await this.categoryRepository.findOne(
+      id
+    );
     if (category) {
       return category;
     } else {
@@ -64,8 +64,10 @@ export class CategoryController {
    */
   @Post('/categories')
   async create(@Body() category: Category) {
-    const errors: ValidationError[] = await validate(category);
-    if (errors.length > 0) {
+    const errors: ValidationError[] = await validate(category, {
+      whitelist: true
+    });
+    if (errors.length) {
       throw new BadRequestError(formatValidationMessage(errors).toString());
     } else {
       await this.categoryRepository.save(category);
@@ -84,16 +86,24 @@ export class CategoryController {
    */
   @Patch('/categories/:categoryId')
   async update(@Param('categoryId') id: number, @Body() newCategory: Category) {
-    const errors: ValidationError[] = await validate(newCategory, {
-      skipMissingProperties: true
-    });
-    if (errors.length > 0) {
-      throw new BadRequestError(formatValidationMessage(errors).toString());
+    const oldCategory: CategoryOrUndefined = await this.categoryRepository.findOne(
+      id
+    );
+    if (oldCategory) {
+      const errors: ValidationError[] = await validate(newCategory, {
+        skipMissingProperties: true,
+        whitelist: true
+      });
+      if (errors.length) {
+        throw new BadRequestError(formatValidationMessage(errors).toString());
+      } else {
+        await this.categoryRepository.update(id, newCategory);
+        return {
+          status: 'Success!'
+        };
+      }
     } else {
-      await this.categoryRepository.update(id, newCategory);
-      return {
-        status: 'Success!'
-      };
+      throw new NotFoundError('Category not found');
     }
   }
 }
