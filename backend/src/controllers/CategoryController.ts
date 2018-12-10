@@ -59,7 +59,7 @@ export class CategoryController {
    * @param category
    */
   @Post()
-  async create(@Body({ validate: true }) category: Category) {
+  async create(@Body() category: Category) {
     const errors: ValidationError[] = await validate(category, {
       whitelist: true
     });

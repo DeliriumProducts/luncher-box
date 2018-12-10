@@ -61,6 +61,7 @@ export class ProductController {
     const errors: ValidationError[] = await validate(product, {
       whitelist: true
     });
+
     if (errors.length) {
       throw new BadRequestError(
         JSON.stringify(formatValidationMessage(errors))
