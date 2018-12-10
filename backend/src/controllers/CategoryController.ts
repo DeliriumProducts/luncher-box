@@ -15,7 +15,7 @@ import {
 } from 'routing-controllers';
 import { validate, ValidationError } from 'class-validator';
 
-type CategoryOrUndefined = Category | undefined;
+type CategoryResponse = Category | undefined;
 
 @JsonController()
 export class CategoryController {
@@ -46,7 +46,7 @@ export class CategoryController {
    */
   @Get('/categories/:categoryId')
   async getOne(@Param('categoryId') id: number) {
-    const category: CategoryOrUndefined = await this.categoryRepository.findOne(
+    const category: CategoryResponse = await this.categoryRepository.findOne(
       id
     );
     if (category) {
@@ -86,7 +86,7 @@ export class CategoryController {
    */
   @Patch('/categories/:categoryId')
   async update(@Param('categoryId') id: number, @Body() newCategory: Category) {
-    const oldCategory: CategoryOrUndefined = await this.categoryRepository.findOne(
+    const oldCategory: CategoryResponse = await this.categoryRepository.findOne(
       id
     );
     if (oldCategory) {
