@@ -19,9 +19,14 @@ const FormContainer = styled.div`
       width: 70vw;
     }
   }
+  .row {
+    display: inline-block;
+  }
+
   .login-forgot {
     float: right;
   }
+  
   .login-button {
     width: 100%;
   }
@@ -39,11 +44,9 @@ const LoginForm = () => (
         <label>Password</label>
         <input placeholder="Please type your password" type="password" />
       </Form.Field>
-      <Form.Field>
+      <Form.Field className="row">
         <Checkbox label="Remember me" />
-        <a className="login-form-forgot" href="">
-          Forgot password
-        </a>
+        <a className="login-form-forgot">Forgot password</a>
       </Form.Field>
       <Button primary type="submit" className="login-button">
         Login
