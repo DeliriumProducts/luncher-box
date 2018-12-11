@@ -1,3 +1,4 @@
+import { Category } from './../entities/Category';
 import { ProductNotFoundError } from './../utils/httpErrors';
 import { Product } from './../entities/Product';
 import {
@@ -9,11 +10,13 @@ import {
   Body,
   BadRequestError,
   Patch,
-  Delete
+  Delete,
+  BodyParam
 } from 'routing-controllers';
-import { getManager, Repository, getRepository } from 'typeorm';
+import { Repository, getRepository } from 'typeorm';
 import { ValidationError, validate } from 'class-validator';
 import formatValidationMessage from '../utils/formatValidationMessage';
+import transformAndValidate from '../utils/transformAndValidate';
 
 type ProductReponse = Product | undefined;
 
@@ -54,18 +57,21 @@ export class ProductController {
    * POST /products
    *
    * Creates a product based on the request's body
-   * @param product
+   * @param productJSON
    */
   @Post()
-  async create(@Body() product: Product) {
-    const errors: ValidationError[] = await validate(product, {
-      whitelist: true
-    });
+  async create(@Body() productJSON: Product) {
+    const [product, err1] = await transformAndValidate(Product, productJSON);
+    const [category, err2] = await transformAndValidate(
+      Category,
+      productJSON.categories
+    );
 
-    if (errors.length) {
-      throw new BadRequestError(
-        JSON.stringify(formatValidationMessage(errors))
-      );
+    console.log(product);
+    console.log(category);
+
+    if (err1 || err2) {
+      throw new BadRequestError(`${err1}\n${err2}`);
     } else {
       await this.productRepository.save(product);
       return {
@@ -89,6 +95,7 @@ export class ProductController {
         skipMissingProperties: true,
         whitelist: true
       });
+
       if (errors.length) {
         throw new BadRequestError(
           JSON.stringify(formatValidationMessage(errors))

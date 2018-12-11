@@ -6,7 +6,15 @@ import {
   JoinTable
 } from 'typeorm';
 import { Category } from './Category';
-import { Length, IsNumber, Min, Max } from 'class-validator';
+import {
+  Length,
+  IsNumber,
+  Min,
+  Max,
+  Allow,
+  ValidateNested,
+  MaxLength
+} from 'class-validator';
 
 @Entity()
 export class Product {
@@ -35,6 +43,7 @@ export class Product {
     cascade: true,
     onDelete: 'CASCADE'
   })
+  @Allow()
   @JoinTable()
   categories: Category[];
 }

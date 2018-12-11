@@ -1,9 +1,11 @@
+import { Product } from './entities/Product';
 import { CategoryController } from './controllers/CategoryController';
 import 'reflect-metadata';
 import { createConnection, Connection } from 'typeorm';
 import { PORT, ENV } from './config/env';
 import dbConfig from './config/typeorm';
 import app from './config/express';
+import { Category } from './entities/Category';
 
 const startServer = async () => {
   console.clear();

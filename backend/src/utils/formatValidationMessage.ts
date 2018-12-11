@@ -6,7 +6,6 @@ export default (errors: ValidationError[]): string => {
     const constraints = error.constraints;
     for (const constraint of Object.values(constraints)) {
       if (constraint) {
-        console.log(constraint);
         formattedErrors += constraint + '; ';
       }
     }

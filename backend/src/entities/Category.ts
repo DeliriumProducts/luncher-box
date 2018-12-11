@@ -6,7 +6,7 @@ import {
   MinKey,
   ManyToMany
 } from 'typeorm';
-import { Length, IsEmail } from 'class-validator';
+import { Length, IsEmail, Allow } from 'class-validator';
 
 @Entity()
 export class Category {
