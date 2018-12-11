@@ -17,12 +17,15 @@ export default class MyDocument extends Document {
       styles: [...initialProps.styles, ...sheet.getStyleElement()]
     };
   }
-  
+
   render() {
     return (
       <html>
         <Head>
-          <link rel="stylesheet" href="/_next/static/style.css" />
+          <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1.0"
+          />
         </Head>
         <body>
           <Main />
