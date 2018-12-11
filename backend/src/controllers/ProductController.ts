@@ -1,3 +1,4 @@
+import { QueryResponse } from './../types/queryresponse.d';
 import { Category } from './../entities/Category';
 import { ProductNotFoundError } from './../utils/httpErrors';
 import { Product } from './../entities/Product';
@@ -17,8 +18,6 @@ import { Repository, getRepository } from 'typeorm';
 import { ValidationError, validate } from 'class-validator';
 import formatValidationMessage from '../utils/formatValidationMessage';
 import transformAndValidate from '../utils/transformAndValidate';
-
-type ProductReponse = Product | undefined;
 
 @JsonController('/products')
 export class ProductController {
@@ -89,7 +88,9 @@ export class ProductController {
    */
   @Patch('/:productId')
   async update(@Param('productId') id: number, @Body() newProduct: Product) {
-    const oldProduct: ProductReponse = await this.productRepository.findOne(id);
+    const oldProduct: QueryResponse<
+      Product
+    > = await this.productRepository.findOne(id);
     if (oldProduct) {
       const errors: ValidationError[] = await validate(newProduct, {
         skipMissingProperties: true,
@@ -119,9 +120,9 @@ export class ProductController {
    */
   @Delete('/:productId')
   async delete(@Param('productId') id: number) {
-    const productToBeDeleted: ProductReponse = await this.productRepository.findOne(
-      id
-    );
+    const productToBeDeleted: QueryResponse<
+      Product
+    > = await this.productRepository.findOne(id);
     if (productToBeDeleted) {
       await this.productRepository.delete(id);
       return {

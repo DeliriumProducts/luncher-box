@@ -1,3 +1,4 @@
+import { QueryResponse } from './../types/queryresponse.d';
 import { CategoryNotFoundError } from './../utils/httpErrors';
 import formatValidationMessage from '../utils/formatValidationMessage';
 import { Repository, getRepository } from 'typeorm';
@@ -16,8 +17,6 @@ import {
 } from 'routing-controllers';
 import { ValidationError } from 'class-validator/validation/ValidationError';
 import { validate } from 'class-validator';
-
-type CategoryResponse = Category | undefined;
 
 @JsonController('/categories')
 export class CategoryController {
@@ -84,9 +83,9 @@ export class CategoryController {
    */
   @Patch('/:categoryId')
   async update(@Param('categoryId') id: number, @Body() newCategory: Category) {
-    const oldCategory: CategoryResponse = await this.categoryRepository.findOne(
-      id
-    );
+    const oldCategory: QueryResponse<
+      Category
+    > = await this.categoryRepository.findOne(id);
     if (oldCategory) {
       const errors: ValidationError[] = await validate(newCategory, {
         skipMissingProperties: true,
@@ -116,9 +115,9 @@ export class CategoryController {
    */
   @Delete('/:categoryId')
   async delete(@Param('categoryId') id: number) {
-    const categoryToBeDeleted: CategoryResponse = await this.categoryRepository.findOne(
-      id
-    );
+    const categoryToBeDeleted: QueryResponse<
+      Category
+    > = await this.categoryRepository.findOne(id);
     if (categoryToBeDeleted) {
       await this.categoryRepository.delete(id);
       return {
