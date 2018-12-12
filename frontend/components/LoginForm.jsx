@@ -2,6 +2,8 @@ import { Button, Checkbox, Form } from 'semantic-ui-react';
 import styled from 'styled-components';
 import 'semantic-ui-css/semantic.min.css';
 
+// TODO: MAKE CENTERING WORK ON ANY DEVICE!!!
+
 const FormContainer = styled.div`
   background-color: rgb(245, 245, 245);
   padding: 30px;
@@ -23,6 +25,7 @@ const FormContainer = styled.div`
 
   .login-forgot {
     float: right;
+    cursor: pointer;
   }
 
   .login-button {
@@ -44,7 +47,7 @@ const LoginForm = () => (
       </Form.Field>
       <Form.Field>
         <Checkbox label="Remember me" />
-        <a className="login-form-forgot">Forgot password</a>
+        <a className="login-forgot">Forgot password</a>
       </Form.Field>
       <Button primary type="submit" className="login-button">
         Login
