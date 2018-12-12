@@ -7,26 +7,24 @@ const FormContainer = styled.div`
   padding: 30px;
   box-shadow: 0 0 10px 5px #ebebeb;
   border-radius: 10px;
+
   #info {
     text-align: center;
+    font-weight: 700;
+    margin: 10px;
   }
   .login-form {
     width: 20vw;
-    max-width: 100vw;
 
     @media only screen and (max-width: 768px) {
-      /* For mobile phones: */
       width: 70vw;
     }
-  }
-  .row {
-    display: inline-block;
   }
 
   .login-forgot {
     float: right;
   }
-  
+
   .login-button {
     width: 100%;
   }
@@ -34,8 +32,8 @@ const FormContainer = styled.div`
 
 const LoginForm = () => (
   <FormContainer>
-    <p id="info">Login to Create, Update or Delete products</p>
     <Form className="login-form">
+      <p id="info">Login to Create, Update or Delete products</p>
       <Form.Field>
         <label>Email</label>
         <input placeholder="Please type your email" type="email" />
@@ -44,7 +42,7 @@ const LoginForm = () => (
         <label>Password</label>
         <input placeholder="Please type your password" type="password" />
       </Form.Field>
-      <Form.Field className="row">
+      <Form.Field>
         <Checkbox label="Remember me" />
         <a className="login-form-forgot">Forgot password</a>
       </Form.Field>
