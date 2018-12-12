@@ -17,11 +17,11 @@ export class Category {
   id: number;
 
   @Column('text')
-  @Length(4, 50)
+  @Length(4, 50, { always: true })
   name: string;
 
-  @Length(5, 255)
   @Column('text')
+  @Length(5, 255, { always: true })
   image: string;
 
   @ManyToMany(() => Product, product => product.categories)

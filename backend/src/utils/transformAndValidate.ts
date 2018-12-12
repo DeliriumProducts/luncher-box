@@ -23,20 +23,16 @@ export default async function(
   let clsObj: any = {};
 
   try {
-    const a = {
-      validator: {
-        whitelist: true
-      },
-      ...options
-    };
-
-    clsObj = await transformAndValidate(cls, obj, {
-      validator: {
-        whitelist: true
-      }
-    });
+    clsObj = await transformAndValidate(cls, obj, options);
   } catch (err) {
-    errors = formatValidationMessage(err[0]);
+    /**
+     * If validating an array of objects, the method returns an array of errors
+     */
+    if (err.isArray) {
+      errors = formatValidationMessage(err[0]);
+    } else {
+      errors = formatValidationMessage(err);
+    }
   }
 
   return [clsObj, errors];

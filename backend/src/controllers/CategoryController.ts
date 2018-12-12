@@ -60,7 +60,9 @@ export class CategoryController {
    */
   @Post()
   async create(@Body() categoryJSON: Category) {
-    const [category, err] = await transformAndValidate(Category, categoryJSON);
+    const [category, err] = await transformAndValidate(Category, categoryJSON, {
+      validator: { whitelist: true }
+    });
 
     if (err) {
       throw new BadRequestError(err);

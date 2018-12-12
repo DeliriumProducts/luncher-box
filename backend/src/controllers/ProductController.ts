@@ -66,17 +66,25 @@ export class ProductController {
      */
     const [product, firstErr] = await transformAndValidate(
       Product,
-      productJSON
+      productJSON,
+      {
+        validator: { whitelist: true }
+      }
     );
+
     const [category, secondErr] = await transformAndValidate(
       Category,
       productJSON.categories,
       {
         validator: {
+          whitelist: true,
           groups: ['requireId']
         }
       }
     );
+
+    console.log(category);
+    console.log(product);
 
     if (firstErr || secondErr) {
       throw new BadRequestError(`${firstErr}\n${secondErr}`);
