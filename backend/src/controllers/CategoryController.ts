@@ -17,6 +17,7 @@ import {
 } from 'routing-controllers';
 import { ValidationError } from 'class-validator/validation/ValidationError';
 import { validate } from 'class-validator';
+import transformAndValidate from '../utils/transformAndValidate';
 
 @JsonController('/categories')
 export class CategoryController {
@@ -58,19 +59,13 @@ export class CategoryController {
    * @param category
    */
   @Post()
-  async create(@Body() category: Category) {
-    const errors: ValidationError[] = await validate(category, {
-      whitelist: true
-    });
-    if (errors.length) {
-      throw new BadRequestError(
-        JSON.stringify(formatValidationMessage(errors))
-      );
+  async create(@Body() categoryJSON: Category) {
+    const [category, err] = await transformAndValidate(Category, categoryJSON);
+
+    if (err) {
+      throw new BadRequestError(err);
     } else {
-      await this.categoryRepository.save(category);
-      return {
-        status: 'Success!'
-      };
+      return this.categoryRepository.save(category);
     }
   }
 
@@ -111,7 +106,6 @@ export class CategoryController {
    *
    * Deletes a category based on the request's body and id paramter
    * @param id
-   * @param newCategory
    */
   @Delete('/:categoryId')
   async delete(@Param('categoryId') id: number) {

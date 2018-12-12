@@ -60,22 +60,28 @@ export class ProductController {
    */
   @Post()
   async create(@Body() productJSON: Product) {
-    const [product, err1] = await transformAndValidate(Product, productJSON);
-    const [category, err2] = await transformAndValidate(
+    /**
+     * Validate the product and then the nested array of categories (product.categories)
+     * The requireId group is necessary in order to validate that the categoryId has been sent
+     */
+    const [product, firstErr] = await transformAndValidate(
+      Product,
+      productJSON
+    );
+    const [category, secondErr] = await transformAndValidate(
       Category,
-      productJSON.categories
+      productJSON.categories,
+      {
+        validator: {
+          groups: ['requireId']
+        }
+      }
     );
 
-    console.log(product);
-    console.log(category);
-
-    if (err1 || err2) {
-      throw new BadRequestError(`${err1}\n${err2}`);
+    if (firstErr || secondErr) {
+      throw new BadRequestError(`${firstErr}\n${secondErr}`);
     } else {
-      await this.productRepository.save(product);
-      return {
-        status: 'Success!'
-      };
+      return this.productRepository.save(product);
     }
   }
 
@@ -102,10 +108,7 @@ export class ProductController {
           JSON.stringify(formatValidationMessage(errors))
         );
       } else {
-        await this.productRepository.update(id, newProduct);
-        return {
-          status: 'Success!'
-        };
+        return await this.productRepository.update(id, newProduct);
       }
     } else {
       throw new ProductNotFoundError();

@@ -6,11 +6,14 @@ import {
   MinKey,
   ManyToMany
 } from 'typeorm';
-import { Length, IsEmail, Allow } from 'class-validator';
+import { Length, IsEmail, Allow, IsDefined } from 'class-validator';
 
 @Entity()
 export class Category {
   @PrimaryGeneratedColumn()
+  @IsDefined({
+    groups: ['requireId']
+  })
   id: number;
 
   @Column('text')

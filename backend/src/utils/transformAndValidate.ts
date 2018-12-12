@@ -21,12 +21,19 @@ export default async function(
 ): Promise<[any, string]> {
   let errors: string = '';
   let clsObj: any = {};
+
   try {
-    clsObj = await transformAndValidate(cls, obj, {
+    const a = {
       validator: {
         whitelist: true
       },
       ...options
+    };
+
+    clsObj = await transformAndValidate(cls, obj, {
+      validator: {
+        whitelist: true
+      }
     });
   } catch (err) {
     errors = formatValidationMessage(err[0]);
