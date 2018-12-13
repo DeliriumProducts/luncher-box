@@ -1,7 +1,7 @@
-import { QueryResponse } from './../types/queryresponse.d';
-import { Category } from './../entities/Category';
-import { ProductNotFoundError } from './../utils/httpErrors';
-import { Product } from './../entities/Product';
+import { QueryResponse } from '../types';
+import { Category } from '../entities';
+import { ProductNotFoundError, EntityNotValidError } from '../utils';
+import { Product } from '../entities';
 import {
   JsonController,
   Get,
@@ -16,8 +16,7 @@ import {
 } from 'routing-controllers';
 import { Repository, getRepository } from 'typeorm';
 import { ValidationError, validate } from 'class-validator';
-import formatValidationMessage from '../utils/formatValidationMessage';
-import transformAndValidate from '../utils/transformAndValidate';
+import { transformAndValidate } from '../utils';
 
 @JsonController('/products')
 export class ProductController {
@@ -61,8 +60,8 @@ export class ProductController {
   @Post()
   async create(@Body() productJSON: Product) {
     /**
-     * Validate the product and then the nested array of categories (product.categories)
-     * The requireId group is necessary in order to validate that the categoryId has been sent
+     * Validate the product and then the nested array of categories (productJSON.categories)
+     * The creatingProducts group is necessary in order to validate that the categoryId has been sent
      */
     const [product, firstErr] = await transformAndValidate(
       Product,
@@ -78,16 +77,13 @@ export class ProductController {
       {
         validator: {
           whitelist: true,
-          groups: ['requireId']
+          groups: ['creatingProducts']
         }
       }
     );
 
-    console.log(category);
-    console.log(product);
-
-    if (firstErr || secondErr) {
-      throw new BadRequestError(`${firstErr}\n${secondErr}`);
+    if (firstErr.length || secondErr.length) {
+      throw new EntityNotValidError(firstErr.concat(secondErr));
     } else {
       return this.productRepository.save(product);
     }

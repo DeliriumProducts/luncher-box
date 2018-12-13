@@ -1,4 +1,5 @@
 import { HttpError } from 'routing-controllers';
+import { EntityError } from 'src/types/entityerror';
 
 /**
  * STATUS: 404
@@ -25,9 +26,9 @@ export class ProductNotFoundError extends HttpError {
  * Used for when an entity failed to validate
  */
 export class EntityNotValidError extends HttpError {
-  errors: string[];
+  errors: EntityError;
 
-  constructor(errors: string[]) {
+  constructor(errors: EntityError) {
     super(400, 'Entity not valid!');
     this.errors = errors;
     this.name = 'EntityNotValidError';

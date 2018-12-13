@@ -1,8 +1,7 @@
-import { QueryResponse } from './../types/queryresponse.d';
-import { CategoryNotFoundError } from './../utils/httpErrors';
-import formatValidationMessage from '../utils/formatValidationMessage';
+import { QueryResponse } from '../types';
+import { CategoryNotFoundError, EntityNotValidError } from '../utils';
 import { Repository, getRepository } from 'typeorm';
-import { Category } from '../entities/Category';
+import { Category } from '../entities';
 import {
   Get,
   JsonController,
@@ -17,7 +16,7 @@ import {
 } from 'routing-controllers';
 import { ValidationError } from 'class-validator/validation/ValidationError';
 import { validate } from 'class-validator';
-import transformAndValidate from '../utils/transformAndValidate';
+import { transformAndValidate } from '../utils';
 
 @JsonController('/categories')
 export class CategoryController {
@@ -61,11 +60,14 @@ export class CategoryController {
   @Post()
   async create(@Body() categoryJSON: Category) {
     const [category, err] = await transformAndValidate(Category, categoryJSON, {
-      validator: { whitelist: true }
+      validator: {
+        whitelist: true,
+        groups: ['creatingCategories']
+      }
     });
 
-    if (err) {
-      throw new BadRequestError(err);
+    if (err.length) {
+      throw new EntityNotValidError(err);
     } else {
       return this.categoryRepository.save(category);
     }
