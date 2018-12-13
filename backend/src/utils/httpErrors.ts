@@ -19,3 +19,19 @@ export class ProductNotFoundError extends HttpError {
     super(404, 'Product not found!');
   }
 }
+
+/**
+ * STATUS: 400
+ * Used for when an entity failed to validate
+ */
+export class EntityNotValidError extends HttpError {
+  errors: string[];
+
+  constructor(errors: string[]) {
+    super(400, 'Entity not valid!');
+    this.errors = errors;
+    this.name = 'EntityNotValidError';
+    delete this.message;
+    delete this.stack;
+  }
+}

@@ -4,7 +4,6 @@ import {
   transformAndValidate,
   TransformValidationOptions
 } from 'class-transformer-validator';
-import formatValidationMessage from './formatValidationMessage';
 
 /**
  * Wrapper around the transformAndValidate method which can be easily awaited without the need of a try/catch.
@@ -16,22 +15,66 @@ import formatValidationMessage from './formatValidationMessage';
  */
 export default async function(
   cls: ClassType<{}>,
-  obj: object,
+  obj: object | Array<{}>,
   options?: TransformValidationOptions
-): Promise<[any, string]> {
-  let errors: string = '';
+): Promise<[any, Array<[]>]> {
+  const errors: any[] = [];
   let clsObj: any = {};
 
   try {
     clsObj = await transformAndValidate(cls, obj, options);
-  } catch (err) {
+  } catch (exception) {
     /**
-     * If validating an array of objects, the method returns an array of errors
+     * If validating an array of objects, there is an array of errors for each object, so it has to be iterated over
+     *
+     * Given the following input: (for class Category)
+     * [
+     *    {
+     *   	  "id":1
+     *      "name": "foo"
+     *    },
+     *    {
+     *       "name": "foobar",
+     *       "image": "barbaz"
+     *    }
+     * ]
+     *
+     * The method wil return:
+     *
+     * [ <- Array for each object in the array
+     *    [ <- an Array of errors
+     *      ValidationError {
+     *        ...
+     *        constraints: [ <- an array of constraints
+     *         ...
+     *        "name must be longer than 3 characters",
+     *        "image must not be undefined"
+     *        ]
+     *      }
+     *    ],
+     *    [ <- an Array of errors
+     *      ValidationError {
+     *        ...
+     *        constraints: [ <- an array of constraints
+     *         ...
+     *        "id must not be undefined"
+     *        ]
+     *      }
+     *    ]
+     * ]
      */
-    if (err.isArray) {
-      errors = formatValidationMessage(err[0]);
+    if (Array.isArray(obj)) {
+      for (const object of exception) {
+        const tempArr: any[] = [];
+        for (const error of object) {
+          tempArr.push(error.constraints);
+        }
+        errors.push(tempArr);
+      }
     } else {
-      errors = formatValidationMessage(err);
+      for (const error of exception) {
+        errors.push(error.constraints);
+      }
     }
   }
 

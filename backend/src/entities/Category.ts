@@ -12,16 +12,22 @@ import { Length, IsEmail, Allow, IsDefined } from 'class-validator';
 export class Category {
   @PrimaryGeneratedColumn()
   @IsDefined({
-    groups: ['requireId']
+    groups: ['creatingProducts']
   })
   id: number;
 
   @Column('text')
-  @Length(4, 50, { always: true })
+  @Length(4, 50, {
+    always: true,
+    groups: ['creatingCategories']
+  })
   name: string;
 
   @Column('text')
-  @Length(5, 255, { always: true })
+  @Length(5, 255, {
+    always: true,
+    groups: ['creatingCategories']
+  })
   image: string;
 
   @ManyToMany(() => Product, product => product.categories)

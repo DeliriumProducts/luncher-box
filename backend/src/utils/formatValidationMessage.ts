@@ -1,6 +1,7 @@
 import { ValidationError } from 'class-validator';
 
 /**
+ * @deprecated in favor of the indexing function
  * Takes an array of ValidationErrors which are returned by class-validator and formats them in a neater way.
  * @param errors
  */
