@@ -43,7 +43,7 @@ export class ProductController {
    * GET /products/:productId
    *
    * Gets a product based on its Id
-   * @param id
+   * @param productId
    */
   @Get('/:productId')
   @OnUndefined(ProductNotFoundError)
@@ -63,27 +63,23 @@ export class ProductController {
      * Validate the product and then the nested array of categories (productJSON.categories)
      * The creatingProducts group is necessary in order to validate that the categoryId has been sent
      */
-    const [product, firstErr] = await transformAndValidate(
+    const [product, productErrors] = await transformAndValidate(
       Product,
-      productJSON,
-      {
-        validator: { whitelist: true }
-      }
+      productJSON
     );
 
-    const [category, secondErr] = await transformAndValidate(
+    const [category, categoriesErrors] = await transformAndValidate(
       Category,
       productJSON.categories,
       {
         validator: {
-          whitelist: true,
           groups: ['creatingProducts']
         }
       }
     );
 
-    if (firstErr.length || secondErr.length) {
-      throw new EntityNotValidError(firstErr.concat(secondErr));
+    if (productErrors.length || categoriesErrors.length) {
+      throw new EntityNotValidError(productErrors.concat(categoriesErrors));
     } else {
       return this.productRepository.save(product);
     }
@@ -108,9 +104,8 @@ export class ProductController {
       });
 
       if (errors.length) {
-        throw new BadRequestError(
-          JSON.stringify(formatValidationMessage(errors))
-        );
+        throw new BadRequestError();
+        // JSON.stringify(formatValidationMessage(errors))
       } else {
         return await this.productRepository.update(id, newProduct);
       }

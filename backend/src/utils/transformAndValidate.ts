@@ -4,6 +4,7 @@ import {
   transformAndValidate,
   TransformValidationOptions
 } from 'class-transformer-validator';
+import deepmerge from 'deepmerge';
 
 /**
  * Wrapper around the transformAndValidate method which can be easily awaited without the need of a try/catch.
@@ -21,8 +22,28 @@ export default async function(
   const errors: any[] = [];
   let clsObj: any = {};
 
+  const defaultOptions: TransformValidationOptions = {
+    validator: {
+      whitelist: true
+    }
+  };
+
+  let modifiedOptions: TransformValidationOptions;
+  if (options) {
+    modifiedOptions = deepmerge(
+      {
+        validator: {
+          whitelist: true
+        }
+      },
+      options
+    );
+  } else {
+    modifiedOptions = defaultOptions;
+  }
+
   try {
-    clsObj = await transformAndValidate(cls, obj, options);
+    clsObj = await transformAndValidate(cls, obj, modifiedOptions);
   } catch (exception) {
     /**
      * If validating an array of objects, there is an array of errors for each object, so it has to be iterated over

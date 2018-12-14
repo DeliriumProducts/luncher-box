@@ -91,9 +91,8 @@ export class CategoryController {
         whitelist: true
       });
       if (errors.length) {
-        throw new BadRequestError(
-          JSON.stringify(formatValidationMessage(errors))
-        );
+        throw new BadRequestError();
+        // JSON.stringify(formatValidationMessage(errors))
       } else {
         await this.categoryRepository.update(id, newCategory);
         return {
