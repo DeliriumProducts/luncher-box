@@ -1,7 +1,7 @@
 import React, { Component, Fragment } from 'react';
 import LoginForm from '../components/LoginForm';
 import MenuBar from '../components/MenuBar';
-import { Layout, Affix } from 'antd';
+import { Affix } from 'antd';
 import styled from 'styled-components';
 
 const Container = styled.div`
@@ -14,17 +14,28 @@ const CenteredDiv = styled.div`
   justify-content: center;
 `;
 
-const { Header, Content, Footer } = Layout;
 export default class Dashboard extends Component {
+  state = {
+    isAuthenticated: false
+  };
+
+  handleLogin = success => {
+    this.setState({ isAuthenticated: success });
+  };
+
   render() {
+    const { isAuthenticated } = this.state;
     return (
       <Container>
-        <Affix offsetTop="0">
-          <MenuBar />
-        </Affix>
-        <CenteredDiv>
-          <LoginForm />
-        </CenteredDiv>
+        {isAuthenticated ? (
+          <Affix offsetTop="0">
+            <MenuBar />
+          </Affix>
+        ) : (
+          <CenteredDiv>
+            <LoginForm handleLogin={this.handleLogin} />
+          </CenteredDiv>
+        )}
       </Container>
     );
   }

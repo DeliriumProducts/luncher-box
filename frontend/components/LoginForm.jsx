@@ -27,17 +27,31 @@ const Container = styled.div`
 `;
 
 class LoginForm extends React.Component {
+  state = {
+    loading: false
+  };
+
   handleSubmit = e => {
     e.preventDefault();
     this.props.form.validateFields((err, values) => {
       if (!err) {
-        console.log('Received values of form: ', values);
+        this.setState(prev => ({
+          loading: !prev.loading
+        }));
       }
     });
   };
 
+  componentDidUpdate() {
+    const success = this.state.loading;
+    if (success) {
+      this.props.handleLogin(success);
+    }
+  }
+
   render() {
     const { getFieldDecorator } = this.props.form;
+    const { loading } = this.state;
     return (
       <Container>
         <Form onSubmit={this.handleSubmit} className="login-form">
@@ -91,6 +105,7 @@ class LoginForm extends React.Component {
               type="primary"
               htmlType="submit"
               className="login-form-button"
+              loading={loading}
             >
               Login
             </Button>

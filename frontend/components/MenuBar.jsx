@@ -1,8 +1,5 @@
 import { Menu, Icon } from 'antd';
 
-const SubMenu = Menu.SubMenu;
-const MenuItemGroup = Menu.ItemGroup;
-
 const MenuBar = () => {
   return (
     <Menu mode="horizontal" defaultSelectedKeys="dashboard">
