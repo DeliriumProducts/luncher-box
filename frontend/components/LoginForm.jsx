@@ -8,6 +8,7 @@ const Container = styled.div`
   padding: 30px;
   box-shadow: 0 0 10px 5px #ebebeb;
   border-radius: 10px;
+  max-height: 100%;
 
   #info {
     text-align: center;
