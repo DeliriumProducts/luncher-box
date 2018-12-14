@@ -78,6 +78,8 @@ export class ProductController {
       }
     );
 
+    product.categories = category;
+
     if (productErrors.length || categoriesErrors.length) {
       throw new EntityNotValidError(productErrors.concat(categoriesErrors));
     } else {

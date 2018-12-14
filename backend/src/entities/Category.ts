@@ -18,14 +18,12 @@ export class Category {
 
   @Column('text')
   @Length(4, 50, {
-    always: true,
     groups: ['creatingCategories']
   })
   name: string;
 
   @Column('text')
   @Length(5, 255, {
-    always: true,
     groups: ['creatingCategories']
   })
   image: string;

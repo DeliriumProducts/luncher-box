@@ -61,7 +61,6 @@ export class CategoryController {
   async create(@Body() categoryJSON: Category) {
     const [category, err] = await transformAndValidate(Category, categoryJSON, {
       validator: {
-        whitelist: true,
         groups: ['creatingCategories']
       }
     });
