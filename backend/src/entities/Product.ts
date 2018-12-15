@@ -26,7 +26,7 @@ export class Product {
   price: number;
 
   @ManyToMany(type => Category, category => category.products, {
-    cascade: true,
+    cascade: false,
     onDelete: 'CASCADE'
   })
   @Allow()

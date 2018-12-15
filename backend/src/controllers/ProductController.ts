@@ -74,23 +74,7 @@ export class ProductController {
      */
     const [product, productErrors] = await this.transformAndValidateProduct(productJSON);
 
-    const [category, categoriesErrors] = await this.transformAndValidateCategory(
-      productJSON.categories,
-      {
-        validator: {
-          /**
-           * Special validator group which enforces the requirement of the Id (check the entity for info)
-           * Strips out every other property but the Id
-           */
-          groups: ['creatingProducts']
-        }
-      }
-    );
-
-    /**
-     * Replace the cateogries after everything but the Id has been removed
-     */
-    product.categories = category;
+    const [category, categoriesErrors] = await this.transformAndValidateCategory(productJSON.categories);
 
     if (productErrors.length || categoriesErrors.length) {
       throw new EntityNotValidError(productErrors.concat(categoriesErrors));
