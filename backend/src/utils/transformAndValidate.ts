@@ -4,18 +4,17 @@ import { transformAndValidate, TransformValidationOptions } from 'class-transfor
 import deepmerge from 'deepmerge';
 
 /**
- * Wrapper around the transformAndValidate method which can be easily awaited without the need of a try/catch.
+ * HOF / Curry func around the transformAndValidate method which can be easily awaited without the need of a try/catch.
  * Returns an array of the finished object and an array of the validation messages.
  *
  * @param cls
  * @param obj
  * @param options
  */
-export default async function(
-  cls: ClassType<{}>,
+export default (cls: ClassType<{}>) => async (
   obj: object | Array<{}>,
   options?: TransformValidationOptions
-): Promise<[any, Array<[]>]> {
+): Promise<[any, Array<[]>]> => {
   const errors: any[] = [];
   let clsObj: any = {};
 
@@ -97,4 +96,4 @@ export default async function(
   }
 
   return [clsObj, errors];
-}
+};

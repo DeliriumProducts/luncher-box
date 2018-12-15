@@ -1,3 +1,4 @@
+import { TransformValidationOptions } from 'class-transformer-validator';
 import { QueryResponse } from '../types';
 import { CategoryNotFoundError, EntityNotValidError } from '../utils';
 import { Repository, getRepository } from 'typeorm';
@@ -20,12 +21,17 @@ import { transformAndValidate } from '../utils';
 @JsonController('/categories')
 export class CategoryController {
   private categoryRepository: Repository<Category>;
+  private transformAndValidateCategory: (
+    obj: object | Array<{}>,
+    options?: TransformValidationOptions
+  ) => Promise<[any, Array<[]>]>;
 
   /**
    * Load the Category repository
    */
   constructor() {
     this.categoryRepository = getRepository(Category);
+    this.transformAndValidateCategory = transformAndValidate(Category);
   }
 
   /**
@@ -58,7 +64,7 @@ export class CategoryController {
    */
   @Post()
   async create(@Body() categoryJSON: Category) {
-    const [category, err] = await transformAndValidate(Category, categoryJSON, {
+    const [category, err] = await this.transformAndValidateCategory(categoryJSON, {
       validator: {
         groups: ['creatingCategories']
       }
@@ -86,7 +92,7 @@ export class CategoryController {
      */
     const oldCategory: QueryResponse<Category> = await this.categoryRepository.findOne(id);
     if (oldCategory) {
-      const [newCategory, err] = await transformAndValidate(Category, newCategoryJSON, {
+      const [newCategory, err] = await this.transformAndValidateCategory(newCategoryJSON, {
         validator: {
           skipMissingProperties: true
         }

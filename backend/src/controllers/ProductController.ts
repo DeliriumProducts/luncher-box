@@ -1,3 +1,4 @@
+import { TransformValidationOptions } from 'class-transformer-validator';
 import { QueryResponse } from '../types';
 import { Category } from '../entities';
 import { ProductNotFoundError, EntityNotValidError } from '../utils';
@@ -20,12 +21,22 @@ import { transformAndValidate } from '../utils';
 @JsonController('/products')
 export class ProductController {
   private productRepository: Repository<Product>;
+  private transformAndValidateProduct: (
+    obj: object | Array<{}>,
+    options?: TransformValidationOptions
+  ) => Promise<[any, Array<[]>]>;
+  private transformAndValidateCategory: (
+    obj: object | Array<{}>,
+    options?: TransformValidationOptions
+  ) => Promise<[any, Array<[]>]>;
 
   /**
    * Load the Product repository
    */
   constructor() {
     this.productRepository = getRepository(Product);
+    this.transformAndValidateProduct = transformAndValidate(Product);
+    this.transformAndValidateCategory = transformAndValidate(Category);
   }
 
   /**
@@ -61,10 +72,9 @@ export class ProductController {
     /**
      * Validate the product and then the nested array of categories (productJSON.categories)
      */
-    const [product, productErrors] = await transformAndValidate(Product, productJSON);
+    const [product, productErrors] = await this.transformAndValidateProduct(productJSON);
 
-    const [category, categoriesErrors] = await transformAndValidate(
-      Category,
+    const [category, categoriesErrors] = await this.transformAndValidateCategory(
       productJSON.categories,
       {
         validator: {
@@ -104,7 +114,7 @@ export class ProductController {
      */
     const oldProduct: QueryResponse<Product> = await this.productRepository.findOne(id);
     if (oldProduct) {
-      const [newProduct, err] = await transformAndValidate(Product, newProductJSON, {
+      const [newProduct, err] = await this.transformAndValidateProduct(newProductJSON, {
         validator: {
           skipMissingProperties: true
         }
