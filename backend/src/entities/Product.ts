@@ -1,20 +1,6 @@
-import {
-  Entity,
-  PrimaryGeneratedColumn,
-  Column,
-  ManyToMany,
-  JoinTable
-} from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToMany, JoinTable } from 'typeorm';
 import { Category } from './Category';
-import {
-  Length,
-  IsNumber,
-  Min,
-  Max,
-  Allow,
-  ValidateNested,
-  MaxLength
-} from 'class-validator';
+import { Length, IsNumber, Min, Max, Allow, ValidateNested, MaxLength } from 'class-validator';
 
 @Entity()
 export class Product {

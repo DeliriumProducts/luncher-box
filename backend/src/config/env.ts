@@ -46,8 +46,7 @@ export const OWNER_PASS = process.env.OWNER_PASS || 'example-password';
 /**
  * Restaurant owner credentials (e-mail TO)
  */
-export const VERIFIER_EMAIL =
-  process.env.VERIFIER_EMAIL || 'example-reciever@mail.com';
+export const VERIFIER_EMAIL = process.env.VERIFIER_EMAIL || 'example-reciever@mail.com';
 
 export default {
   ENV,

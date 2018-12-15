@@ -1,9 +1,6 @@
 import { ValidationError } from 'class-validator';
 import { ClassType } from './../types/classtype.d';
-import {
-  transformAndValidate,
-  TransformValidationOptions
-} from 'class-transformer-validator';
+import { transformAndValidate, TransformValidationOptions } from 'class-transformer-validator';
 import deepmerge from 'deepmerge';
 
 /**

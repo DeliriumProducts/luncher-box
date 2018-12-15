@@ -15,7 +15,6 @@ import {
   Delete
 } from 'routing-controllers';
 import { ValidationError } from 'class-validator/validation/ValidationError';
-import { validate } from 'class-validator';
 import { transformAndValidate } from '../utils';
 
 @JsonController('/categories')
@@ -80,18 +79,20 @@ export class CategoryController {
    * @param newCategory
    */
   @Patch('/:categoryId')
-  async update(@Param('categoryId') id: number, @Body() newCategory: Category) {
-    const oldCategory: QueryResponse<
-      Category
-    > = await this.categoryRepository.findOne(id);
+  @OnUndefined(CategoryNotFoundError)
+  async update(@Param('categoryId') id: number, @Body() newCategoryJSON: Category) {
+    /**
+     * Check if the category exists before updating it
+     */
+    const oldCategory: QueryResponse<Category> = await this.categoryRepository.findOne(id);
     if (oldCategory) {
-      const errors: ValidationError[] = await validate(newCategory, {
-        skipMissingProperties: true,
-        whitelist: true
+      const [newCategory, err] = await transformAndValidate(Category, newCategoryJSON, {
+        validator: {
+          skipMissingProperties: true
+        }
       });
-      if (errors.length) {
-        throw new BadRequestError();
-        // JSON.stringify(formatValidationMessage(errors))
+      if (err.length) {
+        throw new EntityNotValidError(err);
       } else {
         await this.categoryRepository.update(id, newCategory);
         return {
@@ -99,7 +100,7 @@ export class CategoryController {
         };
       }
     } else {
-      throw new CategoryNotFoundError();
+      return undefined;
     }
   }
 
@@ -110,17 +111,19 @@ export class CategoryController {
    * @param id
    */
   @Delete('/:categoryId')
+  @OnUndefined(CategoryNotFoundError)
   async delete(@Param('categoryId') id: number) {
-    const categoryToBeDeleted: QueryResponse<
-      Category
-    > = await this.categoryRepository.findOne(id);
+    /**
+     * Check if the category exists before deleting it
+     */
+    const categoryToBeDeleted: QueryResponse<Category> = await this.categoryRepository.findOne(id);
     if (categoryToBeDeleted) {
       await this.categoryRepository.delete(id);
       return {
         status: 'Success!'
       };
     } else {
-      throw new CategoryNotFoundError();
+      return undefined;
     }
   }
 }

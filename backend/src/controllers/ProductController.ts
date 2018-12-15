@@ -15,7 +15,6 @@ import {
   BodyParam
 } from 'routing-controllers';
 import { Repository, getRepository } from 'typeorm';
-import { ValidationError, validate } from 'class-validator';
 import { transformAndValidate } from '../utils';
 
 @JsonController('/products')
@@ -61,23 +60,26 @@ export class ProductController {
   async create(@Body() productJSON: Product) {
     /**
      * Validate the product and then the nested array of categories (productJSON.categories)
-     * The creatingProducts group is necessary in order to validate that the categoryId has been sent
      */
-    const [product, productErrors] = await transformAndValidate(
-      Product,
-      productJSON
-    );
+    const [product, productErrors] = await transformAndValidate(Product, productJSON);
 
     const [category, categoriesErrors] = await transformAndValidate(
       Category,
       productJSON.categories,
       {
         validator: {
+          /**
+           * Special validator group which enforces the requirement of the Id (check the entity for info)
+           * Strips out every other property but the Id
+           */
           groups: ['creatingProducts']
         }
       }
     );
 
+    /**
+     * Replace the cateogries after everything but the Id has been removed
+     */
     product.categories = category;
 
     if (productErrors.length || categoriesErrors.length) {
@@ -95,24 +97,26 @@ export class ProductController {
    * @param newProduct
    */
   @Patch('/:productId')
-  async update(@Param('productId') id: number, @Body() newProduct: Product) {
-    const oldProduct: QueryResponse<
-      Product
-    > = await this.productRepository.findOne(id);
+  @OnUndefined(ProductNotFoundError)
+  async update(@Param('productId') id: number, @Body() newProductJSON: Product) {
+    /**
+     * Check if the product exists before updating it
+     */
+    const oldProduct: QueryResponse<Product> = await this.productRepository.findOne(id);
     if (oldProduct) {
-      const errors: ValidationError[] = await validate(newProduct, {
-        skipMissingProperties: true,
-        whitelist: true
+      const [newProduct, err] = await transformAndValidate(Product, newProductJSON, {
+        validator: {
+          skipMissingProperties: true
+        }
       });
 
-      if (errors.length) {
-        throw new BadRequestError();
-        // JSON.stringify(formatValidationMessage(errors))
+      if (err.length) {
+        throw new EntityNotValidError(err);
       } else {
-        return await this.productRepository.update(id, newProduct);
+        return this.productRepository.update(id, newProduct);
       }
     } else {
-      throw new ProductNotFoundError();
+      return undefined;
     }
   }
 
@@ -123,17 +127,16 @@ export class ProductController {
    * @param id
    */
   @Delete('/:productId')
+  @OnUndefined(ProductNotFoundError)
   async delete(@Param('productId') id: number) {
-    const productToBeDeleted: QueryResponse<
-      Product
-    > = await this.productRepository.findOne(id);
+    /**
+     * Check if the product exists before deleting it
+     */
+    const productToBeDeleted: QueryResponse<Product> = await this.productRepository.findOne(id);
     if (productToBeDeleted) {
-      await this.productRepository.delete(id);
-      return {
-        status: 'Success!'
-      };
+      return this.productRepository.delete(id);
     } else {
-      throw new ProductNotFoundError();
+      return undefined;
     }
   }
 }

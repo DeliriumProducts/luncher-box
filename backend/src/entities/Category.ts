@@ -1,11 +1,5 @@
 import { Product } from './Product';
-import {
-  Entity,
-  PrimaryGeneratedColumn,
-  Column,
-  MinKey,
-  ManyToMany
-} from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, MinKey, ManyToMany } from 'typeorm';
 import { Length, IsEmail, Allow, IsDefined } from 'class-validator';
 
 @Entity()
