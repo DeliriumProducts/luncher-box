@@ -113,7 +113,10 @@ export class ProductController {
       if (err.length) {
         throw new EntityNotValidError(err);
       } else {
-        return this.productRepository.update(id, newProduct);
+        await this.productRepository.update(id, newProduct);
+        return {
+          status: 'Success!'
+        };
       }
     } else {
       return undefined;
@@ -134,7 +137,10 @@ export class ProductController {
      */
     const productToBeDeleted: QueryResponse<Product> = await this.productRepository.findOne(id);
     if (productToBeDeleted) {
-      return this.productRepository.delete(id);
+      await this.productRepository.delete(id);
+      return {
+        status: 'Success!'
+      };
     } else {
       return undefined;
     }
