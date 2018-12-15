@@ -1,3 +1,4 @@
+import { Product } from './../entities/Product';
 import { TransformValidationOptions } from 'class-transformer-validator';
 import { QueryResponse } from '../types';
 import { CategoryNotFoundError, EntityNotValidError } from '../utils';
@@ -21,6 +22,7 @@ import { transformAndValidate } from '../utils';
 @JsonController('/categories')
 export class CategoryController {
   private categoryRepository: Repository<Category>;
+  private productRepository: Repository<Product>;
   private transformAndValidateCategory: (
     obj: object | Array<{}>,
     options?: TransformValidationOptions
@@ -47,13 +49,15 @@ export class CategoryController {
   /**
    * GET /categories/:categoryId
    *
-   * Gets a category based on its Id
+   * Gets a category and its products based on the Id
    * @param id
    */
   @Get('/:categoryId')
   @OnUndefined(CategoryNotFoundError)
   getOne(@Param('categoryId') id: number) {
-    return this.categoryRepository.findOne(id);
+    return this.categoryRepository.findOne(id, {
+      relations: ['products']
+    });
   }
 
   /**
