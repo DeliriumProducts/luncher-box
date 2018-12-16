@@ -1,5 +1,5 @@
-import { ValidationError } from 'class-validator';
-import { ClassType } from './../types/classtype.d';
+import { TransformAndValidateTuple } from '../types';
+import { ClassType } from '../types/classtype.d';
 import { transformAndValidate, TransformValidationOptions } from 'class-transformer-validator';
 import deepmerge from 'deepmerge';
 
@@ -11,12 +11,12 @@ import deepmerge from 'deepmerge';
  * @param obj
  * @param options
  */
-export default (cls: ClassType<{}>) => async (
+export default <T extends object>(cls: ClassType<T>) => async (
   obj: object | Array<{}>,
   options?: TransformValidationOptions
-): Promise<[any, Array<[]>]> => {
-  const errors: any[] = [];
-  let clsObj: any = {};
+): TransformAndValidateTuple<T> => {
+  const errors: Array<Array<{}>> = [];
+  let clsObj: T = new cls();
 
   const defaultOptions: TransformValidationOptions = {
     validator: {

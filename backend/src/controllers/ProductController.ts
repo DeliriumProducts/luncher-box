@@ -2,6 +2,7 @@ import { TransformValidationOptions } from 'class-transformer-validator';
 import { QueryResponse } from '../types';
 import { Category } from '../entities';
 import { ProductNotFoundError, EntityNotValidError } from '../utils';
+import { TransformAndValidateTuple } from '../types';
 import { Product } from '../entities';
 import {
   JsonController,
@@ -10,10 +11,8 @@ import {
   Param,
   Post,
   Body,
-  BadRequestError,
   Patch,
-  Delete,
-  BodyParam
+  Delete
 } from 'routing-controllers';
 import { Repository, getRepository } from 'typeorm';
 import { transformAndValidate } from '../utils';
@@ -24,11 +23,11 @@ export class ProductController {
   private transformAndValidateProduct: (
     obj: object | Array<{}>,
     options?: TransformValidationOptions
-  ) => Promise<[any, Array<[]>]>;
+  ) => TransformAndValidateTuple<Product>;
   private transformAndValidateCategory: (
     obj: object | Array<{}>,
     options?: TransformValidationOptions
-  ) => Promise<[any, Array<[]>]>;
+  ) => TransformAndValidateTuple<Category>;
 
   /**
    * Load the Product repository
@@ -74,7 +73,9 @@ export class ProductController {
      */
     const [product, productErrors] = await this.transformAndValidateProduct(productJSON);
 
-    const [category, categoriesErrors] = await this.transformAndValidateCategory(productJSON.categories);
+    const [category, categoriesErrors] = await this.transformAndValidateCategory(
+      productJSON.categories
+    );
 
     if (productErrors.length || categoriesErrors.length) {
       throw new EntityNotValidError(productErrors.concat(categoriesErrors));
@@ -88,7 +89,7 @@ export class ProductController {
    *
    * Updates a product based on the request's body and id paramter
    * @param id
-   * @param newProduct
+   * @param newProductJSON
    */
   @Patch('/:productId')
   @OnUndefined(ProductNotFoundError)

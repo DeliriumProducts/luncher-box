@@ -1,3 +1,4 @@
+import { TransformAndValidateTuple } from '../types';
 import { Product } from './../entities/Product';
 import { TransformValidationOptions } from 'class-transformer-validator';
 import { QueryResponse } from '../types';
@@ -9,24 +10,20 @@ import {
   JsonController,
   Post,
   OnUndefined,
-  BadRequestError,
   Patch,
   Param,
   Body,
-  Put,
   Delete
 } from 'routing-controllers';
-import { ValidationError } from 'class-validator/validation/ValidationError';
 import { transformAndValidate } from '../utils';
 
 @JsonController('/categories')
 export class CategoryController {
   private categoryRepository: Repository<Category>;
-  private productRepository: Repository<Product>;
   private transformAndValidateCategory: (
     obj: object | Array<{}>,
     options?: TransformValidationOptions
-  ) => Promise<[any, Array<[]>]>;
+  ) => TransformAndValidateTuple<Category>;
 
   /**
    * Load the Category repository
@@ -68,11 +65,7 @@ export class CategoryController {
    */
   @Post()
   async create(@Body() categoryJSON: Category) {
-    const [category, err] = await this.transformAndValidateCategory(categoryJSON, {
-      validator: {
-        groups: ['creatingCategories']
-      }
-    });
+    const [category, err] = await this.transformAndValidateCategory(categoryJSON);
 
     if (err.length) {
       throw new EntityNotValidError(err);
