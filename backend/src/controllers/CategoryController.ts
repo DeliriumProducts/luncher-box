@@ -68,11 +68,13 @@ export class CategoryController {
   @Post()
   async create(@Body() categoryJSON: Category) {
     const [category, err] = await this.transformAndValidateCategory(categoryJSON);
-
     if (err.length) {
       throw new EntityNotValidError(err);
     } else {
-      return await this.categoryRepository.save(category);
+      await this.categoryRepository.save(category);
+      return {
+        status: 'New category created!'
+      };
     }
   }
 
@@ -91,17 +93,13 @@ export class CategoryController {
      */
     const oldCategory: QueryResponse<Category> = await this.categoryRepository.findOne(id);
     if (oldCategory) {
-      const [newCategory, err] = await this.transformAndValidateCategory(newCategoryJSON, {
-        validator: {
-          skipMissingProperties: true
-        }
-      });
+      const [newCategory, err] = await this.transformAndValidateCategory(newCategoryJSON);
       if (err.length) {
         throw new EntityNotValidError(err);
       } else {
         await this.categoryRepository.update(id, newCategory);
         return {
-          status: 'Success!'
+          status: 'Category updated!'
         };
       }
     } else {
@@ -138,7 +136,7 @@ export class CategoryController {
       }
       await this.categoryRepository.delete(id);
       return {
-        status: 'Success!'
+        status: 'Category deleted!'
       };
     } else {
       return undefined;

@@ -73,11 +73,9 @@ export class ProductController {
      * Validate the product and then the nested array of categories (productJSON.categories)
      */
     const [product, productErrors] = await this.transformAndValidateProduct(productJSON);
-
     const [category, categoriesErrors] = await this.transformAndValidateCategory(
       productJSON.categories
     );
-
     if (productErrors.length || categoriesErrors.length) {
       throw new EntityNotValidError(productErrors.concat(categoriesErrors));
     } else {
@@ -85,7 +83,10 @@ export class ProductController {
        * Throw an error if a category doesn't exist when creating a product
        */
       try {
-        return await this.productRepository.save(product);
+        await this.productRepository.save(product);
+        return {
+          status: 'New product created!'
+        };
       } catch (error) {
         throw new CategoryNotFoundError();
       }
@@ -107,18 +108,13 @@ export class ProductController {
      */
     const oldProduct: QueryResponse<Product> = await this.productRepository.findOne(id);
     if (oldProduct) {
-      const [newProduct, err] = await this.transformAndValidateProduct(newProductJSON, {
-        validator: {
-          skipMissingProperties: true
-        }
-      });
-
+      const [newProduct, err] = await this.transformAndValidateProduct(newProductJSON);
       if (err.length) {
         throw new EntityNotValidError(err);
       } else {
         await this.productRepository.update(id, newProduct);
         return {
-          status: 'Success!'
+          status: 'Product edited!'
         };
       }
     } else {
@@ -142,7 +138,7 @@ export class ProductController {
     if (productToBeDeleted) {
       await this.productRepository.delete(id);
       return {
-        status: 'Success!'
+        status: 'Product deleted!'
       };
     } else {
       return undefined;
