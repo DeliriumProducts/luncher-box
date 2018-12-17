@@ -41,8 +41,8 @@ export class CategoryController {
    * Gets all categories
    */
   @Get()
-  getAll() {
-    return this.categoryRepository.find();
+  async getAll() {
+    return await this.categoryRepository.find();
   }
 
   /**
@@ -53,8 +53,8 @@ export class CategoryController {
    */
   @Get('/:categoryId')
   @OnUndefined(CategoryNotFoundError)
-  getOne(@Param('categoryId') id: number) {
-    return this.categoryRepository.findOne(id, {
+  async getOne(@Param('categoryId') id: number) {
+    return await this.categoryRepository.findOne(id, {
       relations: ['products']
     });
   }
@@ -72,7 +72,7 @@ export class CategoryController {
     if (err.length) {
       throw new EntityNotValidError(err);
     } else {
-      return this.categoryRepository.save(category);
+      return await this.categoryRepository.save(category);
     }
   }
 
