@@ -1,10 +1,9 @@
-import { Button, Checkbox, Form } from 'semantic-ui-react';
+import { Form, Icon, Input, Button, Checkbox } from 'antd';
 import styled from 'styled-components';
-import 'semantic-ui-css/semantic.min.css';
 
-// TODO: MAKE CENTERING WORK ON ANY DEVICE!!!
+const FormItem = Form.Item;
 
-const FormContainer = styled.div`
+const Container = styled.div`
   background-color: rgb(245, 245, 245);
   padding: 30px;
   box-shadow: 0 0 10px 5px #ebebeb;
@@ -12,48 +11,110 @@ const FormContainer = styled.div`
 
   #info {
     text-align: center;
-    font-weight: 700;
-    margin: 10px;
   }
+
   .login-form {
-    width: 20vw;
-
-    @media only screen and (max-width: 768px) {
-      width: 70vw;
-    }
+    max-width: 300px;
   }
 
-  .login-forgot {
+  .login-form-forgot {
     float: right;
-    cursor: pointer;
   }
 
-  .login-button {
+  .login-form-button {
     width: 100%;
   }
 `;
 
-const LoginForm = () => (
-  <FormContainer>
-    <Form className="login-form">
-      <p id="info">Login to Create, Update or Delete products</p>
-      <Form.Field>
-        <label>Email</label>
-        <input placeholder="Please type your email" type="email" />
-      </Form.Field>
-      <Form.Field>
-        <label>Password</label>
-        <input placeholder="Please type your password" type="password" />
-      </Form.Field>
-      <Form.Field>
-        <Checkbox label="Remember me" />
-        <a className="login-forgot">Forgot password</a>
-      </Form.Field>
-      <Button primary type="submit" className="login-button">
-        Login
-      </Button>
-    </Form>
-  </FormContainer>
-);
+class LoginForm extends React.Component {
+  state = {
+    loading: false
+  };
 
-export default LoginForm;
+  handleSubmit = e => {
+    e.preventDefault();
+    this.props.form.validateFields((err, values) => {
+      if (!err) {
+        this.setState(prev => ({
+          loading: !prev.loading
+        }));
+      }
+    });
+  };
+
+  componentDidUpdate() {
+    const success = this.state.loading;
+    if (success) {
+      this.props.handleLogin(success);
+    }
+  }
+
+  render() {
+    const { getFieldDecorator } = this.props.form;
+    const { loading } = this.state;
+    return (
+      <Container>
+        <Form onSubmit={this.handleSubmit} className="login-form">
+          <p id="info">Login to Create, Update or Delete products</p>
+          <FormItem>
+            {getFieldDecorator('email', {
+              rules: [
+                {
+                  type: 'email',
+                  message: 'The input is not valid Email!'
+                },
+                {
+                  required: true,
+                  message: 'Please input your Email!'
+                }
+              ]
+            })(
+              <Input
+                prefix={
+                  <Icon type="mail" style={{ color: 'rgba(0,0,0,.25)' }} />
+                }
+                type="email"
+                placeholder="Email"
+              />
+            )}
+          </FormItem>
+          <FormItem>
+            {getFieldDecorator('password', {
+              rules: [
+                { required: true, message: 'Please input your Password!' }
+              ]
+            })(
+              <Input
+                prefix={
+                  <Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />
+                }
+                type="password"
+                placeholder="Password"
+              />
+            )}
+          </FormItem>
+          <FormItem>
+            {getFieldDecorator('remember', {
+              valuePropName: 'checked',
+              initialValue: true
+            })(<Checkbox>Remember me</Checkbox>)}
+            <a className="login-form-forgot" href="">
+              Forgot password
+            </a>
+            <Button
+              type="primary"
+              htmlType="submit"
+              className="login-form-button"
+              loading={loading}
+            >
+              Login
+            </Button>
+            Or <a href="">register now!</a>
+          </FormItem>
+        </Form>
+      </Container>
+    );
+  }
+}
+
+export default Form.create()(LoginForm);

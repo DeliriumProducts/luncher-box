@@ -1,15 +1,20 @@
 {
   "presets": ["next/babel"],
   "plugins": [
-    [
-      "styled-jsx/babel"
-    ],
+    ["styled-jsx/babel"],
     [
       "styled-components",
       {
         "ssr": true,
         "displayName": true,
         "preprocess": false
+      }
+    ],
+    [
+      "import",
+      {
+        "libraryName": "antd",
+        "style": "css"
       }
     ]
   ]
