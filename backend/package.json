@@ -16,6 +16,9 @@
     "@types/node": "^10.12.12",
     "@types/passport": "^0.4.7",
     "@types/passport-local": "^1.0.33",
+    "husky": "^1.2.1",
+    "prettier": "^1.15.3",
+    "pretty-quick": "^1.8.0",
     "ts-node": "7.0.1",
     "typescript": "^3.2.2"
   },
@@ -30,6 +33,7 @@
     "compression": "^1.7.3",
     "cookie-parser": "^1.4.3",
     "cors": "^2.8.5",
+    "deepmerge": "^3.0.0",
     "dotenv": "^6.2.0",
     "express": "^4.15.4",
     "express-session": "^1.15.6",
@@ -50,5 +54,10 @@
   },
   "scripts": {
     "start": "NODE_ENV=development nodemon --exec ts-node src/index.ts"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "pretty-quick --staged"
+    }
   }
 }
