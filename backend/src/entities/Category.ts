@@ -5,7 +5,6 @@ import { Length, IsEmail, Allow, IsDefined } from 'class-validator';
 @Entity()
 export class Category {
   @PrimaryGeneratedColumn()
-  @IsDefined()
   id: number;
 
   @Column('text')

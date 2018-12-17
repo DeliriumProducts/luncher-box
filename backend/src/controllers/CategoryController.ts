@@ -20,6 +20,7 @@ import { transformAndValidate } from '../utils';
 @JsonController('/categories')
 export class CategoryController {
   private categoryRepository: Repository<Category>;
+  private productRepository: Repository<Product>;
   private transformAndValidateCategory: (
     obj: object | Array<{}>,
     options?: TransformValidationOptions
@@ -30,6 +31,7 @@ export class CategoryController {
    */
   constructor() {
     this.categoryRepository = getRepository(Category);
+    this.productRepository = getRepository(Product);
     this.transformAndValidateCategory = transformAndValidate(Category);
   }
 
@@ -119,8 +121,21 @@ export class CategoryController {
     /**
      * Check if the category exists before deleting it
      */
-    const categoryToBeDeleted: QueryResponse<Category> = await this.categoryRepository.findOne(id);
+    const categoryToBeDeleted: QueryResponse<Category> = await this.categoryRepository.findOne(id, {
+      relations: ['products', 'products.categories']
+    });
     if (categoryToBeDeleted) {
+      /**
+       * Remove products from the category before deleting it
+       */
+      for (const product of categoryToBeDeleted.products) {
+        /**
+         * Remove the product if it doesn't belong to any other categories
+         */
+        if (product.categories.length <= 2) {
+          await this.productRepository.remove(product);
+        }
+      }
       await this.categoryRepository.delete(id);
       return {
         status: 'Success!'

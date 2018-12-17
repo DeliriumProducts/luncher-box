@@ -34,8 +34,8 @@ export class ProductController {
    */
   constructor() {
     this.productRepository = getRepository(Product);
-    this.transformAndValidateProduct = transformAndValidate(Product);
     this.transformAndValidateCategory = transformAndValidate(Category);
+    this.transformAndValidateProduct = transformAndValidate(Product);
   }
 
   /**
