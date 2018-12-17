@@ -132,7 +132,7 @@ export class CategoryController {
         /**
          * Remove the product if it doesn't belong to any other categories
          */
-        if (product.categories.length <= 2) {
+        if (product.categories.length < 2) {
           await this.productRepository.remove(product);
         }
       }
