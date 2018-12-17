@@ -12,8 +12,8 @@ import {
   Param,
   Post,
   Body,
-  Patch,
-  Delete
+  Delete,
+  Put
 } from 'routing-controllers';
 import { Repository, getRepository } from 'typeorm';
 import { transformAndValidate } from '../utils';
@@ -74,8 +74,16 @@ export class ProductController {
      */
     const [product, productErrors] = await this.transformAndValidateProduct(productJSON);
     const [category, categoriesErrors] = await this.transformAndValidateCategory(
-      productJSON.categories
+      productJSON.categories,
+      {
+        validator: {
+          groups: ['creatingProduct']
+        }
+      }
     );
+
+    console.log(category);
+
     if (productErrors.length || categoriesErrors.length) {
       throw new EntityNotValidError(productErrors.concat(categoriesErrors));
     } else {
@@ -94,13 +102,13 @@ export class ProductController {
   }
 
   /**
-   * PATCH /products/:productId
+   *  PUT /products/:productId
    *
    * Updates a product based on the request's body and id paramter
    * @param id
    * @param newProductJSON
    */
-  @Patch('/:productId')
+  @Put('/:productId')
   @OnUndefined(ProductNotFoundError)
   async update(@Param('productId') id: number, @Body() newProductJSON: Product) {
     /**

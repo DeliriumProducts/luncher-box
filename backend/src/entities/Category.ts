@@ -5,14 +5,21 @@ import { Length, IsEmail, Allow, IsDefined } from 'class-validator';
 @Entity()
 export class Category {
   @PrimaryGeneratedColumn()
+  @IsDefined({
+    groups: ['creatingProduct']
+  })
   id: number;
 
   @Column('text')
-  @Length(4, 50)
+  @Length(4, 50, {
+    groups: ['creatingCategory']
+  })
   name: string;
 
   @Column('text')
-  @Length(5, 255)
+  @Length(5, 255, {
+    groups: ['creatingCategory']
+  })
   image: string;
 
   @ManyToMany(() => Product, product => product.categories)

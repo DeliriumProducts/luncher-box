@@ -10,10 +10,10 @@ import {
   JsonController,
   Post,
   OnUndefined,
-  Patch,
   Param,
   Body,
-  Delete
+  Delete,
+  Put
 } from 'routing-controllers';
 import { transformAndValidate } from '../utils';
 
@@ -67,7 +67,11 @@ export class CategoryController {
    */
   @Post()
   async create(@Body() categoryJSON: Category) {
-    const [category, err] = await this.transformAndValidateCategory(categoryJSON);
+    const [category, err] = await this.transformAndValidateCategory(categoryJSON, {
+      validator: {
+        groups: ['creatingCategory']
+      }
+    });
     if (err.length) {
       throw new EntityNotValidError(err);
     } else {
@@ -79,13 +83,13 @@ export class CategoryController {
   }
 
   /**
-   * PATCH /categories/:categoryId
+   *  PUT /categories/:categoryId
    *
    * Updates a category based on the request's body and id paramter
    * @param id
    * @param newCategory
    */
-  @Patch('/:categoryId')
+  @Put('/:categoryId')
   @OnUndefined(CategoryNotFoundError)
   async update(@Param('categoryId') id: number, @Body() newCategoryJSON: Category) {
     /**
@@ -93,7 +97,11 @@ export class CategoryController {
      */
     const oldCategory: QueryResponse<Category> = await this.categoryRepository.findOne(id);
     if (oldCategory) {
-      const [newCategory, err] = await this.transformAndValidateCategory(newCategoryJSON);
+      const [newCategory, err] = await this.transformAndValidateCategory(newCategoryJSON, {
+        validator: {
+          groups: ['creatingCategory']
+        }
+      });
       if (err.length) {
         throw new EntityNotValidError(err);
       } else {
