@@ -15,7 +15,7 @@ export default <T extends object>(cls: ClassType<T>) => async (
   obj: object | Array<{}>,
   options?: TransformValidationOptions
 ): TransformAndValidateTuple<T> => {
-  const errors: Array<Array<{}>> = [];
+  const errors: Array<Array<{}> | {}> = [];
   let clsObj: T = new cls();
 
   const defaultOptions: TransformValidationOptions = {
