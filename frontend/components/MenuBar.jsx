@@ -1,13 +1,14 @@
 import { Menu, Icon } from 'antd';
+import Link from 'next/link';
 
-const MenuBar = () => {
+const MenuBar = ({ selectedKey }) => {
   return (
-    <Menu mode="horizontal" defaultSelectedKeys="dashboard">
+    <Menu mode="horizontal" defaultSelectedKeys={selectedKey}>
       <Menu.Item key="dashboard">
         <Icon type="dashboard" />
         Dashboard
       </Menu.Item>
-      <Menu.Item key="Orders">
+      <Menu.Item key="orders">
         <Icon type="table" />
         Orders
       </Menu.Item>

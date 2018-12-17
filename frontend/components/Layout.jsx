@@ -18,6 +18,7 @@ class Layout extends React.Component {
   handleLogin = success => {
     this.setState({ isAuthenticated: success });
   };
+
   render() {
     const { isAuthenticated } = this.state;
     return (
