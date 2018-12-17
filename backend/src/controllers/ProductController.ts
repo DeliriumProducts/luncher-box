@@ -1,3 +1,4 @@
+import { CategoryNotFoundError } from './../utils/httpErrors';
 import { TransformValidationOptions } from 'class-transformer-validator';
 import { QueryResponse } from '../types';
 import { Category } from '../entities';
@@ -44,8 +45,8 @@ export class ProductController {
    * Gets all products
    */
   @Get()
-  getAll() {
-    return this.productRepository.find();
+  async getAll() {
+    return await this.productRepository.find();
   }
 
   /**
@@ -56,8 +57,8 @@ export class ProductController {
    */
   @Get('/:productId')
   @OnUndefined(ProductNotFoundError)
-  getOne(@Param('productId') id: number) {
-    return this.productRepository.findOne(id);
+  async getOne(@Param('productId') id: number) {
+    return await this.productRepository.findOne(id);
   }
 
   /**
@@ -80,7 +81,14 @@ export class ProductController {
     if (productErrors.length || categoriesErrors.length) {
       throw new EntityNotValidError(productErrors.concat(categoriesErrors));
     } else {
-      return this.productRepository.save(product);
+      /**
+       * Throw an error if a category doesn't exist when creating a product
+       */
+      try {
+        return await this.productRepository.save(product);
+      } catch (error) {
+        throw new CategoryNotFoundError();
+      }
     }
   }
 
