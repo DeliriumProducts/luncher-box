@@ -1,0 +1,1 @@
+{"version":3,"file":"static/webpack/static/development/pages/index.js.5d3fa74c0cdff5c4124f.hot-update.js","sources":["webpack:///./socket.js"],"sourcesContent":["import io from 'socket.io-client';\nconst socket = io('http://192.168.43.198:8000');\nexport default socket;\n"],"mappings":";;;;;;;;;;AAAA;AAAA;AAAA;AAAA;AACA;AACA;;;;A","sourceRoot":""}

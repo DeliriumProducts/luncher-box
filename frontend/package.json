@@ -3,7 +3,8 @@
   "scripts": {
     "dev": "next",
     "build": "next build",
-    "start": "next start"
+    "start": "next start",
+    "export": "next export"
   },
   "dependencies": {
     "@zeit/next-css": "^1.0.1",
@@ -11,6 +12,7 @@
     "next": "^7.0.2",
     "react": "^16.6.3",
     "react-dom": "^16.6.3",
+    "socket.io-client": "^2.2.0",
     "styled-components": "^4.1.2"
   },
   "devDependencies": {

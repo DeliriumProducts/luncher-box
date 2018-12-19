@@ -59,12 +59,4 @@ app.use((req: Request, res: Response, next: NextFunction) => {
   next();
 });
 
-/**
- * Set up routing-controllers
- */
-useExpressServer(app, {
-  classTransformer: false,
-  controllers: [`${__dirname}/../controllers/*.ts`]
-});
-
-export default app;
+export { app };

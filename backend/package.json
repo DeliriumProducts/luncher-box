@@ -25,6 +25,7 @@
   "dependencies": {
     "@types/bcrypt": "^3.0.0",
     "@types/bcryptjs": "^2.4.2",
+    "@types/socket.io": "^2.1.2",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.18.3",
     "class-transformer": "^0.2.0",
@@ -47,13 +48,16 @@
     "passport-local": "^1.0.0",
     "reflect-metadata": "^0.1.12",
     "routing-controllers": "^0.7.7",
+    "socket-controllers": "^0.0.3",
+    "socket.io": "^2.2.0",
     "tslint": "^5.11.0",
     "typedi": "^0.8.0",
     "typeorm": "0.2.9",
     "typeorm-routing-controllers-extensions": "^0.2.0"
   },
   "scripts": {
-    "start": "NODE_ENV=development nodemon --exec ts-node src/index.ts"
+    "start": "NODE_ENV=development nodemon --exec ts-node src/index.ts",
+    "debug": "NODE_ENV=development nodemon --exec ts-node src/index.ts"
   },
   "husky": {
     "hooks": {
