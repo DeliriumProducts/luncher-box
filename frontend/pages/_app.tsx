@@ -13,7 +13,7 @@ const GlobalStyle = createGlobalStyle`
 `;
 
 export default class MyApp extends App {
-  static async getInitialProps({ Component, router, ctx }) {
+  static async getInitialProps({ Component, router, ctx }: any) {
     let pageProps = {};
 
     if (Component.getInitialProps) {
