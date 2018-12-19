@@ -1,9 +1,19 @@
 import { Menu, Icon } from 'antd';
 import Link from 'next/link';
+import styled from 'styled-components';
+
+const StyledMenu = styled(Menu)`
+  display: flex;
+
+  & > * {
+    flex: 1;
+    text-align: center;
+  }
+`;
 
 const MenuBar = ({ selectedKey }) => {
   return (
-    <Menu mode="horizontal" defaultSelectedKeys={selectedKey}>
+    <StyledMenu mode="horizontal" defaultSelectedKeys={selectedKey}>
       <Menu.Item key="dashboard">
         <Icon type="dashboard" />
         Dashboard
@@ -20,7 +30,7 @@ const MenuBar = ({ selectedKey }) => {
         <Icon type="pie-chart" />
         Restaurant load
       </Menu.Item>
-    </Menu>
+    </StyledMenu>
   );
 };
 
