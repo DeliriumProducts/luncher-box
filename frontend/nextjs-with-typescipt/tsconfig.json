@@ -2,6 +2,7 @@
   "compilerOptions": {
     "target": "es6",
     "module": "commonjs",
+    "jsx": "preserve",
     "lib": ["dom", "es6", "es2017", "esnext.asynciterable"],
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
@@ -17,9 +18,9 @@
     "noUnusedLocals": false,
     "noUnusedParameters": false,
     "noImplicitReturns": true,
-    "baseUrl": ".",
     "noFallthroughCasesInSwitch": true,
-    "allowSyntheticDefaultImports": true
+    "allowSyntheticDefaultImports": true,
+    "preserveConstEnums": true
   },
   "exclude": ["node_modules"],
   "include": ["./**/*.tsx", "./**/*.ts"]
