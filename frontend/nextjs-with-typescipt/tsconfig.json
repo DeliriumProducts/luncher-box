@@ -23,5 +23,12 @@
     "preserveConstEnums": true
   },
   "exclude": ["node_modules"],
-  "include": ["./**/*.tsx", "./**/*.ts"]
+  "include": [
+    "./**/*.tsx",
+    "./**/*.ts",
+    "components/Layout.jsx",
+    "components/RegisterForm.jsx",
+    "components/MenuBar.jsx",
+    "components/LoginForm.jsx"
+  ]
 }

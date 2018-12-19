@@ -1,7 +1,6 @@
 {
   "defaultSeverity": "error",
   "extends": ["tslint:recommended"],
-  "jsRules": {},
   "rules": {
     "no-console": false,
     "member-access": false,
@@ -15,7 +14,8 @@
     "interface-name": false,
     "arrow-parens": false,
     "no-submodule-imports": false,
-    "interface-over-type-literal": false
+    "interface-over-type-literal": false,
+    "semicolon": [true, "always", "strict-bound-class-methods"]
   },
   "rulesDirectory": []
 }

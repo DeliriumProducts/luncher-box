@@ -1,5 +1,8 @@
 import { Form, Icon, Input, Button, Checkbox } from 'antd';
 import styled from 'styled-components';
+import React from 'react';
+import { FormComponentProps } from 'antd/lib/form';
+import { HandleLogin } from '../types';
 
 const FormItem = Form.Item;
 
@@ -26,12 +29,20 @@ const Container = styled.div`
   }
 `;
 
-class LoginForm extends React.Component {
+interface Props extends FormComponentProps {
+  handleLogin: HandleLogin;
+}
+
+type State = {
+  loading: boolean;
+};
+
+class LoginForm extends React.Component<Props, State> {
   state = {
     loading: false
   };
 
-  handleSubmit = e => {
+  handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     this.props.form.validateFields((err, values) => {
       if (!err) {
