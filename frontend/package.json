@@ -8,6 +8,7 @@
     "type-check": "tsc"
   },
   "dependencies": {
+    "@types/socket.io-client": "^1.4.32",
     "@types/styled-components": "^4.1.4",
     "@zeit/next-css": "^1.0.1",
     "@zeit/next-typescript": "^1.1.1",
@@ -22,9 +23,9 @@
     "@types/next": "^7.0.5",
     "@types/react": "^16.7.17",
     "@types/react-dom": "16.0.11",
-    "typescript": "3.2.2",
     "babel-plugin-import": "^1.11.0",
-    "babel-plugin-styled-components": "^1.9.4"
+    "babel-plugin-styled-components": "^1.9.4",
+    "typescript": "3.2.2"
   },
   "license": "ISC"
 }
