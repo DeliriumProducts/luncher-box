@@ -1,10 +1,14 @@
-import { CategoryNotFoundError } from './../utils/httpErrors';
 import { TransformValidationOptions } from 'class-transformer-validator';
 import { QueryResponse } from '../types';
-import { Category } from '../entities';
-import { ProductNotFoundError, EntityNotValidError } from '../utils';
+import {
+  Category,
+  Product,
+  ProductNotFoundError,
+  ProductNotValidError,
+  DuplicateProductError,
+  CategoryNotFoundError
+} from '../entities';
 import { TransformAndValidateTuple } from '../types';
-import { Product } from '../entities';
 import {
   JsonController,
   Get,
@@ -35,8 +39,8 @@ export class ProductController {
    */
   constructor() {
     this.productRepository = getRepository(Product);
-    this.transformAndValidateCategory = transformAndValidate(Category);
     this.transformAndValidateProduct = transformAndValidate(Product);
+    this.transformAndValidateCategory = transformAndValidate(Category);
   }
 
   /**
@@ -68,12 +72,13 @@ export class ProductController {
    * @param productJSON
    */
   @Post()
+  @OnUndefined(CategoryNotFoundError)
   async create(@Body() productJSON: Product) {
     /**
      * Validate the product and then the nested array of categories (productJSON.categories)
      */
-    const [product, productErrors] = await this.transformAndValidateProduct(productJSON);
-    const [category, categoriesErrors] = await this.transformAndValidateCategory(
+    const [product, productErr] = await this.transformAndValidateProduct(productJSON);
+    const [category, categoriesErr] = await this.transformAndValidateCategory(
       productJSON.categories,
       {
         validator: {
@@ -82,10 +87,8 @@ export class ProductController {
       }
     );
 
-    console.log(category);
-
-    if (productErrors.length || categoriesErrors.length) {
-      throw new EntityNotValidError(productErrors.concat(categoriesErrors));
+    if (productErr.length || categoriesErr.length) {
+      throw new ProductNotValidError(productErr.concat(categoriesErr));
     } else {
       /**
        * Throw an error if a category doesn't exist when creating a product
@@ -96,7 +99,7 @@ export class ProductController {
           status: 'New product created!'
         };
       } catch (error) {
-        throw new CategoryNotFoundError();
+        return undefined;
       }
     }
   }
@@ -118,7 +121,7 @@ export class ProductController {
     if (oldProduct) {
       const [newProduct, err] = await this.transformAndValidateProduct(newProductJSON);
       if (err.length) {
-        throw new EntityNotValidError(err);
+        throw new ProductNotValidError(err);
       } else {
         await this.productRepository.update(id, newProduct);
         return {

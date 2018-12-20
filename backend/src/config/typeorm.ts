@@ -8,6 +8,7 @@ const dbConfig: ConnectionOptions = {
   username: DB_USER,
   password: DB_PASS,
   database: DB_NAME,
+  charset: 'UTF8_GENERAL_CI',
   synchronize: true, // don't use in production!
   logging: false,
   entities: ['src/entities/*.ts']

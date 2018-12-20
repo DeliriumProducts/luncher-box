@@ -1,3 +1,5 @@
+import { EntityError } from '../types';
+import { EntityNotValidError, EntityNotFoundError } from '../utils';
 import { Product } from './Product';
 import { Entity, PrimaryGeneratedColumn, Column, MinKey, ManyToMany } from 'typeorm';
 import { Length, IsEmail, Allow, IsDefined } from 'class-validator';
@@ -24,4 +26,15 @@ export class Category {
 
   @ManyToMany(() => Product, product => product.categories)
   products: Product[];
+}
+export class CategoryNotFoundError extends EntityNotFoundError<Category> {
+  constructor() {
+    super(Category);
+  }
+}
+
+export class CategoryNotValidError extends EntityNotValidError<Category> {
+  constructor(errors: EntityError) {
+    super(Category, errors);
+  }
 }

@@ -1,10 +1,7 @@
-import { TransformAndValidateTuple } from '../types';
-import { Product } from './../entities/Product';
+import { TransformAndValidateTuple, EntityError, QueryResponse } from '../types';
 import { TransformValidationOptions } from 'class-transformer-validator';
-import { QueryResponse } from '../types';
-import { CategoryNotFoundError, EntityNotValidError } from '../utils';
 import { Repository, getRepository } from 'typeorm';
-import { Category } from '../entities';
+import { Product, Category, CategoryNotFoundError, CategoryNotValidError } from '../entities';
 import {
   Get,
   JsonController,
@@ -31,8 +28,8 @@ export class CategoryController {
    */
   constructor() {
     this.categoryRepository = getRepository(Category);
-    this.productRepository = getRepository(Product);
     this.transformAndValidateCategory = transformAndValidate(Category);
+    this.productRepository = getRepository(Product);
   }
 
   /**
@@ -73,7 +70,7 @@ export class CategoryController {
       }
     });
     if (err.length) {
-      throw new EntityNotValidError(err);
+      throw new CategoryNotValidError(err);
     } else {
       await this.categoryRepository.save(category);
       return {
@@ -103,7 +100,7 @@ export class CategoryController {
         }
       });
       if (err.length) {
-        throw new EntityNotValidError(err);
+        throw new CategoryNotValidError(err);
       } else {
         await this.categoryRepository.update(id, newCategory);
         return {

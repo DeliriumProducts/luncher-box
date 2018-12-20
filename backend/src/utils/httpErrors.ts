@@ -1,23 +1,15 @@
 import { HttpError } from 'routing-controllers';
 import { EntityError } from 'src/types/entityerror';
+import { ClassType } from '../types';
+import { Product } from '../entities';
 
 /**
  * STATUS: 404
- * Used for when a category hasn't been found
+ * Used for when an entity hasn't been found
  */
-export class CategoryNotFoundError extends HttpError {
-  constructor() {
-    super(404, 'Category not found!');
-  }
-}
-
-/**
- * STATUS: 404
- * Used for when a product hasn't been found
- */
-export class ProductNotFoundError extends HttpError {
-  constructor() {
-    super(404, 'Product not found!');
+export class EntityNotFoundError<T> extends HttpError {
+  constructor(cls: ClassType<T>) {
+    super(404, `${cls.name} not found!`);
   }
 }
 
@@ -25,13 +17,28 @@ export class ProductNotFoundError extends HttpError {
  * STATUS: 400
  * Used for when an entity failed to validate
  */
-export class EntityNotValidError extends HttpError {
+export class EntityNotValidError<T> extends HttpError {
   errors: EntityError;
 
-  constructor(errors: EntityError) {
-    super(400, 'Entity not valid!');
+  constructor(cls: ClassType<T>, errors: EntityError) {
+    super(400);
     this.errors = errors;
-    this.name = 'EntityNotValidError';
+    this.name = `${cls.name} not valid!`;
+    delete this.message;
+    delete this.stack;
+  }
+}
+
+/**
+ * STATUS: 422
+ * Used for when a duplicate entity was found
+ */
+export class DuplicateEntityError<T> extends HttpError {
+  errors: EntityError;
+
+  constructor(cls: ClassType<T>) {
+    super(422);
+    this.name = `Duplicate ${cls.name} entry!`;
     delete this.message;
     delete this.stack;
   }
