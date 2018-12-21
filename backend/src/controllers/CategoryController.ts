@@ -12,7 +12,7 @@ import {
   Delete,
   Put
 } from 'routing-controllers';
-import { transformAndValidate } from '../utils';
+import { transformAndValidate, EntityNotFoundError } from '../utils';
 
 @JsonController('/categories')
 export class CategoryController {

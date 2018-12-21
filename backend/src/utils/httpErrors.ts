@@ -7,7 +7,7 @@ import { Product } from '../entities';
  * STATUS: 404
  * Used for when an entity hasn't been found
  */
-export class EntityNotFoundError<T> extends HttpError {
+export abstract class EntityNotFoundError<T> extends HttpError {
   constructor(cls: ClassType<T>) {
     super(404, `${cls.name} not found!`);
   }
@@ -17,7 +17,7 @@ export class EntityNotFoundError<T> extends HttpError {
  * STATUS: 400
  * Used for when an entity failed to validate
  */
-export class EntityNotValidError<T> extends HttpError {
+export abstract class EntityNotValidError<T> extends HttpError {
   errors: EntityError;
 
   constructor(cls: ClassType<T>, errors: EntityError) {
@@ -33,7 +33,7 @@ export class EntityNotValidError<T> extends HttpError {
  * STATUS: 422
  * Used for when a duplicate entity was found
  */
-export class DuplicateEntityError<T> extends HttpError {
+export abstract class DuplicateEntityError<T> extends HttpError {
   errors: EntityError;
 
   constructor(cls: ClassType<T>) {
