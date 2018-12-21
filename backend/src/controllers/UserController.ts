@@ -58,7 +58,13 @@ export class UserController {
     }
   }
 
-  @Post('/laino')
+  /**
+   * POST /auth/login
+   *
+   * Login a user based on the request body
+   * @param userJSON
+   */
+  @Post('/login')
   @OnUndefined(UserNotFoundError)
   async laino(@Body() userJSON: User) {
     const email = userJSON.email;
