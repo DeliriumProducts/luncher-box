@@ -6,14 +6,13 @@ import { QueryResponse } from '../types/';
 
 export const initPassport = () => {
   const userRepository = getRepository(User);
-
   /**
    * Check the user exists in the database and if the passwords match with the one in it
    * @param email
    * @param password
    * @param done
    */
-  const loginUser = async (email: string, password: string, done: any) => {
+  const authenticateUser = async (email: string, password: string, done: any) => {
     const user: QueryResponse<User> = await userRepository.findOne({ where: { email } });
     if (!user || !user.validatePassword(password)) {
       return done(null, false, { isValid: false });
@@ -22,24 +21,7 @@ export const initPassport = () => {
     return done(null, user);
   };
 
-  /**
-   *
-   * Check for a duplicate account before registration
-   * @param email
-   * @param password
-   * @param done
-   */
-  const registerUser = async (email: string, password: string, done: any) => {
-    const user: QueryResponse<User> = await userRepository.findOne({ where: { email } });
-    if (user) {
-      return done(null, false, { isTaken: true });
-    }
-
-    return done(null, user);
-  };
-
   passport.use(
-    'login',
     new LocalStrategy(
       {
         /**
@@ -47,20 +29,7 @@ export const initPassport = () => {
          */
         usernameField: 'email'
       },
-      loginUser
-    )
-  );
-
-  passport.use(
-    'register',
-    new LocalStrategy(
-      {
-        /**
-         * Use email field rather than username
-         */
-        usernameField: 'email'
-      },
-      registerUser
+      authenticateUser
     )
   );
 

@@ -9,6 +9,7 @@ dotenv.config();
  * DEV or PROD enviroment
  */
 export const ENV = process.env.NODE_ENV || 'development';
+export const IS_DEV = ENV === 'development';
 
 /**
  * Server port
@@ -55,6 +56,7 @@ export const FRONTEND_URL = process.env.FRONTEND_URL || 'http://localhost:3000';
 
 export default {
   ENV,
+  IS_DEV,
   PORT,
   DB_HOST,
   DB_USER,
