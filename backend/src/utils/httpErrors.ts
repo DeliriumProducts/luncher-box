@@ -7,7 +7,10 @@ import { ClassType, EntityError } from '../types';
  */
 export abstract class EntityNotFoundError<T> extends HttpError {
   constructor(cls: ClassType<T>) {
-    super(404, `${cls.name} not found!`);
+    super(404);
+    this.name = `${cls.name} not found!`;
+    delete this.message;
+    delete this.stack;
   }
 }
 
