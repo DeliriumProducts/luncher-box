@@ -11,17 +11,11 @@ import 'reflect-metadata';
 import { SESSION_SECRET, FRONTEND_URL } from './env';
 import express from 'express';
 import cors from 'cors';
-import { initPassport } from './';
 
 /**
  * Create express app
  */
 const app: Application = express();
-
-/**
- * Initialize passport configuration
- */
-initPassport();
 
 /**
  * Configure express app

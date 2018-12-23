@@ -1,6 +1,6 @@
 import 'reflect-metadata';
 import { createConnection, Connection } from 'typeorm';
-import { PORT, ENV, dbConfig, app, io, server } from './config';
+import { PORT, ENV, dbConfig, initPassport, app, io, server } from './config';
 import { useExpressServer } from 'routing-controllers';
 import { useSocketServer } from 'socket-controllers';
 
@@ -25,6 +25,11 @@ const startServer = async () => {
   useSocketServer(io, {
     controllers: [`${__dirname}/controllers/*.io.ts`]
   });
+
+  /**
+   * Initialize passport configuration
+   */
+  initPassport();
 
   /**
    * Start server
