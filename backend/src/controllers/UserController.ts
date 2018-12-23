@@ -40,7 +40,15 @@ export class UserController {
    * @param userJSON
    */
   @Post('/register')
+  @OnUndefined(DuplicateUserError)
   async register(@Body() userJSON: User, @Req() req: Request, @Res() res: Response) {
+    /**
+     * Check if there is a user already registered with the given email
+     */
+    if (await this.userRepository.find({ where: { email: userJSON.email } })) {
+      return undefined;
+    }
+
     const [user, err] = await this.transformAndValidateUser(userJSON);
 
     if (err.length) {
@@ -49,21 +57,17 @@ export class UserController {
       /**
        * Throw an error if there is a duplicate email
        */
-      try {
-        await this.userRepository.save(user);
+      await this.userRepository.save(user);
 
-        req.login(user, error => {
-          if (error) {
-            throw new Error(error);
-          }
-        });
+      req.login(user, error => {
+        if (error) {
+          throw new Error(error);
+        }
+      });
 
-        return {
-          message: 'User created!'
-        };
-      } catch (error) {
-        throw new DuplicateUserError();
-      }
+      return {
+        message: 'User created!'
+      };
     }
   }
 

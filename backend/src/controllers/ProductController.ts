@@ -78,9 +78,6 @@ export class ProductController {
   @Post()
   @OnUndefined(CategoryNotFoundError)
   async create(@Body() productJSON: Product) {
-    /**
-     * Validate the product
-     */
     const [product, productErr] = await this.transformAndValidateProduct(productJSON);
 
     if (productErr.length) {
