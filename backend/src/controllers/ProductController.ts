@@ -117,10 +117,18 @@ export class ProductController {
     const oldProduct: QueryResponse<Product> = await this.productRepository.findOne(id);
 
     if (oldProduct) {
-      const [newProduct, err] = await this.transformAndValidateProduct(newProductJSON);
+      const [newProduct, productErr] = await this.transformAndValidateProduct(newProductJSON);
+      const [_, categoriesErr] = await this.transformAndValidateCategory(
+        newProductJSON.categories,
+        {
+          validator: {
+            groups: ['creatingProduct']
+          }
+        }
+      );
 
-      if (err.length) {
-        throw new ProductNotValidError(err);
+      if (productErr.length || categoriesErr.length) {
+        throw new ProductNotValidError(productErr.concat(categoriesErr));
       }
 
       await this.productRepository.update(id, newProduct);
