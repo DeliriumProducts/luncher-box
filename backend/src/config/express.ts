@@ -4,14 +4,14 @@ import 'reflect-metadata';
 import session from 'express-session';
 import passport from 'passport';
 import { Request, Response, Application, NextFunction } from 'express';
-import { useExpressServer } from 'routing-controllers';
 import expressValidator from 'express-validator';
 import compression from 'compression';
 import lusca from 'lusca';
 import 'reflect-metadata';
-import { SESSION_SECRET } from './env';
-import express = require('express');
-import cors = require('cors');
+import { SESSION_SECRET, FRONTEND_URL } from './env';
+import express from 'express';
+import cors from 'cors';
+import { initPassport } from './';
 
 /**
  * Create express app
@@ -19,11 +19,16 @@ import cors = require('cors');
 const app: Application = express();
 
 /**
+ * Initialize passport configuration
+ */
+initPassport();
+
+/**
  * Configure express app
  */
 app.use(
   cors({
-    origin: true,
+    origin: FRONTEND_URL,
     credentials: true
   })
 );

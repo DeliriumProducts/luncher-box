@@ -1,5 +1,5 @@
 import passport from 'passport';
-import LocalPassport from 'passport-local';
+import { Strategy as LocalStrategy } from 'passport-local';
 import { getRepository } from 'typeorm';
 import { User } from '../entities/';
 import { QueryResponse } from '../types/';
@@ -9,24 +9,25 @@ const userRepository = getRepository(User);
 const loginUser = async (email: string, password: string, done: any) => {
   const user: QueryResponse<User> = await userRepository.findOne({ where: { email } });
   if (!user || !user.validatePassword(password)) {
-    return done(null, false, { message: 'Invalid login credentials' });
+    return done(null, false, { isValid: false });
   }
 
   return done(null, user);
 };
+
 const registerUser = async (email: string, password: string, done: any) => {
   const user: QueryResponse<User> = await userRepository.findOne({ where: { email } });
   if (user) {
-    return done(null, false, { message: 'Email already taken!' });
+    return done(null, false, { isTaken: true });
   }
 
   return done(null, user);
 };
 
-module.exports = () => {
+export const initPassport = () => {
   passport.use(
     'login',
-    new LocalPassport.Strategy(
+    new LocalStrategy(
       {
         usernameField: 'email',
         passwordField: 'password'
@@ -37,7 +38,7 @@ module.exports = () => {
 
   passport.use(
     'register',
-    new LocalPassport.Strategy(
+    new LocalStrategy(
       {
         usernameField: 'email',
         passwordField: 'password'

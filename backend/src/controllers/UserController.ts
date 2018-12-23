@@ -1,9 +1,11 @@
-import { JsonController, Get, Post, Body, OnUndefined } from 'routing-controllers';
+import { JsonController, Get, Post, Body, OnUndefined, Req, Res } from 'routing-controllers';
+import { Request, Response } from 'express';
 import { User, UserNotValidError, DuplicateUserError, UserNotFoundError } from '../entities';
 import { transformAndValidate } from '../utils';
 import { Repository, getRepository } from 'typeorm';
 import { TransformValidationOptions } from 'class-transformer-validator';
 import { TransformAndValidateTuple } from '../types';
+import passport = require('passport');
 
 @JsonController('/auth')
 export class UserController {
@@ -38,24 +40,22 @@ export class UserController {
    * @param userJSON
    */
   @Post('/register')
-  async register(@Body() userJSON: User) {
-    const [user, err] = await this.transformAndValidateUser(userJSON);
-
-    if (err.length) {
-      throw new UserNotValidError(err);
-    } else {
-      /**
-       * Throw an error if there is a duplicate email
-       */
-      try {
-        await this.userRepository.save(user);
-        return {
-          status: 'User created!'
-        };
-      } catch (error) {
+  async register(@Body() userJSON: User, @Req() req: Request, @Res() res: Response) {
+    passport.authenticate('register', async (err, user, info) => {
+      if (info.isTaken) {
         throw new DuplicateUserError();
       }
-    }
+      const [_, validationErr] = await this.transformAndValidateUser(userJSON);
+
+      if (validationErr.length) {
+        throw new UserNotValidError(err);
+      }
+
+      await this.userRepository.save(user);
+      return {
+        status: 'User created!'
+      };
+    })(req, res);
   }
 
   /**

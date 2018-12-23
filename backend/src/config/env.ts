@@ -48,6 +48,11 @@ export const OWNER_PASS = process.env.OWNER_PASS || 'example-password';
  */
 export const VERIFIER_EMAIL = process.env.VERIFIER_EMAIL || 'example-reciever@mail.com';
 
+/**
+ * Frontend url
+ */
+export const FRONTEND_URL = process.env.FRONTEND_URL || 'http://localhost:3000';
+
 export default {
   ENV,
   PORT,
@@ -57,5 +62,6 @@ export default {
   SESSION_SECRET,
   OWNER_EMAIL,
   OWNER_PASS,
-  VERIFIER_EMAIL
+  VERIFIER_EMAIL,
+  FRONTEND_URL
 };
