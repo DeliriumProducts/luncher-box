@@ -61,7 +61,7 @@ export default <T extends object>(cls: ClassType<T>) => async (
      *    [ <- an Array of errors
      *      ValidationError {
      *        ...
-     *        constraints: [ <- an array of constraints
+     *        constraints: [ <- an array of constraints for a single property
      *         ...
      *        "name must be longer than 3 characters",
      *        "image must not be undefined"
@@ -71,7 +71,7 @@ export default <T extends object>(cls: ClassType<T>) => async (
      *    [ <- an Array of errors
      *      ValidationError {
      *        ...
-     *        constraints: [ <- an array of constraints
+     *        constraints: [ <- an array of constraints for a single property
      *         ...
      *        "id must not be undefined"
      *        ]
@@ -83,13 +83,13 @@ export default <T extends object>(cls: ClassType<T>) => async (
       for (const object of exception) {
         const tempArr: any[] = [];
         for (const error of object) {
-          tempArr.push(error.constraints);
+          tempArr.push({ [`${cls.name} ${error.property}`]: [error.constraints] });
         }
         errors.push(tempArr);
       }
     } else {
       for (const error of exception) {
-        errors.push(error.constraints);
+        errors.push({ [`${cls.name} ${error.property}`]: [error.constraints] });
       }
     }
   }
