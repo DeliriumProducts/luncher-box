@@ -41,8 +41,10 @@ export const initPassport = () => {
     'login',
     new LocalStrategy(
       {
-        usernameField: 'email',
-        passwordField: 'password'
+        /**
+         * Use email field rather than username
+         */
+        usernameField: 'email'
       },
       loginUser
     )
@@ -52,8 +54,10 @@ export const initPassport = () => {
     'register',
     new LocalStrategy(
       {
-        usernameField: 'email',
-        passwordField: 'password'
+        /**
+         * Use email field rather than username
+         */
+        usernameField: 'email'
       },
       registerUser
     )
