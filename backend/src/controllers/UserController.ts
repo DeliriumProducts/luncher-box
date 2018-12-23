@@ -45,7 +45,7 @@ export class UserController {
     /**
      * Check if there is a user already registered with the given email
      */
-    if (await this.userRepository.find({ where: { email: userJSON.email } })) {
+    if (await this.userRepository.findOne({ where: { email: userJSON.email } })) {
       return undefined;
     }
 
@@ -59,6 +59,9 @@ export class UserController {
        */
       await this.userRepository.save(user);
 
+      /**
+       * Inject cookie sesssion
+       */
       req.login(user, error => {
         if (error) {
           throw new Error(error);
@@ -79,7 +82,7 @@ export class UserController {
    */
   @Post('/login')
   @OnUndefined(UserNotFoundError)
-  async laino(@Body() userJSON: User) {
+  async login(@Body() userJSON: User) {
     const email = userJSON.email;
     const user = await this.userRepository.findOne({ where: { email } });
     if (user) {

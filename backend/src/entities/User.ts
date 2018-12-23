@@ -17,7 +17,7 @@ export class User {
   @IsEmail()
   email: string;
 
-  @Column('text')
+  @Column()
   @Matches(/^(?=.*[a-z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/, {
     message:
       // tslint:disable-next-line
