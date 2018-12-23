@@ -72,7 +72,7 @@ export class CategoryController {
 
     await this.categoryRepository.save(category);
     return {
-      status: 'New category created!'
+      message: 'New category created!'
     };
   }
 
@@ -100,7 +100,7 @@ export class CategoryController {
 
       await this.categoryRepository.update(id, newCategory);
       return {
-        status: 'Category updated!'
+        message: 'Category updated!'
       };
     }
 
@@ -137,7 +137,7 @@ export class CategoryController {
       }
       await this.categoryRepository.delete(id);
       return {
-        status: 'Category deleted!'
+        message: 'Category deleted!'
       };
     }
 

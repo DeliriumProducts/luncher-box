@@ -59,7 +59,7 @@ export class UserController {
         });
 
         return {
-          status: 'User created!'
+          message: 'User created!'
         };
       } catch (error) {
         throw new DuplicateUserError();

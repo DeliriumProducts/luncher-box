@@ -117,7 +117,7 @@ export class ProductController {
 
     await this.productRepository.save(product);
     return {
-      status: 'New product created!'
+      message: 'New product created!'
     };
   }
 
@@ -175,7 +175,7 @@ export class ProductController {
 
       await this.productRepository.save(newProduct);
       return {
-        status: 'Product edited!'
+        message: 'Product edited!'
       };
     }
 
@@ -199,7 +199,7 @@ export class ProductController {
     if (productToBeDeleted) {
       await this.productRepository.delete(id);
       return {
-        status: 'Product deleted!'
+        message: 'Product deleted!'
       };
     }
 
