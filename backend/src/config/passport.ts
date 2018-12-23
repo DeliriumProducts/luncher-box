@@ -6,14 +6,18 @@ import { QueryResponse } from '../types/';
 
 const userRepository = getRepository(User);
 
-const authenticateUser = async (email: string, password: string, done: any) => {
+const loginUser = async (email: string, password: string, done: any) => {
   const user: QueryResponse<User> = await userRepository.findOne({ where: { email } });
-  if (!user) {
-    return done(null, false);
+  if (!user || !user.validatePassword(password)) {
+    return done(null, false, { message: 'Invalid login credentials' });
   }
 
-  if (!user.validatePassword(password)) {
-    return done(null, false);
+  return done(null, user);
+};
+const registerUser = async (email: string, password: string, done: any) => {
+  const user: QueryResponse<User> = await userRepository.findOne({ where: { email } });
+  if (user) {
+    return done(null, false, { message: 'Email already taken!' });
   }
 
   return done(null, user);
@@ -21,12 +25,24 @@ const authenticateUser = async (email: string, password: string, done: any) => {
 
 module.exports = () => {
   passport.use(
+    'login',
     new LocalPassport.Strategy(
       {
         usernameField: 'email',
         passwordField: 'password'
       },
-      authenticateUser
+      loginUser
+    )
+  );
+
+  passport.use(
+    'register',
+    new LocalPassport.Strategy(
+      {
+        usernameField: 'email',
+        passwordField: 'password'
+      },
+      registerUser
     )
   );
 
