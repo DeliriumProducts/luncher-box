@@ -1,37 +1,37 @@
 Arguments: 
-  /usr/bin/node /usr/bin/yarn add @types/socket-controllers
+  /usr/bin/node /usr/bin/yarn add @types/passport-local _-D
 
 PATH: 
-  /home/simo/Temp/color-scripts/color-scripts:/home/simo/.gem/ruby/2.5.0/bin:/home/simo/perl5/bin:/home/simo/Temp/color-scripts/color-scripts:/home/simo/.gem/ruby/2.5.0/bin:/home/simo/perl5/bin:/usr/local/sbin:/usr/local/bin:/usr/bin:/opt/android-sdk/tools:/opt/android-sdk/tools/bin:/opt/cuda/bin:/opt/flutter/bin:/usr/lib/jvm/default/bin:/usr/bin/site_perl:/usr/bin/vendor_perl:/usr/bin/core_perl
+  /usr/local/bin:/usr/bin:/bin:/usr/local/sbin:/usr/lib/jvm/default/bin:/usr/bin/site_perl:/usr/bin/vendor_perl:/usr/bin/core_perl
 
 Yarn version: 
   1.12.3
 
 Node version: 
-  8.14.0
+  11.5.0
 
 Platform: 
   linux x64
 
 Trace: 
-  Error: https://registry.yarnpkg.com/@types%2fsocket-controllers: Not found
+  Error: https://registry.yarnpkg.com/_-D: Not found
       at Request.params.callback [as _callback] (/usr/lib/node_modules/yarn/lib/cli.js:65894:18)
       at Request.self.callback (/usr/lib/node_modules/yarn/lib/cli.js:129018:22)
-      at emitTwo (events.js:126:13)
-      at Request.emit (events.js:214:7)
+      at Request.emit (events.js:189:13)
       at Request.<anonymous> (/usr/lib/node_modules/yarn/lib/cli.js:129990:10)
-      at emitOne (events.js:116:13)
-      at Request.emit (events.js:211:7)
+      at Request.emit (events.js:189:13)
       at IncomingMessage.<anonymous> (/usr/lib/node_modules/yarn/lib/cli.js:129912:12)
-      at Object.onceWrapper (events.js:313:30)
-      at emitNone (events.js:111:20)
+      at Object.onceWrapper (events.js:277:13)
+      at IncomingMessage.emit (events.js:194:15)
+      at endReadableNT (_stream_readable.js:1129:12)
+      at process.internalTickCallback (internal/process/next_tick.js:72:19)
 
 npm manifest: 
   {
     "name": "luncherbox-api",
     "version": "0.0.1",
     "devDependencies": {
-      "@types/bluebird": "^3.5.24",
+      "@types/bluebird": "^3.5.25",
       "@types/body-parser": "^1.17.0",
       "@types/compression": "0.0.36",
       "@types/cookie-parser": "^1.4.1",
@@ -42,7 +42,7 @@ npm manifest:
       "@types/express-validator": "^3.0.0",
       "@types/jest": "^23.3.10",
       "@types/lusca": "^1.5.0",
-      "@types/node": "^10.12.12",
+      "@types/node": "^10.12.18",
       "@types/passport": "^0.4.7",
       "@types/passport-local": "^1.0.33",
       "husky": "^1.2.1",
@@ -68,12 +68,12 @@ npm manifest:
       "express": "^4.15.4",
       "express-session": "^1.15.6",
       "express-validator": "^5.3.0",
-      "jsonwebtoken": "^8.4.0",
       "lusca": "^1.6.1",
       "mysql": "^2.14.1",
       "nodemailer": "^4.7.0",
       "nodemon": "^1.18.7",
       "passport": "^0.4.0",
+      "passport-jwt": "^4.0.0",
       "passport-local": "^1.0.0",
       "reflect-metadata": "^0.1.12",
       "routing-controllers": "^0.7.7",
@@ -113,7 +113,7 @@ Lockfile:
     resolved "https://registry.yarnpkg.com/@types/bcryptjs/-/bcryptjs-2.4.2.tgz#e3530eac9dd136bfdfb0e43df2c4c5ce1f77dfae"
     integrity sha512-LiMQ6EOPob/4yUL66SZzu6Yh77cbzJFYll+ZfaPiPPFswtIlA/Fs1MzdKYA7JApHU49zQTbJGX3PDmCpIdDBRQ==
   
-  "@types/bluebird@^3.5.24":
+  "@types/bluebird@^3.5.25":
     version "3.5.25"
     resolved "https://registry.yarnpkg.com/@types/bluebird/-/bluebird-3.5.25.tgz#59188b871208092e37767e4b3d80c3b3eaae43bd"
     integrity sha512-yfhIBix+AIFTmYGtkC0Bi+XGjSkOINykqKvO/Wqdz/DuXlAKK7HmhLAXdPIGsV4xzKcL3ev/zYc4yLNo+OvGaw==
@@ -217,10 +217,15 @@ Lockfile:
     resolved "https://registry.yarnpkg.com/@types/mime/-/mime-2.0.0.tgz#5a7306e367c539b9f6543499de8dd519fac37a8b"
     integrity sha512-A2TAGbTFdBw9azHbpVd+/FkdW2T6msN1uct1O9bH3vTerEHKZhTXJUQXy+hNq1B0RagfU8U+KBdqiZpxjhOUQA==
   
-  "@types/node@*", "@types/node@^10.12.12":
+  "@types/node@*":
     version "10.12.15"
     resolved "https://registry.yarnpkg.com/@types/node/-/node-10.12.15.tgz#20e85651b62fd86656e57c9c9bc771ab1570bc59"
     integrity sha512-9kROxduaN98QghwwHmxXO2Xz3MaWf+I1sLVAA6KJDF5xix+IyXVhds0MAfdNwtcpSrzhaTsNB0/jnL86fgUhqA==
+  
+  "@types/node@^10.12.18":
+    version "10.12.18"
+    resolved "https://registry.yarnpkg.com/@types/node/-/node-10.12.18.tgz#1d3ca764718915584fcd9f6344621b7672665c67"
+    integrity sha512-fh+pAqt4xRzPfqA6eh3Z2y6fyZavRIumvjhaCL753+TVkGKGhpPeyrJG2JftD0T9q4GF00KjefsQ+PQNDdWQaQ==
   
   "@types/passport-local@^1.0.33":
     version "1.0.33"
@@ -1849,7 +1854,7 @@ Lockfile:
     resolved "https://registry.yarnpkg.com/json-parse-better-errors/-/json-parse-better-errors-1.0.2.tgz#bb867cfb3450e69107c131d1c514bab3dc8bcaa9"
     integrity sha512-mrqyZKfX5EhL7hvqcV6WG1yYjnjeuYDzDhhcAAUrq8Po85NBQBJP+ZDUT75qZQ98IkUoBqdkExkukOU7Ts2wrw==
   
-  jsonwebtoken@^8.4.0:
+  jsonwebtoken@^8.2.0:
     version "8.4.0"
     resolved "https://registry.yarnpkg.com/jsonwebtoken/-/jsonwebtoken-8.4.0.tgz#8757f7b4cb7440d86d5e2f3becefa70536c8e46a"
     integrity sha512-coyXjRTCy0pw5WYBpMvWOMN+Kjaik2MwTUIq9cna/W7NpO9E+iYbumZONAz3hcr+tXFJECoQVrtmIoC3Oz0gvg==
@@ -2489,6 +2494,14 @@ Lockfile:
     resolved "https://registry.yarnpkg.com/pascalcase/-/pascalcase-0.1.1.tgz#b363e55e8006ca6fe21784d2db22bd15d7917f14"
     integrity sha1-s2PlXoAGym/iF4TS2yK9FdeRfxQ=
   
+  passport-jwt@^4.0.0:
+    version "4.0.0"
+    resolved "https://registry.yarnpkg.com/passport-jwt/-/passport-jwt-4.0.0.tgz#7f0be7ba942e28b9f5d22c2ebbb8ce96ef7cf065"
+    integrity sha512-BwC0n2GP/1hMVjR4QpnvqA61TxenUMlmfNjYNgK0ZAs0HK4SOQkHcSv4L328blNTLtHq7DbmvyNJiH+bn6C5Mg==
+    dependencies:
+      jsonwebtoken "^8.2.0"
+      passport-strategy "^1.0.0"
+  
   passport-local@^1.0.0:
     version "1.0.0"
     resolved "https://registry.yarnpkg.com/passport-local/-/passport-local-1.0.0.tgz#1fe63268c92e75606626437e3b906662c15ba6ee"
@@ -2496,7 +2509,7 @@ Lockfile:
     dependencies:
       passport-strategy "1.x.x"
   
-  passport-strategy@1.x.x:
+  passport-strategy@1.x.x, passport-strategy@^1.0.0:
     version "1.0.0"
     resolved "https://registry.yarnpkg.com/passport-strategy/-/passport-strategy-1.0.0.tgz#b5539aa8fc225a3d1ad179476ddf236b440f52e4"
     integrity sha1-tVOaqPwiWj0a0XlHbd8ja0QPUuQ=
