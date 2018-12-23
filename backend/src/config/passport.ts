@@ -4,39 +4,40 @@ import { getRepository, Repository } from 'typeorm';
 import { User } from '../entities/';
 import { QueryResponse } from '../types/';
 
-const userRepository: Repository<User> = getRepository(User);
-
-/**
- * Check the user exists in the database and if the passwords match with the one in it
- * @param email
- * @param password
- * @param done
- */
-const loginUser = async (email: string, password: string, done: any) => {
-  const user: QueryResponse<User> = await userRepository.findOne({ where: { email } });
-  if (!user || !user.validatePassword(password)) {
-    return done(null, false, { isValid: false });
-  }
-
-  return done(null, user);
-};
-
-/**
- * Check for a duplicate account before registration
- * @param email
- * @param password
- * @param done
- */
-const registerUser = async (email: string, password: string, done: any) => {
-  const user: QueryResponse<User> = await userRepository.findOne({ where: { email } });
-  if (user) {
-    return done(null, false, { isTaken: true });
-  }
-
-  return done(null, user);
-};
-
 export const initPassport = () => {
+  const userRepository = getRepository(User);
+
+  /**
+   * Check the user exists in the database and if the passwords match with the one in it
+   * @param email
+   * @param password
+   * @param done
+   */
+  const loginUser = async (email: string, password: string, done: any) => {
+    const user: QueryResponse<User> = await userRepository.findOne({ where: { email } });
+    if (!user || !user.validatePassword(password)) {
+      return done(null, false, { isValid: false });
+    }
+
+    return done(null, user);
+  };
+
+  /**
+   *
+   * Check for a duplicate account before registration
+   * @param email
+   * @param password
+   * @param done
+   */
+  const registerUser = async (email: string, password: string, done: any) => {
+    const user: QueryResponse<User> = await userRepository.findOne({ where: { email } });
+    if (user) {
+      return done(null, false, { isTaken: true });
+    }
+
+    return done(null, user);
+  };
+
   passport.use(
     'login',
     new LocalStrategy(
