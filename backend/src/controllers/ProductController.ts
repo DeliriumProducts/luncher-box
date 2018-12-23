@@ -25,6 +25,7 @@ import { transformAndValidate } from '../utils';
 @JsonController('/products')
 export class ProductController {
   private productRepository: Repository<Product>;
+  private categoryRepository: Repository<Category>;
   private transformAndValidateProduct: (
     obj: object | Array<{}>,
     options?: TransformValidationOptions
@@ -39,6 +40,7 @@ export class ProductController {
    */
   constructor() {
     this.productRepository = getRepository(Product);
+    this.categoryRepository = getRepository(Category);
     this.transformAndValidateProduct = transformAndValidate(Product);
     this.transformAndValidateCategory = transformAndValidate(Category);
   }
@@ -62,7 +64,9 @@ export class ProductController {
   @Get('/:productId')
   @OnUndefined(ProductNotFoundError)
   async getOne(@Param('productId') id: number) {
-    return await this.productRepository.findOne(id);
+    return await this.productRepository.findOne(id, {
+      relations: ['categories']
+    });
   }
 
   /**
@@ -75,30 +79,46 @@ export class ProductController {
   @OnUndefined(CategoryNotFoundError)
   async create(@Body() productJSON: Product) {
     /**
-     * Validate the product and then the nested array of categories (productJSON.categories)
+     * Validate the product
      */
     const [product, productErr] = await this.transformAndValidateProduct(productJSON);
-    const [_, categoriesErr] = await this.transformAndValidateCategory(productJSON.categories, {
-      validator: {
-        groups: ['creatingProduct']
-      }
-    });
 
-    if (productErr.length || categoriesErr.length) {
-      throw new ProductNotValidError(productErr.concat(categoriesErr));
+    if (productErr.length) {
+      throw new ProductNotValidError(productErr);
     }
 
     /**
      * Throw an error if a category doesn't exist when creating a product
      */
-    try {
-      await this.productRepository.save(product);
-      return {
-        status: 'New product created!'
-      };
-    } catch (error) {
-      return undefined;
+    const categories = await this.categoryRepository.find();
+    const validCategories: Category[] = [];
+
+    for (const category of product.categories) {
+      /**
+       * Make sure only an array of objects are being passed
+       */
+      if (typeof category === 'object') {
+        for (const entities of categories) {
+          /**
+           * Add only the valid categories
+           */
+          if (category.id === entities.id) {
+            validCategories.push(category);
+          }
+        }
+      }
     }
+
+    if (!validCategories.length) {
+      return undefined;
+    } else {
+      product.categories = validCategories;
+    }
+
+    await this.productRepository.save(product);
+    return {
+      status: 'New product created!'
+    };
   }
 
   /**
@@ -118,20 +138,42 @@ export class ProductController {
 
     if (oldProduct) {
       const [newProduct, productErr] = await this.transformAndValidateProduct(newProductJSON);
-      const [_, categoriesErr] = await this.transformAndValidateCategory(
-        newProductJSON.categories,
-        {
-          validator: {
-            groups: ['creatingProduct']
-          }
-        }
-      );
 
-      if (productErr.length || categoriesErr.length) {
-        throw new ProductNotValidError(productErr.concat(categoriesErr));
+      if (productErr.length) {
+        throw new ProductNotValidError(productErr);
       }
 
-      await this.productRepository.update(id, newProduct);
+      /**
+       * Throw an error if a category doesn't exist when creating a product
+       */
+      const categories = await this.categoryRepository.find();
+      const validCategories: Category[] = [];
+
+      for (const category of newProduct.categories) {
+        /**
+         * Make sure only an array of objects are being passed
+         */
+        if (typeof category === 'object') {
+          for (const entities of categories) {
+            /**
+             * Add only the valid categories
+             */
+            if (category.id === entities.id) {
+              validCategories.push(category);
+            }
+          }
+        }
+      }
+
+      if (!validCategories.length) {
+        return undefined;
+      } else {
+        newProduct.categories = validCategories;
+      }
+
+      newProduct.id = oldProduct.id;
+
+      await this.productRepository.save(newProduct);
       return {
         status: 'Product edited!'
       };

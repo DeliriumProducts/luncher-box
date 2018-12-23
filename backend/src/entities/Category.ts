@@ -2,26 +2,19 @@ import { EntityError } from '../types';
 import { EntityNotValidError, EntityNotFoundError } from '../utils';
 import { Product } from './Product';
 import { Entity, PrimaryGeneratedColumn, Column, MinKey, ManyToMany } from 'typeorm';
-import { Length, IsEmail, Allow, IsDefined } from 'class-validator';
+import { Length } from 'class-validator';
 
 @Entity()
 export class Category {
   @PrimaryGeneratedColumn()
-  @IsDefined({
-    groups: ['creatingProduct']
-  })
   id: number;
 
   @Column('text')
-  @Length(4, 50, {
-    groups: ['creatingCategory']
-  })
+  @Length(4, 50)
   name: string;
 
   @Column('text')
-  @Length(5, 255, {
-    groups: ['creatingCategory']
-  })
+  @Length(5, 255)
   image: string;
 
   @ManyToMany(() => Product, product => product.categories)

@@ -1,4 +1,4 @@
-import { TransformAndValidateTuple, EntityError, QueryResponse } from '../types';
+import { TransformAndValidateTuple, QueryResponse } from '../types';
 import { TransformValidationOptions } from 'class-transformer-validator';
 import { Repository, getRepository } from 'typeorm';
 import { Product, Category, CategoryNotFoundError, CategoryNotValidError } from '../entities';
@@ -12,7 +12,7 @@ import {
   Delete,
   Put
 } from 'routing-controllers';
-import { transformAndValidate, EntityNotFoundError } from '../utils';
+import { transformAndValidate } from '../utils';
 
 @JsonController('/categories')
 export class CategoryController {
@@ -64,11 +64,7 @@ export class CategoryController {
    */
   @Post()
   async create(@Body() categoryJSON: Category) {
-    const [category, err] = await this.transformAndValidateCategory(categoryJSON, {
-      validator: {
-        groups: ['creatingCategory']
-      }
-    });
+    const [category, err] = await this.transformAndValidateCategory(categoryJSON);
 
     if (err.length) {
       throw new CategoryNotValidError(err);
@@ -96,11 +92,7 @@ export class CategoryController {
     const oldCategory: QueryResponse<Category> = await this.categoryRepository.findOne(id);
 
     if (oldCategory) {
-      const [newCategory, err] = await this.transformAndValidateCategory(newCategoryJSON, {
-        validator: {
-          groups: ['creatingCategory']
-        }
-      });
+      const [newCategory, err] = await this.transformAndValidateCategory(newCategoryJSON);
 
       if (err.length) {
         throw new CategoryNotValidError(err);
