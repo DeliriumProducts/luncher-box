@@ -1,5 +1,4 @@
-import { TransformAndValidateTuple } from '../types';
-import { ClassType } from '../types/classtype.d';
+import { TransformAndValidateTuple, ClassType } from '../types';
 import { transformAndValidate, TransformValidationOptions } from 'class-transformer-validator';
 import deepmerge from 'deepmerge';
 

@@ -2,7 +2,7 @@
   "name": "luncherbox-api",
   "version": "0.0.1",
   "devDependencies": {
-    "@types/bluebird": "^3.5.24",
+    "@types/bluebird": "^3.5.25",
     "@types/body-parser": "^1.17.0",
     "@types/compression": "0.0.36",
     "@types/cookie-parser": "^1.4.1",
@@ -13,7 +13,7 @@
     "@types/express-validator": "^3.0.0",
     "@types/jest": "^23.3.10",
     "@types/lusca": "^1.5.0",
-    "@types/node": "^10.12.12",
+    "@types/node": "^10.12.18",
     "@types/passport": "^0.4.7",
     "@types/passport-local": "^1.0.33",
     "husky": "^1.2.1",
