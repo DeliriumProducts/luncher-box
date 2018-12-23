@@ -69,14 +69,15 @@ export class CategoryController {
         groups: ['creatingCategory']
       }
     });
+
     if (err.length) {
       throw new CategoryNotValidError(err);
-    } else {
-      await this.categoryRepository.save(category);
-      return {
-        status: 'New category created!'
-      };
     }
+
+    await this.categoryRepository.save(category);
+    return {
+      status: 'New category created!'
+    };
   }
 
   /**
@@ -93,23 +94,25 @@ export class CategoryController {
      * Check if the category exists before updating it
      */
     const oldCategory: QueryResponse<Category> = await this.categoryRepository.findOne(id);
+
     if (oldCategory) {
       const [newCategory, err] = await this.transformAndValidateCategory(newCategoryJSON, {
         validator: {
           groups: ['creatingCategory']
         }
       });
+
       if (err.length) {
         throw new CategoryNotValidError(err);
-      } else {
-        await this.categoryRepository.update(id, newCategory);
-        return {
-          status: 'Category updated!'
-        };
       }
-    } else {
-      return undefined;
+
+      await this.categoryRepository.update(id, newCategory);
+      return {
+        status: 'Category updated!'
+      };
     }
+
+    return undefined;
   }
 
   /**
@@ -127,6 +130,7 @@ export class CategoryController {
     const categoryToBeDeleted: QueryResponse<Category> = await this.categoryRepository.findOne(id, {
       relations: ['products', 'products.categories']
     });
+
     if (categoryToBeDeleted) {
       /**
        * Remove products from the category before deleting it
@@ -143,8 +147,8 @@ export class CategoryController {
       return {
         status: 'Category deleted!'
       };
-    } else {
-      return undefined;
     }
+
+    return undefined;
   }
 }

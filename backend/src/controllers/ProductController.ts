@@ -78,29 +78,26 @@ export class ProductController {
      * Validate the product and then the nested array of categories (productJSON.categories)
      */
     const [product, productErr] = await this.transformAndValidateProduct(productJSON);
-    const [category, categoriesErr] = await this.transformAndValidateCategory(
-      productJSON.categories,
-      {
-        validator: {
-          groups: ['creatingProduct']
-        }
+    const [_, categoriesErr] = await this.transformAndValidateCategory(productJSON.categories, {
+      validator: {
+        groups: ['creatingProduct']
       }
-    );
+    });
 
     if (productErr.length || categoriesErr.length) {
       throw new ProductNotValidError(productErr.concat(categoriesErr));
-    } else {
-      /**
-       * Throw an error if a category doesn't exist when creating a product
-       */
-      try {
-        await this.productRepository.save(product);
-        return {
-          status: 'New product created!'
-        };
-      } catch (error) {
-        return undefined;
-      }
+    }
+
+    /**
+     * Throw an error if a category doesn't exist when creating a product
+     */
+    try {
+      await this.productRepository.save(product);
+      return {
+        status: 'New product created!'
+      };
+    } catch (error) {
+      return undefined;
     }
   }
 
@@ -118,19 +115,21 @@ export class ProductController {
      * Check if the product exists before updating it
      */
     const oldProduct: QueryResponse<Product> = await this.productRepository.findOne(id);
+
     if (oldProduct) {
       const [newProduct, err] = await this.transformAndValidateProduct(newProductJSON);
+
       if (err.length) {
         throw new ProductNotValidError(err);
-      } else {
-        await this.productRepository.update(id, newProduct);
-        return {
-          status: 'Product edited!'
-        };
       }
-    } else {
-      return undefined;
+
+      await this.productRepository.update(id, newProduct);
+      return {
+        status: 'Product edited!'
+      };
     }
+
+    return undefined;
   }
 
   /**
@@ -146,13 +145,14 @@ export class ProductController {
      * Check if the product exists before deleting it
      */
     const productToBeDeleted: QueryResponse<Product> = await this.productRepository.findOne(id);
+
     if (productToBeDeleted) {
       await this.productRepository.delete(id);
       return {
         status: 'Product deleted!'
       };
-    } else {
-      return undefined;
     }
+
+    return undefined;
   }
 }
