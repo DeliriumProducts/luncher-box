@@ -1,11 +1,17 @@
 import passport from 'passport';
 import { Strategy as LocalStrategy } from 'passport-local';
-import { getRepository } from 'typeorm';
+import { getRepository, Repository } from 'typeorm';
 import { User } from '../entities/';
 import { QueryResponse } from '../types/';
 
-const userRepository = getRepository(User);
+const userRepository: Repository<User> = getRepository(User);
 
+/**
+ * Check the user exists in the database and if the passwords match with the one in it
+ * @param email
+ * @param password
+ * @param done
+ */
 const loginUser = async (email: string, password: string, done: any) => {
   const user: QueryResponse<User> = await userRepository.findOne({ where: { email } });
   if (!user || !user.validatePassword(password)) {
@@ -15,6 +21,12 @@ const loginUser = async (email: string, password: string, done: any) => {
   return done(null, user);
 };
 
+/**
+ * Check for a duplicate account before registration
+ * @param email
+ * @param password
+ * @param done
+ */
 const registerUser = async (email: string, password: string, done: any) => {
   const user: QueryResponse<User> = await userRepository.findOne({ where: { email } });
   if (user) {
@@ -47,6 +59,9 @@ export const initPassport = () => {
     )
   );
 
+  /**
+   * Called when logging in, injects a cookie in the session
+   */
   passport.serializeUser((user: User, done: any) => {
     if (!user) {
       done(null, false);
@@ -55,8 +70,12 @@ export const initPassport = () => {
     }
   });
 
+  /**
+   * Called when trying to access protected routes, verifies the cookie from the session
+   */
   passport.deserializeUser(async (id: number, done: any) => {
     const user = await userRepository.findOne({ where: { id } });
+
     if (!user) {
       done(null, false);
     } else {

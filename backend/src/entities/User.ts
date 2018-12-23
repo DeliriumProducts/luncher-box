@@ -28,11 +28,18 @@ export class User {
   @Column()
   isVerified: boolean;
 
+  /**
+   * Hash password using bcrypt before inserting
+   */
   @BeforeInsert()
   async hashPassword(): Promise<void> {
     this.password = await bcrypt.hash(this.password, 12);
   }
 
+  /**
+   * Check if the password matches with the one in the database
+   * @param password
+   */
   async validatePassword(password: string): Promise<boolean> {
     return await bcrypt.compare(password, this.password);
   }
