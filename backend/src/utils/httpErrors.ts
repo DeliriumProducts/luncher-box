@@ -1,7 +1,6 @@
 import { HttpError } from 'routing-controllers';
 import { EntityError } from 'src/types/entityerror';
 import { ClassType } from '../types';
-import { Product } from '../entities';
 
 /**
  * STATUS: 404
