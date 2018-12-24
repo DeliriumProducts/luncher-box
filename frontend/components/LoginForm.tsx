@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import React from 'react';
 import { FormComponentProps } from 'antd/lib/form';
 import { HandleLogin } from '../types';
+import axios from 'axios';
 
 const FormItem = Form.Item;
 
@@ -44,11 +45,25 @@ class LoginForm extends React.Component<Props, State> {
 
   handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    this.props.form.validateFields((err, values) => {
+    this.props.form.validateFields(async (err, values) => {
       if (!err) {
-        this.setState(prev => ({
-          loading: !prev.loading
-        }));
+        // this.setState(prev => ({
+        //   loading: !prev.loading
+        // }));
+
+        const { email, password } = values;
+        const data = {
+          email,
+          password
+        };
+        const response = await axios.post(
+          'http://localhost:8000/auth/login',
+          data,
+          {
+            withCredentials: true
+          }
+        );
+        console.log(response);
       }
     });
   };
