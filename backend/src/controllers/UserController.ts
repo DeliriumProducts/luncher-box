@@ -1,5 +1,5 @@
 import { JsonController, Get, Post, Body, Req, UseBefore } from 'routing-controllers';
-import { Request, Response } from 'express';
+import { Request } from 'express';
 import { User, UserNotValidError, DuplicateUserError, UserNotFoundError } from '../entities';
 import { transformAndValidate } from '../utils';
 import { Repository, getRepository } from 'typeorm';

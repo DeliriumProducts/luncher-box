@@ -1,9 +1,9 @@
-import MenuBar from './MenuBar';
-import LoginForm from './LoginForm';
 import { Affix } from 'antd';
 import styled from 'styled-components';
 import React from 'react';
 import { HandleLogin } from '../types';
+import MenuBar from './MenuBar';
+import LoginForm from './LoginForm';
 
 const CenteredDiv = styled.div`
   min-height: 100%;
