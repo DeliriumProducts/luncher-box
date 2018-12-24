@@ -2,16 +2,7 @@ import { TransformAndValidateTuple, QueryResponse } from '../types';
 import { TransformValidationOptions } from 'class-transformer-validator';
 import { Repository, getRepository } from 'typeorm';
 import { Product, Category, CategoryNotFoundError, CategoryNotValidError } from '../entities';
-import {
-  Get,
-  JsonController,
-  Post,
-  OnUndefined,
-  Param,
-  Body,
-  Delete,
-  Put
-} from 'routing-controllers';
+import { Get, JsonController, Post, Param, Body, Delete, Put } from 'routing-controllers';
 import { transformAndValidate } from '../utils';
 
 @JsonController('/categories')
@@ -39,7 +30,8 @@ export class CategoryController {
    */
   @Get()
   async getAll() {
-    return await this.categoryRepository.find();
+    const categories = await this.categoryRepository.find();
+    return categories;
   }
 
   /**
@@ -49,11 +41,16 @@ export class CategoryController {
    * @param id
    */
   @Get('/:categoryId')
-  @OnUndefined(CategoryNotFoundError)
   async getOne(@Param('categoryId') id: number) {
-    return await this.categoryRepository.findOne(id, {
+    const category = await this.categoryRepository.findOne(id, {
       relations: ['products']
     });
+
+    if (category) {
+      return category;
+    }
+
+    throw new CategoryNotFoundError();
   }
 
   /**
@@ -71,9 +68,7 @@ export class CategoryController {
     }
 
     await this.categoryRepository.save(category);
-    return {
-      message: 'New category created!'
-    };
+    return 'New category created!';
   }
 
   /**
@@ -84,7 +79,6 @@ export class CategoryController {
    * @param newCategory
    */
   @Put('/:categoryId')
-  @OnUndefined(CategoryNotFoundError)
   async update(@Param('categoryId') id: number, @Body() newCategoryJSON: Category) {
     /**
      * Check if the category exists before updating it
@@ -99,12 +93,10 @@ export class CategoryController {
       }
 
       await this.categoryRepository.update(id, newCategory);
-      return {
-        message: 'Category updated!'
-      };
+      return 'Category updated!';
     }
 
-    return undefined;
+    throw new CategoryNotFoundError();
   }
 
   /**
@@ -114,7 +106,6 @@ export class CategoryController {
    * @param id
    */
   @Delete('/:categoryId')
-  @OnUndefined(CategoryNotFoundError)
   async delete(@Param('categoryId') id: number) {
     /**
      * Check if the category exists before deleting it
@@ -136,11 +127,9 @@ export class CategoryController {
         }
       }
       await this.categoryRepository.delete(id);
-      return {
-        message: 'Category deleted!'
-      };
+      return 'Category deleted!';
     }
 
-    return undefined;
+    throw new CategoryNotFoundError();
   }
 }

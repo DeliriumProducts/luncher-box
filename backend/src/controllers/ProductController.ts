@@ -9,16 +9,7 @@ import {
   CategoryNotFoundError
 } from '../entities';
 import { TransformAndValidateTuple } from '../types';
-import {
-  JsonController,
-  Get,
-  OnUndefined,
-  Param,
-  Post,
-  Body,
-  Delete,
-  Put
-} from 'routing-controllers';
+import { JsonController, Get, Param, Post, Body, Delete, Put } from 'routing-controllers';
 import { Repository, getRepository } from 'typeorm';
 import { transformAndValidate } from '../utils';
 
@@ -52,7 +43,8 @@ export class ProductController {
    */
   @Get()
   async getAll() {
-    return await this.productRepository.find();
+    const categories = await this.productRepository.find();
+    return categories;
   }
 
   /**
@@ -62,11 +54,16 @@ export class ProductController {
    * @param productId
    */
   @Get('/:productId')
-  @OnUndefined(ProductNotFoundError)
   async getOne(@Param('productId') id: number) {
-    return await this.productRepository.findOne(id, {
+    const product = await this.productRepository.findOne(id, {
       relations: ['categories']
     });
+
+    if (product) {
+      return product;
+    }
+
+    throw new ProductNotFoundError();
   }
 
   /**
@@ -76,7 +73,6 @@ export class ProductController {
    * @param productJSON
    */
   @Post()
-  @OnUndefined(CategoryNotFoundError)
   async create(@Body() productJSON: Product) {
     const [product, productErr] = await this.transformAndValidateProduct(productJSON);
 
@@ -107,15 +103,13 @@ export class ProductController {
     }
 
     if (!validCategories.length) {
-      return undefined;
+      throw new CategoryNotFoundError();
     } else {
       product.categories = validCategories;
     }
 
     await this.productRepository.save(product);
-    return {
-      message: 'New product created!'
-    };
+    return 'New product created!';
   }
 
   /**
@@ -126,7 +120,6 @@ export class ProductController {
    * @param newProductJSON
    */
   @Put('/:productId')
-  @OnUndefined(ProductNotFoundError)
   async update(@Param('productId') id: number, @Body() newProductJSON: Product) {
     /**
      * Check if the product exists before updating it
@@ -163,7 +156,7 @@ export class ProductController {
       }
 
       if (!validCategories.length) {
-        return undefined;
+        throw new CategoryNotFoundError();
       } else {
         newProduct.categories = validCategories;
       }
@@ -171,12 +164,10 @@ export class ProductController {
       newProduct.id = oldProduct.id;
 
       await this.productRepository.save(newProduct);
-      return {
-        message: 'Product edited!'
-      };
+      return 'Product edited!';
     }
 
-    return undefined;
+    throw new ProductNotFoundError();
   }
 
   /**
@@ -186,7 +177,6 @@ export class ProductController {
    * @param id
    */
   @Delete('/:productId')
-  @OnUndefined(ProductNotFoundError)
   async delete(@Param('productId') id: number) {
     /**
      * Check if the product exists before deleting it
@@ -195,11 +185,9 @@ export class ProductController {
 
     if (productToBeDeleted) {
       await this.productRepository.delete(id);
-      return {
-        message: 'Product deleted!'
-      };
+      return 'Product deleted!';
     }
 
-    return undefined;
+    throw new ProductNotFoundError();
   }
 }
