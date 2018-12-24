@@ -1,14 +1,14 @@
 import { UserNotFoundError } from './../entities/User';
 import passport from 'passport';
 import { Strategy as LocalStrategy } from 'passport-local';
-import { getRepository, Repository } from 'typeorm';
+import { getRepository } from 'typeorm';
 import { User } from '../entities/';
 import { QueryResponse } from '../types/';
 
 export const initPassport = () => {
   const userRepository = getRepository(User);
   /**
-   * Check the user exists in the database and if the passwords match with the one in it
+   * Check if the user exists in the database and if the passwords match with the one in it
    * @param email
    * @param password
    * @param done
