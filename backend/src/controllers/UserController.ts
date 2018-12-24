@@ -1,4 +1,13 @@
-import { JsonController, Get, Post, Body, OnUndefined, Req, Res } from 'routing-controllers';
+import {
+  JsonController,
+  Get,
+  Post,
+  Body,
+  OnUndefined,
+  Req,
+  Res,
+  UseBefore
+} from 'routing-controllers';
 import { Request, Response } from 'express';
 import { User, UserNotValidError, DuplicateUserError, UserNotFoundError } from '../entities';
 import { transformAndValidate } from '../utils';
@@ -41,7 +50,7 @@ export class UserController {
    */
   @Post('/register')
   @OnUndefined(DuplicateUserError)
-  async register(@Body() userJSON: User, @Req() req: Request, @Res() res: Response) {
+  async register(@Body() userJSON: User, @Req() req: Request) {
     /**
      * Check if there is a user already registered with the given email
      */
@@ -78,17 +87,16 @@ export class UserController {
    * POST /auth/login
    *
    * Login a user based on the request body
-   * @param userJSON
    */
   @Post('/login')
-  @OnUndefined(UserNotFoundError)
-  async login(@Body() userJSON: User) {
-    const email = userJSON.email;
-    const user = await this.userRepository.findOne({ where: { email } });
-    if (user) {
-      return user.validatePassword(userJSON.password);
+  @UseBefore(passport.authenticate('local'))
+  async login(@Req() req: Request) {
+    if (req.user) {
+      return {
+        message: 'User logged in!'
+      };
     } else {
-      return undefined;
+      throw new UserNotFoundError();
     }
   }
 }

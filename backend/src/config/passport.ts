@@ -1,3 +1,4 @@
+import { UserNotFoundError } from './../entities/User';
 import passport from 'passport';
 import { Strategy as LocalStrategy } from 'passport-local';
 import { getRepository, Repository } from 'typeorm';
@@ -14,8 +15,9 @@ export const initPassport = () => {
    */
   const authenticateUser = async (email: string, password: string, done: any) => {
     const user: QueryResponse<User> = await userRepository.findOne({ where: { email } });
-    if (!user || !user.validatePassword(password)) {
-      return done(null, false, { isValid: false });
+
+    if (!user || !(await user.validatePassword(password))) {
+      return done(null, false);
     }
 
     return done(null, user);
