@@ -3,14 +3,7 @@ import styled from 'styled-components';
 import React from 'react';
 import { HandleLogin } from '../types';
 import MenuBar from './MenuBar';
-import LoginForm from './LoginForm';
-
-const CenteredDiv = styled.div`
-  min-height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-`;
+import CenteredDiv from './CenteredDiv';
 
 type State = {
   isAuthenticated: boolean;
@@ -30,20 +23,12 @@ class Layout extends React.Component<Props, State> {
   };
 
   render() {
-    const { isAuthenticated } = this.state;
     return (
       <>
-        {isAuthenticated ? (
-          <>
-            <Affix offsetTop={0}>
-              <MenuBar selectedKey={this.props.selectedKey} />
-            </Affix>
-            {this.props.children}
-          </>
-        ) : (
-          <CenteredDiv>
-            <LoginForm handleLogin={this.handleLogin} />
-          </CenteredDiv>
+        <Affix offsetTop={0}>
+          <MenuBar selectedKey={this.props.selectedKey} />
+        </Affix>
+        {this.props.children}
         )}
       </>
     );
