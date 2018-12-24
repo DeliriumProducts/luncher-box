@@ -85,4 +85,19 @@ export class UserController {
       throw new UserNotFoundError();
     }
   }
+
+  /**
+   * GET /auth/logout
+   *
+   * Logout a user
+   */
+  @Get('/logout')
+  async logout(@Req() req: Request) {
+    if (req.user) {
+      req.logout();
+      return 'User logged out!';
+    } else {
+      return 'Login to logout!';
+    }
+  }
 }
