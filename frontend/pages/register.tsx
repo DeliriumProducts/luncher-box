@@ -54,7 +54,7 @@ class RegisterForm extends React.Component<Props, State> {
         };
 
         this.setState({ loading: true });
-        await axios.post('http://49447e34.ngrok.io/auth/register', data, {
+        await axios.post('http://80ee1d03.ngrok.io/auth/register', data, {
           withCredentials: true
         });
         this.setState({ loading: false });
