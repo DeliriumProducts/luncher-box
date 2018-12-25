@@ -2,7 +2,16 @@ import { TransformAndValidateTuple, QueryResponse } from '../types';
 import { TransformValidationOptions } from 'class-transformer-validator';
 import { Repository, getRepository } from 'typeorm';
 import { Product, Category, CategoryNotFoundError, CategoryNotValidError } from '../entities';
-import { Get, JsonController, Post, Param, Body, Delete, Put } from 'routing-controllers';
+import {
+  Get,
+  JsonController,
+  Post,
+  Param,
+  Body,
+  Delete,
+  Put,
+  Authorized
+} from 'routing-controllers';
 import { transformAndValidate } from '../utils';
 
 @JsonController('/categories')
@@ -60,6 +69,7 @@ export class CategoryController {
    * @param category
    */
   @Post()
+  @Authorized()
   async create(@Body() categoryJSON: Category) {
     const [category, err] = await this.transformAndValidateCategory(categoryJSON);
 
@@ -79,6 +89,7 @@ export class CategoryController {
    * @param newCategory
    */
   @Put('/:categoryId')
+  @Authorized()
   async update(@Param('categoryId') id: number, @Body() newCategoryJSON: Category) {
     /**
      * Check if the category exists before updating it
@@ -106,6 +117,7 @@ export class CategoryController {
    * @param id
    */
   @Delete('/:categoryId')
+  @Authorized()
   async delete(@Param('categoryId') id: number) {
     /**
      * Check if the category exists before deleting it

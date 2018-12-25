@@ -3,6 +3,7 @@ import { createConnection, Connection } from 'typeorm';
 import { PORT, ENV, dbConfig, initPassport, app, io, server } from './config';
 import { useExpressServer } from 'routing-controllers';
 import { useSocketServer } from 'socket-controllers';
+import { authorizationChecker } from './utils';
 
 const startServer = async () => {
   console.clear();
@@ -16,7 +17,8 @@ const startServer = async () => {
    */
   useExpressServer(app, {
     classTransformer: false,
-    controllers: [`${__dirname}/controllers/*.ts`]
+    controllers: [`${__dirname}/controllers/*.ts`],
+    authorizationChecker
   });
 
   /**

@@ -5,11 +5,19 @@ import {
   Product,
   ProductNotFoundError,
   ProductNotValidError,
-  DuplicateProductError,
   CategoryNotFoundError
 } from '../entities';
 import { TransformAndValidateTuple } from '../types';
-import { JsonController, Get, Param, Post, Body, Delete, Put } from 'routing-controllers';
+import {
+  JsonController,
+  Get,
+  Param,
+  Post,
+  Body,
+  Delete,
+  Put,
+  Authorized
+} from 'routing-controllers';
 import { Repository, getRepository } from 'typeorm';
 import { transformAndValidate } from '../utils';
 
@@ -73,6 +81,7 @@ export class ProductController {
    * @param productJSON
    */
   @Post()
+  @Authorized()
   async create(@Body() productJSON: Product) {
     const [product, productErr] = await this.transformAndValidateProduct(productJSON);
 
@@ -120,6 +129,7 @@ export class ProductController {
    * @param newProductJSON
    */
   @Put('/:productId')
+  @Authorized()
   async update(@Param('productId') id: number, @Body() newProductJSON: Product) {
     /**
      * Check if the product exists before updating it
@@ -176,6 +186,7 @@ export class ProductController {
    * @param id
    */
   @Delete('/:productId')
+  @Authorized()
   async delete(@Param('productId') id: number) {
     /**
      * Check if the product exists before deleting it
