@@ -4,7 +4,7 @@ import MenuBar from './MenuBar';
 
 interface Props {
   selectedKey: string;
-  children: ReactNode;
+  children?: ReactNode;
 }
 
 const Layout: React.FunctionComponent<Props> = props => {
