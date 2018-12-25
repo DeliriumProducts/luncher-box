@@ -6,6 +6,7 @@ import { FormComponentProps } from 'antd/lib/form';
 import { HandleLogin } from '../types';
 import CenteredDiv from '../components/CenteredDiv';
 import axios from 'axios';
+import { NextContext } from 'next';
 
 const FormItem = Form.Item;
 
@@ -41,6 +42,20 @@ interface State {
 }
 
 class LoginForm extends React.Component<Props, State> {
+  static async getInitialProps({ req }: NextContext) {
+    if (req) {
+      const response = await axios.get('http://localhost:8000/auth', {
+        withCredentials: true,
+        headers: {
+          cookie: req.headers.cookie
+        }
+      });
+
+      console.log(response.data);
+    } else {
+      console.log('client');
+    }
+  }
   state = {
     loading: false
   };
@@ -56,7 +71,7 @@ class LoginForm extends React.Component<Props, State> {
         };
         this.setState({ loading: true });
         const response = await axios.post(
-          'http://49447e34.ngrok.io/auth/login',
+          'http://localhost:8000/auth/login',
           data,
           {
             withCredentials: true
