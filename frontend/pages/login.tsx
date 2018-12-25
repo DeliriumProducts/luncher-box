@@ -36,9 +36,9 @@ interface Props extends FormComponentProps {
   handleLogin: HandleLogin;
 }
 
-type State = {
+interface State {
   loading: boolean;
-};
+}
 
 class LoginForm extends React.Component<Props, State> {
   state = {

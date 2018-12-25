@@ -32,9 +32,9 @@ interface Props extends FormComponentProps {
   handleregister: HandleRegister;
 }
 
-type State = {
+interface State {
   loading: boolean;
-};
+}
 
 class RegisterForm extends React.Component<Props, State> {
   state = {

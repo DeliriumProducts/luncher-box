@@ -1,2 +1,4 @@
-export * from './handleLogin';
-export * from './handleRegister';
+export * from './HandleLogin';
+export * from './HandleRegister';
+export * from './Product';
+export * from './Category';
