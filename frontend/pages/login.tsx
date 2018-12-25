@@ -44,14 +44,15 @@ interface State {
 class LoginForm extends React.Component<Props, State> {
   static async getInitialProps({ req }: NextContext) {
     if (req) {
-      const response = await axios.get('http://localhost:8000/auth', {
-        withCredentials: true,
-        headers: {
-          cookie: req.headers.cookie
-        }
-      });
-
-      console.log(response.data);
+      if (req.headers.cookie) {
+        const response = await axios.get('http://localhost:8000/auth', {
+          withCredentials: true,
+          headers: {
+            cookie: req.headers.cookie
+          }
+        });
+        console.log(response.data);
+      }
     } else {
       console.log('client');
     }
