@@ -6,6 +6,6 @@ interface Values {
   categories: Category[];
 }
 
-export default React.createContext<Values>({
+export const UserContext = React.createContext<Values>({
   categories: []
 });
