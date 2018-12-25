@@ -45,7 +45,7 @@ class LoginForm extends React.Component<Props, State> {
   static async getInitialProps({ req }: NextContext) {
     if (req) {
       if (req.headers.cookie) {
-        const response = await axios.get('http://localhost:8000/auth', {
+        const response = await axios.get('http://80ee1d03.ngrok.io/auth', {
           withCredentials: true,
           headers: {
             cookie: req.headers.cookie
@@ -72,7 +72,7 @@ class LoginForm extends React.Component<Props, State> {
         };
         this.setState({ loading: true });
         const response = await axios.post(
-          'http://localhost:8000/auth/login',
+          'http://80ee1d03.ngrok.io/auth/login',
           data,
           {
             withCredentials: true

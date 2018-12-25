@@ -4,6 +4,7 @@ import { createGlobalStyle } from 'styled-components';
 import axios from 'axios';
 import AdminContext from '../context/AdminContext';
 import UserContext from '../context/UserContext';
+import { Category } from '../types';
 
 const GlobalStyle = createGlobalStyle`
   html,
@@ -17,12 +18,12 @@ const GlobalStyle = createGlobalStyle`
 
 interface Props {
   isAuthenticated: boolean;
+  categories: Category[];
 }
 
 export default class MyApp extends App<Props> {
   static async getInitialProps({ Component, ctx, req, res }: any) {
     let pageProps = {};
-    let categories = {};
     let isAuthenticated = false;
     if (Component.getInitialProps) {
       pageProps = await Component.getInitialProps(ctx);
@@ -33,13 +34,12 @@ export default class MyApp extends App<Props> {
      */
     if (req) {
       if (req.headers.cookie) {
-        const response = await axios.get('http://localhost:8000/auth', {
+        isAuthenticated = (await axios.get('http://80ee1d03.ngrok.io/auth', {
           withCredentials: true,
           headers: {
             cookie: req.headers.cookie
           }
-        });
-        isAuthenticated = response.data;
+        })).data;
       }
 
       if (!isAuthenticated) {
@@ -50,18 +50,24 @@ export default class MyApp extends App<Props> {
       }
     }
 
-    return { pageProps, isAuthenticated };
+    /**
+     * Get all categories
+     */
+    const categories = (await axios.get('http://80ee1d03.ngrok.io')).data;
+    return { pageProps, isAuthenticated, categories };
   }
 
   render() {
-    const { Component, pageProps, isAuthenticated } = this.props;
+    const { Component, pageProps, isAuthenticated, categories } = this.props;
 
     return (
       <AdminContext.Provider value={{ isAuthenticated }}>
-        <Container>
-          <GlobalStyle />
-          <Component {...pageProps} />
-        </Container>
+        <UserContext.Provider value={{ categories }}>
+          <Container>
+            <GlobalStyle />
+            <Component {...pageProps} />
+          </Container>
+        </UserContext.Provider>
       </AdminContext.Provider>
     );
   }
