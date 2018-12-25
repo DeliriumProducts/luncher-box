@@ -4,7 +4,13 @@ import { Credentials } from './../types';
 
 export class AuthAPI {
   static async login(credentials: Credentials) {
-    const response = await axios.post(`${BACKEND_URL}/auth/login`, credentials);
+    const response = await axios.post(
+      `${BACKEND_URL}/auth/login`,
+      credentials,
+      {
+        withCredentials: true
+      }
+    );
 
     return response;
   }

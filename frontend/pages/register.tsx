@@ -46,15 +46,14 @@ class RegisterForm extends React.Component<Props, State> {
     this.props.form.validateFields(async (err, values) => {
       if (!err) {
         const { email, password, name } = values;
-        console.log(name);
-        const data = {
+        const credentials = {
           name,
           email,
           password
         };
 
         this.setState({ loading: true });
-        await AuthAPI.login(credentials);
+        await AuthAPI.register(credentials);
         this.setState({ loading: false });
       }
     });
