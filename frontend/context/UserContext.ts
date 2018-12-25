@@ -4,10 +4,8 @@ import React from 'react';
 
 interface Values {
   categories: Category[];
-  products: Product[];
 }
 
 export default React.createContext<Values>({
-  categories: [],
-  products: []
+  categories: []
 });
