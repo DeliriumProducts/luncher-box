@@ -3,8 +3,8 @@ import Link from 'next/link';
 import styled from 'styled-components';
 import React from 'react';
 import { FormComponentProps } from 'antd/lib/form';
-import { HandleRegister } from '../types';
-import CenteredDiv from '../components/CenteredDiv';
+import { HandleRegister } from '../../types';
+import CenteredDiv from '../../components/CenteredDiv';
 import axios from 'axios';
 
 const FormItem = Form.Item;
