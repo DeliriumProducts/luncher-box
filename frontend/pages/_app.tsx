@@ -1,10 +1,10 @@
 import React from 'react';
-import App, { Container } from 'next/app';
+import App, { Container, NextAppContext } from 'next/app';
 import { createGlobalStyle } from 'styled-components';
-import axios from 'axios';
-import AdminContext from '../context/AdminContext';
-import UserContext from '../context/UserContext';
+import { UserContext } from '../context/';
 import { Category } from '../types';
+import { AuthAPI, CategoryAPI } from '../api';
+import { NextContext } from 'next';
 
 const GlobalStyle = createGlobalStyle`
   html,
@@ -22,53 +22,30 @@ interface Props {
 }
 
 export default class MyApp extends App<Props> {
-  static async getInitialProps({ Component, ctx, req, res }: any) {
+  static async getInitialProps({ Component, ctx }: NextAppContext) {
     let pageProps = {};
-    let isAuthenticated = false;
+
     if (Component.getInitialProps) {
       pageProps = await Component.getInitialProps(ctx);
     }
 
     /**
-     * Check for authentication
-     */
-    if (req) {
-      if (req.headers.cookie) {
-        isAuthenticated = (await axios.get('http://80ee1d03.ngrok.io/auth', {
-          withCredentials: true,
-          headers: {
-            cookie: req.headers.cookie
-          }
-        })).data;
-      }
-
-      if (!isAuthenticated) {
-        res.writeHead(302, {
-          Location: '/login'
-        });
-        res.end();
-      }
-    }
-
-    /**
      * Get all categories
      */
-    const categories = (await axios.get('http://80ee1d03.ngrok.io')).data;
-    return { pageProps, isAuthenticated, categories };
+    const categories = await CategoryAPI.getAll();
+    return { pageProps, categories };
   }
 
   render() {
     const { Component, pageProps, isAuthenticated, categories } = this.props;
 
     return (
-      <AdminContext.Provider value={{ isAuthenticated }}>
-        <UserContext.Provider value={{ categories }}>
-          <Container>
-            <GlobalStyle />
-            <Component {...pageProps} />
-          </Container>
-        </UserContext.Provider>
-      </AdminContext.Provider>
+      <UserContext.Provider value={{ categories }}>
+        <Container>
+          <GlobalStyle />
+          <Component {...pageProps} />
+        </Container>
+      </UserContext.Provider>
     );
   }
 }

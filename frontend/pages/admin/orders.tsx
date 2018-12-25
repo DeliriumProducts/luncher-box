@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from 'react';
-import Layout from '../components/Layout';
+import Layout from '../../components/Layout';
 import styled from 'styled-components';
 
 const Container = styled.div`
