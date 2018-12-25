@@ -1,6 +1,7 @@
 const withTypescript = require('@zeit/next-typescript');
 const withCss = require('@zeit/next-css');
 const { parsed: localEnv } = require('dotenv').config();
+const webpack = require('webpack');
 
 // fix: prevents error when .css files are required by node
 if (typeof require !== 'undefined') {
