@@ -7,7 +7,6 @@ import {
   OnMessage,
   SocketIO
 } from 'socket-controllers';
-import { app } from 'src/config';
 
 @SocketController()
 export class OrderController {

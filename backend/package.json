@@ -2,6 +2,8 @@
   "name": "luncherbox-api",
   "version": "0.0.1",
   "devDependencies": {
+    "@types/bcrypt": "^3.0.0",
+    "@types/bcryptjs": "^2.4.2",
     "@types/bluebird": "^3.5.25",
     "@types/body-parser": "^1.17.0",
     "@types/compression": "0.0.36",
@@ -14,8 +16,10 @@
     "@types/jest": "^23.3.10",
     "@types/lusca": "^1.5.0",
     "@types/node": "^10.12.18",
+    "@types/nodemailer": "^4.6.5",
     "@types/passport": "^0.4.7",
     "@types/passport-local": "^1.0.33",
+    "@types/socket.io": "^2.1.2",
     "husky": "^1.2.1",
     "prettier": "^1.15.3",
     "pretty-quick": "^1.8.0",
@@ -23,9 +27,6 @@
     "typescript": "^3.2.2"
   },
   "dependencies": {
-    "@types/bcrypt": "^3.0.0",
-    "@types/bcryptjs": "^2.4.2",
-    "@types/socket.io": "^2.1.2",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.18.3",
     "class-transformer": "^0.2.0",

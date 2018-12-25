@@ -104,9 +104,9 @@ export class ProductController {
 
     if (!validCategories.length) {
       throw new CategoryNotFoundError();
-    } else {
-      product.categories = validCategories;
     }
+
+    product.categories = validCategories;
 
     await this.productRepository.save(product);
     return 'New product created!';
@@ -157,10 +157,9 @@ export class ProductController {
 
       if (!validCategories.length) {
         throw new CategoryNotFoundError();
-      } else {
-        newProduct.categories = validCategories;
       }
 
+      newProduct.categories = validCategories;
       newProduct.id = oldProduct.id;
 
       await this.productRepository.save(newProduct);

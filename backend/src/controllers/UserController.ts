@@ -1,15 +1,18 @@
 import { JsonController, Get, Post, Body, Req, UseBefore } from 'routing-controllers';
 import { Request } from 'express';
-import { User, UserNotValidError, DuplicateUserError, UserNotFoundError } from '../entities';
-import { transformAndValidate } from '../utils';
+import nodemailer from 'nodemailer';
+import passport from 'passport';
+import { User, UserNotValidError, DuplicateUserError, UserNotFoundError, Token } from '../entities';
 import { Repository, getRepository } from 'typeorm';
 import { TransformValidationOptions } from 'class-transformer-validator';
 import { TransformAndValidateTuple } from '../types';
-import passport = require('passport');
+import { OWNER_EMAIL, OWNER_PASS, VERIFIER_EMAIL } from '../config';
+import { transformAndValidate } from '../utils';
 
 @JsonController('/auth')
 export class UserController {
   private userRepository: Repository<User>;
+  private tokenRepository: Repository<Token>;
   private transformAndValidateUser: (
     obj: object | Array<{}>,
     options?: TransformValidationOptions
@@ -20,6 +23,7 @@ export class UserController {
    */
   constructor() {
     this.userRepository = getRepository(User);
+    this.tokenRepository = getRepository(Token);
     this.transformAndValidateUser = transformAndValidate(User);
   }
 
@@ -52,22 +56,52 @@ export class UserController {
 
     if (err.length) {
       throw new UserNotValidError(err);
-    } else {
-      /**
-       * Throw an error if there is a duplicate email
-       */
-      await this.userRepository.save(user);
+    }
 
-      /**
-       * Inject cookie sesssion
-       */
-      req.login(user, error => {
-        if (error) {
-          throw new Error(error);
-        }
-      });
+    const userEntity = await this.userRepository.save(user);
 
-      return 'User created!';
+    /**
+     * Generate verification token and save it
+     */
+    const token = new Token();
+    token.user = userEntity;
+    await this.tokenRepository.save(token);
+
+    // /**
+    //  * Inject cookie sesssion
+    //  */
+    // req.login(user, error => {
+    //   if (error) {
+    //     throw new Error(error);
+    //   }
+    // });
+
+    /**
+     * Send verification email
+     */
+    const transporter = nodemailer.createTransport({
+      service: 'Gmail',
+      auth: {
+        user: OWNER_EMAIL,
+        pass: OWNER_PASS
+      }
+    });
+
+    const confirmationURL = `http://${req.headers.host}/confirm/${token.id}`;
+
+    const mailOptions = {
+      from: OWNER_EMAIL,
+      to: VERIFIER_EMAIL,
+      subject: 'Luncher Box Account Verification',
+      text: `Hello,
+Please verify ${user.name}'s account by clicking the following link: ${confirmationURL}.`
+    };
+
+    try {
+      await transporter.sendMail(mailOptions);
+      return 'Verification email sent!';
+    } catch (error) {
+      return 'Verification email not sent!';
     }
   }
 
@@ -81,9 +115,9 @@ export class UserController {
   async login(@Req() req: Request) {
     if (req.user) {
       return 'User logged in!';
-    } else {
-      throw new UserNotFoundError();
     }
+
+    throw new UserNotFoundError();
   }
 
   /**
@@ -96,8 +130,8 @@ export class UserController {
     if (req.user) {
       req.logout();
       return 'User logged out!';
-    } else {
-      return 'Login to logout!';
     }
+
+    return 'Login to logout!';
   }
 }
