@@ -12,6 +12,7 @@
     "@zeit/next-typescript": "^1.1.1",
     "antd": "^3.11.2",
     "axios": "^0.18.0",
+    "dotenv": "^6.2.0",
     "isomorphic-unfetch": "^3.0.0",
     "next": "7.0.2",
     "react": "16.6.3",
@@ -21,11 +22,12 @@
   },
   "devDependencies": {
     "@types/axios": "^0.14.0",
-    "@types/socket.io-client": "^1.4.32",
-    "@types/styled-components": "^4.1.4",
+    "@types/dotenv": "^6.1.0",
     "@types/next": "^7.0.5",
     "@types/react": "^16.7.17",
     "@types/react-dom": "16.0.11",
+    "@types/socket.io-client": "^1.4.32",
+    "@types/styled-components": "^4.1.4",
     "babel-plugin-import": "^1.11.0",
     "babel-plugin-styled-components": "^1.9.4",
     "typescript": "3.2.2"
