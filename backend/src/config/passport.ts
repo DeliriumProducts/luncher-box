@@ -16,7 +16,7 @@ export const initPassport = () => {
   const authenticateUser = async (email: string, password: string, done: any) => {
     const user: QueryResponse<User> = await userRepository.findOne({ where: { email } });
 
-    if (!user || !(await user.validatePassword(password)) || !user.isVerified) {
+    if (!user || !user.isVerified || !(await user.validatePassword(password))) {
       return done(null, false);
     }
 
