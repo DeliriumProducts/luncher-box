@@ -46,19 +46,18 @@ class RegisterForm extends React.Component<Props, State> {
     this.props.form.validateFields(async (err, values) => {
       if (!err) {
         const { email, password, name } = values;
+        console.log(name);
         const data = {
+          name,
           email,
-          password,
-          name
+          password
         };
-        const response = await axios.post(
-          'http://localhost:8000/auth/register',
-          data,
-          {
-            withCredentials: true
-          }
-        );
-        console.log(response);
+
+        this.setState({ loading: true });
+        await axios.post('http://49447e34.ngrok.io/auth/register', data, {
+          withCredentials: true
+        });
+        this.setState({ loading: false });
       }
     });
   };
@@ -75,7 +74,7 @@ class RegisterForm extends React.Component<Props, State> {
               {getFieldDecorator('name', {
                 rules: [
                   {
-                    type: 'text',
+                    type: 'string',
                     message: 'The input is not valid Name!'
                   },
                   {

@@ -52,12 +52,11 @@ class LoginForm extends React.Component<Props, State> {
         const { email, password } = values;
         const data = {
           email,
-          password,
-          name: 'Pesho'
+          password
         };
         this.setState({ loading: true });
         const response = await axios.post(
-          'http://b8787e5a.ngrok.io/auth/register',
+          'http://49447e34.ngrok.io/auth/login',
           data,
           {
             withCredentials: true
