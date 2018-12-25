@@ -1,9 +1,26 @@
 import { Menu, Icon } from 'antd';
-import Link from 'next/link';
+import styled from 'styled-components';
 
-const MenuBar = ({ selectedKey }) => {
+type Props = {
+  selectedKey: string;
+};
+
+const StyledMenu = styled(Menu)`
+  display: flex;
+
+  & > * {
+    flex: 1;
+    text-align: center;
+  }
+`;
+
+const MenuBar: React.FunctionComponent<Props> = ({ selectedKey }) => {
   return (
-    <Menu mode="horizontal" defaultSelectedKeys={selectedKey}>
+    <StyledMenu
+      mode="horizontal"
+      defaultSelectedKeys={[selectedKey]}
+      theme="dark"
+    >
       <Menu.Item key="dashboard">
         <Icon type="dashboard" />
         Dashboard
@@ -20,7 +37,7 @@ const MenuBar = ({ selectedKey }) => {
         <Icon type="pie-chart" />
         Restaurant load
       </Menu.Item>
-    </Menu>
+    </StyledMenu>
   );
 };
 

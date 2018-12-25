@@ -1,19 +1,16 @@
-import { TransformAndValidateTuple } from '../types';
-import { Product } from './../entities/Product';
+import { TransformAndValidateTuple, QueryResponse } from '../types';
 import { TransformValidationOptions } from 'class-transformer-validator';
-import { QueryResponse } from '../types';
-import { CategoryNotFoundError, EntityNotValidError } from '../utils';
 import { Repository, getRepository } from 'typeorm';
-import { Category } from '../entities';
+import { Product, Category, CategoryNotFoundError, CategoryNotValidError } from '../entities';
 import {
   Get,
   JsonController,
   Post,
-  OnUndefined,
   Param,
   Body,
   Delete,
-  Put
+  Put,
+  Authorized
 } from 'routing-controllers';
 import { transformAndValidate } from '../utils';
 
@@ -31,8 +28,8 @@ export class CategoryController {
    */
   constructor() {
     this.categoryRepository = getRepository(Category);
-    this.productRepository = getRepository(Product);
     this.transformAndValidateCategory = transformAndValidate(Category);
+    this.productRepository = getRepository(Product);
   }
 
   /**
@@ -42,7 +39,8 @@ export class CategoryController {
    */
   @Get()
   async getAll() {
-    return await this.categoryRepository.find();
+    const categories = await this.categoryRepository.find();
+    return categories;
   }
 
   /**
@@ -52,11 +50,16 @@ export class CategoryController {
    * @param id
    */
   @Get('/:categoryId')
-  @OnUndefined(CategoryNotFoundError)
   async getOne(@Param('categoryId') id: number) {
-    return await this.categoryRepository.findOne(id, {
+    const category = await this.categoryRepository.findOne(id, {
       relations: ['products']
     });
+
+    if (category) {
+      return category;
+    }
+
+    throw new CategoryNotFoundError();
   }
 
   /**
@@ -66,20 +69,16 @@ export class CategoryController {
    * @param category
    */
   @Post()
+  @Authorized()
   async create(@Body() categoryJSON: Category) {
-    const [category, err] = await this.transformAndValidateCategory(categoryJSON, {
-      validator: {
-        groups: ['creatingCategory']
-      }
-    });
+    const [category, err] = await this.transformAndValidateCategory(categoryJSON);
+
     if (err.length) {
-      throw new EntityNotValidError(err);
-    } else {
-      await this.categoryRepository.save(category);
-      return {
-        status: 'New category created!'
-      };
+      throw new CategoryNotValidError(err);
     }
+
+    await this.categoryRepository.save(category);
+    return 'New category created!';
   }
 
   /**
@@ -90,29 +89,25 @@ export class CategoryController {
    * @param newCategory
    */
   @Put('/:categoryId')
-  @OnUndefined(CategoryNotFoundError)
+  @Authorized()
   async update(@Param('categoryId') id: number, @Body() newCategoryJSON: Category) {
     /**
      * Check if the category exists before updating it
      */
     const oldCategory: QueryResponse<Category> = await this.categoryRepository.findOne(id);
+
     if (oldCategory) {
-      const [newCategory, err] = await this.transformAndValidateCategory(newCategoryJSON, {
-        validator: {
-          groups: ['creatingCategory']
-        }
-      });
+      const [newCategory, err] = await this.transformAndValidateCategory(newCategoryJSON);
+
       if (err.length) {
-        throw new EntityNotValidError(err);
-      } else {
-        await this.categoryRepository.update(id, newCategory);
-        return {
-          status: 'Category updated!'
-        };
+        throw new CategoryNotValidError(err);
       }
-    } else {
-      return undefined;
+
+      await this.categoryRepository.update(id, newCategory);
+      return 'Category updated!';
     }
+
+    throw new CategoryNotFoundError();
   }
 
   /**
@@ -122,7 +117,7 @@ export class CategoryController {
    * @param id
    */
   @Delete('/:categoryId')
-  @OnUndefined(CategoryNotFoundError)
+  @Authorized()
   async delete(@Param('categoryId') id: number) {
     /**
      * Check if the category exists before deleting it
@@ -130,6 +125,7 @@ export class CategoryController {
     const categoryToBeDeleted: QueryResponse<Category> = await this.categoryRepository.findOne(id, {
       relations: ['products', 'products.categories']
     });
+
     if (categoryToBeDeleted) {
       /**
        * Remove products from the category before deleting it
@@ -143,11 +139,9 @@ export class CategoryController {
         }
       }
       await this.categoryRepository.delete(id);
-      return {
-        status: 'Category deleted!'
-      };
-    } else {
-      return undefined;
+      return 'Category deleted!';
     }
+
+    throw new CategoryNotFoundError();
   }
 }

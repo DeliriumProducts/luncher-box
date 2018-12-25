@@ -1,19 +1,22 @@
-import { CategoryNotFoundError } from './../utils/httpErrors';
 import { TransformValidationOptions } from 'class-transformer-validator';
 import { QueryResponse } from '../types';
-import { Category } from '../entities';
-import { ProductNotFoundError, EntityNotValidError } from '../utils';
+import {
+  Category,
+  Product,
+  ProductNotFoundError,
+  ProductNotValidError,
+  CategoryNotFoundError
+} from '../entities';
 import { TransformAndValidateTuple } from '../types';
-import { Product } from '../entities';
 import {
   JsonController,
   Get,
-  OnUndefined,
   Param,
   Post,
   Body,
   Delete,
-  Put
+  Put,
+  Authorized
 } from 'routing-controllers';
 import { Repository, getRepository } from 'typeorm';
 import { transformAndValidate } from '../utils';
@@ -21,6 +24,7 @@ import { transformAndValidate } from '../utils';
 @JsonController('/products')
 export class ProductController {
   private productRepository: Repository<Product>;
+  private categoryRepository: Repository<Category>;
   private transformAndValidateProduct: (
     obj: object | Array<{}>,
     options?: TransformValidationOptions
@@ -35,8 +39,9 @@ export class ProductController {
    */
   constructor() {
     this.productRepository = getRepository(Product);
-    this.transformAndValidateCategory = transformAndValidate(Category);
+    this.categoryRepository = getRepository(Category);
     this.transformAndValidateProduct = transformAndValidate(Product);
+    this.transformAndValidateCategory = transformAndValidate(Category);
   }
 
   /**
@@ -46,7 +51,8 @@ export class ProductController {
    */
   @Get()
   async getAll() {
-    return await this.productRepository.find();
+    const categories = await this.productRepository.find();
+    return categories;
   }
 
   /**
@@ -56,9 +62,16 @@ export class ProductController {
    * @param productId
    */
   @Get('/:productId')
-  @OnUndefined(ProductNotFoundError)
   async getOne(@Param('productId') id: number) {
-    return await this.productRepository.findOne(id);
+    const product = await this.productRepository.findOne(id, {
+      relations: ['categories']
+    });
+
+    if (product) {
+      return product;
+    }
+
+    throw new ProductNotFoundError();
   }
 
   /**
@@ -68,37 +81,44 @@ export class ProductController {
    * @param productJSON
    */
   @Post()
+  @Authorized()
   async create(@Body() productJSON: Product) {
+    const [product, productErr] = await this.transformAndValidateProduct(productJSON);
+
+    if (productErr.length) {
+      throw new ProductNotValidError(productErr);
+    }
+
     /**
-     * Validate the product and then the nested array of categories (productJSON.categories)
+     * Throw an error if a category doesn't exist when creating a product
      */
-    const [product, productErrors] = await this.transformAndValidateProduct(productJSON);
-    const [category, categoriesErrors] = await this.transformAndValidateCategory(
-      productJSON.categories,
-      {
-        validator: {
-          groups: ['creatingProduct']
+    const categories = await this.categoryRepository.find();
+    const validCategories: Category[] = [];
+
+    for (const category of product.categories) {
+      /**
+       * Make sure only an array of objects are being passed
+       */
+      if (typeof category === 'object') {
+        for (const entities of categories) {
+          /**
+           * Add only the valid categories
+           */
+          if (category.id === entities.id) {
+            validCategories.push(category);
+          }
         }
       }
-    );
-
-    console.log(category);
-
-    if (productErrors.length || categoriesErrors.length) {
-      throw new EntityNotValidError(productErrors.concat(categoriesErrors));
-    } else {
-      /**
-       * Throw an error if a category doesn't exist when creating a product
-       */
-      try {
-        await this.productRepository.save(product);
-        return {
-          status: 'New product created!'
-        };
-      } catch (error) {
-        throw new CategoryNotFoundError();
-      }
     }
+
+    if (!validCategories.length) {
+      throw new CategoryNotFoundError();
+    }
+
+    product.categories = validCategories;
+
+    await this.productRepository.save(product);
+    return 'New product created!';
   }
 
   /**
@@ -109,25 +129,54 @@ export class ProductController {
    * @param newProductJSON
    */
   @Put('/:productId')
-  @OnUndefined(ProductNotFoundError)
+  @Authorized()
   async update(@Param('productId') id: number, @Body() newProductJSON: Product) {
     /**
      * Check if the product exists before updating it
      */
     const oldProduct: QueryResponse<Product> = await this.productRepository.findOne(id);
+
     if (oldProduct) {
-      const [newProduct, err] = await this.transformAndValidateProduct(newProductJSON);
-      if (err.length) {
-        throw new EntityNotValidError(err);
-      } else {
-        await this.productRepository.update(id, newProduct);
-        return {
-          status: 'Product edited!'
-        };
+      const [newProduct, productErr] = await this.transformAndValidateProduct(newProductJSON);
+
+      if (productErr.length) {
+        throw new ProductNotValidError(productErr);
       }
-    } else {
-      return undefined;
+
+      /**
+       * Throw an error if a category doesn't exist when creating a product
+       */
+      const categories = await this.categoryRepository.find();
+      const validCategories: Category[] = [];
+
+      for (const category of newProduct.categories) {
+        /**
+         * Make sure only an array of objects are being passed
+         */
+        if (typeof category === 'object') {
+          for (const entities of categories) {
+            /**
+             * Add only the valid categories
+             */
+            if (category.id === entities.id) {
+              validCategories.push(category);
+            }
+          }
+        }
+      }
+
+      if (!validCategories.length) {
+        throw new CategoryNotFoundError();
+      }
+
+      newProduct.categories = validCategories;
+      newProduct.id = oldProduct.id;
+
+      await this.productRepository.save(newProduct);
+      return 'Product edited!';
     }
+
+    throw new ProductNotFoundError();
   }
 
   /**
@@ -137,19 +186,18 @@ export class ProductController {
    * @param id
    */
   @Delete('/:productId')
-  @OnUndefined(ProductNotFoundError)
+  @Authorized()
   async delete(@Param('productId') id: number) {
     /**
      * Check if the product exists before deleting it
      */
     const productToBeDeleted: QueryResponse<Product> = await this.productRepository.findOne(id);
+
     if (productToBeDeleted) {
       await this.productRepository.delete(id);
-      return {
-        status: 'Product deleted!'
-      };
-    } else {
-      return undefined;
+      return 'Product deleted!';
     }
+
+    throw new ProductNotFoundError();
   }
 }

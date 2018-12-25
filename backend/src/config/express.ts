@@ -4,14 +4,13 @@ import 'reflect-metadata';
 import session from 'express-session';
 import passport from 'passport';
 import { Request, Response, Application, NextFunction } from 'express';
-import { useExpressServer } from 'routing-controllers';
 import expressValidator from 'express-validator';
 import compression from 'compression';
 import lusca from 'lusca';
 import 'reflect-metadata';
-import { SESSION_SECRET } from './env';
-import express = require('express');
-import cors = require('cors');
+import { SESSION_SECRET, FRONTEND_URL, IS_DEV } from './env';
+import express from 'express';
+import cors from 'cors';
 
 /**
  * Create express app
@@ -23,7 +22,11 @@ const app: Application = express();
  */
 app.use(
   cors({
-    origin: true,
+    /**
+     * During develpoment we enabling using the database from anywhere
+     * During production we make sure it's only accesible from the FRONTEND_URL env variable
+     */
+    origin: IS_DEV || FRONTEND_URL,
     credentials: true
   })
 );
@@ -59,12 +62,4 @@ app.use((req: Request, res: Response, next: NextFunction) => {
   next();
 });
 
-/**
- * Set up routing-controllers
- */
-useExpressServer(app, {
-  classTransformer: false,
-  controllers: [`${__dirname}/../controllers/*.ts`]
-});
-
-export default app;
+export { app };

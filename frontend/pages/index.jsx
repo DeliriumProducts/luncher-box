@@ -1,13 +1,8 @@
-import Link from "next/link";
-import { Component, Fragment } from "react";
+import { Component } from 'react';
 
 class Home extends Component {
   render() {
-    return (
-      <div>
-        Welcome to Luncher Box!
-      </div>
-    );
+    return <div>Welcome to Luncher Box!</div>;
   }
 }
 export default Home;

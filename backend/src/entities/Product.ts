@@ -1,6 +1,17 @@
+import { EntityError } from '../types';
+import { EntityNotValidError, DuplicateEntityError, EntityNotFoundError } from '../utils';
 import { Entity, PrimaryGeneratedColumn, Column, ManyToMany, JoinTable } from 'typeorm';
 import { Category } from './Category';
-import { Length, IsNumber, Min, Max, Allow, ValidateNested, MaxLength } from 'class-validator';
+import {
+  Length,
+  IsNumber,
+  Min,
+  Max,
+  Allow,
+  ValidateNested,
+  MaxLength,
+  IsEmail
+} from 'class-validator';
 
 @Entity()
 export class Product {
@@ -26,10 +37,27 @@ export class Product {
   price: number;
 
   @ManyToMany(type => Category, category => category.products, {
-    cascade: false,
-    onDelete: 'CASCADE'
+    cascade: false
   })
   @Allow()
   @JoinTable()
   categories: Category[];
+}
+
+export class ProductNotFoundError extends EntityNotFoundError<Product> {
+  constructor() {
+    super(Product);
+  }
+}
+
+export class ProductNotValidError extends EntityNotValidError<Product> {
+  constructor(errors: EntityError) {
+    super(Product, errors);
+  }
+}
+
+export class DuplicateProductError extends DuplicateEntityError<Product> {
+  constructor() {
+    super(Product);
+  }
 }

@@ -1,3 +1,3 @@
 export * from './httpErrors';
-export * from './indexing';
+export * from './authorizationChecker';
 export { default as transformAndValidate } from './transformAndValidate';

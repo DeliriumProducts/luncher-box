@@ -2,8 +2,6 @@
 
 # dependencies
 frontend-old/
-backend-old/
-node_modules/
 
 # testing
 /coverage
@@ -12,6 +10,7 @@ node_modules/
 /build
 /dist
 /.next
+/out
 
 # misc
 .DS_Store
