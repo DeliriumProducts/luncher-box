@@ -16,11 +16,7 @@ const StyledMenu = styled(Menu)`
 
 const MenuBar: React.FunctionComponent<Props> = ({ selectedKey }) => {
   return (
-    <StyledMenu
-      mode="horizontal"
-      defaultSelectedKeys={[selectedKey]}
-      theme="dark"
-    >
+    <StyledMenu mode="horizontal" defaultSelectedKeys={[selectedKey]}>
       <Menu.Item key="dashboard">
         <Icon type="dashboard" />
         Dashboard

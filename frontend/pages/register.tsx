@@ -5,7 +5,7 @@ import React from 'react';
 import { FormComponentProps } from 'antd/lib/form';
 import { HandleRegister } from '../types';
 import CenteredDiv from '../components/CenteredDiv';
-import axios from 'axios';
+import { AuthAPI } from '../api';
 
 const FormItem = Form.Item;
 
@@ -54,9 +54,7 @@ class RegisterForm extends React.Component<Props, State> {
         };
 
         this.setState({ loading: true });
-        await axios.post('http://80ee1d03.ngrok.io/auth/register', data, {
-          withCredentials: true
-        });
+        await AuthAPI.login(credentials);
         this.setState({ loading: false });
       }
     });
@@ -117,7 +115,13 @@ class RegisterForm extends React.Component<Props, State> {
             <FormItem>
               {getFieldDecorator('password', {
                 rules: [
-                  { required: true, message: 'Please type your Password!' }
+                  {
+                    required: true,
+                    pattern: /^(?=.*[a-z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/,
+                    message:
+                      // tslint:disable-next-line
+                      'Password must contain at least 1 lowercase alphabetical character, 1 special symbol, 1 numeric character and be at least 8 characters long'
+                  }
                 ]
               })(
                 <Input

@@ -23,6 +23,7 @@ export class AuthAPI {
     if (cookie) {
       opts = { headers: { cookie } };
     }
+    console.log(opts);
     const isAuthenticated: boolean = (await axios.get(`${BACKEND_URL}/auth`, {
       withCredentials: true,
       ...opts

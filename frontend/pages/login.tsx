@@ -5,8 +5,7 @@ import React from 'react';
 import { FormComponentProps } from 'antd/lib/form';
 import { HandleLogin } from '../types';
 import CenteredDiv from '../components/CenteredDiv';
-import axios from 'axios';
-import { NextContext } from 'next';
+import { AuthAPI } from '../api';
 
 const FormItem = Form.Item;
 
@@ -42,21 +41,6 @@ interface State {
 }
 
 class LoginForm extends React.Component<Props, State> {
-  static async getInitialProps({ req }: NextContext) {
-    if (req) {
-      if (req.headers.cookie) {
-        const response = await axios.get('http://80ee1d03.ngrok.io/auth', {
-          withCredentials: true,
-          headers: {
-            cookie: req.headers.cookie
-          }
-        });
-        console.log(response.data);
-      }
-    } else {
-      console.log('client');
-    }
-  }
   state = {
     loading: false
   };
@@ -66,19 +50,12 @@ class LoginForm extends React.Component<Props, State> {
     this.props.form.validateFields(async (err: any, values: any) => {
       if (!err) {
         const { email, password } = values;
-        const data = {
+        const credentials = {
           email,
           password
         };
         this.setState({ loading: true });
-        const response = await axios.post(
-          'http://80ee1d03.ngrok.io/auth/login',
-          data,
-          {
-            withCredentials: true
-          }
-        );
-        console.log(response);
+        await AuthAPI.login(credentials);
         this.setState({ loading: false });
       }
     });
@@ -117,7 +94,13 @@ class LoginForm extends React.Component<Props, State> {
             <FormItem>
               {getFieldDecorator('password', {
                 rules: [
-                  { required: true, message: 'Please input your Password!' }
+                  {
+                    required: true,
+                    pattern: /^(?=.*[a-z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/,
+                    message:
+                      // tslint:disable-next-line
+                      'Password must contain at least 1 lowercase alphabetical character, 1 special symbol, 1 numeric character and be at least 8 characters long'
+                  }
                 ]
               })(
                 <Input
