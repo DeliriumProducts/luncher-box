@@ -1,37 +1,20 @@
 import { Affix } from 'antd';
-import styled from 'styled-components';
-import React from 'react';
-import { HandleLogin } from '../types';
+import React, { ReactNode } from 'react';
 import MenuBar from './MenuBar';
-import CenteredDiv from './CenteredDiv';
 
-type State = {
-  isAuthenticated: boolean;
-};
-
-type Props = {
+interface Props {
   selectedKey: string;
-};
-
-class Layout extends React.Component<Props, State> {
-  state = {
-    isAuthenticated: false
-  };
-
-  handleLogin: HandleLogin = success => {
-    this.setState({ isAuthenticated: success });
-  };
-
-  render() {
-    return (
-      <>
-        <Affix offsetTop={0}>
-          <MenuBar selectedKey={this.props.selectedKey} />
-        </Affix>
-        {this.props.children}
-        )}
-      </>
-    );
-  }
+  children: ReactNode;
 }
+
+const Layout: React.FunctionComponent<Props> = props => {
+  return (
+    <>
+      <Affix offsetTop={0}>
+        <MenuBar selectedKey={props.selectedKey} />
+      </Affix>
+      {props.children}
+    </>
+  );
+};
 export default Layout;
