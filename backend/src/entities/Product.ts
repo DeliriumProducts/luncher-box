@@ -2,7 +2,7 @@ import { EntityError } from '../types';
 import { EntityNotValidError, DuplicateEntityError, EntityNotFoundError } from '../utils';
 import { Entity, PrimaryGeneratedColumn, Column, ManyToMany, JoinTable } from 'typeorm';
 import { Category } from './Category';
-import { Length, IsNumber, Min, Max, Allow } from 'class-validator';
+import { Length, IsNumber, Min, Max, Allow, IsUrl } from 'class-validator';
 
 @Entity()
 export class Product {
@@ -18,6 +18,7 @@ export class Product {
   description: string;
 
   @Column('text')
+  @IsUrl()
   @Length(5, 255)
   image: string;
 
