@@ -23,7 +23,7 @@ const app: Application = express();
 app.use(
   cors({
     /**
-     * During develpoment we enabling using the database from anywhere
+     * During develpoment we enable it, so that the backend can be accessed from anywhere
      * During production we make sure it's only accesible from the FRONTEND_URL env variable
      */
     origin: IS_DEV || FRONTEND_URL,
@@ -44,22 +44,19 @@ app.use(
 );
 app.use(
   lusca({
-    csrf: false, // should be true (is false only temporarily)
-    xframe: 'SAMEORIGIN', // could cause CORS issues?
+    /**
+     * CSRF should be enabled in production
+     */
+    csrf: !IS_DEV,
+    xframe: 'SAMEORIGIN',
     p3p: 'ABCDEF',
     hsts: { maxAge: 31536000, includeSubDomains: true, preload: true },
     xssProtection: true,
     nosniff: true,
-    referrerPolicy: 'same-origin' // could cause CORS issues?
+    referrerPolicy: 'same-origin'
   })
 );
 app.use(passport.initialize());
 app.use(passport.session());
-app.use((req: Request, res: Response, next: NextFunction) => {
-  if (req.user) {
-    res.locals.user = req.user;
-  }
-  next();
-});
 
 export { app };
