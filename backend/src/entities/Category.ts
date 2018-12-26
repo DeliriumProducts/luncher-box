@@ -20,6 +20,7 @@ export class Category {
   @ManyToMany(() => Product, product => product.categories)
   products: Product[];
 }
+
 export class CategoryNotFoundError extends EntityNotFoundError<Category> {
   constructor() {
     super(Category);

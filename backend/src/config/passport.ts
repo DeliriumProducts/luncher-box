@@ -7,6 +7,7 @@ import { QueryResponse } from '../types/';
 
 export const initPassport = () => {
   const userRepository = getRepository(User);
+
   /**
    * Check if the user exists in the database and if the passwords match with the one in it
    * @param email
