@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "@types/styled-system": "^3.0.9",
+    "styled-system": "^3.1.11"
+  }
+}
