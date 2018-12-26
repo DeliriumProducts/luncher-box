@@ -98,7 +98,7 @@ class LoginForm extends React.Component<Props, State> {
                     required: true,
                     message:
                       // tslint:disable-next-line
-                      'Password must contain at least 1 lowercase alphabetical character, 1 special symbol, 1 numeric character and be at least 8 characters long'
+                      'Password must contain at least 1 lowercase alphabetical character, 1 numeric character and be at least 8 characters long'
                   }
                 ]
               })(

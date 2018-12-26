@@ -18,10 +18,10 @@ export class User {
   email: string;
 
   @Column()
-  @Matches(/^(?=.*[a-z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/, {
+  @Matches(/^(?=.*[a-z])(?=.*[0-9])(?=.{8,})/, {
     message:
       // tslint:disable-next-line
-      'Password must contain at least 1 lowercase alphabetical character, 1 special symbol, 1 numeric character and be at least 8 characters long'
+      'Password must contain at least 1 lowercase alphabetical character, 1 numeric character and be at least 8 characters long'
   })
   password: string;
 
