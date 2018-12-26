@@ -95,7 +95,8 @@ class LoginForm extends React.Component<Props, State> {
               {getFieldDecorator('password', {
                 rules: [
                   {
-                    required: true
+                    required: true,
+                    message: 'Please input your password!'
                   }
                 ]
               })(
