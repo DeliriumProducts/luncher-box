@@ -95,10 +95,7 @@ class LoginForm extends React.Component<Props, State> {
               {getFieldDecorator('password', {
                 rules: [
                   {
-                    required: true,
-                    message:
-                      // tslint:disable-next-line
-                      'Password must contain at least 1 lowercase alphabetical character, 1 numeric character and be at least 8 characters long'
+                    required: true
                   }
                 ]
               })(
