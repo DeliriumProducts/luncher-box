@@ -1,9 +1,9 @@
-import axios from 'axios';
+import axios, { AxiosResponse } from 'axios';
 import { BACKEND_URL } from './../config';
 import { Credentials } from './../types';
 
 export class AuthAPI {
-  static async login(credentials: Credentials) {
+  static async login(credentials: Credentials): Promise<AxiosResponse> {
     const response = await axios.post(
       `${BACKEND_URL}/auth/login`,
       credentials,
@@ -15,7 +15,7 @@ export class AuthAPI {
     return response;
   }
 
-  static async register(credentials: Credentials) {
+  static async register(credentials: Credentials): Promise<AxiosResponse> {
     const response = await axios.post(
       `${BACKEND_URL}/auth/register`,
       credentials
@@ -24,7 +24,13 @@ export class AuthAPI {
     return response;
   }
 
-  static async isAuthenticated(cookie?: any) {
+  static async logout(): Promise<AxiosResponse> {
+    const response = await axios.get(`${BACKEND_URL}/auth/logout`);
+
+    return response;
+  }
+
+  static async isAuthenticated(cookie?: any): Promise<boolean> {
     let opts = {};
     if (cookie) {
       opts = { headers: { cookie } };
