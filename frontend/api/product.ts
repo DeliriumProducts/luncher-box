@@ -29,10 +29,10 @@ export class ProductAPI {
   }
 
   static async delete({ id }: Product) {
-    const response = (await axios.delete(
+    const response = await axios.delete(
       `${BACKEND_URL}/products/${id}`,
       this.opts
-    )).data;
+    );
 
     return response;
   }

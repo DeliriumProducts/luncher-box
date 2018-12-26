@@ -3,7 +3,7 @@ import { BACKEND_URL } from './../config';
 import { Credentials } from './../types';
 
 export class AuthAPI {
-  static async login(credentials: Credentials): Promise<AxiosResponse> {
+  static async login(credentials: Credentials) {
     const response = await axios.post(
       `${BACKEND_URL}/auth/login`,
       credentials,
@@ -15,7 +15,7 @@ export class AuthAPI {
     return response;
   }
 
-  static async register(credentials: Credentials): Promise<AxiosResponse> {
+  static async register(credentials: Credentials) {
     const response = await axios.post(
       `${BACKEND_URL}/auth/register`,
       credentials
@@ -24,13 +24,13 @@ export class AuthAPI {
     return response;
   }
 
-  static async logout(): Promise<AxiosResponse> {
+  static async logout() {
     const response = await axios.get(`${BACKEND_URL}/auth/logout`);
 
     return response;
   }
 
-  static async isAuthenticated(cookie?: any): Promise<boolean> {
+  static async isAuthenticated(cookie?: any) {
     let opts = {};
     if (cookie) {
       opts = { headers: { cookie } };
