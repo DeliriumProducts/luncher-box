@@ -3,6 +3,7 @@ import Link from 'next/link';
 import Router from 'next/router';
 import styled from 'styled-components';
 import { AuthAPI } from '../api';
+import { Exit } from 'styled-icons/icomoon/Exit';
 
 interface Props {
   selectedKey: string;
@@ -17,10 +18,11 @@ const StyledMenu = styled(Menu)`
 
 const StyledAnchor = styled.a`
   color: inherit;
+  cursor: pointer;
 `;
 
-const StyledLink = styled(Link)`
-  cursor: pointer;
+const StyledLogOut = styled(Exit)`
+  margin-right: 10px;
 `;
 
 const handleClick = async (e: any) => {
@@ -44,42 +46,36 @@ const MenuBar: React.FunctionComponent<Props> = ({ selectedKey }) => {
       defaultSelectedKeys={[selectedKey]}
     >
       <Menu.Item key="dashboard">
-        <span>
-          <Link href="dashboard" prefetch>
-            <StyledAnchor>
-              <Icon type="dashboard" />
-              Dashboard
-            </StyledAnchor>
-          </Link>
-        </span>
+        <Link href="dashboard">
+          <StyledAnchor>
+            <Icon type="dashboard" />
+            Dashboard
+          </StyledAnchor>
+        </Link>
       </Menu.Item>
       <Menu.Item key="orders">
-        <span>
-          <Link href="orders" prefetch>
-            <StyledAnchor>
-              <Icon type="table" />
-              Orders
-            </StyledAnchor>
-          </Link>
-        </span>
+        <Link href="orders">
+          <StyledAnchor>
+            <Icon type="table" />
+            Orders
+          </StyledAnchor>
+        </Link>
       </Menu.Item>
-      <Menu.ItemGroup>
-        <StyledLink href="staffchat" prefetch>
-          <Menu.Item key="chat">
+      <Menu.Item key="chat">
+        <Link href="staffchat">
+          <StyledAnchor>
             <Icon type="message" />
             Staff chat
-          </Menu.Item>
-        </StyledLink>
-      </Menu.ItemGroup>
+          </StyledAnchor>
+        </Link>
+      </Menu.Item>
       <Menu.Item key="load">
-        <span>
-          <StyledLink href="restaurantload" prefetch>
-            <StyledAnchor>
-              <Icon type="pie-chart" />
-              Restaurant load
-            </StyledAnchor>
-          </StyledLink>
-        </span>
+        <Link href="restaurantload">
+          <StyledAnchor>
+            <Icon type="pie-chart" />
+            Restaurant load
+          </StyledAnchor>
+        </Link>
       </Menu.Item>
       <Menu.SubMenu
         title={
@@ -90,8 +86,16 @@ const MenuBar: React.FunctionComponent<Props> = ({ selectedKey }) => {
         }
         className="right"
       >
-        <Menu.Item key="settings">Settings</Menu.Item>
-        <Menu.Item key="logout">Logout</Menu.Item>
+        <Menu.Item key="settings">
+          <span>
+            <Icon type="setting" /> Settings
+          </span>
+        </Menu.Item>
+        <Menu.Item key="logout">
+          <span>
+            <StyledLogOut size={14} /> Logout
+          </span>
+        </Menu.Item>
       </Menu.SubMenu>
     </StyledMenu>
   );
