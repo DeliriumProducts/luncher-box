@@ -15,10 +15,13 @@ class Home extends Component<Props> {
     /**
      * Check for authentication
      */
+
+    /**
+     * Check wheter authentication is happening server-side or client-side based on received context
+     */
     if (req && res) {
       if (req.headers.cookie) {
         isAuthenticated = await AuthAPI.isAuthenticated(req.headers.cookie);
-
         if (!isAuthenticated) {
           res.writeHead(302, {
             Location: '/login'
@@ -28,11 +31,11 @@ class Home extends Component<Props> {
       }
     } else {
       isAuthenticated = await AuthAPI.isAuthenticated();
+      if (!isAuthenticated) {
+        Router.push('/login');
+      }
     }
 
-    if (!isAuthenticated) {
-      Router.push('/login');
-    }
     return { isAuthenticated };
   }
 

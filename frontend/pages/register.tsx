@@ -143,7 +143,7 @@ class RegisterForm extends React.Component<Props, State> {
               </Button>
               Already registered?{' '}
               <Link href="login">
-                <a>login now!</a>
+                <a>Login now!</a>
               </Link>
             </FormItem>
           </Form>

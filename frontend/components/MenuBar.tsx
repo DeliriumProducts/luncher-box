@@ -19,6 +19,10 @@ const StyledAnchor = styled.a`
   color: inherit;
 `;
 
+const StyledLink = styled(Link)`
+  cursor: pointer;
+`;
+
 const handleClick = async (e: any) => {
   const { key } = e;
 
@@ -60,21 +64,21 @@ const MenuBar: React.FunctionComponent<Props> = ({ selectedKey }) => {
         </span>
       </Menu.Item>
       <Menu.ItemGroup>
-        <Link href="staffchat" prefetch>
+        <StyledLink href="staffchat" prefetch>
           <Menu.Item key="chat">
             <Icon type="message" />
             Staff chat
           </Menu.Item>
-        </Link>
+        </StyledLink>
       </Menu.ItemGroup>
       <Menu.Item key="load">
         <span>
-          <Link href="restaurantload" prefetch>
+          <StyledLink href="restaurantload" prefetch>
             <StyledAnchor>
               <Icon type="pie-chart" />
               Restaurant load
             </StyledAnchor>
-          </Link>
+          </StyledLink>
         </span>
       </Menu.Item>
       <Menu.SubMenu
