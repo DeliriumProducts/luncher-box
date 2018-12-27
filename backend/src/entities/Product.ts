@@ -28,7 +28,7 @@ export class Product {
   @Max(1000)
   price: number;
 
-  @ManyToMany(type => Category, category => category.products, {
+  @ManyToMany(() => Category, category => category.products, {
     cascade: false
   })
   @Allow()
