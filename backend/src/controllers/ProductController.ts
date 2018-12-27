@@ -16,7 +16,8 @@ import {
   Body,
   Delete,
   Put,
-  Authorized
+  Authorized,
+  QueryParam
 } from 'routing-controllers';
 import { Repository, getRepository } from 'typeorm';
 import { transformAndValidate } from '../utils';
@@ -50,8 +51,11 @@ export class ProductController {
    * Gets all products
    */
   @Get()
-  async getAll() {
-    const categories = await this.productRepository.find();
+  async getAll(@QueryParam('page') page = 1, @QueryParam('amount') amount = 25) {
+    const categories = await this.productRepository.find({
+      skip: amount * (page - 1),
+      take: amount
+    });
     return categories;
   }
 

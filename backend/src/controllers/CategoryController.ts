@@ -10,7 +10,8 @@ import {
   Body,
   Delete,
   Put,
-  Authorized
+  Authorized,
+  QueryParam
 } from 'routing-controllers';
 import { transformAndValidate } from '../utils';
 
@@ -38,8 +39,11 @@ export class CategoryController {
    * Gets all categories
    */
   @Get()
-  async getAll() {
-    const categories = await this.categoryRepository.find();
+  async getAll(@QueryParam('page') page = 1, @QueryParam('amount') amount = 25) {
+    const categories = await this.categoryRepository.find({
+      skip: amount * (page - 1),
+      take: amount
+    });
     return categories;
   }
 
