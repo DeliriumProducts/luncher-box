@@ -1,5 +1,6 @@
-import { Form, Icon, Input, Button, Checkbox } from 'antd';
+import { Form, Icon, Input, Button, Checkbox, message } from 'antd';
 import Link from 'next/link';
+import Router from 'next/router';
 import styled from 'styled-components';
 import React from 'react';
 import { FormComponentProps } from 'antd/lib/form';
@@ -59,8 +60,18 @@ class LoginForm extends React.Component<Props, State> {
         this.setState({ loading: true });
         try {
           await AuthAPI.login(credentials);
+          message.success(
+            'You successfully logged in! Redirecting you to dashboard...'
+          );
+          Router.push('/admin/dashboard');
         } catch ({ response }) {
-          console.log(response.status);
+          if (response.status === 401) {
+            message.error(
+              'Invalid credentials. Try again or click Forgot password to reset it'
+            );
+          } else {
+            message.error('Server error, please try again');
+          }
         }
         this.setState({ loading: false });
       }
