@@ -50,6 +50,7 @@ export class CategoryController {
       const categories = await this.categoryRepository.find();
       return categories;
     }
+
   }
 
   /**
