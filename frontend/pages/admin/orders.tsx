@@ -1,17 +1,16 @@
 import React, { Component, Fragment } from 'react';
 import Layout from '../../components/Layout';
-import styled from 'styled-components';
+import FullHeightContainer from '../../components/FullHeightContainer';
+import Index from './index';
 
-const Container = styled.div`
-  height: 100%;
-`;
-
-export default class Dashboard extends Component {
+class Orders extends Index {
   render() {
     return (
-      <Container>
-        <Layout selectedKey="orders" />
-      </Container>
+      <FullHeightContainer>
+        <Layout selectedKey="orders">Orders go here...</Layout>
+      </FullHeightContainer>
     );
   }
 }
+
+export default Orders;

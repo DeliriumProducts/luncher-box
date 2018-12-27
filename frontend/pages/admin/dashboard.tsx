@@ -1,17 +1,13 @@
 import Layout from '../../components/Layout';
-import styled from 'styled-components';
+import FullHeightContainer from '../../components/FullHeightContainer';
 import Index from './index';
-
-const Container = styled.div`
-  height: 100%;
-`;
 
 class Dashboard extends Index {
   render() {
     return (
-      <Container>
-        <Layout selectedKey="dashboard" />
-      </Container>
+      <FullHeightContainer>
+        <Layout selectedKey="dashboard">this is the dashboard</Layout>
+      </FullHeightContainer>
     );
   }
 }

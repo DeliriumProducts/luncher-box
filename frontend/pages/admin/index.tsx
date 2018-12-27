@@ -2,6 +2,7 @@ import { Component } from 'react';
 import { AdminContext } from '../../context';
 import { AuthAPI } from '../../api';
 import { NextContext } from 'next';
+import Router from 'next/router';
 
 interface Props {
   isAuthenticated: boolean;
@@ -17,16 +18,20 @@ class Home extends Component<Props> {
     if (req && res) {
       if (req.headers.cookie) {
         isAuthenticated = await AuthAPI.isAuthenticated(req.headers.cookie);
-      }
 
-      if (!isAuthenticated) {
-        res.writeHead(302, {
-          Location: '/login'
-        });
-        res.end();
+        if (!isAuthenticated) {
+          res.writeHead(302, {
+            Location: '/login'
+          });
+          res.end();
+        }
       }
     } else {
       isAuthenticated = await AuthAPI.isAuthenticated();
+    }
+
+    if (!isAuthenticated) {
+      Router.push('/login');
     }
     return { isAuthenticated };
   }

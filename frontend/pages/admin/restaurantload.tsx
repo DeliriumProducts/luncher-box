@@ -1,17 +1,16 @@
 import React, { Component, Fragment } from 'react';
 import Layout from '../../components/Layout';
-import styled from 'styled-components';
+import FullHeightContainer from '../../components/FullHeightContainer';
+import Index from './index';
 
-const Container = styled.div`
-  height: 100%;
-`;
-
-export default class Dashboard extends Component {
+class RestaurantLoad extends Index {
   render() {
     return (
-      <Container>
-        <Layout selectedKey="load" />
-      </Container>
+      <FullHeightContainer>
+        <Layout selectedKey="load">????????</Layout>
+      </FullHeightContainer>
     );
   }
 }
+
+export default RestaurantLoad;

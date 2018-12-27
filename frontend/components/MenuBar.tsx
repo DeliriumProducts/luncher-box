@@ -1,38 +1,94 @@
 import { Menu, Icon } from 'antd';
+import Link from 'next/link';
+import Router from 'next/router';
 import styled from 'styled-components';
+import { AuthAPI } from '../api';
 
-type Props = {
+interface Props {
   selectedKey: string;
-};
+}
 
 const StyledMenu = styled(Menu)`
   display: flex;
-
-  & > * {
-    flex: 1;
-    text-align: center;
+  .right {
+    margin-left: auto;
   }
 `;
 
+const StyledAnchor = styled.a`
+  color: inherit;
+`;
+
+const handleClick = async (e: any) => {
+  const { key } = e;
+
+  switch (key) {
+    case 'logout':
+      await AuthAPI.logout();
+      Router.push('/login');
+      break;
+    default:
+      break;
+  }
+};
+
 const MenuBar: React.FunctionComponent<Props> = ({ selectedKey }) => {
   return (
-    <StyledMenu mode="horizontal" defaultSelectedKeys={[selectedKey]}>
+    <StyledMenu
+      onClick={handleClick}
+      mode="horizontal"
+      defaultSelectedKeys={[selectedKey]}
+    >
       <Menu.Item key="dashboard">
-        <Icon type="dashboard" />
-        Dashboard
+        <span>
+          <Link href="dashboard" prefetch>
+            <StyledAnchor>
+              <Icon type="dashboard" />
+              Dashboard
+            </StyledAnchor>
+          </Link>
+        </span>
       </Menu.Item>
       <Menu.Item key="orders">
-        <Icon type="table" />
-        Orders
+        <span>
+          <Link href="orders" prefetch>
+            <StyledAnchor>
+              <Icon type="table" />
+              Orders
+            </StyledAnchor>
+          </Link>
+        </span>
       </Menu.Item>
-      <Menu.Item key="chat">
-        <Icon type="message" />
-        Staff chat
-      </Menu.Item>
+      <Menu.ItemGroup>
+        <Link href="staffchat" prefetch>
+          <Menu.Item key="chat">
+            <Icon type="message" />
+            Staff chat
+          </Menu.Item>
+        </Link>
+      </Menu.ItemGroup>
       <Menu.Item key="load">
-        <Icon type="pie-chart" />
-        Restaurant load
+        <span>
+          <Link href="restaurantload" prefetch>
+            <StyledAnchor>
+              <Icon type="pie-chart" />
+              Restaurant load
+            </StyledAnchor>
+          </Link>
+        </span>
       </Menu.Item>
+      <Menu.SubMenu
+        title={
+          <span color="inherit">
+            <Icon type="user" />
+            My profile
+          </span>
+        }
+        className="right"
+      >
+        <Menu.Item key="settings">Settings</Menu.Item>
+        <Menu.Item key="logout">Logout</Menu.Item>
+      </Menu.SubMenu>
     </StyledMenu>
   );
 };
