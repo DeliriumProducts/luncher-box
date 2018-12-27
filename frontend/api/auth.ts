@@ -1,6 +1,6 @@
 import axios, { AxiosResponse } from 'axios';
 import { BACKEND_URL } from './../config';
-import { Credentials } from './../types';
+import { Credentials } from './../types/';
 
 export class AuthAPI {
   static async login(credentials: Credentials) {
@@ -25,7 +25,9 @@ export class AuthAPI {
   }
 
   static async logout() {
-    const response = await axios.get(`${BACKEND_URL}/auth/logout`);
+    const response = await axios.get(`${BACKEND_URL}/auth/logout`, {
+      withCredentials: true
+    });
 
     return response;
   }
@@ -35,7 +37,6 @@ export class AuthAPI {
     if (cookie) {
       opts = { headers: { cookie } };
     }
-    console.log(opts);
     const isAuthenticated: boolean = (await axios.get(`${BACKEND_URL}/auth`, {
       withCredentials: true,
       ...opts
