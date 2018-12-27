@@ -50,12 +50,18 @@ class LoginForm extends React.Component<Props, State> {
     this.props.form.validateFields(async (err: any, values: any) => {
       if (!err) {
         const { email, password } = values;
+
         const credentials = {
           email,
           password
         };
+
         this.setState({ loading: true });
-        await AuthAPI.login(credentials);
+        try {
+          await AuthAPI.login(credentials);
+        } catch ({ response }) {
+          console.log(response.status);
+        }
         this.setState({ loading: false });
       }
     });
