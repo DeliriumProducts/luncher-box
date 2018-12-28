@@ -22,15 +22,16 @@ class Home extends Component<Props> {
     if (req && res) {
       if (req.headers.cookie) {
         isAuthenticated = await AuthAPI.isAuthenticated(req.headers.cookie);
-        if (!isAuthenticated) {
-          res.writeHead(302, {
-            Location: '/login'
-          });
-          res.end();
-        }
+      }
+      if (!isAuthenticated) {
+        res.writeHead(302, {
+          Location: '/login'
+        });
+        res.end();
       }
     } else {
       isAuthenticated = await AuthAPI.isAuthenticated();
+      console.log(isAuthenticated);
       if (!isAuthenticated) {
         Router.push('/login');
       }
@@ -40,12 +41,7 @@ class Home extends Component<Props> {
   }
 
   render() {
-    const { isAuthenticated } = this.props;
-    return (
-      <AdminContext.Provider value={{ isAuthenticated }}>
-        <div>Welcome to Luncher Box's admin panel!</div>;
-      </AdminContext.Provider>
-    );
+    return <div>Welcome to Luncher Box's admin panel!</div>;
   }
 }
 export default Home;
