@@ -37,9 +37,9 @@ export class CategoryAPI {
     return response;
   }
 
-  static async getAll() {
+  static async getAll(page: number, amount: number) {
     const categories: Category[] = (await axios.get(
-      `${BACKEND_URL}/categories`
+      `${BACKEND_URL}/categories?page=${page}&amount=${amount}`
     )).data;
 
     return categories;
