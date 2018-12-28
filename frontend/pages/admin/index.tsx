@@ -31,7 +31,6 @@ class Home extends Component<Props> {
       }
     } else {
       isAuthenticated = await AuthAPI.isAuthenticated();
-      console.log(isAuthenticated);
       if (!isAuthenticated) {
         Router.push('/login');
       }

@@ -2,7 +2,7 @@ import { Form, Icon, Input, Button, Checkbox, message } from 'antd';
 import Link from 'next/link';
 import Router from 'next/router';
 import styled from 'styled-components';
-import React from 'react';
+import React, { Component } from 'react';
 import { FormComponentProps } from 'antd/lib/form';
 import { HandleLogin } from '../types';
 import CenteredDiv from '../components/CenteredDiv';
@@ -41,7 +41,7 @@ interface State {
   loading: boolean;
 }
 
-class LoginForm extends React.Component<Props, State> {
+class LoginForm extends Component<Props, State> {
   state = {
     loading: false
   };

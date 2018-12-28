@@ -32,7 +32,7 @@ export default class MyApp extends App<Props> {
     /**
      * Get all categories
      */
-    const categories = await CategoryAPI.getAll();
+    const categories = await CategoryAPI.getAll(1, 25);
     return { pageProps, categories };
   }
 
