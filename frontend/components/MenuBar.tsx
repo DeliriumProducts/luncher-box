@@ -6,6 +6,7 @@ import styled from 'styled-components';
 import { Exit } from 'styled-icons/icomoon/Exit';
 import { AuthAPI } from '../api';
 import { UserContext } from '../context';
+import { EntityTypes } from '../types';
 import EntityModal from './EntityModal';
 
 interface Props {
@@ -14,6 +15,7 @@ interface Props {
 
 interface State {
   modalVisible: boolean;
+  type: EntityTypes;
 }
 
 const StyledMenu = styled(Menu)`
@@ -36,13 +38,14 @@ class MenuBar extends Component<Props, State> {
   static contextType = UserContext;
 
   state = {
-    modalVisible: false
+    modalVisible: false,
+    type: EntityTypes.Product
   };
 
   private formRef: any;
 
-  showModal = () => {
-    this.setState({ modalVisible: true });
+  showModal = (type: EntityTypes) => {
+    this.setState({ modalVisible: true, type });
   };
   handleCancel = () => {
     this.setState({ modalVisible: false });
@@ -77,7 +80,10 @@ class MenuBar extends Component<Props, State> {
         Router.push('/login');
         break;
       case 'product':
-        this.showModal();
+        this.showModal(EntityTypes.Product);
+        break;
+      case 'category':
+        this.showModal(EntityTypes.Category);
         break;
       default:
         break;
@@ -173,6 +179,7 @@ class MenuBar extends Component<Props, State> {
           visible={this.state.modalVisible}
           onCancel={this.handleCancel}
           onCreate={this.handleCreate}
+          type={this.state.type}
         />
       </div>
     );

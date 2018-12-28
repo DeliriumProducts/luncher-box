@@ -2,10 +2,11 @@ import { Modal, Form, Input, Radio, Icon, Select } from 'antd';
 import React from 'react';
 import { FormComponentProps } from 'antd/lib/form';
 import { UserContext } from '../context';
+import { EntityTypes } from '../types';
 
 interface Props extends FormComponentProps {
   visible: boolean;
-  type: 'product' | 'category';
+  type: EntityTypes;
   onCancel: () => void;
   onCreate: () => void;
 }
@@ -16,12 +17,12 @@ const EntityModal = Form.create()(
     context!: React.ContextType<typeof UserContext>;
 
     render() {
-      const { visible, onCancel, onCreate, form } = this.props;
+      const { visible, onCancel, onCreate, form, type } = this.props;
       const { getFieldDecorator } = form;
       return (
         <Modal
           visible={visible}
-          title="Create a new product"
+          title={`Create a new ${type}`}
           okText="Create"
           onCancel={onCancel}
           onOk={onCreate}
@@ -49,32 +50,35 @@ const EntityModal = Form.create()(
                   placeholder="Name"
                 />
               )}
+              Product
             </Form.Item>
-            <Form.Item>
-              {getFieldDecorator('description', {
-                rules: [
-                  {
-                    type: 'string',
-                    message: 'Invalid description'
-                  },
-                  {
-                    required: true,
-                    message: 'Description field cannot be empty'
-                  }
-                ]
-              })(
-                <Input
-                  prefix={
-                    <Icon
-                      type="info-circle"
-                      style={{ color: 'rgba(0,0,0,.25)' }}
-                    />
-                  }
-                  type="text"
-                  placeholder="Description"
-                />
-              )}
-            </Form.Item>{' '}
+            {type === EntityTypes.Product && (
+              <Form.Item>
+                {getFieldDecorator('description', {
+                  rules: [
+                    {
+                      type: 'string',
+                      message: 'Invalid description'
+                    },
+                    {
+                      required: true,
+                      message: 'Description field cannot be empty'
+                    }
+                  ]
+                })(
+                  <Input
+                    prefix={
+                      <Icon
+                        type="info-circle"
+                        style={{ color: 'rgba(0,0,0,.25)' }}
+                      />
+                    }
+                    type="text"
+                    placeholder="Description"
+                  />
+                )}
+              </Form.Item>
+            )}
             <Form.Item>
               {getFieldDecorator('image', {
                 rules: [
@@ -97,58 +101,65 @@ const EntityModal = Form.create()(
                 />
               )}
             </Form.Item>
-            <Form.Item>
-              {getFieldDecorator('price', {
-                rules: [
-                  {
-                    type: 'number',
-                    message: 'Invalid price',
-                    transform: value => Number(value)
-                  },
-                  {
-                    required: true,
-                    message: 'Price field cannot be empty'
-                  }
-                ]
-              })(
-                <Input
-                  prefix={
-                    <Icon type="dollar" style={{ color: 'rgba(0,0,0,.25)' }} />
-                  }
-                  type="number"
-                  placeholder="Price"
-                />
-              )}
-            </Form.Item>
-            <Form.Item>
-              {getFieldDecorator('categories', {
-                rules: [
-                  {
-                    type: 'array',
-                    message: 'Invalid categories'
-                  },
-                  {
-                    required: true,
-                    message: 'Categories field cannot be empty'
-                  }
-                ]
-              })(
-                <Select
-                  mode="multiple"
-                  style={{ width: '100%' }}
-                  placeholder="Please select a category"
-                >
-                  {this.context.categories &&
-                    this.context.categories.map(category => {
-                      return (
-                        <Select.Option key={category.id.toString()}>
-                          {category.name}
-                        </Select.Option>
-                      );
-                    })}
-                </Select>
-              )}
-            </Form.Item>
+            {type === EntityTypes.Product && (
+              <Form.Item>
+                {getFieldDecorator('price', {
+                  rules: [
+                    {
+                      type: 'number',
+                      message: 'Invalid price',
+                      transform: value => Number(value)
+                    },
+                    {
+                      required: true,
+                      message: 'Price field cannot be empty'
+                    }
+                  ]
+                })(
+                  <Input
+                    prefix={
+                      <Icon
+                        type="dollar"
+                        style={{ color: 'rgba(0,0,0,.25)' }}
+                      />
+                    }
+                    type="number"
+                    placeholder="Price"
+                  />
+                )}
+              </Form.Item>
+            )}
+            {type === EntityTypes.Product && (
+              <Form.Item>
+                {getFieldDecorator('categories', {
+                  rules: [
+                    {
+                      type: 'array',
+                      message: 'Invalid categories'
+                    },
+                    {
+                      required: true,
+                      message: 'Categories field cannot be empty'
+                    }
+                  ]
+                })(
+                  <Select
+                    mode="multiple"
+                    style={{ width: '100%' }}
+                    placeholder="Please select a category"
+                  >
+                    {this.context.categories &&
+                      this.context.categories.map(category => {
+                        return (
+                          <Select.Option key={category.id.toString()}>
+                            {category.name}
+                          </Select.Option>
+                        );
+                      })}
+                  </Select>
+                )}
+              </Form.Item>
+            )}
           </Form>
         </Modal>
       );
