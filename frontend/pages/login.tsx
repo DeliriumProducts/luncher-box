@@ -61,13 +61,15 @@ class LoginForm extends React.Component<Props, State> {
         try {
           await AuthAPI.login(credentials);
           message.success(
-            'You successfully logged in! Redirecting you to dashboard...'
+            'You successfully logged in! Redirecting you to dashboard...',
+            1
           );
           Router.push('/admin/dashboard');
         } catch ({ response }) {
           if (response.status === 401) {
             message.error(
-              'Invalid credentials. Try again or click Forgot password to reset it'
+              'Invalid credentials. Try again or click Forgot password to reset it',
+              1
             );
           } else {
             message.error('Server error, please try again');
