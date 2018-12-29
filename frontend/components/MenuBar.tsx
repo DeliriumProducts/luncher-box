@@ -13,11 +13,6 @@ interface Props {
   selectedKey: string;
 }
 
-interface State {
-  modalVisible: boolean;
-  type: EntityTypes;
-}
-
 const StyledMenu = styled(Menu)`
   display: flex;
   .right {
@@ -34,12 +29,17 @@ const StyledLogout = styled(Exit)`
   margin-right: 10px;
 `;
 
+interface State {
+  modalVisible: boolean;
+  type: EntityTypes;
+}
+
 class MenuBar extends Component<Props, State> {
   static contextType = UserContext;
 
-  state = {
+  state: State = {
     modalVisible: false,
-    type: EntityTypes.Product
+    type: 'product'
   };
 
   private formRef: any;
@@ -80,10 +80,10 @@ class MenuBar extends Component<Props, State> {
         Router.push('/login');
         break;
       case 'product':
-        this.showModal(EntityTypes.Product);
+        this.showModal('product');
         break;
       case 'category':
-        this.showModal(EntityTypes.Category);
+        this.showModal('category');
         break;
       default:
         break;

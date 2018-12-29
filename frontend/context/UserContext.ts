@@ -1,4 +1,3 @@
-import { Product } from './../types/Product';
 import { Category } from './../types/Category';
 import React from 'react';
 
