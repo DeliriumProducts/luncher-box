@@ -115,8 +115,6 @@ export class ProductController {
       }
     }
 
-    console.log(product);
-
     if (!validCategories.length) {
       throw new CategoryNotFoundError();
     }
