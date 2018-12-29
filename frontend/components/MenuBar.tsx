@@ -4,9 +4,9 @@ import Link from 'next/link';
 import Router from 'next/router';
 import styled from 'styled-components';
 import { Exit } from 'styled-icons/icomoon/Exit';
-import { AuthAPI } from '../api';
+import { AuthAPI, CategoryAPI, ProductAPI } from '../api';
 import { UserContext } from '../context';
-import { EntityTypes } from '../types';
+import { EntityTypes, Product, Category } from '../types';
 import EntityModal from './EntityModal';
 
 interface Props {
@@ -31,7 +31,8 @@ const StyledLogout = styled(Exit)`
 
 interface State {
   modalVisible: boolean;
-  type: EntityTypes;
+  modalType: EntityTypes;
+  loading: boolean;
 }
 
 class MenuBar extends Component<Props, State> {
@@ -39,29 +40,44 @@ class MenuBar extends Component<Props, State> {
 
   state: State = {
     modalVisible: false,
-    type: 'product'
+    modalType: 'product',
+    loading: false
   };
 
   private formRef: any;
 
   showModal = (type: EntityTypes) => {
-    this.setState({ modalVisible: true, type });
+    this.setState({ modalVisible: true, modalType: type });
   };
+
   handleCancel = () => {
     this.setState({ modalVisible: false });
   };
 
   handleCreate = () => {
     const form = this.formRef.props.form;
-    form.validateFields((err: any, values: any) => {
+
+    form.validateFields(async (err: any, values: any) => {
       if (err) {
         return;
       }
 
-      const { name, description, image, price, categories } = values;
-      const categoriesId = categories.map((id: number) => ({ id }));
-      const product = { name, description, image, price, categoriesId };
-      console.log(product);
+      this.setState({ loading: true });
+
+      switch (this.state.modalType) {
+        case 'category':
+          const category: Category = values;
+          await CategoryAPI.create(category);
+          break;
+        case 'product':
+          const product: Product = values;
+          await ProductAPI.create(product);
+          break;
+        default:
+          break;
+      }
+
+      this.setState({ loading: false });
       form.resetFields();
       this.setState({ modalVisible: false });
     });
@@ -179,7 +195,8 @@ class MenuBar extends Component<Props, State> {
           visible={this.state.modalVisible}
           onCancel={this.handleCancel}
           onCreate={this.handleCreate}
-          type={this.state.type}
+          type={this.state.modalType}
+          loading={this.state.loading}
         />
       </div>
     );

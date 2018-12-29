@@ -7,6 +7,7 @@ import { EntityTypes } from '../types';
 interface Props extends FormComponentProps {
   visible: boolean;
   type: EntityTypes;
+  loading: boolean;
   onCancel: () => void;
   onCreate: () => void;
 }
@@ -19,11 +20,13 @@ const EntityModal = Form.create()(
     render() {
       const { visible, onCancel, onCreate, form, type } = this.props;
       const { getFieldDecorator } = form;
+
       return (
         <Modal
           visible={visible}
           title={`Create a new ${type}`}
           okText="Create"
+          okButtonProps={{ loading: this.props.loading }}
           onCancel={onCancel}
           onOk={onCreate}
           centered

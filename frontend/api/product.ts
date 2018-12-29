@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { BACKEND_URL } from './../config';
-import { Product } from '../types';
+import { Product, Category } from '../types';
 
 export class ProductAPI {
   static opts = {
@@ -8,6 +8,21 @@ export class ProductAPI {
   };
 
   static async create(product: Product) {
+    /**
+     * As the backend requires an array of objects which contain the Ids as numbers,
+     * we map through the categories array and create a new one
+     * The next line is ignored, due to the fact that we have to overwrite the default structure
+     */
+    // @ts-ignore
+    product.categories = product.categories.map((categoryId: number) => ({
+      id: Number(categoryId)
+    }));
+
+    /**
+     * As the backend requires an actual number instead of a string for the price, we convert it to one
+     */
+    product.price = Number(product.price);
+
     const response = await axios.post(
       `${BACKEND_URL}/products`,
       product,
@@ -19,6 +34,22 @@ export class ProductAPI {
 
   static async edit(product: Product) {
     const { id } = product;
+
+    /**
+     * As the backend requires an array of objects which contain the Ids as numbers,
+     * we map through the categories array and create a new one
+     * The next line is ignored, due to the fact that we have to overwrite the default structure
+     */
+    // @ts-ignore
+    product.categories = product.categories.map((categoryId: number) => ({
+      id: Number(categoryId)
+    }));
+
+    /**
+     * As the backend requires an actual number instead of a string for the price, we convert it to one
+     */
+    product.price = Number(product.price);
+
     const response = await axios.put(
       `${BACKEND_URL}/products/${id}`,
       product,
