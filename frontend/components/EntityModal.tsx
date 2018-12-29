@@ -50,9 +50,8 @@ const EntityModal = Form.create()(
                   placeholder="Name"
                 />
               )}
-              Product
             </Form.Item>
-            {type === EntityTypes.Product && (
+            {type === 'product' && (
               <Form.Item>
                 {getFieldDecorator('description', {
                   rules: [
@@ -101,7 +100,7 @@ const EntityModal = Form.create()(
                 />
               )}
             </Form.Item>
-            {type === EntityTypes.Product && (
+            {type === 'product' && (
               <Form.Item>
                 {getFieldDecorator('price', {
                   rules: [
@@ -129,7 +128,7 @@ const EntityModal = Form.create()(
                 )}
               </Form.Item>
             )}
-            {type === EntityTypes.Product && (
+            {type === 'product' && (
               <Form.Item>
                 {getFieldDecorator('categories', {
                   rules: [
