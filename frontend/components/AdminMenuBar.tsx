@@ -35,7 +35,7 @@ interface State {
   loading: boolean;
 }
 
-class MenuBar extends Component<Props, State> {
+class AdminMenuBar extends Component<Props, State> {
   static contextType = UserContext;
 
   state: State = {
@@ -203,4 +203,4 @@ class MenuBar extends Component<Props, State> {
   }
 }
 
-export default MenuBar;
+export default AdminMenuBar;
