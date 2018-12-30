@@ -28,13 +28,13 @@ const StyledImg = styled.img`
   border-top-right-radius: 6px;
 `;
 
-interface Props {
+type Props = {
   img: string;
   alt: string;
   name: string;
-  desc?: string;
-  price?: string;
-}
+  desc: string;
+  price: string;
+};
 
 export default (props: Props) => (
   <StyledDiv>
