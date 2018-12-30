@@ -2,7 +2,7 @@ import { EntityError } from '../types';
 import { EntityNotValidError, EntityNotFoundError } from '../utils';
 import { Product } from './Product';
 import { Entity, PrimaryGeneratedColumn, Column, MinKey, ManyToMany } from 'typeorm';
-import { Length } from 'class-validator';
+import { Length, IsUrl } from 'class-validator';
 
 @Entity()
 export class Category {
@@ -14,12 +14,14 @@ export class Category {
   name: string;
 
   @Column('text')
+  @IsUrl()
   @Length(5, 255)
   image: string;
 
   @ManyToMany(() => Product, product => product.categories)
   products: Product[];
 }
+
 export class CategoryNotFoundError extends EntityNotFoundError<Category> {
   constructor() {
     super(Category);

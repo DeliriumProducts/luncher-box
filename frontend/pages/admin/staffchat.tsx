@@ -1,17 +1,16 @@
 import React, { Component, Fragment } from 'react';
-import Layout from '../../components/Layout';
-import styled from 'styled-components';
+import AdminLayout from '../../components/AdminLayout';
+import FullHeightContainer from '../../components/FullHeightContainer';
+import Index from './index';
 
-const Container = styled.div`
-  height: 100%;
-`;
-
-export default class Dashboard extends Component {
+class StaffChat extends Index {
   render() {
     return (
-      <Container>
-        <Layout selectedKey="chat" />
-      </Container>
+      <FullHeightContainer>
+        <AdminLayout selectedKey="chat">kp</AdminLayout>
+      </FullHeightContainer>
     );
   }
 }
+
+export default StaffChat;

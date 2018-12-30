@@ -1,13 +1,50 @@
 import axios from 'axios';
 import { BACKEND_URL } from './../config';
-import { Product } from '../types';
+import { Product } from '../interfaces';
 
 export class ProductAPI {
   static opts = {
     withCredentials: true
   };
 
+  static async getAll(page?: number, limit?: number) {
+    if (page && limit) {
+      const products: Product[] = (await axios.get(
+        `${BACKEND_URL}/products?page=${page}&limit=${limit}`
+      )).data;
+
+      return products;
+    } else {
+      const products: Product[] = (await axios.get(`${BACKEND_URL}/products`))
+        .data;
+
+      return products;
+    }
+  }
+
+  static async getOne({ id }: Product) {
+    const product: Product = (await axios.get(`${BACKEND_URL}/products/${id}`))
+      .data;
+
+    return product;
+  }
+
   static async create(product: Product) {
+    /**
+     * As the backend requires an array of objects which contain the Ids as numbers,
+     * we map through the categories array and create a new one
+     * The next line is ignored, due to the fact that we have to overwrite the default structure
+     */
+    // @ts-ignore
+    product.categories = product.categories.map((categoryId: number) => ({
+      id: Number(categoryId)
+    }));
+
+    /**
+     * As the backend requires an actual number instead of a string for the price, we convert it to one
+     */
+    product.price = Number(product.price);
+
     const response = await axios.post(
       `${BACKEND_URL}/products`,
       product,
@@ -19,6 +56,22 @@ export class ProductAPI {
 
   static async edit(product: Product) {
     const { id } = product;
+
+    /**
+     * As the backend requires an array of objects which contain the Ids as numbers,
+     * we map through the categories array and create a new one
+     * The next line is ignored, due to the fact that we have to overwrite the default structure
+     */
+    // @ts-ignore
+    product.categories = product.categories.map((categoryId: number) => ({
+      id: Number(categoryId)
+    }));
+
+    /**
+     * As the backend requires an actual number instead of a string for the price, we convert it to one
+     */
+    product.price = Number(product.price);
+
     const response = await axios.put(
       `${BACKEND_URL}/products/${id}`,
       product,
@@ -29,25 +82,11 @@ export class ProductAPI {
   }
 
   static async delete({ id }: Product) {
-    const response = (await axios.delete(
+    const response = await axios.delete(
       `${BACKEND_URL}/products/${id}`,
       this.opts
-    )).data;
+    );
 
     return response;
-  }
-
-  static async getAll() {
-    const products: Product[] = (await axios.get(`${BACKEND_URL}/products`))
-      .data;
-
-    return products;
-  }
-
-  static async getOne({ id }: Product) {
-    const product: Product = (await axios.get(`${BACKEND_URL}/products/${id}`))
-      .data;
-
-    return product;
   }
 }

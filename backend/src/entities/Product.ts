@@ -2,16 +2,7 @@ import { EntityError } from '../types';
 import { EntityNotValidError, DuplicateEntityError, EntityNotFoundError } from '../utils';
 import { Entity, PrimaryGeneratedColumn, Column, ManyToMany, JoinTable } from 'typeorm';
 import { Category } from './Category';
-import {
-  Length,
-  IsNumber,
-  Min,
-  Max,
-  Allow,
-  ValidateNested,
-  MaxLength,
-  IsEmail
-} from 'class-validator';
+import { Length, IsNumber, Min, Max, Allow, IsUrl } from 'class-validator';
 
 @Entity()
 export class Product {
@@ -27,6 +18,7 @@ export class Product {
   description: string;
 
   @Column('text')
+  @IsUrl()
   @Length(5, 255)
   image: string;
 
@@ -36,7 +28,7 @@ export class Product {
   @Max(1000)
   price: number;
 
-  @ManyToMany(type => Category, category => category.products, {
+  @ManyToMany(() => Category, category => category.products, {
     cascade: false
   })
   @Allow()

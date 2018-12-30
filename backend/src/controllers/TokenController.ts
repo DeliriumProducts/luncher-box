@@ -1,5 +1,7 @@
+import { FRONTEND_URL } from './../config/env';
+import { Response } from 'express';
 import { QueryResponse } from './../types';
-import { JsonController, Get, Param } from 'routing-controllers';
+import { JsonController, Get, Param, Res, Redirect } from 'routing-controllers';
 import { getRepository, Repository } from 'typeorm';
 import { Token, TokenNotFoundError, User } from '../entities';
 
@@ -17,6 +19,7 @@ export class TokenController {
   }
 
   @Get('/confirm/:tokenId')
+  @Redirect(`${FRONTEND_URL}/login`)
   async verify(@Param('tokenId') id: string) {
     const token: QueryResponse<Token> = await this.tokenRepository.findOne(id, {
       relations: ['user']
@@ -34,7 +37,5 @@ export class TokenController {
 
     await this.userRepository.save(user);
     await this.tokenRepository.remove(token);
-
-    return `User ${user.name} successfully verified!`;
   }
 }

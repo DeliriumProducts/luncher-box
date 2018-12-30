@@ -1,12 +1,12 @@
-import { Form, Icon, Input, Button, Checkbox } from 'antd';
+import { Form, Icon, Input, Button, Checkbox, message } from 'antd';
 import Link from 'next/link';
+import Router from 'next/router';
 import styled from 'styled-components';
-import React from 'react';
+import React, { Component } from 'react';
 import { FormComponentProps } from 'antd/lib/form';
 import { HandleLogin } from '../types';
 import CenteredDiv from '../components/CenteredDiv';
-import axios from 'axios';
-import { NextContext } from 'next';
+import { AuthAPI } from '../api';
 
 const FormItem = Form.Item;
 
@@ -41,22 +41,7 @@ interface State {
   loading: boolean;
 }
 
-class LoginForm extends React.Component<Props, State> {
-  static async getInitialProps({ req }: NextContext) {
-    if (req) {
-      if (req.headers.cookie) {
-        const response = await axios.get('http://80ee1d03.ngrok.io/auth', {
-          withCredentials: true,
-          headers: {
-            cookie: req.headers.cookie
-          }
-        });
-        console.log(response.data);
-      }
-    } else {
-      console.log('client');
-    }
-  }
+class LoginForm extends Component<Props, State> {
   state = {
     loading: false
   };
@@ -66,19 +51,30 @@ class LoginForm extends React.Component<Props, State> {
     this.props.form.validateFields(async (err: any, values: any) => {
       if (!err) {
         const { email, password } = values;
-        const data = {
+
+        const credentials = {
           email,
           password
         };
+
         this.setState({ loading: true });
-        const response = await axios.post(
-          'http://80ee1d03.ngrok.io/auth/login',
-          data,
-          {
-            withCredentials: true
+        try {
+          await AuthAPI.login(credentials);
+          message.success(
+            'You successfully logged in! Redirecting you to dashboard...',
+            1
+          );
+          Router.push('/admin/dashboard');
+        } catch ({ response }) {
+          if (response.status === 401) {
+            message.error(
+              'Invalid credentials. Try again or click Forgot password to reset it',
+              1
+            );
+          } else {
+            message.error('Server error, please try again');
           }
-        );
-        console.log(response);
+        }
         this.setState({ loading: false });
       }
     });
@@ -117,7 +113,10 @@ class LoginForm extends React.Component<Props, State> {
             <FormItem>
               {getFieldDecorator('password', {
                 rules: [
-                  { required: true, message: 'Please input your Password!' }
+                  {
+                    required: true,
+                    message: 'Please input your password!'
+                  }
                 ]
               })(
                 <Input

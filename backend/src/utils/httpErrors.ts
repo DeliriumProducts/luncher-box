@@ -1,5 +1,6 @@
 import { HttpError } from 'routing-controllers';
-import { ClassType, EntityError } from '../types';
+import { EntityError } from '../types';
+import { ClassType } from '../interfaces';
 
 /**
  * STATUS: 404

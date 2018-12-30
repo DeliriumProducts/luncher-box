@@ -1,10 +1,16 @@
-import axios from 'axios';
+import axios, { AxiosResponse } from 'axios';
 import { BACKEND_URL } from './../config';
-import { Credentials } from './../types';
+import { Credentials } from './../types/';
 
 export class AuthAPI {
   static async login(credentials: Credentials) {
-    const response = await axios.post(`${BACKEND_URL}/auth/login`, credentials);
+    const response = await axios.post(
+      `${BACKEND_URL}/auth/login`,
+      credentials,
+      {
+        withCredentials: true
+      }
+    );
 
     return response;
   }
@@ -14,6 +20,14 @@ export class AuthAPI {
       `${BACKEND_URL}/auth/register`,
       credentials
     );
+
+    return response;
+  }
+
+  static async logout() {
+    const response = await axios.get(`${BACKEND_URL}/auth/logout`, {
+      withCredentials: true
+    });
 
     return response;
   }

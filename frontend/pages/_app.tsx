@@ -37,7 +37,7 @@ export default class MyApp extends App<Props> {
   }
 
   render() {
-    const { Component, pageProps, isAuthenticated, categories } = this.props;
+    const { Component, pageProps, categories } = this.props;
 
     return (
       <UserContext.Provider value={{ categories }}>

@@ -17,7 +17,9 @@ const startServer = async () => {
    */
   useExpressServer(app, {
     classTransformer: false,
+    defaultErrorHandler: false,
     controllers: [`${__dirname}/controllers/*.ts`],
+    middlewares: [`${__dirname}/middlewares/*.ts`],
     authorizationChecker
   });
 

@@ -1,5 +1,4 @@
-import { Product } from './../types/Product';
-import { Category } from './../types/Category';
+import { Category } from '../interfaces';
 import React from 'react';
 
 interface Values {

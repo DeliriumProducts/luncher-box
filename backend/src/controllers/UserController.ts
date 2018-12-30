@@ -67,15 +67,6 @@ export class UserController {
     token.user = userEntity;
     await this.tokenRepository.save(token);
 
-    // /**
-    //  * Inject cookie sesssion
-    //  */
-    // req.login(user, error => {
-    //   if (error) {
-    //     throw new Error(error);
-    //   }
-    // });
-
     /**
      * Send verification email
      */

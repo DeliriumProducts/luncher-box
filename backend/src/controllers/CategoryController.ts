@@ -10,7 +10,8 @@ import {
   Body,
   Delete,
   Put,
-  Authorized
+  Authorized,
+  QueryParam
 } from 'routing-controllers';
 import { transformAndValidate } from '../utils';
 
@@ -38,9 +39,18 @@ export class CategoryController {
    * Gets all categories
    */
   @Get()
-  async getAll() {
-    const categories = await this.categoryRepository.find();
-    return categories;
+  async getAll(@QueryParam('page') page?: number, @QueryParam('limit') limit?: number) {
+    if (page && limit) {
+      const categories = await this.categoryRepository.find({
+        skip: limit * (page - 1),
+        take: limit
+      });
+      return categories;
+    } else {
+      const categories = await this.categoryRepository.find();
+      return categories;
+    }
+
   }
 
   /**
