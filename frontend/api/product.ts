@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { BACKEND_URL } from './../config';
-import { Product, Category } from '../types';
+import { Product, Category } from '../interfaces';
 
 export class ProductAPI {
   static opts = {

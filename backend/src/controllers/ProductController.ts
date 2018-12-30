@@ -51,12 +51,17 @@ export class ProductController {
    * Gets all products
    */
   @Get()
-  async getAll(@QueryParam('page') page = 1, @QueryParam('amount') amount = 25) {
-    const categories = await this.productRepository.find({
-      skip: amount * (page - 1),
-      take: amount
-    });
-    return categories;
+  async getAll(@QueryParam('page') page: number, @QueryParam('amount') amount: number) {
+    if (page && amount) {
+      const categories = await this.productRepository.find({
+        skip: amount * (page - 1),
+        take: amount
+      });
+      return categories;
+    } else {
+      const categories = await this.productRepository.find();
+      return categories;
+    }
   }
 
   /**

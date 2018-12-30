@@ -39,12 +39,17 @@ export class CategoryController {
    * Gets all categories
    */
   @Get()
-  async getAll(@QueryParam('page') page = 1, @QueryParam('amount') amount = 25) {
-    const categories = await this.categoryRepository.find({
-      skip: amount * (page - 1),
-      take: amount
-    });
-    return categories;
+  async getAll(@QueryParam('page') page: number, @QueryParam('amount') amount: number) {
+    if (page && amount) {
+      const categories = await this.categoryRepository.find({
+        skip: amount * (page - 1),
+        take: amount
+      });
+      return categories;
+    } else {
+      const categories = await this.categoryRepository.find();
+      return categories;
+    }
   }
 
   /**
