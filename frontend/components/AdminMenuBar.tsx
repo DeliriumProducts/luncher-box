@@ -6,7 +6,8 @@ import styled from 'styled-components';
 import { Exit } from 'styled-icons/icomoon/Exit';
 import { AuthAPI, CategoryAPI, ProductAPI } from '../api';
 import { UserContext } from '../context';
-import { EntityTypes, Product, Category } from '../types';
+import { EntityTypes } from '../types';
+import { Product, Category } from '../interfaces';
 import EntityModal from './EntityModal';
 
 interface Props {

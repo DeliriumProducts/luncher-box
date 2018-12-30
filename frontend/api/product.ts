@@ -1,11 +1,33 @@
 import axios from 'axios';
 import { BACKEND_URL } from './../config';
-import { Product, Category } from '../interfaces';
+import { Product } from '../interfaces';
 
 export class ProductAPI {
   static opts = {
     withCredentials: true
   };
+
+  static async getAll(page?: number, limit?: number) {
+    if (page && limit) {
+      const products: Product[] = (await axios.get(
+        `${BACKEND_URL}/products?page=${page}&limit=${limit}`
+      )).data;
+
+      return products;
+    } else {
+      const products: Product[] = (await axios.get(`${BACKEND_URL}/products`))
+        .data;
+
+      return products;
+    }
+  }
+
+  static async getOne({ id }: Product) {
+    const product: Product = (await axios.get(`${BACKEND_URL}/products/${id}`))
+      .data;
+
+    return product;
+  }
 
   static async create(product: Product) {
     /**
@@ -66,19 +88,5 @@ export class ProductAPI {
     );
 
     return response;
-  }
-
-  static async getAll() {
-    const products: Product[] = (await axios.get(`${BACKEND_URL}/products`))
-      .data;
-
-    return products;
-  }
-
-  static async getOne({ id }: Product) {
-    const product: Product = (await axios.get(`${BACKEND_URL}/products/${id}`))
-      .data;
-
-    return product;
   }
 }
