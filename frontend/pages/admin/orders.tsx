@@ -1,9 +1,9 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import AdminLayout from '../../components/AdminLayout';
 import FullHeightContainer from '../../components/FullHeightContainer';
-import Index from './index';
+import withAuth from '../../components/withAuth';
 
-class Orders extends Index {
+class Orders extends Component {
   render() {
     return (
       <FullHeightContainer>
@@ -13,4 +13,4 @@ class Orders extends Index {
   }
 }
 
-export default Orders;
+export default withAuth(Orders);

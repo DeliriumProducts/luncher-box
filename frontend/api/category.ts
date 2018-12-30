@@ -16,7 +16,7 @@ export class CategoryAPI {
       return categories;
     } else {
       const categories: Category[] = (await axios.get(
-        `${BACKEND_URL}/categoreis?page=${page}&limit=${limit}`
+        `${BACKEND_URL}/categories?page=${page}&limit=${limit}`
       )).data;
 
       return categories;

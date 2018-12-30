@@ -1,8 +1,9 @@
+import { Component } from 'react';
 import AdminLayout from '../../components/AdminLayout';
 import FullHeightContainer from '../../components/FullHeightContainer';
-import Index from './index';
+import withAuth from '../../components/withAuth';
 
-class Dashboard extends Index {
+class Dashboard extends Component {
   render() {
     return (
       <FullHeightContainer>
@@ -12,4 +13,4 @@ class Dashboard extends Index {
   }
 }
 
-export default Dashboard;
+export default withAuth(Dashboard);

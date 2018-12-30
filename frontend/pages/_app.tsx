@@ -2,7 +2,7 @@ import React from 'react';
 import App, { Container, NextAppContext } from 'next/app';
 import { createGlobalStyle } from 'styled-components';
 import { UserContext } from '../context/';
-import { Category } from '../types';
+import { Category } from '../interfaces';
 import { AuthAPI, CategoryAPI } from '../api';
 import { NextContext } from 'next';
 

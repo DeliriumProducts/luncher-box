@@ -63,6 +63,7 @@ export class ProductController {
       return categories;
     }
   }
+
   /**
    * GET /products/:productId
    *
