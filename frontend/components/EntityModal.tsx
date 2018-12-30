@@ -18,7 +18,7 @@ const EntityModal = Form.create()(
     context!: React.ContextType<typeof UserContext>;
 
     render() {
-      const { visible, onCancel, onCreate, form, type } = this.props;
+      const { visible, onCancel, onCreate, form, type, loading } = this.props;
       const { getFieldDecorator } = form;
 
       return (
@@ -26,7 +26,7 @@ const EntityModal = Form.create()(
           visible={visible}
           title={`Create a new ${type}`}
           okText="Create"
-          okButtonProps={{ loading: this.props.loading }}
+          okButtonProps={{ loading }}
           onCancel={onCancel}
           onOk={onCreate}
           centered
