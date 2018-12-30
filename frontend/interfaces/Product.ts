@@ -1,4 +1,4 @@
-import { Category } from '.';
+import { Category } from './';
 
 /**
  * Used for the Product entity from the backend

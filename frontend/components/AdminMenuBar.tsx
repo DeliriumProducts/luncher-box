@@ -15,6 +15,7 @@ interface Props {
 
 const StyledMenu = styled(Menu)`
   display: flex;
+  text-align: center;
   .right {
     margin-left: auto;
   }
