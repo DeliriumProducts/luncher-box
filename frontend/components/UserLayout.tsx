@@ -1,7 +1,6 @@
 import { Affix, Layout } from 'antd';
 import React, { ReactNode } from 'react';
 import UserMenuBar from './UserMenuBar';
-import styled from 'styled-components';
 
 interface Props {
   selectedKey: string;
