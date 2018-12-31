@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { UserContext } from '../context';
 import { Category } from '../interfaces';
+import { CategoryAPI } from '../api';
 
 interface Props {
   categories: Category[];
@@ -8,14 +9,16 @@ interface Props {
 }
 
 interface State {
-  category: Category | undefined;
+  categories: Category[];
 }
 class UserProvider extends Component<Props, State> {
   state = {
-    category: undefined
+    categories: []
   };
-  addCategory = (category: Category) => {
-    this.setState({ category });
+
+  updateCategories = async () => {
+    const categories = await CategoryAPI.getAll();
+    this.setState({ categories });
   };
 
   /**
@@ -23,15 +26,12 @@ class UserProvider extends Component<Props, State> {
    */
 
   render() {
-    const { category } = this.state;
-    const categories = category
-      ? [...this.props.categories, category]
-      : [...this.props.categories];
+    const { categories } = this.state;
     return (
       <UserContext.Provider
         value={{
           categories,
-          actions: { addCategory: this.addCategory }
+          actions: { updateCategories: this.updateCategories }
         }}
       >
         {this.props.children}

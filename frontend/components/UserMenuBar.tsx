@@ -7,6 +7,14 @@ interface Props {
   selectedKey: string;
 }
 
+const MenuContainer = styled.div`
+  @media (max-width: 768px) {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+  }
+`;
+
 const StyledMenu = styled(Menu)`
   display: flex;
   align-items: center;
@@ -24,7 +32,7 @@ class AdminMenuBar extends Component<Props, any> {
   render() {
     const { selectedKey } = this.props;
     return (
-      <div>
+      <MenuContainer>
         <StyledMenu mode="horizontal" defaultSelectedKeys={[selectedKey]}>
           <Menu.Item key="dashboard">
             <Link href="dashboard">
@@ -55,7 +63,7 @@ class AdminMenuBar extends Component<Props, any> {
             </Link>
           </Menu.Item>
         </StyledMenu>
-      </div>
+      </MenuContainer>
     );
   }
 }

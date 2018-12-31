@@ -24,7 +24,6 @@ const MenuContainer = styled.div`
 
 const StyledMenu = styled(Menu)`
   display: flex;
-  background-color: rgb(250, 250, 250);
   box-shadow: 0 4px 4px rgba(0, 0, 0, 0.12);
 
   .right {
@@ -79,8 +78,7 @@ class AdminMenuBar extends Component<Props, State> {
         case 'category':
           const category: Category = values;
           await CategoryAPI.create(category);
-          // FIX UPDATING CONTEXT
-          this.context.actions.addCategory(category);
+          this.context.actions.updateCategories();
           break;
         case 'product':
           const product: Product = values;
