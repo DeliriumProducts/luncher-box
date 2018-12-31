@@ -34,6 +34,12 @@ export const DB_USER = process.env.DB_USER || 'root';
 export const DB_PASS = process.env.DB_PASS || '';
 
 /**
+ * Redis host and port
+ */
+export const REDIS_HOST = process.env.REDIS_HOST || '127.0.0.1';
+export const REDIS_PORT = Number(process.env.REDIS_PORT) || 6379;
+
+/**
  * Session secret
  */
 export const SESSION_SECRET = process.env.SESSION_SECRET || 'example-secret';
@@ -59,8 +65,11 @@ export default {
   IS_DEV,
   PORT,
   DB_HOST,
+  DB_PORT,
   DB_USER,
   DB_PASS,
+  REDIS_HOST,
+  REDIS_PORT,
   SESSION_SECRET,
   OWNER_EMAIL,
   OWNER_PASS,
