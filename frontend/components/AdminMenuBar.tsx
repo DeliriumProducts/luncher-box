@@ -14,9 +14,19 @@ interface Props {
   selectedKey: string;
 }
 
+const MenuContainer = styled.div`
+  @media (max-width: 768px) {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+  }
+`;
+
 const StyledMenu = styled(Menu)`
   display: flex;
-  text-align: center;
+  background-color: rgb(250, 250, 250);
+  box-shadow: 0 4px 4px rgba(0, 0, 0, 0.12);
+
   .right {
     margin-left: auto;
   }
@@ -30,7 +40,6 @@ const StyledAnchor = styled.a`
 const StyledLogout = styled(Exit)`
   margin-right: 10px;
 `;
-
 interface State {
   modalVisible: boolean;
   modalType: EntityTypes;
@@ -111,11 +120,12 @@ class AdminMenuBar extends Component<Props, State> {
   render() {
     const { selectedKey } = this.props;
     return (
-      <div>
+      <MenuContainer>
         <StyledMenu
           onClick={this.handleClick}
           mode="horizontal"
           defaultSelectedKeys={[selectedKey]}
+          inlineIndent={50}
         >
           <Menu.Item key="dashboard">
             <Link href="dashboard">
@@ -156,6 +166,7 @@ class AdminMenuBar extends Component<Props, State> {
                 New
               </span>
             }
+            selectable={false}
           >
             <Menu.Item key="product">
               <StyledAnchor>
@@ -200,7 +211,7 @@ class AdminMenuBar extends Component<Props, State> {
           type={this.state.modalType}
           loading={this.state.loading}
         />
-      </div>
+      </MenuContainer>
     );
   }
 }
