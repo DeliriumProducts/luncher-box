@@ -86,8 +86,7 @@ export class CategoryController {
       throw new CategoryNotValidError(err);
     }
 
-    await this.categoryRepository.save(category);
-    return 'New category created!';
+    return await this.categoryRepository.save(category);
   }
 
   /**
@@ -112,8 +111,9 @@ export class CategoryController {
         throw new CategoryNotValidError(err);
       }
 
-      await this.categoryRepository.update(id, newCategory);
-      return 'Category updated!';
+      newCategory.id = oldCategory.id;
+
+      return await this.categoryRepository.save(newCategory);
     }
 
     throw new CategoryNotFoundError();
