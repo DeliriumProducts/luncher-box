@@ -7,8 +7,16 @@ export class CategoryAPI {
     withCredentials: true
   };
 
-  static async getAll(page?: number, limit?: number) {
-    if (page && limit) {
+  static async getAll(page?: number, limit: number = 0, since?: number) {
+    if (since) {
+      const categories: Category[] = (await axios.get(
+        `${BACKEND_URL}/categories?since=${since}&limit=${limit}`
+      )).data;
+
+      return categories;
+    }
+
+    if (page) {
       const categories: Category[] = (await axios.get(
         `${BACKEND_URL}/categories?page=${page}&limit=${limit}`
       )).data;
