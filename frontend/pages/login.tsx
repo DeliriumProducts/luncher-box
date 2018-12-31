@@ -64,7 +64,7 @@ class LoginForm extends Component<Props, State> {
             'You successfully logged in! Redirecting you to dashboard...',
             1
           );
-          Router.push('/admin/dashboard');
+          Router.push('/admin');
         } catch ({ response }) {
           if (response.status === 401) {
             message.error(

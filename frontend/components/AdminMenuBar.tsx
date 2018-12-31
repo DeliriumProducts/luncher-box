@@ -79,6 +79,8 @@ class AdminMenuBar extends Component<Props, State> {
         case 'category':
           const category: Category = values;
           await CategoryAPI.create(category);
+          // FIX UPDATING CONTEXT
+          this.context.actions.addCategory(category);
           break;
         case 'product':
           const product: Product = values;
@@ -88,9 +90,8 @@ class AdminMenuBar extends Component<Props, State> {
           break;
       }
 
-      this.setState({ loading: false });
       form.resetFields();
-      this.setState({ modalVisible: false });
+      this.setState({ modalVisible: false, loading: false });
     });
   };
 

@@ -1,9 +1,16 @@
 import { Component } from 'react';
+import AdminLayout from '../../components/AdminLayout';
+import FullHeightContainer from '../../components/FullHeightContainer';
 import withAuth from '../../components/withAuth';
 
-class Home extends Component {
+class Index extends Component {
   render() {
-    return <div>Welcome to Luncher Box's admin panel!</div>;
+    return (
+      <FullHeightContainer>
+        <AdminLayout selectedKey="dashboard">this is the dashboard</AdminLayout>
+      </FullHeightContainer>
+    );
   }
 }
-export default withAuth(Home);
+
+export default withAuth(Index);
