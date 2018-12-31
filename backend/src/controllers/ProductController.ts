@@ -126,8 +126,7 @@ export class ProductController {
 
     product.categories = validCategories;
 
-    await this.productRepository.save(product);
-    return 'New product created!';
+    return await this.productRepository.save(product);
   }
 
   /**
@@ -181,7 +180,7 @@ export class ProductController {
       newProduct.categories = validCategories;
       newProduct.id = oldProduct.id;
 
-      await this.productRepository.save(newProduct);
+      return await this.productRepository.save(newProduct);
       return 'Product edited!';
     }
 
