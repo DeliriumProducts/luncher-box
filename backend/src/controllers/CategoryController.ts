@@ -1,6 +1,6 @@
 import { TransformAndValidateTuple, QueryResponse } from '../types';
 import { TransformValidationOptions } from 'class-transformer-validator';
-import { Repository, getRepository } from 'typeorm';
+import { Repository, getRepository, MoreThan } from 'typeorm';
 import { Product, Category, CategoryNotFoundError, CategoryNotValidError } from '../entities';
 import {
   Get,
@@ -39,15 +39,28 @@ export class CategoryController {
    * Gets all categories
    */
   @Get()
-  async getAll(@QueryParam('page') page?: number, @QueryParam('limit') limit?: number) {
-    if (page && limit) {
+  async getAll(
+    @QueryParam('page') page?: number,
+    @QueryParam('limit') limit: number = 0,
+    @QueryParam('since') since?: number
+  ) {
+    if (since) {
+      const categories = await this.categoryRepository.find({
+        where: { id: MoreThan(since), take: limit }
+      });
+      return categories;
+    }
+
+    if (page) {
       const categories = await this.categoryRepository.find({
         skip: limit * (page - 1),
         take: limit
       });
+
       return categories;
     } else {
       const categories = await this.categoryRepository.find();
+
       return categories;
     }
   }
