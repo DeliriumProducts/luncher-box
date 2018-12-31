@@ -13,7 +13,6 @@ import { SESSION_SECRET, FRONTEND_URL, IS_DEV } from './env';
 import express from 'express';
 import cors from 'cors';
 import { redisClient } from './';
-import { RedisClient } from 'redis';
 
 /**
  * Initialize connect-redis session
