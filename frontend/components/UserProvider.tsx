@@ -10,10 +10,12 @@ interface Props {
 
 interface State {
   categories: Category[];
+  category: Category | undefined;
 }
 class UserProvider extends Component<Props, State> {
   state = {
-    categories: []
+    categories: [],
+    category: undefined
   };
 
   updateCategories = async () => {
@@ -21,17 +23,28 @@ class UserProvider extends Component<Props, State> {
     this.setState({ categories });
   };
 
+  addCategory = (category: Category) => {
+    this.setState({ category });
+  };
+
   /**
    * We update the current state for every render
    */
 
   render() {
-    const { categories } = this.state;
+    const { category } = this.state;
+    const currentCategories = this.state.categories;
+    const categories: Category[] = category
+      ? [...currentCategories, category]
+      : [...currentCategories];
     return (
       <UserContext.Provider
         value={{
           categories,
-          actions: { updateCategories: this.updateCategories }
+          actions: {
+            updateCategories: this.updateCategories,
+            addCategory: this.addCategory
+          }
         }}
       >
         {this.props.children}

@@ -5,6 +5,7 @@ interface Values {
   categories: Category[];
   actions: {
     updateCategories: () => void;
+    addCategory: (category: Category) => void;
   };
 }
 
@@ -12,6 +13,7 @@ interface Values {
 export const UserContext = React.createContext<Values>({
   categories: [],
   actions: {
-    updateCategories: () => {}
+    updateCategories: () => {},
+    addCategory: () => {}
   }
 });

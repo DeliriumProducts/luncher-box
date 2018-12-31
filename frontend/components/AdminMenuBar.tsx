@@ -76,9 +76,9 @@ class AdminMenuBar extends Component<Props, State> {
 
       switch (this.state.modalType) {
         case 'category':
-          const category: Category = values;
-          await CategoryAPI.create(category);
-          this.context.actions.updateCategories();
+          let category: Category = values;
+          category = (await CategoryAPI.create(category)).data;
+          this.context.actions.addCategory(category);
           break;
         case 'product':
           const product: Product = values;
