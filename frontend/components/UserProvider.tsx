@@ -27,13 +27,18 @@ class UserProvider extends Component<Props, State> {
     this.setState({ category });
   };
 
+  componentDidMount() {
+    const { categories } = this.props;
+    this.setState({ categories });
+  }
+
   /**
    * We update the current state for every render
    */
 
   render() {
-    const { category } = this.state;
-    const currentCategories = this.state.categories;
+    const { category, categories: currentCategories } = this.state;
+
     const categories: Category[] = category
       ? [...currentCategories, category]
       : [...currentCategories];

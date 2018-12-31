@@ -127,7 +127,7 @@ class AdminMenuBar extends Component<Props, State> {
           inlineIndent={50}
         >
           <Menu.Item key="dashboard">
-            <Link href="dashboard">
+            <Link href="/admin" prefetch>
               <StyledAnchor>
                 <Icon type="dashboard" />
                 Dashboard
@@ -135,7 +135,7 @@ class AdminMenuBar extends Component<Props, State> {
             </Link>
           </Menu.Item>
           <Menu.Item key="orders">
-            <Link href="orders">
+            <Link href="/admin/orders" prefetch>
               <StyledAnchor>
                 <Icon type="table" />
                 Orders
@@ -143,7 +143,7 @@ class AdminMenuBar extends Component<Props, State> {
             </Link>
           </Menu.Item>
           <Menu.Item key="chat">
-            <Link href="staffchat">
+            <Link href="/admin/staffchat" prefetch>
               <StyledAnchor>
                 <Icon type="message" />
                 Staff chat
@@ -151,7 +151,7 @@ class AdminMenuBar extends Component<Props, State> {
             </Link>
           </Menu.Item>
           <Menu.Item key="load">
-            <Link href="restaurantload">
+            <Link href="/admin/restaurantload" prefetch>
               <StyledAnchor>
                 <Icon type="pie-chart" />
                 Restaurant load
