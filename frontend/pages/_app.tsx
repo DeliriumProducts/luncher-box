@@ -3,8 +3,8 @@ import App, { Container, NextAppContext } from 'next/app';
 import { createGlobalStyle } from 'styled-components';
 import { UserContext } from '../context/';
 import { Category } from '../interfaces';
-import { AuthAPI, CategoryAPI } from '../api';
-import { NextContext } from 'next';
+import { CategoryAPI } from '../api';
+import UserProvider from '../components/UserProvider';
 
 const GlobalStyle = createGlobalStyle`
   html,
@@ -38,14 +38,13 @@ export default class MyApp extends App<Props> {
 
   render() {
     const { Component, pageProps, categories } = this.props;
-
     return (
-      <UserContext.Provider value={{ categories }}>
+      <UserProvider categories={categories}>
         <Container>
           <GlobalStyle />
           <Component {...pageProps} />
         </Container>
-      </UserContext.Provider>
+      </UserProvider>
     );
   }
 }
