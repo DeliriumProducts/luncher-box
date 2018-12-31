@@ -46,7 +46,8 @@ export class CategoryController {
   ) {
     if (since) {
       const categories = await this.categoryRepository.find({
-        where: { id: MoreThan(since), take: limit }
+        where: { id: MoreThan(since) },
+        take: limit
       });
       return categories;
     }
