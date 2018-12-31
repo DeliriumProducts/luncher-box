@@ -27,17 +27,26 @@ class UserProvider extends Component<Props, State> {
     this.setState({ category });
   };
 
+  addCategories = (newCategories: Category[]) => {
+    /**
+     * This code should be reviewed later on!
+     */
+    let categories: Category[] = { ...this.state.categories };
+    categories = { ...categories, ...newCategories };
+    this.setState({ categories });
+  };
+
   componentDidMount() {
     const { categories } = this.props;
     this.setState({ categories });
   }
 
   /**
-   * We update the current state for every render
+   * We update the current context for every render
    */
 
   render() {
-    const { category, categories: currentCategories } = this.state;
+    const { category, categories: currentCategories } = { ...this.state };
 
     const categories: Category[] = category
       ? [...currentCategories, category]
@@ -48,7 +57,8 @@ class UserProvider extends Component<Props, State> {
           categories,
           actions: {
             updateCategories: this.updateCategories,
-            addCategory: this.addCategory
+            addCategory: this.addCategory,
+            addCategories: this.addCategories
           }
         }}
       >
