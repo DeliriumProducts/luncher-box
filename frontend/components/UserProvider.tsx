@@ -23,16 +23,12 @@ class UserProvider extends Component<Props, State> {
     this.setState({ categories });
   };
 
-  addCategory = (category: Category) => {
-    this.setState({ category });
-  };
-
   addCategories = (newCategories: Category[]) => {
     /**
      * This code should be reviewed later on!
      */
-    let categories: Category[] = { ...this.state.categories };
-    categories = { ...categories, ...newCategories };
+    let categories: Category[] = [...this.state.categories];
+    categories = [...categories, ...newCategories];
     this.setState({ categories });
   };
 
@@ -56,7 +52,6 @@ class UserProvider extends Component<Props, State> {
           categories,
           actions: {
             updateCategories: this.updateCategories,
-            addCategory: this.addCategory,
             addCategories: this.addCategories
           }
         }}

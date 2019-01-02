@@ -1,6 +1,6 @@
 import axios, { AxiosResponse } from 'axios';
 import { BACKEND_URL } from './../config';
-import { Credentials } from './../types/';
+import { Credentials } from './../interfaces/';
 
 export class AuthAPI {
   static async login(credentials: Credentials) {

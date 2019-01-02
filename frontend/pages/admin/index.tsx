@@ -10,11 +10,10 @@ class Index extends Component {
 
   render() {
     const { categories } = this.context;
-    console.log(categories);
     const { id: lastCategoryId } = categories[categories.length - 1];
     return (
       <FullHeightContainer>
-        <UpdateUserContext since={5}>
+        <UpdateUserContext since={lastCategoryId}>
           <AdminLayout selectedKey="home">
             this is the home page <br /> dasdasdda
           </AdminLayout>

@@ -5,17 +5,14 @@ interface Values {
   categories: Category[];
   actions: {
     updateCategories: () => void;
-    addCategory: (category: Category) => void;
     addCategories: (categories: Category[]) => void;
   };
 }
 
-// tslint:disable
 export const UserContext = React.createContext<Values>({
   categories: [],
   actions: {
     updateCategories: () => {},
-    addCategory: () => {},
     addCategories: () => {}
   }
 });
