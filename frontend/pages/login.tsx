@@ -1,12 +1,12 @@
-import { Form, Icon, Input, Button, Checkbox, message } from 'antd';
+import { Button, Checkbox, Form, Icon, Input, message } from 'antd';
+import { FormComponentProps } from 'antd/lib/form';
 import Link from 'next/link';
 import Router from 'next/router';
-import styled from 'styled-components';
 import React, { Component } from 'react';
-import { FormComponentProps } from 'antd/lib/form';
-import { HandleLogin } from '../types';
-import CenteredDiv from '../components/CenteredDiv';
+import styled from 'styled-components';
 import { AuthAPI } from '../api';
+import CenteredDiv from '../components/CenteredDiv';
+import { HandleLogin } from '../types';
 
 const FormItem = Form.Item;
 

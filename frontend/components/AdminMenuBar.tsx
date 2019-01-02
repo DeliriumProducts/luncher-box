@@ -1,13 +1,13 @@
-import React, { Component } from 'react';
-import { Menu, Icon } from 'antd';
+import { Icon, Menu } from 'antd';
 import Link from 'next/link';
 import Router from 'next/router';
+import React, { Component } from 'react';
 import styled from 'styled-components';
 import { Exit } from 'styled-icons/icomoon/Exit';
 import { AuthAPI, CategoryAPI, ProductAPI } from '../api';
 import { UserContext } from '../context';
+import { Category, Product } from '../interfaces';
 import { EntityTypes } from '../types';
-import { Product, Category } from '../interfaces';
 import EntityModal from './EntityModal';
 
 interface Props {

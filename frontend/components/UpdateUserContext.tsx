@@ -1,7 +1,7 @@
-import React, { Component, Fragment } from 'react';
-import { Category } from '../interfaces';
+import React, { Component } from 'react';
 import { CategoryAPI } from '../api';
 import { UserContext } from '../context';
+import { Category } from '../interfaces';
 
 interface Props {
   since?: number;

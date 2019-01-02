@@ -1,6 +1,6 @@
-import React, { Component } from 'react';
-import { Menu, Icon } from 'antd';
+import { Icon, Menu } from 'antd';
 import Link from 'next/link';
+import React, { Component } from 'react';
 import styled from 'styled-components';
 
 interface Props {

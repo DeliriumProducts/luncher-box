@@ -1,4 +1,4 @@
-import { Affix, Layout } from 'antd';
+import { Affix } from 'antd';
 import React, { ReactNode } from 'react';
 import UserMenuBar from './UserMenuBar';
 

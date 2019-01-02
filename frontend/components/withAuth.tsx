@@ -1,7 +1,7 @@
-import React, { Component, ComponentClass } from 'react';
 import { NextContext } from 'next';
-import { AuthAPI } from '../api';
 import Router from 'next/router';
+import React, { Component, ComponentClass } from 'react';
+import { AuthAPI } from '../api';
 
 const withAuth = <T extends object>(C: ComponentClass<T>) =>
   class extends Component<T> {

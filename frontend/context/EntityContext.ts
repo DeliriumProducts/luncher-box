@@ -1,5 +1,5 @@
-import { Category } from '../interfaces';
 import React from 'react';
+import { Category } from '../interfaces';
 
 interface Values {
   categories: Category[];

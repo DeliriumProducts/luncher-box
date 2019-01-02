@@ -1,7 +1,6 @@
 import { Affix, Layout } from 'antd';
 import React, { ReactNode } from 'react';
 import AdminMenuBar from './AdminMenuBar';
-import styled from 'styled-components';
 
 const { Header, Footer, Sider, Content } = Layout;
 

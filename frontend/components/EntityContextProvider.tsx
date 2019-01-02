@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
+import { CategoryAPI } from '../api';
 import { EntityContext } from '../context';
 import { Category } from '../interfaces';
-import { CategoryAPI } from '../api';
 
 interface Props {
   children: React.ReactNode;

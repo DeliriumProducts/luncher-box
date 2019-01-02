@@ -1,9 +1,6 @@
 import { Component } from 'react';
-import Product from '../components/Product';
 import Category from '../components/Category';
 import UserLayout from '../components/UserLayout';
-import FullHeightContainer from '../components/FullHeightContainer';
-import CenteredDiv from '../components/CenteredDiv';
 
 class Home extends Component {
   render() {

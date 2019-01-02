@@ -1,8 +1,8 @@
-import React from 'react';
 import App, { Container, NextAppContext } from 'next/app';
+import React from 'react';
 import { createGlobalStyle } from 'styled-components';
-import { Category } from '../interfaces';
 import EntityContextProvider from '../components/EntityContextProvider';
+import { Category } from '../interfaces';
 
 const GlobalStyle = createGlobalStyle`
   html,

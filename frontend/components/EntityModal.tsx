@@ -1,6 +1,6 @@
-import { Modal, Form, Input, Radio, Icon, Select } from 'antd';
-import React from 'react';
+import { Form, Icon, Input, Modal, Select } from 'antd';
 import { FormComponentProps } from 'antd/lib/form';
+import React from 'react';
 import { UserContext } from '../context';
 import { EntityTypes } from '../types';
 
