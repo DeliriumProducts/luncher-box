@@ -1,16 +1,15 @@
 import React from 'react';
 import App, { Container, NextAppContext } from 'next/app';
 import { createGlobalStyle } from 'styled-components';
-import { UserContext } from '../context/';
 import { Category } from '../interfaces';
-import { CategoryAPI } from '../api';
-import UserProvider from '../components/UserProvider';
+import EntityContextProvider from '../components/EntityContextProvider';
 
 const GlobalStyle = createGlobalStyle`
   html,
   body {
     margin: 0;
   }
+
   #__next {
     height: 100%;
   }
@@ -29,22 +28,18 @@ export default class MyApp extends App<Props> {
       pageProps = await Component.getInitialProps(ctx);
     }
 
-    /**
-     * Get all categories
-     */
-    const categories = await CategoryAPI.getAll();
-    return { pageProps, categories };
+    return { pageProps };
   }
 
   render() {
-    const { Component, pageProps, categories } = this.props;
+    const { Component, pageProps } = this.props;
     return (
-      <UserProvider categories={categories}>
+      <EntityContextProvider>
         <Container>
           <GlobalStyle />
           <Component {...pageProps} />
         </Container>
-      </UserProvider>
+      </EntityContextProvider>
     );
   }
 }

@@ -3,10 +3,10 @@ import AdminLayout from '../../components/AdminLayout';
 import FullHeightContainer from '../../components/FullHeightContainer';
 import withAuth from '../../components/withAuth';
 import UpdateUserContext from '../../components/UpdateUserContext';
-import { UserContext } from '../../context';
+import { EntityContext } from '../../context';
 
 class Index extends Component {
-  static contextType = UserContext;
+  static contextType = EntityContext;
 
   render() {
     const { categories } = this.context;

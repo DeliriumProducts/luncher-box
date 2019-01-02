@@ -1,10 +1,9 @@
 import React, { Component } from 'react';
-import { UserContext } from '../context';
+import { EntityContext } from '../context';
 import { Category } from '../interfaces';
 import { CategoryAPI } from '../api';
 
 interface Props {
-  categories: Category[];
   children: React.ReactNode;
 }
 
@@ -24,46 +23,40 @@ class UserProvider extends Component<Props, State> {
   };
 
   addCategories = (newCategories: Category[]) => {
-    /**
-     * This code should be reviewed later on!
-     */
     let categories: Category[] = [...this.state.categories];
     categories = [...categories, ...newCategories];
     this.setState({ categories });
   };
 
-  componentDidMount() {
-    const { categories } = this.props;
-    this.setState({ categories });
-  }
+  addCategory = (newCategory: Category) => {
+    this.setState({ category: newCategory });
+  };
 
   /**
    * We update the current context for every render
    */
   render() {
-    const { category, categories: currentCategories } = this.state;
-
-    const categories: Category[] = category
-      ? [...currentCategories, category]
-      : [...currentCategories];
+    const { categories: currentCategories } = this.state;
+    const categories: Category[] = [...currentCategories];
     return (
-      <UserContext.Provider
+      <EntityContext.Provider
         value={{
           categories,
           actions: {
             updateCategories: this.updateCategories,
-            addCategories: this.addCategories
+            addCategories: this.addCategories,
+            addCategory: this.addCategory
           }
         }}
       >
         {this.props.children}
-      </UserContext.Provider>
+      </EntityContext.Provider>
     );
   }
 }
 
 // then make a consumer which will surface it
-const UserConsumer = UserContext.Consumer;
+const UserConsumer = EntityContext.Consumer;
 
 export default UserProvider;
 export { UserConsumer };

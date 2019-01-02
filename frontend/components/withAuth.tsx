@@ -1,16 +1,12 @@
-import React from 'react';
+import React, { Component, ComponentClass } from 'react';
 import { NextContext } from 'next';
 import { AuthAPI } from '../api';
 import Router from 'next/router';
 
-const withAuth = <T extends object>(C: React.ComponentClass<T>) => {
-  return class AuthComponent extends React.Component<T> {
+const withAuth = <T extends object>(C: ComponentClass<T>) =>
+  class extends Component<T> {
     static async getInitialProps({ req, res }: NextContext) {
       let isAuthenticated = false;
-
-      /**
-       * Check for authentication
-       */
 
       /**
        * Check wheter authentication is happening server-side or client-side based on received context
@@ -31,13 +27,10 @@ const withAuth = <T extends object>(C: React.ComponentClass<T>) => {
           Router.push('/login');
         }
       }
-
-      return { isAuthenticated };
     }
     render() {
       return <C {...this.props} />;
     }
   };
-};
 
 export default withAuth;

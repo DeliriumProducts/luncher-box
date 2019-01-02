@@ -1,2 +1,1 @@
-export * from './AdminContext';
-export * from './UserContext';
+export * from './EntityContext';
