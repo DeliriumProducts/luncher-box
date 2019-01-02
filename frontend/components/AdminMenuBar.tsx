@@ -19,6 +19,10 @@ const MenuContainer = styled.div`
     position: fixed;
     bottom: 0;
     width: 100%;
+
+    .menu-item-title {
+      display: none;
+    }
   }
 `;
 
@@ -126,11 +130,11 @@ class AdminMenuBar extends Component<Props, State> {
           defaultSelectedKeys={[selectedKey]}
           inlineIndent={50}
         >
-          <Menu.Item key="dashboard">
+          <Menu.Item key="home">
             <Link href="/admin" prefetch>
               <StyledAnchor>
-                <Icon type="dashboard" />
-                Dashboard
+                <Icon type="home" />
+                <span className="menu-item-title">Home</span>
               </StyledAnchor>
             </Link>
           </Menu.Item>
@@ -138,7 +142,7 @@ class AdminMenuBar extends Component<Props, State> {
             <Link href="/admin/orders" prefetch>
               <StyledAnchor>
                 <Icon type="table" />
-                Orders
+                <span className="menu-item-title">Orders</span>
               </StyledAnchor>
             </Link>
           </Menu.Item>
@@ -146,7 +150,8 @@ class AdminMenuBar extends Component<Props, State> {
             <Link href="/admin/staffchat" prefetch>
               <StyledAnchor>
                 <Icon type="message" />
-                Staff chat
+
+                <span className="menu-item-title">Staff chat</span>
               </StyledAnchor>
             </Link>
           </Menu.Item>
@@ -154,7 +159,7 @@ class AdminMenuBar extends Component<Props, State> {
             <Link href="/admin/restaurantload" prefetch>
               <StyledAnchor>
                 <Icon type="pie-chart" />
-                Restaurant load
+                <span className="menu-item-title">Restaurant load</span>
               </StyledAnchor>
             </Link>
           </Menu.Item>
@@ -162,7 +167,7 @@ class AdminMenuBar extends Component<Props, State> {
             title={
               <span>
                 <Icon type="plus" />
-                New
+                <span className="menu-item-title">New</span>
               </span>
             }
             selectable={false}
@@ -185,7 +190,7 @@ class AdminMenuBar extends Component<Props, State> {
             title={
               <span>
                 <Icon type="user" />
-                My profile
+                <span className="menu-item-title">My profile</span>
               </span>
             }
             className="right"

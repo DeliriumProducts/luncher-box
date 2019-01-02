@@ -15,22 +15,16 @@ interface State {
 class UpdateUserContext extends Component<Props, State> {
   static contextType = UserContext;
 
-  state = {
-    categories: []
-  };
-
   async componentDidMount() {
     const { since } = this.props;
     let categories: Category[];
     if (since) {
       categories = await CategoryAPI.getAll(since);
-      this.setState({ categories });
+      this.context.actions.addCategories(categories);
     } else {
       categories = await CategoryAPI.getAll();
-      this.setState({ categories });
+      this.context.actions.updateCategories();
     }
-
-    this.context.actions.addCategories(categories);
   }
   render() {
     const { children } = this.props;

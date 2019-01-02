@@ -44,9 +44,8 @@ class UserProvider extends Component<Props, State> {
   /**
    * We update the current context for every render
    */
-
   render() {
-    const { category, categories: currentCategories } = { ...this.state };
+    const { category, categories: currentCategories } = this.state;
 
     const categories: Category[] = category
       ? [...currentCategories, category]
