@@ -1,4 +1,3 @@
-import { UserNotFoundError } from './../entities/User';
 import passport from 'passport';
 import { Strategy as LocalStrategy } from 'passport-local';
 import { getRepository } from 'typeorm';

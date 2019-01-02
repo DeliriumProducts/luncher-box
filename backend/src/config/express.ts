@@ -1,18 +1,16 @@
 import bodyParser from 'body-parser';
-import cookieParser from 'cookie-parser';
-import 'reflect-metadata';
-import session from 'express-session';
-import createRedisStore from 'connect-redis';
-import passport from 'passport';
-import { Application } from 'express';
-import expressValidator from 'express-validator';
 import compression from 'compression';
-import lusca from 'lusca';
-import 'reflect-metadata';
-import { SESSION_SECRET, FRONTEND_URL, IS_DEV } from './env';
-import express from 'express';
+import createRedisStore from 'connect-redis';
+import cookieParser from 'cookie-parser';
 import cors from 'cors';
+import express, { Application } from 'express';
+import session from 'express-session';
+import expressValidator from 'express-validator';
+import lusca from 'lusca';
+import passport from 'passport';
+import 'reflect-metadata';
 import { redisClient } from './';
+import { FRONTEND_URL, IS_DEV, SESSION_SECRET } from './env';
 
 /**
  * Initialize connect-redis session

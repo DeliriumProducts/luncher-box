@@ -1,8 +1,8 @@
 import 'reflect-metadata';
-import { createConnection, Connection } from 'typeorm';
-import { PORT, ENV, dbConfig, initPassport, app, io, server } from './config';
 import { useExpressServer } from 'routing-controllers';
 import { useSocketServer } from 'socket-controllers';
+import { Connection, createConnection } from 'typeorm';
+import { app, dbConfig, ENV, initPassport, io, PORT, server } from './config';
 import { authorizationChecker } from './utils';
 
 const startServer = async () => {

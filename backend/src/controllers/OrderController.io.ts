@@ -1,10 +1,10 @@
 import {
-  OnConnect,
-  SocketController,
   ConnectedSocket,
-  OnDisconnect,
   MessageBody,
+  OnConnect,
+  OnDisconnect,
   OnMessage,
+  SocketController,
   SocketIO
 } from 'socket-controllers';
 

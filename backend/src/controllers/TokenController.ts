@@ -1,9 +1,8 @@
-import { FRONTEND_URL } from './../config/env';
-import { Response } from 'express';
-import { QueryResponse } from './../types';
-import { JsonController, Get, Param, Res, Redirect } from 'routing-controllers';
+import { Get, JsonController, Param, Redirect } from 'routing-controllers';
 import { getRepository, Repository } from 'typeorm';
 import { Token, TokenNotFoundError, User } from '../entities';
+import { FRONTEND_URL } from './../config/env';
+import { QueryResponse } from './../types';
 
 @JsonController()
 export class TokenController {

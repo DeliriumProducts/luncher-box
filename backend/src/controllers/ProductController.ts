@@ -1,25 +1,25 @@
-import { QueryResponse, TransformAndValidateTuple } from '../types';
-import { transformAndValidate } from '../utils';
 import { TransformValidationOptions } from 'class-transformer-validator';
 import {
-  Category,
-  Product,
-  ProductNotFoundError,
-  ProductNotValidError,
-  CategoryNotFoundError
-} from '../entities';
-import {
-  JsonController,
-  Get,
-  Param,
-  Post,
+  Authorized,
   Body,
   Delete,
+  Get,
+  JsonController,
+  Param,
+  Post,
   Put,
-  Authorized,
   QueryParam
 } from 'routing-controllers';
-import { Repository, getRepository, MoreThan } from 'typeorm';
+import { getRepository, MoreThan, Repository } from 'typeorm';
+import {
+  Category,
+  CategoryNotFoundError,
+  Product,
+  ProductNotFoundError,
+  ProductNotValidError
+} from '../entities';
+import { QueryResponse, TransformAndValidateTuple } from '../types';
+import { transformAndValidate } from '../utils';
 
 @JsonController('/products')
 export class ProductController {

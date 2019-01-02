@@ -1,8 +1,8 @@
-import { EntityError } from '../types';
-import { Entity, PrimaryGeneratedColumn, Column, BeforeInsert, Unique } from 'typeorm';
-import { Length, IsEmail, Matches } from 'class-validator';
-import { EntityNotValidError, DuplicateEntityError, EntityNotFoundError } from '../utils';
 import bcrypt from 'bcryptjs';
+import { IsEmail, Length, Matches } from 'class-validator';
+import { BeforeInsert, Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { EntityError } from '../types';
+import { DuplicateEntityError, EntityNotFoundError, EntityNotValidError } from '../utils';
 
 @Entity()
 export class User {
