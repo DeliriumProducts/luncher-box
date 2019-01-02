@@ -1,5 +1,6 @@
+import { QueryResponse, TransformAndValidateTuple } from '../types';
+import { transformAndValidate } from '../utils';
 import { TransformValidationOptions } from 'class-transformer-validator';
-import { QueryResponse } from '../types';
 import {
   Category,
   Product,
@@ -7,7 +8,6 @@ import {
   ProductNotValidError,
   CategoryNotFoundError
 } from '../entities';
-import { TransformAndValidateTuple } from '../types';
 import {
   JsonController,
   Get,
@@ -19,8 +19,7 @@ import {
   Authorized,
   QueryParam
 } from 'routing-controllers';
-import { Repository, getRepository } from 'typeorm';
-import { transformAndValidate } from '../utils';
+import { Repository, getRepository, MoreThan } from 'typeorm';
 
 @JsonController('/products')
 export class ProductController {
@@ -51,16 +50,30 @@ export class ProductController {
    * Gets all products
    */
   @Get()
-  async getAll(@QueryParam('page') page?: number, @QueryParam('limit') limit?: number) {
-    if (page && limit) {
-      const categories = await this.productRepository.find({
+  async getAll(
+    @QueryParam('page') page?: number,
+    @QueryParam('limit') limit: number = 0,
+    @QueryParam('since') since?: number
+  ) {
+    if (since) {
+      const products = await this.productRepository.find({
+        where: { id: MoreThan(since) },
+        take: limit
+      });
+      return products;
+    }
+
+    if (page) {
+      const products = await this.productRepository.find({
         skip: limit * (page - 1),
         take: limit
       });
-      return categories;
+
+      return products;
     } else {
-      const categories = await this.productRepository.find();
-      return categories;
+      const products = await this.productRepository.find();
+
+      return products;
     }
   }
 
