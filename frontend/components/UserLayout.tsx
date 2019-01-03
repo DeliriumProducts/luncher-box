@@ -17,7 +17,14 @@ const UserLayout: React.FunctionComponent<Props> = props => {
         <UserMenuBar selectedKey={props.selectedKey} />
       </Affix>
       <Content>
-        <div style={{ minHeight: '100%', paddingBottom: 5 }}>
+        <div
+          style={{
+            minHeight: '100vh',
+            paddingBottom: 5,
+            paddingLeft: 10,
+            paddingRight: 10
+          }}
+        >
           {props.children}
         </div>
       </Content>

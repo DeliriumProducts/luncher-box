@@ -9,6 +9,12 @@ const StyledCard = styled(Card)`
   border-radius: 7px;
   margin: 8px 4px 0 4px;
   box-shadow: 0 4px 4px rgba(0, 0, 0, 0.12);
+  & img {
+    border-radius: 7px 7px 0 0;
+    max-height: 128px;
+    object-fit: cover;
+    display: cover;
+  }
 `;
 
 const StyledMeta = styled(Meta)`
@@ -19,14 +25,6 @@ const StyledMeta = styled(Meta)`
   }
 `;
 
-const StyledImg = styled.img`
-  border-top-left-radius: 7px;
-  max-height: 256px;
-  object-fit: cover;
-  border-top-right-radius: 7px;
-  display: cover;
-`;
-
 type Props = {
   name: string;
   image: string;
@@ -35,10 +33,7 @@ type Props = {
 };
 
 export default (props: Props) => (
-  <StyledCard
-    bordered={false}
-    cover={<StyledImg alt="example" src={props.image} />}
-  >
+  <StyledCard bordered={false} cover={<img alt="example" src={props.image} />}>
     <StyledMeta title={props.name} description={props.description} />
   </StyledCard>
 );
