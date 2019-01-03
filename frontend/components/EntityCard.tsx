@@ -29,6 +29,10 @@ const StyledCard = styled(Card)`
     box-shadow: none;
     margin: 0;
     width: 100%;
+
+    .ant-layout-content {
+      background-color: green;
+    }
   }
 
   .ant-card-actions {
