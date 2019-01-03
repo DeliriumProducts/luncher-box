@@ -14,7 +14,7 @@ const StyledContent = styled(Content)`
   padding: 50px;
   min-height: 100%;
 
-  @media (max-width: 768px) {
+  @media (max-width: 480px) {
     padding: 0;
   }
 `;
