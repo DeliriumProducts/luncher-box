@@ -1,6 +1,7 @@
 import { Affix, Layout } from 'antd';
 import React, { ReactNode } from 'react';
 import AdminMenuBar from './AdminMenuBar';
+import styled from 'styled-components';
 
 const { Content } = Layout;
 
@@ -9,17 +10,22 @@ interface Props {
   children?: ReactNode;
 }
 
+const StyledContent = styled(Content)`
+  padding: 50px;
+  min-height: 100%;
+
+  @media (max-width: 768px) {
+    padding: 0;
+  }
+`;
+
 const AdminLayout: React.FunctionComponent<Props> = props => {
   return (
     <Layout>
       <Affix offsetTop={0}>
         <AdminMenuBar selectedKey={props.selectedKey} />
       </Affix>
-      <Content>
-        <div style={{ minHeight: '100%', padding: '0 10px 5px 10px' }}>
-          {props.children}
-        </div>
-      </Content>
+      <StyledContent>{props.children}</StyledContent>
     </Layout>
   );
 };

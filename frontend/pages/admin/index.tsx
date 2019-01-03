@@ -23,10 +23,21 @@ class Index extends Component {
     return (
       <AdminLayout selectedKey="home">
         <FlexContainer>
-          <EntityCard image="https://sifu.unileversolutions.com/image/en-AU/recipe-topvisual/2/1260-709/beef-burger-with-deep-fried-bacon-and-thousand-island-dressing-50247463.jpg" />
-          <EntityCard image="https://sifu.unileversolutions.com/image/en-AU/recipe-topvisual/2/1260-709/beef-burger-with-deep-fried-bacon-and-thousand-island-dressing-50247463.jpg" />
-          <EntityCard image="https://sifu.unileversolutions.com/image/en-AU/recipe-topvisual/2/1260-709/beef-burger-with-deep-fried-bacon-and-thousand-island-dressing-50247463.jpg" />
-          <EntityCard image="https://sifu.unileversolutions.com/image/en-AU/recipe-topvisual/2/1260-709/beef-burger-with-deep-fried-bacon-and-thousand-island-dressing-50247463.jpg" />
+          <EntityCard
+            name="nadenica"
+            description="dadasjdhfdjsk"
+            image="https://sifu.unileversolutions.com/image/en-AU/recipe-topvisual/2/1260-709/beef-burger-with-deep-fried-bacon-and-thousand-island-dressing-50247463.jpg"
+          />
+          <EntityCard
+            name="fksdjfksdjfksjfksjfkjskfsjfksjfksjfkdsjfksjfksjfdsfdasdasdsadsadassajdsajdajsdajsdsajdkdsfsffffffffffffffffffffffffffffffjfjjfjfjjfjfjjfjfjfjfjjdsdskjfkjsfjksfjksjsjfkjsdfdsjfdskjfkjsksdfsfkskfjdskjfdskjfdsfkjsfksjfskjfskfjsfkjskfjskfjskjfkjdsfjkskjdsfkjskfkjdsfkjsjkskjkjskjsfkjskjskjfkjskjfdskjfkjdssdkjskjfskjsdkkjsfkjdskjfskjfkjsfkjskjfskjfsskjfskjssf"
+            description="dsjhfjdshifsjdfdsgfdmgfdsfdsfsfjksjfksfjksfdajsajdjsadjadjdjjdadfffffffffffjjjjjfjjfjfjfjfjfsdkjfkdskfAAAAAAAAAAAAAsdjfsdkfsdfsdfsjdkfdskjfdskjfdskjfdsfkjdsfkjsfkjjjdjddjdjdjdfhdskjfdskjfsfdfkjhsdfkjsfdkjdsfsdfkjdsfjdsfdsfsdsfkjdsfdsfkjdskjsdfkjfddsfssfssdfkjsfljsdflkjsdflkjsflkjdsfljdsfljkdsfljdsfljsdfljsdfljsdflkjljfdlgjsdgoiuwt;lfg;lksdf;lkjs fs;kjwt4oij lsd;n gslkj 4elkgnms lkgjsfd gnfd; gkd jg;dfgjd kljglkdjglkds gjfgjddgggggggggggggggggggggggggggggggggjjjjjjjjjgjgjgjgjgjgjfgfdgfdgfdgfdgfdgkjfdgjfdglkdfgljfdkfdlgkjfdlkgjdfkgljrekljfdlkjgdfkjgfdlkgjdflkgjfdglkdjfgfdglkjdgdlfkjfjdshfskfhshfkshfskhfdsfsjfhsfjshfjdshfjhfjshfjdshfjshfjshfjshfjshfjshfjshfjshfjdshfjshjfhsdfhjshfjshfjhjh"
+            image="https://sifu.unileversolutions.com/image/en-AU/recipe-topvisual/2/1260-709/beef-burger-with-deep-fried-bacon-and-thousand-island-dressing-50247463.jpg"
+          />
+          <EntityCard
+            name="nadenica"
+            description="dadasjdhfdjsk"
+            image="https://sifu.unileversolutions.com/image/en-AU/recipe-topvisual/2/1260-709/beef-burger-with-deep-fried-bacon-and-thousand-island-dressing-50247463.jpg"
+          />
         </FlexContainer>
       </AdminLayout>
     );
