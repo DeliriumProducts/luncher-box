@@ -19,9 +19,8 @@ const { Meta } = Card;
 const StyledCard = styled(Card)`
   border-radius: 7px;
   margin-top: 8px;
-  margin-right: 40px;
-  margin-left: 40px;
   box-shadow: 0 4px 4px rgba(0, 0, 0, 0.12);
+  max-width: 100%;
 
   @media (max-width: 768px) {
     border-radius: 0;
@@ -30,6 +29,10 @@ const StyledCard = styled(Card)`
     box-shadow: none;
     margin: 0;
     width: 100%;
+
+    .ant-layout-content {
+      background-color: green;
+    }
   }
 `;
 
@@ -48,7 +51,7 @@ const StyledMeta = styled(Meta)`
 
   & * {
     white-space: initial;
-    oferflow-wrap: normal;
+    word-wrap: break-word;
   }
 `;
 
@@ -61,11 +64,11 @@ export default class EntityCard extends Component<Props, State> {
     const { loading } = this.state;
     return (
       <StyledCard bordered={false}>
-        <Skeleton loading={true} avatar active>
+        <Skeleton loading={false} avatar active>
           <StyledMeta
             avatar={<StyledImg src={this.props.image} />}
-            title="Card tidddddddfdsfdigfdjgfdkgjfdkgjdfkfhjdfkljdkljhkldjhdflkjgdflkhjsklgjwiert[gdfogjer[ioymdfgbkpn354ipgmdfgi034mgi0n[rtiohddddskjfskdfgjdfkgjdfkgjdfkljkkjkjgfdklgjkdflhjkfgljhfglkhjfklhrtjhoiterjhmgdfigh[e5rtg[idfhjrte[fodigjfdighofggfdoih[jertg[ioperwhrtj[g0rh0ert0ithjtle"
-            description="This is some very long long and boring description of this category which I created some time ago when I had no idea what I am doing with css so I was rlly dummb u know"
+            title={this.props.name}
+            description={this.props.description}
           />
         </Skeleton>
       </StyledCard>
