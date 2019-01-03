@@ -11,16 +11,14 @@ interface Props {
 
 const AdminLayout: React.FunctionComponent<Props> = props => {
   return (
-    <>
-      <Layout>
-        <Affix offsetTop={0}>
-          <AdminMenuBar selectedKey={props.selectedKey} />
-        </Affix>
-        <Content style={{ padding: '0 50px' }}>
-          <div style={{ padding: 24, minHeight: 280 }}>{props.children}</div>
-        </Content>
-      </Layout>
-    </>
+    <Layout>
+      <Affix offsetTop={0}>
+        <AdminMenuBar selectedKey={props.selectedKey} />
+      </Affix>
+      <Content style={{ padding: '0 50px' }}>
+        <div style={{ padding: 24, minHeight: 280 }}>{props.children}</div>
+      </Content>
+    </Layout>
   );
 };
 export default AdminLayout;

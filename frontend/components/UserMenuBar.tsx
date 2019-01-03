@@ -27,7 +27,7 @@ const StyledAnchor = styled.a`
 `;
 
 class AdminMenuBar extends Component<Props, any> {
-  private formRef: any;
+  formRef: any;
 
   render() {
     const { selectedKey } = this.props;
