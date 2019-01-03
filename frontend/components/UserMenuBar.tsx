@@ -10,6 +10,7 @@ interface Props {
 const MenuContainer = styled.div`
   z-index: 999;
   @media (max-width: 768px) {
+    overflow: hidden;
     position: fixed;
     bottom: 0;
     width: 100%;
@@ -34,7 +35,7 @@ class AdminMenuBar extends Component<Props, any> {
       <MenuContainer>
         <StyledMenu mode="horizontal" defaultSelectedKeys={[selectedKey]}>
           <Menu.Item key="dashboard">
-            <Link href="dashboard">
+            <Link href="/">
               <StyledAnchor>
                 <Icon type="dashboard" />
               </StyledAnchor>

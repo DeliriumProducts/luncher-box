@@ -5,21 +5,24 @@ const { Meta } = Card;
 
 const StyledCard = styled(Card)`
   min-width: 256px;
+  max-width: 512px;
   border-radius: 7px;
-  margin: 5px 2.5px 0 2.5px;
-  position: relative;
+  margin: 8px 4px 0 4px;
   box-shadow: 0 4px 4px rgba(0, 0, 0, 0.12);
 `;
 
 const StyledMeta = styled(Meta)`
   display: flex;
-  flex-wrap: wrap;
   align-items: center;
-  margin-bottom: 4px;
+  & * {
+    white-space: initial;
+  }
 `;
 
 const StyledImg = styled.img`
   border-top-left-radius: 7px;
+  max-height: 256px;
+  object-fit: cover;
   border-top-right-radius: 7px;
   display: cover;
 `;

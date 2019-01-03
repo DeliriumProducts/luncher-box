@@ -25,19 +25,19 @@ class Home extends Component {
         <FlexContainer>
           <Product
             image="https://static01.nyt.com/images/2016/11/29/dining/recipelab-chick-noodle-still/recipelab-chick-noodle-still-videoSixteenByNineJumbo1600.jpg"
-            description="It's with chickenIt'sIt's with chickenIt's with chicken niggerIt's with chicken niggerIt's with chicken nigger niggerIt's with chickenIt's with chicken niggerIt's with chicken niggerIt's with chicken nigger niggerIt's with chickenIt's with chicken niggerIt's with chicken niggerIt's with chicken nigger niggerIt's with chickenIt's with chicken niggerIt's with chicken niggerIt's with chicken nigger niggerIt's with chickenIt's with chicken niggerIt's with chicken niggerIt's with chicken nigger niggerIt's with chickenIt's with chicken niggerIt's with chicken niggerIt's with chicken nigger nigger with chicken niggerIt's with chicken niggerIt's with chicken nigger nigger"
+            description="it's with chickit's with chickenit's with chickenit's with chickenit's with chickenit's with chickenit's with chickenit's with chickenit's with chickenit's with chickenit's with chickenit's with chickenit's with chickenit's with chickenit's with chickenit's with chickenit's with chickenit's with chickenit's with chickenit's with chickenit's with chickenit's with chickenit's with chickenit's with chickenit's with chickenit's with chickenit's with chickenit's with chickenen"
             name="Chicken Soup"
             price="3.2"
           />
 
           <Product
             image="https://static01.nyt.com/images/2016/11/29/dining/recipelab-chick-noodle-still/recipelab-chick-noodle-still-videoSixteenByNineJumbo1600.jpg"
-            description="It's with chicken nigger"
-            name="REALLY LONG TITLE NIGGERREALLY LONG TITLE NIGGERREALLY LONG TITLE NIGGERREALLY LONG TITLE NIGGERREALLY LONG TITLE NIGGERREALLY LONG TITLE NIGGERREALLY LONG TITLE NIGGERREALLY LONG TITLE NIGGERREALLY LONG TITLE NIGGER"
+            description="It's with chicken ni"
+            name="REALLY LONG NAMEREALLY LONG NAME REALLY LONG NAME REALLY LONG NAME REALLY LONG NAME REALLY LONG NAME REALLY LONG NAME REALLY LONG NAME REALLY LONG NAME REALLY LONG NAME REALLY LONG NAME REALLY LONG NAME REALLY LONG NAME REALLY LONG NAME REALLY LONG NAME REALLY LONG NAME REALLY LONG NAME REALLY LONG NAME REALLY LONG NAME REALLY LONG NAME REALLY LONG NAME REALLY LONG NAME REALLY LONG NAME REALLY LONG NAME REALLY LONG NAME REALLY LONG NAME  "
             price="3.2"
           />
           <Product
-            image="https://static01.nyt.com/images/2016/11/29/dining/recipelab-chick-noodle-still/recipelab-chick-noodle-still-videoSixteenByNineJumbo1600.jpg"
+            image="https://cdn3.tmbi.com/toh/GoogleImages/Crispy-Fried-Chicken_exps6445_PSG143429D03_05_5b_RMS.jpg"
             description="It's with chicken nigger"
             name="Chicken Soup"
             price="3.2"
