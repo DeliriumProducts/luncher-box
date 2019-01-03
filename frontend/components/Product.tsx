@@ -1,45 +1,41 @@
 import styled from 'styled-components';
+import { Card } from 'antd';
 
-const StyledDiv = styled.div`
+const { Meta } = Card;
+
+const StyledCard = styled(Card)`
+  min-width: 256px;
+  border-radius: 7px;
+  margin: 5px 2.5px 0 2.5px;
+  position: relative;
   box-shadow: 0 4px 4px rgba(0, 0, 0, 0.12);
-  border-radius: 6px;
-  width: 330px;
-  height: 510px;
-  margin: 5px;
-  text-align: center;
 `;
 
-const StyledH1 = styled.h1`
-  margin-top: 25%;
-  color: #393939;
-  font-size: 3rem;
-`;
-
-const StyledParagraph = styled.p`
-  color: #393939;
-  font-size: 0.8rem;
+const StyledMeta = styled(Meta)`
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  margin-bottom: 4px;
 `;
 
 const StyledImg = styled.img`
-  width: 100%;
-  height: 256px;
-  object-fit: cover;
-  border-top-left-radius: 6px;
-  border-top-right-radius: 6px;
+  border-top-left-radius: 7px;
+  border-top-right-radius: 7px;
+  display: cover;
 `;
 
 type Props = {
-  img: string;
-  alt: string;
   name: string;
-  desc: string;
+  image: string;
+  description: string;
   price: string;
 };
 
 export default (props: Props) => (
-  <StyledDiv>
-    <StyledImg src={props.img} alt={props.alt} />
-    <StyledH1>{props.name}</StyledH1>
-    <StyledParagraph>{props.desc}</StyledParagraph>
-  </StyledDiv>
+  <StyledCard
+    bordered={false}
+    cover={<StyledImg alt="example" src={props.image} />}
+  >
+    <StyledMeta title={props.name} description={props.description} />
+  </StyledCard>
 );

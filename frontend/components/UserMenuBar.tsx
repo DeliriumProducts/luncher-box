@@ -8,6 +8,7 @@ interface Props {
 }
 
 const MenuContainer = styled.div`
+  z-index: 999;
   @media (max-width: 768px) {
     position: fixed;
     bottom: 0;
@@ -27,8 +28,6 @@ const StyledAnchor = styled.a`
 `;
 
 class AdminMenuBar extends Component<Props, any> {
-  private formRef: any;
-
   render() {
     const { selectedKey } = this.props;
     return (

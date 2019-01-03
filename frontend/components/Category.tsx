@@ -1,10 +1,11 @@
 import styled from 'styled-components';
+import { Card } from 'antd';
 
-const StyledDiv = styled.div``;
+const StyledCard = styled(Card)``;
 
 type Props = {
   name: string;
   img: string;
 };
 
-export default (props: Props) => <div />;
+export default (props: Props) => <StyledCard />;
