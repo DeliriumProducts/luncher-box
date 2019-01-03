@@ -49,6 +49,7 @@ export class CategoryController {
         where: { id: MoreThan(since) },
         take: limit
       });
+
       return categories;
     }
 

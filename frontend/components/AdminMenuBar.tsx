@@ -5,7 +5,7 @@ import React, { Component } from 'react';
 import styled from 'styled-components';
 import { Exit } from 'styled-icons/icomoon/Exit';
 import { AuthAPI, CategoryAPI, ProductAPI } from '../api';
-import { UserContext } from '../context';
+import { EntityContext } from '../context';
 import { Category, Product } from '../interfaces';
 import { EntityTypes } from '../types';
 import EntityModal from './EntityModal';
@@ -50,7 +50,8 @@ interface State {
 }
 
 class AdminMenuBar extends Component<Props, State> {
-  static contextType = UserContext;
+  static contextType = EntityContext;
+  context!: React.ContextType<typeof EntityContext>;
 
   state: State = {
     modalVisible: false,
@@ -58,7 +59,7 @@ class AdminMenuBar extends Component<Props, State> {
     loading: false
   };
 
-  private formRef: any;
+  formRef: any;
 
   showModal = (type: EntityTypes) => {
     this.setState({ modalVisible: true, modalType: type });
@@ -82,11 +83,12 @@ class AdminMenuBar extends Component<Props, State> {
         case 'category':
           let category: Category = values;
           category = (await CategoryAPI.create(category)).data;
-          this.context.actions.addCategory(category);
+          this.context.actions.pushEntity(category, 'category');
           break;
         case 'product':
-          const product: Product = values;
-          await ProductAPI.create(product);
+          let product: Product = values;
+          product = (await ProductAPI.create(product)).data;
+          this.context.actions.pushEntity(product, 'product');
           break;
         default:
           break;
@@ -122,6 +124,7 @@ class AdminMenuBar extends Component<Props, State> {
 
   render() {
     const { selectedKey } = this.props;
+
     return (
       <MenuContainer>
         <StyledMenu
@@ -150,7 +153,6 @@ class AdminMenuBar extends Component<Props, State> {
             <Link href="/admin/staffchat" prefetch>
               <StyledAnchor>
                 <Icon type="message" />
-
                 <span className="menu-item-title">Staff chat</span>
               </StyledAnchor>
             </Link>

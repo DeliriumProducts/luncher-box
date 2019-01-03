@@ -7,24 +7,30 @@ export class CategoryAPI {
     withCredentials: true
   };
 
-  static async getAll(page?: number, limit: number = 0, since?: number) {
-    if (since) {
+  static async getAll(
+    opts: { since?: number; page?: number; limit?: number } = {}
+  ) {
+    if (!opts.limit) {
+      opts.limit = 0;
+    }
+
+    if (opts.since) {
       const categories: Category[] = (await axios.get(
-        `${BACKEND_URL}/categories?since=${since}&limit=${limit}`
+        `${BACKEND_URL}/categories?since=${opts.since}&limit=${opts.limit}`
       )).data;
 
       return categories;
     }
 
-    if (page) {
+    if (opts.page) {
       const categories: Category[] = (await axios.get(
-        `${BACKEND_URL}/categories?page=${page}&limit=${limit}`
+        `${BACKEND_URL}/categories?page=${opts.page}&limit=${opts.limit}`
       )).data;
 
       return categories;
     } else {
       const categories: Category[] = (await axios.get(
-        `${BACKEND_URL}/categories?page=${page}&limit=${limit}`
+        `${BACKEND_URL}/categories?limit=${opts.limit}`
       )).data;
 
       return categories;

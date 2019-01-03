@@ -1,20 +1,27 @@
 import React from 'react';
-import { Category } from '../interfaces';
+import { EntityInstance, EntityTypes } from '../types';
+import { Product, Category } from '../interfaces';
 
 interface Values {
-  categories: Category[];
+  entities: {
+    products: Product[];
+    categories: Category[];
+  };
   actions: {
-    updateCategories: () => void;
-    addCategory: (category: Category) => void;
-    addCategories: (categories: Category[]) => void;
+    updateEntities: () => void;
+    pushEntity: (newEntity: EntityInstance, entityType: EntityTypes) => void;
   };
 }
 
 export const EntityContext = React.createContext<Values>({
-  categories: [],
+  entities: {
+    products: [],
+    categories: []
+  },
   actions: {
-    updateCategories: () => {},
-    addCategory: () => {},
-    addCategories: () => {}
+    // tslint:disable
+    updateEntities: () => {},
+    pushEntity: () => {}
+    // tslint:enable
   }
 });

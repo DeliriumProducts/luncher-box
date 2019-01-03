@@ -7,16 +7,31 @@ export class ProductAPI {
     withCredentials: true
   };
 
-  static async getAll(page?: number, limit?: number) {
-    if (page && limit) {
+  static async getAll(
+    opts: { since?: number; page?: number; limit?: number } = {}
+  ) {
+    if (!opts.limit) {
+      opts.limit = 0;
+    }
+
+    if (opts.since) {
       const products: Product[] = (await axios.get(
-        `${BACKEND_URL}/products?page=${page}&limit=${limit}`
+        `${BACKEND_URL}/products?since=${opts.since}&limit=${opts.limit}`
+      )).data;
+
+      return products;
+    }
+
+    if (opts.page) {
+      const products: Product[] = (await axios.get(
+        `${BACKEND_URL}/products?page=${opts.page}&limit=${opts.limit}`
       )).data;
 
       return products;
     } else {
-      const products: Product[] = (await axios.get(`${BACKEND_URL}/products`))
-        .data;
+      const products: Product[] = (await axios.get(
+        `${BACKEND_URL}/products?limit=${opts.limit}`
+      )).data;
 
       return products;
     }

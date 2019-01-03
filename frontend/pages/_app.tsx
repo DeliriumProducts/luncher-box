@@ -2,7 +2,6 @@ import App, { Container, NextAppContext } from 'next/app';
 import React from 'react';
 import { createGlobalStyle } from 'styled-components';
 import EntityContextProvider from '../components/EntityContextProvider';
-import { Category } from '../interfaces';
 
 const GlobalStyle = createGlobalStyle`
   html,
@@ -15,12 +14,7 @@ const GlobalStyle = createGlobalStyle`
   }
 `;
 
-interface Props {
-  isAuthenticated: boolean;
-  categories: Category[];
-}
-
-export default class MyApp extends App<Props> {
+export default class MyApp extends App {
   static async getInitialProps({ Component, ctx }: NextAppContext) {
     let pageProps = {};
 
@@ -33,6 +27,7 @@ export default class MyApp extends App<Props> {
 
   render() {
     const { Component, pageProps } = this.props;
+
     return (
       <EntityContextProvider>
         <Container>

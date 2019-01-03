@@ -1,7 +1,7 @@
 import { Form, Icon, Input, Modal, Select } from 'antd';
 import { FormComponentProps } from 'antd/lib/form';
 import React from 'react';
-import { UserContext } from '../context';
+import { EntityContext } from '../context';
 import { EntityTypes } from '../types';
 
 interface Props extends FormComponentProps {
@@ -14,8 +14,12 @@ interface Props extends FormComponentProps {
 
 const EntityModal = Form.create()(
   class extends React.Component<Props> {
-    static contextType = UserContext;
-    context!: React.ContextType<typeof UserContext>;
+    static contextType = EntityContext;
+    context!: React.ContextType<typeof EntityContext>;
+
+    componentDidMount() {
+      this.context.actions.updateEntities();
+    }
 
     render() {
       const { visible, onCancel, onCreate, form, type, loading } = this.props;
@@ -150,8 +154,8 @@ const EntityModal = Form.create()(
                     style={{ width: '100%' }}
                     placeholder="Please select a category"
                   >
-                    {this.context.categories &&
-                      this.context.categories.map(category => {
+                    {this.context.entities.categories &&
+                      this.context.entities.categories.map(category => {
                         return (
                           <Select.Option key={category.id.toString()}>
                             {category.name}
