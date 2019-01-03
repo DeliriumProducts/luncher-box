@@ -127,6 +127,29 @@ class AdminMenuBar extends Component<Props, State> {
           <Menu.SubMenu
             title={
               <span>
+                <Icon type="plus" className="menu-item-icon" />
+                <span className="menu-item-title">New</span>
+              </span>
+            }
+            selectable={false}
+          >
+            <Menu.Item key="product">
+              <StyledAnchor>
+                <Icon type="file-text" className="menu-item-icon" />
+                Product
+              </StyledAnchor>
+            </Menu.Item>
+
+            <Menu.Item key="category">
+              <StyledAnchor>
+                <Icon type="folder-open" className="menu-item-icon" />
+                Category
+              </StyledAnchor>
+            </Menu.Item>
+          </Menu.SubMenu>
+          <Menu.SubMenu
+            title={
+              <span>
                 <Icon type="user" className="menu-item-icon" />
                 <span className="menu-item-title">My profile</span>
               </span>
