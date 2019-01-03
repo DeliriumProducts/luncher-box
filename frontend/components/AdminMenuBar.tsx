@@ -209,14 +209,16 @@ class AdminMenuBar extends Component<Props, State> {
             </Menu.Item>
           </Menu.SubMenu>
         </StyledMenu>
-        <EntityModal
-          wrappedComponentRef={this.saveFormRef}
-          visible={this.state.modalVisible}
-          onCancel={this.handleCancel}
-          onCreate={this.handleCreate}
-          type={this.state.modalType}
-          loading={this.state.loading}
-        />
+        {this.state.modalVisible && (
+          <EntityModal
+            wrappedComponentRef={this.saveFormRef}
+            visible={this.state.modalVisible}
+            onCancel={this.handleCancel}
+            onCreate={this.handleCreate}
+            type={this.state.modalType}
+            loading={this.state.loading}
+          />
+        )}
       </MenuContainer>
     );
   }
