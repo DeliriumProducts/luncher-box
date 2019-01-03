@@ -15,8 +15,10 @@ const AdminLayout: React.FunctionComponent<Props> = props => {
       <Affix offsetTop={0}>
         <AdminMenuBar selectedKey={props.selectedKey} />
       </Affix>
-      <Content style={{ padding: '0 50px' }}>
-        <div style={{ padding: 24, minHeight: 280 }}>{props.children}</div>
+      <Content>
+        <div style={{ minHeight: '100%', padding: '0 10px 5px 10px' }}>
+          {props.children}
+        </div>
       </Content>
     </Layout>
   );

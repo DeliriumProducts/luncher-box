@@ -23,6 +23,7 @@ const MenuContainer = styled.div`
 
     .menu-item-title {
       display: none;
+      content: ;
     }
 
     .menu-item-icon {
