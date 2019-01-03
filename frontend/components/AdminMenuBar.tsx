@@ -15,6 +15,7 @@ interface Props {
 }
 
 const MenuContainer = styled.div`
+  z-index: 999;
   @media (max-width: 768px) {
     position: fixed;
     bottom: 0;
@@ -23,16 +24,22 @@ const MenuContainer = styled.div`
     .menu-item-title {
       display: none;
     }
+
+    .menu-item-icon {
+      font-size: 25px;
+    }
+
+    .styled-menu {
+      justify-content: space-between;
+    }
   }
 `;
 
 const StyledMenu = styled(Menu)`
   display: flex;
+  align-items: center;
+  justify-content: center;
   box-shadow: 0 4px 4px rgba(0, 0, 0, 0.12);
-
-  .right {
-    margin-left: auto;
-  }
 `;
 
 const StyledAnchor = styled.a`
@@ -132,11 +139,12 @@ class AdminMenuBar extends Component<Props, State> {
           mode="horizontal"
           defaultSelectedKeys={[selectedKey]}
           inlineIndent={50}
+          className="styled-menu"
         >
           <Menu.Item key="home">
             <Link href="/admin" prefetch>
               <StyledAnchor>
-                <Icon type="home" />
+                <Icon type="home" className="menu-item-icon" />
                 <span className="menu-item-title">Home</span>
               </StyledAnchor>
             </Link>
@@ -144,7 +152,7 @@ class AdminMenuBar extends Component<Props, State> {
           <Menu.Item key="orders">
             <Link href="/admin/orders" prefetch>
               <StyledAnchor>
-                <Icon type="table" />
+                <Icon type="table" className="menu-item-icon" />
                 <span className="menu-item-title">Orders</span>
               </StyledAnchor>
             </Link>
@@ -152,7 +160,7 @@ class AdminMenuBar extends Component<Props, State> {
           <Menu.Item key="chat">
             <Link href="/admin/staffchat" prefetch>
               <StyledAnchor>
-                <Icon type="message" />
+                <Icon type="message" className="menu-item-icon" />
                 <span className="menu-item-title">Staff chat</span>
               </StyledAnchor>
             </Link>
@@ -160,7 +168,7 @@ class AdminMenuBar extends Component<Props, State> {
           <Menu.Item key="load">
             <Link href="/admin/restaurantload" prefetch>
               <StyledAnchor>
-                <Icon type="pie-chart" />
+                <Icon type="pie-chart" className="menu-item-icon" />
                 <span className="menu-item-title">Restaurant load</span>
               </StyledAnchor>
             </Link>
@@ -168,7 +176,7 @@ class AdminMenuBar extends Component<Props, State> {
           <Menu.SubMenu
             title={
               <span>
-                <Icon type="plus" />
+                <Icon type="plus" className="menu-item-icon" />
                 <span className="menu-item-title">New</span>
               </span>
             }
@@ -176,14 +184,14 @@ class AdminMenuBar extends Component<Props, State> {
           >
             <Menu.Item key="product">
               <StyledAnchor>
-                <Icon type="file-text" />
+                <Icon type="file-text" className="menu-item-icon" />
                 Product
               </StyledAnchor>
             </Menu.Item>
 
             <Menu.Item key="category">
               <StyledAnchor>
-                <Icon type="folder-open" />
+                <Icon type="folder-open" className="menu-item-icon" />
                 Category
               </StyledAnchor>
             </Menu.Item>
@@ -191,15 +199,14 @@ class AdminMenuBar extends Component<Props, State> {
           <Menu.SubMenu
             title={
               <span>
-                <Icon type="user" />
+                <Icon type="user" className="menu-item-icon" />
                 <span className="menu-item-title">My profile</span>
               </span>
             }
-            className="right"
           >
             <Menu.Item key="settings">
               <span>
-                <Icon type="setting" /> Settings
+                <Icon type="setting" className="menu-item-icon" /> Settings
               </span>
             </Menu.Item>
             <Menu.Item key="logout">
