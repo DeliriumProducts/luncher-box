@@ -10,6 +10,11 @@ interface Props {
   children?: ReactNode;
 }
 
+const StyledLayout = styled(Layout)`
+  min-height: 100%;
+  background-color: #fff;
+`;
+
 const CustomHeader = styled.div`
   @media (max-width: 768px) {
     display: none;
@@ -20,6 +25,7 @@ const StyledContent = styled(Content)`
   padding: 50px;
   min-height: 100%;
   background-color: #fff;
+  margin-bottom: 50px;
 
   @media (max-width: 480px) {
     padding: 0;
@@ -34,7 +40,7 @@ const CustomFooter = styled.div`
 
 const AdminLayout: React.FunctionComponent<Props> = props => {
   return (
-    <Layout>
+    <StyledLayout>
       <CustomHeader>
         <Affix offsetTop={0}>
           <AdminMenuBar selectedKey={props.selectedKey} />
@@ -46,7 +52,7 @@ const AdminLayout: React.FunctionComponent<Props> = props => {
           <AdminMenuBar selectedKey={props.selectedKey} />
         </CustomFooter>
       </Affix>
-    </Layout>
+    </StyledLayout>
   );
 };
 export default AdminLayout;

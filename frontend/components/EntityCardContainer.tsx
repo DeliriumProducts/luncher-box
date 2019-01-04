@@ -1,6 +1,7 @@
-import { Card, Input, Button } from 'antd';
+import { Card, Input } from 'antd';
 import React, { Component } from 'react';
 import styled from 'styled-components';
+import ActionButton from './ActionButton';
 
 const { Search } = Input;
 
@@ -11,7 +12,7 @@ interface Props {
 
 const StyledCard = styled(Card)`
   border-radius: 7px;
-  box-shadow: 0 4px 4px rgba(0, 0, 0, 0.12);
+  box-shadow: 0 2px 2px rgba(0, 0, 0, 0.12);
   background-color: rgb(245, 245, 245);
   min-width: 100%;
 
@@ -36,15 +37,10 @@ const StyledCard = styled(Card)`
       .ant-input {
         max-width: 300px;
         border: none;
-        box-shadow: 0 4px 4px rgba(0, 0, 0, 0.12);
+        box-shadow: 0 2px 2px rgba(0, 0, 0, 0.12);
       }
     }
   }
-`;
-
-const ActionButton: any = styled(Button)`
-  border: none;
-  box-shadow: 0 4px 4px rgba(0, 0, 0, 0.12);
 `;
 
 class EntityCardContainer extends Component<Props> {

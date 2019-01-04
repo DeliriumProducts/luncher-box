@@ -15,11 +15,11 @@ interface Props {
 }
 
 const MenuContainer = styled.div`
-  z-index: 999;
+  z-index: 5000;
   @media (max-width: 768px) {
-    /* position: fixed;
+    position: fixed;
     bottom: 0;
-    width: 100%; */
+    width: 100%;
 
     .menu-item-title {
       display: none;
@@ -27,7 +27,7 @@ const MenuContainer = styled.div`
 
     .menu-item-icon {
       font-size: 25px;
-      margin-top: 0;
+      margin-right: 0;
     }
 
     .styled-menu {
@@ -40,7 +40,7 @@ const StyledMenu = styled(Menu)`
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 4px 4px rgba(0, 0, 0, 0.12);
+  box-shadow: 0 2px 2px rgba(0, 0, 0, 0.12);
 `;
 
 const StyledAnchor = styled.a`

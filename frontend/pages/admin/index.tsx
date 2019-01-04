@@ -27,7 +27,6 @@ class Index extends Component {
         <EntityCardContainer title="Categories (64)">
           <EntityCard
             name="nadenica"
-            description="dadasjdhffkfkkfkfkfkfkdsjfksdjfdsflsjfsf;ljsfs;lfkjdsf;lajsf;ljsdf;ljsdf;ljksdf;ljsf;sfjlsf;lsdjfsf;lsjdfdjsk"
             image="https://sifu.unileversolutions.com/image/en-AU/recipe-topvisual/2/1260-709/beef-burger-with-deep-fried-bacon-and-thousand-island-dressing-50247463.jpg"
           />
           <EntityCard
@@ -37,6 +36,7 @@ class Index extends Component {
           />
           <EntityCard
             name="nadenica"
+            price={9.99}
             description="dadasjdhffkfkkfkfkfkfkdsjfksdjfdsflsjfsf;ljsfs;lfkjdsf;lajsf;ljsdf;ljsdf;ljksdf;ljsf;sfjlsf;lsdjfsf;lsjdfdjsk"
             image="https://sifu.unileversolutions.com/image/en-AU/recipe-topvisual/2/1260-709/beef-burger-with-deep-fried-bacon-and-thousand-island-dressing-50247463.jpg"
           />
