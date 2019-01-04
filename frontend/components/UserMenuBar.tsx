@@ -13,12 +13,14 @@ const MenuContainer = styled.div`
     position: fixed;
     bottom: 0;
     width: 100%;
+
     .menu-item-title {
       display: none;
       content: '';
     }
     .menu-item-icon {
       font-size: 25px;
+      margin-right: 0;
     }
     .styled-menu {
       justify-content: space-between;

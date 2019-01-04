@@ -21,7 +21,7 @@ class Home extends Component {
 
   render() {
     return (
-      <UserLayout selectedKey="home">
+      <UserLayout selectedKey="daily">
         <FlexContainer>
           <Product
             image="https://static01.nyt.com/images/2016/11/29/dining/recipelab-chick-noodle-still/recipelab-chick-noodle-still-videoSixteenByNineJumbo1600.jpg"
