@@ -1,4 +1,4 @@
-import { Skeleton, Card, Badge } from 'antd';
+import { Skeleton, Card } from 'antd';
 import React, { Component } from 'react';
 import styled from 'styled-components';
 import ActionButton from './ActionButton';
