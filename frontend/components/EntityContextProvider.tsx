@@ -26,8 +26,6 @@ class UserProvider extends Component<Props, State> {
   updateEntities = async () => {
     const entities = { ...this.state.entities };
 
-    console.log('requset');
-
     let newProducts: Product[] = [];
     let newCategories: Category[] = [];
     const newEntities: typeof entities = {
@@ -40,28 +38,35 @@ class UserProvider extends Component<Props, State> {
      */
 
     if (entities.products.length) {
+      const { products: oldProducts } = entities;
       const { id: lastProductId } = entities.products[
         entities.products.length - 1
       ];
 
-      newProducts = await ProductAPI.getAll({ since: lastProductId });
+      const fetchedProducts = await ProductAPI.getAll({ since: lastProductId });
+
+      newProducts.push(...oldProducts, ...fetchedProducts);
     } else {
       newProducts = await ProductAPI.getAll();
     }
 
     if (entities.categories.length) {
+      const { categories: oldCategories } = entities;
       const { id: lastCategoryId } = entities.categories[
         entities.categories.length - 1
       ];
 
-      newCategories = await CategoryAPI.getAll({ since: lastCategoryId });
+      const fetchedCategories = await CategoryAPI.getAll({
+        since: lastCategoryId
+      });
+
+      newCategories.push(...oldCategories, ...fetchedCategories);
     } else {
       newCategories = await CategoryAPI.getAll();
     }
 
     newEntities.categories = newCategories;
     newEntities.products = newProducts;
-
     this.setState({ entities: newEntities });
   };
 
