@@ -10,12 +10,12 @@ const StyledCard = styled(Card)`
   text-align: center;
   margin: 8px 4px 0 4px;
   box-shadow: 0 4px 4px rgba(0, 0, 0, 0.12);
-  width: 16rem;
-  min-height: 25rem;
+  flex-basis: 16rem;
   padding-bottom: 0;
 
   .ant-card-body {
     padding-top: 0;
+    height: 100%;
   }
 
   & img {
@@ -30,7 +30,13 @@ const StyledCard = styled(Card)`
     border-bottom-color: rgb(210, 210, 210);
     box-shadow: none;
     margin: 8px 0 0 0;
-    width: 100%;
+    flex-basis: 100%;
+  }
+
+  .ant-card-actions {
+    background-color: #fff;
+    border-top-color: rgb(210, 210, 210);
+    border-radius: 0 0 7px 7px;
   }
 `;
 
@@ -39,6 +45,7 @@ const StyledMeta = styled(Meta)`
   flex-grow: 1;
   align-items: center;
   justify-content: center;
+  height: 100%;
   & * {
     white-space: initial;
     overflow-wrap: normal;
@@ -51,6 +58,11 @@ interface Props {
   description: string;
   price: string;
 }
+
+const ViewMoreButton: any = styled(Button)`
+  border: none;
+  box-shadow: 0 4px 4px rgba(0, 0, 0, 0.12);
+`;
 
 const addDots = (str: string, limit: number) => {
   if (str.length > limit) {
@@ -76,20 +88,22 @@ export default (props: Props) => {
               height: 44,
               zIndex: 50,
               position: 'relative',
-              bottom: 22
+              bottom: 22,
+              border: 'none',
+              boxShadow: '0 4px 4px rgba(0, 0, 0, 0.12)'
             }}
             icon="plus"
             shape="circle"
           />
         </div>
       }
+      actions={[
+        <ViewMoreButton size="small" icon="info">
+          View more
+        </ViewMoreButton>
+      ]}
     >
       <StyledMeta title={shortName} description={<p>{shortDesc}</p>} />
-      {(readMoreName || readMoreDesc) && (
-        <Button style={{}} size="small" icon="info">
-          View more
-        </Button>
-      )}
     </StyledCard>
   );
 };
