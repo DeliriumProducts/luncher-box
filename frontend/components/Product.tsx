@@ -96,11 +96,18 @@ export default (props: Props) => {
           />
         </div>
       }
-      actions={[
-        <ViewMoreButton size="small" icon="info">
-          View more
-        </ViewMoreButton>
-      ]}
+      actions={
+        /**
+         * There is no need to render any buttons if the text can fit normally
+         */
+        readMoreDesc || readMoreName
+          ? [
+              <ViewMoreButton size="small" icon="info">
+                View more
+              </ViewMoreButton>
+            ]
+          : []
+      }
     >
       <StyledMeta title={shortName} description={<p>{shortDesc}</p>} />
     </StyledCard>
