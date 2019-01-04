@@ -6,7 +6,7 @@ import { EntityTypes } from '../types';
 
 interface Props extends FormComponentProps {
   visible: boolean;
-  type: EntityTypes;
+  entityType: EntityTypes;
   loading: boolean;
   onCancel: () => void;
   onCreate: () => void;
@@ -22,13 +22,20 @@ const EntityModal = Form.create()(
     }
 
     render() {
-      const { visible, onCancel, onCreate, form, type, loading } = this.props;
+      const {
+        visible,
+        onCancel,
+        onCreate,
+        form,
+        entityType,
+        loading
+      } = this.props;
       const { getFieldDecorator } = form;
 
       return (
         <Modal
           visible={visible}
-          title={`Create a new ${type}`}
+          title={`Create a new ${entityType}`}
           okText="Create"
           okButtonProps={{ loading }}
           onCancel={onCancel}
@@ -58,7 +65,7 @@ const EntityModal = Form.create()(
                 />
               )}
             </Form.Item>
-            {type === 'product' && (
+            {entityType === 'product' && (
               <Form.Item>
                 {getFieldDecorator('description', {
                   rules: [
@@ -107,7 +114,7 @@ const EntityModal = Form.create()(
                 />
               )}
             </Form.Item>
-            {type === 'product' && (
+            {entityType === 'product' && (
               <Form.Item>
                 {getFieldDecorator('price', {
                   rules: [
@@ -135,7 +142,7 @@ const EntityModal = Form.create()(
                 )}
               </Form.Item>
             )}
-            {type === 'product' && (
+            {entityType === 'product' && (
               <Form.Item>
                 {getFieldDecorator('categories', {
                   rules: [
