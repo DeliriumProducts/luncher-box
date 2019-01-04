@@ -8,16 +8,26 @@ interface Props {
 }
 
 const MenuContainer = styled.div`
-  z-index: 999;
+  z-index: 5000;
   @media (max-width: 768px) {
-    overflow: hidden;
     position: fixed;
     bottom: 0;
     width: 100%;
+    .menu-item-title {
+      display: none;
+      content: '';
+    }
+    .menu-item-icon {
+      font-size: 25px;
+    }
+    .styled-menu {
+      justify-content: space-between;
+    }
   }
 `;
 
 const StyledMenu = styled(Menu)`
+  z-index: 5000;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -28,37 +38,38 @@ const StyledAnchor = styled.a`
   cursor: pointer;
 `;
 
-class AdminMenuBar extends Component<Props, any> {
+class UserMenuBar extends Component<Props, any> {
   render() {
     const { selectedKey } = this.props;
     return (
       <MenuContainer>
-        <StyledMenu mode="horizontal" defaultSelectedKeys={[selectedKey]}>
-          <Menu.Item key="dashboard">
+        <StyledMenu
+          mode="horizontal"
+          defaultSelectedKeys={[selectedKey]}
+          inlineIndent={50}
+          className="styled-menu"
+        >
+          <Menu.Item key="daily">
             <Link href="/">
               <StyledAnchor>
-                <Icon type="dashboard" />
+                <Icon type="calendar" className="menu-item-icon" />
+                <span className="menu-item-title">Daily</span>
               </StyledAnchor>
             </Link>
           </Menu.Item>
-          <Menu.Item key="orders">
-            <Link href="orders">
+          <Menu.Item key="menu">
+            <Link href="menu">
               <StyledAnchor>
-                <Icon type="table" />
+                <Icon type="read" className="menu-item-icon" />
+                <span className="menu-item-title">Menu</span>
               </StyledAnchor>
             </Link>
           </Menu.Item>
-          <Menu.Item key="chat">
-            <Link href="staffchat">
+          <Menu.Item key="cart">
+            <Link href="cart">
               <StyledAnchor>
-                <Icon type="message" />
-              </StyledAnchor>
-            </Link>
-          </Menu.Item>
-          <Menu.Item key="load">
-            <Link href="restaurantload">
-              <StyledAnchor>
-                <Icon type="pie-chart" />
+                <Icon type="shopping-cart" className="menu-item-icon" />
+                <span className="menu-item-title">Cart</span>
               </StyledAnchor>
             </Link>
           </Menu.Item>
@@ -68,4 +79,4 @@ class AdminMenuBar extends Component<Props, any> {
   }
 }
 
-export default AdminMenuBar;
+export default UserMenuBar;

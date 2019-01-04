@@ -80,7 +80,7 @@ class Home extends Component {
           <Product
             image="https://static01.nyt.com/images/2016/11/29/dining/recipelab-chick-noodle-still/recipelab-chick-noodle-still-videoSixteenByNineJumbo1600.jpg"
             name="Chicken Soup"
-            description="It's with chicken nigger"
+            description="It's with chicken"
             price="3.2"
           />
         </FlexContainer>
