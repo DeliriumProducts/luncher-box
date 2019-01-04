@@ -88,6 +88,7 @@ export default (props: Props) => {
           >
             <PriceBadge
               style={{
+                zIndex: 0,
                 marginLeft: 10,
                 marginTop: 10,
                 boxShadow: '0 4px 4px rgba(0, 0, 0, 0.12)'
