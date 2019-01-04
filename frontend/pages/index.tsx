@@ -17,44 +17,29 @@ class Home extends Component {
 
   componentDidMount() {
     this.context.actions.updateEntities();
+    console.log(this.context.entities.categories);
   }
 
   render() {
     return (
       <UserLayout selectedKey="daily">
         <FlexContainer>
-          <Category
-            name="pesho"
-            image="https://upload.wikimedia.org/wikipedia/commons/thumb/0/0b/RedDot_Burger.jpg/1200px-RedDot_Burger.jpg"
-          />
-          <Category
-            name="pesho"
-            image="https://upload.wikimedia.org/wikipedia/commons/thumb/0/0b/RedDot_Burger.jpg/1200px-RedDot_Burger.jpg"
-          />
-          <Category
-            name="pesho"
-            image="https://upload.wikimedia.org/wikipedia/commons/thumb/0/0b/RedDot_Burger.jpg/1200px-RedDot_Burger.jpg"
-          />
-          <Category
-            name="pesho"
-            image="https://upload.wikimedia.org/wikipedia/commons/thumb/0/0b/RedDot_Burger.jpg/1200px-RedDot_Burger.jpg"
-          />
-          <Category
-            name="pesho"
-            image="https://upload.wikimedia.org/wikipedia/commons/thumb/0/0b/RedDot_Burger.jpg/1200px-RedDot_Burger.jpg"
-          />
-          <Category
-            name="pesho"
-            image="https://upload.wikimedia.org/wikipedia/commons/thumb/0/0b/RedDot_Burger.jpg/1200px-RedDot_Burger.jpg"
-          />
-          <Category
-            name="pesho"
-            image="https://upload.wikimedia.org/wikipedia/commons/thumb/0/0b/RedDot_Burger.jpg/1200px-RedDot_Burger.jpg"
-          />
-          <Category
-            name="pesho"
-            image="https://upload.wikimedia.org/wikipedia/commons/thumb/0/0b/RedDot_Burger.jpg/1200px-RedDot_Burger.jpg"
-          />
+          {this.context.entities.categories.map(category => (
+            <Category
+              key={category.id}
+              name={category.name}
+              image={category.image}
+            />
+          ))}
+          {this.context.entities.products.map(product => (
+            <Product
+              key={product.id}
+              name={product.name}
+              description={product.description}
+              price={product.price}
+              image={product.image}
+            />
+          ))}
         </FlexContainer>
       </UserLayout>
     );

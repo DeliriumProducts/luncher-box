@@ -17,8 +17,6 @@ const StyledDiv: any = styled.div`
   @media (max-width: 768px) {
     margin: 8px 0 0 0;
     flex-basis: 100%;
-  }
-  box-shadow: 0 4px 4px rgba(0, 0, 0, 0.5);
 `;
 
 const BlurredDiv: any = styled.div`
@@ -37,28 +35,33 @@ interface Props {
   image: string;
 }
 
-export default (props: Props) => (
-  <StyledDiv>
-    <BlurredDiv img={props.image}>
+export default (props: Props) => {
+  const { id, name, image } = props;
+  console.log(image);
+
+  return (
+    <StyledDiv>
+      <BlurredDiv img={image}>
+        <div
+          style={{
+            backgroundColor: 'rgba(0,0,0,0.45)',
+            width: '100%',
+            height: '100%'
+          }}
+        />
+      </BlurredDiv>
       <div
         style={{
-          backgroundColor: 'rgba(0,0,0,0.45)',
+          position: 'absolute',
           width: '100%',
-          height: '100%'
+          height: '100%',
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center'
         }}
-      />
-    </BlurredDiv>
-    <div
-      style={{
-        position: 'absolute',
-        width: '100%',
-        height: '100%',
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center'
-      }}
-    >
-      nigger
-    </div>
-  </StyledDiv>
-);
+      >
+        {name}
+      </div>
+    </StyledDiv>
+  );
+};

@@ -52,7 +52,7 @@ class UserMenuBar extends Component<Props, any> {
           className="styled-menu"
         >
           <Menu.Item key="daily">
-            <Link href="/">
+            <Link href="/" prefetch>
               <StyledAnchor>
                 <Icon type="calendar" className="menu-item-icon" />
                 <span className="menu-item-title">Daily</span>
@@ -60,7 +60,7 @@ class UserMenuBar extends Component<Props, any> {
             </Link>
           </Menu.Item>
           <Menu.Item key="menu">
-            <Link href="menu">
+            <Link href="menu" prefetch>
               <StyledAnchor>
                 <Icon type="read" className="menu-item-icon" />
                 <span className="menu-item-title">Menu</span>
@@ -68,7 +68,7 @@ class UserMenuBar extends Component<Props, any> {
             </Link>
           </Menu.Item>
           <Menu.Item key="cart">
-            <Link href="cart">
+            <Link href="cart" prefetch>
               <StyledAnchor>
                 <Icon type="shopping-cart" className="menu-item-icon" />
                 <span className="menu-item-title">Cart</span>

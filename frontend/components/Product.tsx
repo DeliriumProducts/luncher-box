@@ -53,7 +53,7 @@ interface Props {
   name: string;
   image: string;
   description: string;
-  price: string;
+  price: string | number;
 }
 
 const ViewMoreButton: any = styled(Button)`
