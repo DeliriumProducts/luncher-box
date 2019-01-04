@@ -1,6 +1,8 @@
-import { Skeleton, Card, Icon, Button } from 'antd';
+import { Skeleton, Card, Badge } from 'antd';
 import React, { Component } from 'react';
 import styled from 'styled-components';
+import ActionButton from './ActionButton';
+import PriceBadge from './PriceBadge';
 
 interface Props {
   id: number;
@@ -19,13 +21,13 @@ const { Meta } = Card;
 const StyledCard = styled(Card)`
   border-radius: 10px;
   margin-top: 8px;
-  box-shadow: 0 4px 4px rgba(0, 0, 0, 0.12);
+  box-shadow: 0 2px 2px rgba(0, 0, 0, 0.12);
   max-width: 100%;
 
   @media (max-width: 480px) {
     border-radius: 0;
     border-bottom: 1px solid;
-    border-bottom-color: rgb(210, 210, 210);
+    border-color: rgb(210, 210, 210);
     box-shadow: none;
     margin: 0;
     width: 100%;
@@ -45,7 +47,7 @@ const StyledCard = styled(Card)`
 const StyledImg = styled.img`
   border-radius: 7px;
   max-height: 72px;
-  box-shadow: 0 4px 4px rgba(0, 0, 0, 0.12);
+  box-shadow: 0 2px 2px rgba(0, 0, 0, 0.12);
   @media (max-width: 250px) {
     display: none;
   }
@@ -60,11 +62,6 @@ const StyledMeta = styled(Meta)`
     white-space: initial;
     word-wrap: break-word;
   }
-`;
-
-const ActionButton: any = styled(Button)`
-  border: none;
-  box-shadow: 0 4px 4px rgba(0, 0, 0, 0.12);
 `;
 
 class EntityCard extends Component<Props, State> {
@@ -90,7 +87,16 @@ class EntityCard extends Component<Props, State> {
         <Skeleton loading={loading} avatar active>
           <StyledMeta
             avatar={<StyledImg src={this.props.image} />}
-            title={this.props.name}
+            title={
+              <span>
+                {this.props.name}
+                <PriceBadge
+                  offset={[10, 0]}
+                  overflowCount={1000}
+                  count={this.props.price && `${this.props.price} / a piece`}
+                />
+              </span>
+            }
             description={this.props.description}
           />
         </Skeleton>
