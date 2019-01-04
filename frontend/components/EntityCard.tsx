@@ -33,7 +33,8 @@ const StyledCard = styled(Card)`
 
   .ant-card-actions {
     background-color: #fff;
-    border-radius: 7px;
+    border-top-color: rgb(210, 210, 210);
+    border-radius: 0 0 7px 7px;
   }
 `;
 
@@ -62,7 +63,7 @@ const ActionButton: any = styled(Button)`
   box-shadow: 0 4px 4px rgba(0, 0, 0, 0.12);
 `;
 
-export default class EntityCard extends Component<Props, State> {
+class EntityCard extends Component<Props, State> {
   state = {
     loading: false
   };
@@ -92,3 +93,5 @@ export default class EntityCard extends Component<Props, State> {
     );
   }
 }
+
+export default EntityCard;

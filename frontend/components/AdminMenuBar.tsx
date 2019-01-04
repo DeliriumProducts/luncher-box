@@ -23,7 +23,6 @@ const MenuContainer = styled.div`
 
     .menu-item-title {
       display: none;
-      content: ;
     }
 
     .menu-item-icon {
@@ -223,7 +222,7 @@ class AdminMenuBar extends Component<Props, State> {
             visible={this.state.modalVisible}
             onCancel={this.handleCancel}
             onCreate={this.handleCreate}
-            type={this.state.modalType}
+            entityType={this.state.modalType}
             loading={this.state.loading}
           />
         )}
