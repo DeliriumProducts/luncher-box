@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 import { Card, Button, Icon } from 'antd';
+import PriceBadge from './PriceBadge';
 
 const { Meta } = Card;
 
@@ -12,19 +13,16 @@ const StyledCard = styled(Card)`
   box-shadow: 0 4px 4px rgba(0, 0, 0, 0.12);
   flex-basis: 16rem;
   padding-bottom: 0;
-
   .ant-card-body {
     padding-top: 0;
     height: 100%;
   }
-
   & img {
     border-radius: 7px 7px 0 0;
     object-fit: cover;
     width: 100%;
     height: 16rem;
   }
-
   @media (max-width: 768px) {
     border-bottom: 1px solid;
     border-bottom-color: rgb(210, 210, 210);
@@ -32,7 +30,6 @@ const StyledCard = styled(Card)`
     margin: 8px 0 0 0;
     flex-basis: 100%;
   }
-
   .ant-card-actions {
     background-color: #fff;
     border-top-color: rgb(210, 210, 210);
@@ -73,15 +70,34 @@ const addDots = (str: string, limit: number) => {
 };
 
 export default (props: Props) => {
-  const [shortName, readMoreName] = addDots(props.name, 50);
-  const [shortDesc, readMoreDesc] = addDots(props.description, 150);
+  const { name, description, price, image } = props;
+
+  const [shortName, readMoreName] = addDots(name, 50);
+  const [shortDesc, readMoreDesc] = addDots(description, 150);
 
   return (
     <StyledCard
       bordered={false}
       cover={
-        <div>
-          <img alt="example" src={props.image} />
+        <div style={{ position: 'relative' }}>
+          <div
+            style={{
+              position: 'absolute',
+              display: 'flex'
+            }}
+          >
+            <PriceBadge
+              style={{
+                marginLeft: 10,
+                marginTop: 10,
+                boxShadow: '0 4px 4px rgba(0, 0, 0, 0.12)'
+              }}
+              offset={[0, 0]}
+              overflowCount={1000}
+              count={price && `${price} / piece`}
+            />
+          </div>
+          <img alt="example" src={image} />
           <Button
             style={{
               width: 44,
