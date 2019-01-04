@@ -1,4 +1,4 @@
-import { Card, Input } from 'antd';
+import { Card, Input, Button } from 'antd';
 import React, { Component } from 'react';
 import styled from 'styled-components';
 
@@ -10,14 +10,10 @@ interface Props {
 }
 
 const StyledCard = styled(Card)`
-  overflow-y: auto;
-  overflow-x: auto;
-  display: flex;
-  flex-wrap: wrap;
-  flex-direction: column;
   border-radius: 7px;
   box-shadow: 0 4px 4px rgba(0, 0, 0, 0.12);
   background-color: rgb(245, 245, 245);
+  min-width: 100%;
 
   @media (max-width: 480px) {
     .ant-card-body {
@@ -27,9 +23,28 @@ const StyledCard = styled(Card)`
   }
 
   .ant-card-head {
-    font-size: 20px;
     border: none;
+
+    .ant-card-head-title {
+      flex: 1;
+    }
+
+    .ant-card-extra {
+      display: flex;
+      flex: 1;
+
+      .ant-input {
+        max-width: 300px;
+        border: none;
+        box-shadow: 0 4px 4px rgba(0, 0, 0, 0.12);
+      }
+    }
   }
+`;
+
+const ActionButton: any = styled(Button)`
+  border: none;
+  box-shadow: 0 4px 4px rgba(0, 0, 0, 0.12);
 `;
 
 class EntityCardContainer extends Component<Props> {
@@ -38,11 +53,7 @@ class EntityCardContainer extends Component<Props> {
       <StyledCard
         title={this.props.title}
         extra={
-          <Search
-            placeholder="input search text"
-            onSearch={value => console.log(value)}
-            style={{ width: 200 }}
-          />
+          <Search placeholder="Search" onSearch={value => console.log(value)} />
         }
         bordered={false}
       >

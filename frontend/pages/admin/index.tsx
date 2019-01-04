@@ -24,7 +24,7 @@ class Index extends Component {
     return (
       <AdminLayout selectedKey="home">
         ok nigga
-        <EntityCardContainer title="dddd">
+        <EntityCardContainer title="Categories (64)">
           <EntityCard
             name="nadenica"
             description="dadasjdhffkfkkfkfkfkfkdsjfksdjfdsflsjfsf;ljsfs;lfkjdsf;lajsf;ljsdf;ljsdf;ljksdf;ljsf;sfjlsf;lsdjfsf;lsjdfdjsk"

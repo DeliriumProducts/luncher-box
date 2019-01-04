@@ -17,9 +17,9 @@ interface Props {
 const MenuContainer = styled.div`
   z-index: 999;
   @media (max-width: 768px) {
-    position: fixed;
+    /* position: fixed;
     bottom: 0;
-    width: 100%;
+    width: 100%; */
 
     .menu-item-title {
       display: none;
@@ -27,6 +27,7 @@ const MenuContainer = styled.div`
 
     .menu-item-icon {
       font-size: 25px;
+      margin-top: 0;
     }
 
     .styled-menu {
