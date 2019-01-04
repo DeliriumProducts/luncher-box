@@ -80,13 +80,12 @@ export default (props: Props) => {
     <StyledCard
       bordered={false}
       cover={
-        <div style={{ zIndex: 50 }}>
+        <div>
           <img alt="example" src={props.image} />
           <Button
             style={{
               width: 44,
               height: 44,
-              zIndex: 50,
               position: 'relative',
               bottom: 22,
               border: 'none',
