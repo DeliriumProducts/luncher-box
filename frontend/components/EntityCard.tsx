@@ -40,7 +40,7 @@ const StyledCard = styled(Card)`
 
 const StyledImg = styled.img`
   border-radius: 7px;
-  max-height: 88px;
+  max-height: 72px;
   box-shadow: 0 4px 4px rgba(0, 0, 0, 0.12);
   @media (max-width: 250px) {
     display: none;
@@ -70,6 +70,7 @@ class EntityCard extends Component<Props, State> {
 
   render() {
     const { loading } = this.state;
+
     return (
       <StyledCard
         bordered={false}
