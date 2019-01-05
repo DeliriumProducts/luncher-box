@@ -102,6 +102,12 @@ class EntityCardContainer extends Component<Props, State> {
   handleCreate = () => {
     const form = this.formRef.props.form;
 
+    /**
+     * We will need the entity from state when actionType == 'edit'
+     * so we destructure it now then we have to check
+     * for undefined because entity is undefined on actionType == 'create'
+     */
+    const { entity } = this.state;
     form.validateFields(async (err: any, values: any) => {
       if (err) {
         return;
@@ -116,7 +122,15 @@ class EntityCardContainer extends Component<Props, State> {
           if (this.state.actionType === 'create') {
             category = (await CategoryAPI.create(category)).data;
           } else {
-            category = (await CategoryAPI.edit(category)).data;
+            /**
+             * Firstly we check for entity because undefined is possible
+             * then inject the id of the entity manually since
+             * our modal does not return it when actionType == 'edit'
+             */
+            if (entity) {
+              category.id = entity.id;
+              category = (await CategoryAPI.edit(category)).data;
+            }
           }
           this.context.actions.pushEntity(category, 'category');
           break;
@@ -126,7 +140,15 @@ class EntityCardContainer extends Component<Props, State> {
           if (this.state.actionType === 'create') {
             product = (await ProductAPI.create(product)).data;
           } else {
-            product = (await ProductAPI.edit(product)).data;
+            /**
+             * Firstly we check for entity because unfenied is possible
+             * then inject the id of the entity manually since
+             * our modal dos not return it when actionType == 'edit'
+             */
+            if (entity) {
+              product.id = entity.id;
+              product = (await ProductAPI.edit(product)).data;
+            }
           }
           this.context.actions.pushEntity(product, 'product');
           break;
