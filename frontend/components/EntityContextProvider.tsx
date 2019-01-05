@@ -101,6 +101,43 @@ class UserProvider extends Component<Props, State> {
     this.setState({ entities: newEntities });
   };
 
+  editEntity = (entity: EntityInstance, entityType: EntityTypes) => {
+    const entities = { ...this.state.entities };
+
+    const newProducts: Product[] = [...entities.products];
+    const newCategories: Category[] = [...entities.categories];
+
+    const newEntities: typeof entities = {
+      products: newProducts,
+      categories: newCategories
+    };
+
+    if (entityType == 'category') {
+      newCategories.find(
+        (category: Category, i: number): any => {
+          if (category.id === entity.id) {
+            newCategories[i] = { ...entity };
+            return true; // stop searching
+          }
+        }
+      );
+    } else {
+      newProducts.find(
+        (product: Product, i: number): any => {
+          if (product.id === entity.id) {
+            newProducts[i] = { ...(entity as Product) };
+            return true; // stop searching
+          }
+        }
+      );
+    }
+
+    newEntities.categories = newCategories;
+    newEntities.products = newProducts;
+
+    this.setState({ entities: newEntities });
+  };
+
   /**
    * We update the current context for every render
    */

@@ -70,6 +70,7 @@ class EntityCardContainer extends Component<Props, State> {
     entityType: 'product',
     actionType: 'create'
   };
+
   formRef: any;
 
   showModal = async (
@@ -85,7 +86,7 @@ class EntityCardContainer extends Component<Props, State> {
         entity
       });
     } else {
-      this.setState({ modalVisible: true, actionType });
+      this.setState({ modalVisible: true, entityType });
     }
 
     /**
@@ -121,6 +122,7 @@ class EntityCardContainer extends Component<Props, State> {
 
           if (this.state.actionType === 'create') {
             category = (await CategoryAPI.create(category)).data;
+            this.context.actions.pushEntity(category, 'category');
           } else {
             /**
              * Firstly we check for entity because undefined is possible
@@ -130,15 +132,16 @@ class EntityCardContainer extends Component<Props, State> {
             if (entity) {
               category.id = entity.id;
               category = (await CategoryAPI.edit(category)).data;
+              this.context.actions.editEntity(category, 'category');
             }
           }
-          this.context.actions.pushEntity(category, 'category');
           break;
         case 'product':
           let product: Product = values;
 
           if (this.state.actionType === 'create') {
             product = (await ProductAPI.create(product)).data;
+            this.context.actions.pushEntity(product, 'product');
           } else {
             /**
              * Firstly we check for entity because unfenied is possible
@@ -148,9 +151,9 @@ class EntityCardContainer extends Component<Props, State> {
             if (entity) {
               product.id = entity.id;
               product = (await ProductAPI.edit(product)).data;
+              this.context.actions.editEntity(product, 'product');
             }
           }
-          this.context.actions.pushEntity(product, 'product');
           break;
         default:
           break;

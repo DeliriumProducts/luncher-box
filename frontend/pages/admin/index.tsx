@@ -28,7 +28,6 @@ class Index extends Component {
 
   async componentDidMount() {
     await this.context.actions.updateEntities();
-    console.log(this.context.entities.products);
   }
 
   render() {
