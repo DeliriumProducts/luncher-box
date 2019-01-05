@@ -30,24 +30,25 @@ class Home extends Component {
               indicator={<Icon style={{ color: '#fff' }} type="loading" spin />}
             />
           ) : (
-            this.context.entities.categories.map(category => (
-              <Category
-                key={category.id}
-                name={category.name}
-                image={category.image}
-              />
-            ))
-          )
-          /* {this.context.entities.products.map(product => (
-            <Product
-              key={product.id}
-              name={product.name}
-              description={product.description}
-              price={product.price}
-              image={product.image}
-            />
-          ))} */
-          }
+            <>
+              {this.context.entities.categories.map(category => (
+                <Category
+                  key={category.id}
+                  name={category.name}
+                  image={category.image}
+                />
+              ))}
+              {this.context.entities.products.map(product => (
+                <Product
+                  key={product.id}
+                  name={product.name}
+                  description={product.description}
+                  price={product.price}
+                  image={product.image}
+                />
+              ))}
+            </>
+          )}
         </FlexContainer>
       </UserLayout>
     );

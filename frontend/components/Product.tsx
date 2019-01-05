@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { Card, Button, Icon } from 'antd';
+import { Card, Button, Icon, Modal } from 'antd';
 import PriceBadge from './PriceBadge';
 
 const { Meta } = Card;
@@ -69,6 +69,20 @@ const addDots = (str: string, limit: number) => {
   return [str, false];
 };
 
+const viewMore = (props: Props) => {
+  Modal.info({
+    title: props.name,
+    content: (
+      <div>
+        <p>{props.description}</p>
+        <strong>{props.price} / piece</strong>
+      </div>
+    ),
+    onOk() {},
+    maskClosable: true
+  });
+};
+
 export default (props: Props) => {
   const { name, description, price, image } = props;
 
@@ -119,7 +133,11 @@ export default (props: Props) => {
          */
         readMoreDesc || readMoreName
           ? [
-              <ViewMoreButton size="small" icon="info">
+              <ViewMoreButton
+                size="small"
+                icon="info"
+                onClick={() => viewMore(props)}
+              >
                 View more
               </ViewMoreButton>
             ]
