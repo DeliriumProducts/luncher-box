@@ -106,7 +106,7 @@ class EntityCard extends Component<Props, State> {
             key="edit"
             type="default"
             icon="edit"
-            onClick={() => showModal(entityType, 'edit', entity)}
+            onClick={async () => await showModal(entityType, 'edit', entity)}
           >
             Edit
           </ActionButton>,
