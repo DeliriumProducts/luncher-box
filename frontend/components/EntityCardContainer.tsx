@@ -72,7 +72,7 @@ class EntityCardContainer extends Component<Props, State> {
   };
   formRef: any;
 
-  showModal = (
+  showModal = async (
     entityType: EntityTypes,
     actionType: 'create' | 'edit',
     entity?: EntityInstance
@@ -91,7 +91,7 @@ class EntityCardContainer extends Component<Props, State> {
     /**
      * Update context every time the modal is shown
      */
-    this.context.actions.updateEntities();
+    await this.context.actions.updateEntities();
   };
   handleCancel = () => {
     this.setState({
@@ -158,7 +158,9 @@ class EntityCardContainer extends Component<Props, State> {
             type="default"
             id="new-button"
             icon="plus"
-            onClick={() => this.showModal(this.props.entityType, 'create')}
+            onClick={async () =>
+              await this.showModal(this.props.entityType, 'create')
+            }
           >
             New
           </ActionButton>
