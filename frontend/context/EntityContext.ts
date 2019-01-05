@@ -7,9 +7,11 @@ interface Values {
     products: Product[];
     categories: Category[];
   };
+
   actions: {
     updateEntities: () => void;
     pushEntity: (newEntity: EntityInstance, entityType: EntityTypes) => void;
+    editEntity: (entity: EntityInstance, entityType: EntityTypes) => void;
   };
 }
 
@@ -21,7 +23,8 @@ export const EntityContext = React.createContext<Values>({
   actions: {
     // tslint:disable
     updateEntities: () => {},
-    pushEntity: () => {}
+    pushEntity: () => {},
+    editEntity: () => {}
     // tslint:enable
   }
 });
