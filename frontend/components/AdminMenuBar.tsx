@@ -67,50 +67,6 @@ class AdminMenuBar extends Component<Props, State> {
     loading: false
   };
 
-  formRef: any;
-
-  showModal = (type: EntityTypes) => {
-    this.setState({ modalVisible: true, modalType: type });
-  };
-
-  handleCancel = () => {
-    this.setState({ modalVisible: false });
-  };
-
-  handleCreate = () => {
-    const form = this.formRef.props.form;
-
-    form.validateFields(async (err: any, values: any) => {
-      if (err) {
-        return;
-      }
-
-      this.setState({ loading: true });
-
-      switch (this.state.modalType) {
-        case 'category':
-          let category: Category = values;
-          category = (await CategoryAPI.create(category)).data;
-          this.context.actions.pushEntity(category, 'category');
-          break;
-        case 'product':
-          let product: Product = values;
-          product = (await ProductAPI.create(product)).data;
-          this.context.actions.pushEntity(product, 'product');
-          break;
-        default:
-          break;
-      }
-
-      form.resetFields();
-      this.setState({ modalVisible: false, loading: false });
-    });
-  };
-
-  saveFormRef = (formRef: any) => {
-    this.formRef = formRef;
-  };
-
   handleClick = async (e: any) => {
     const { key } = e;
 
@@ -118,12 +74,6 @@ class AdminMenuBar extends Component<Props, State> {
       case 'logout':
         await AuthAPI.logout();
         Router.push('/login');
-        break;
-      case 'product':
-        this.showModal('product');
-        break;
-      case 'category':
-        this.showModal('category');
         break;
       default:
         break;
