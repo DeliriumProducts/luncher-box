@@ -6,12 +6,22 @@ import EntityCard from '../../components/EntityCard';
 import styled from 'styled-components';
 import EntityCardContainer from '../../components/EntityCardContainer';
 
-const FlexboxContainer = styled.div`
+const FlexContainer = styled.div`
   display: flex;
-  flex-direction: column;
-  flex-wrap: wrap;
-`;
+  flex-flow: row wrap;
+  justify-content: space-between;
+  width: 100%;
 
+  .col {
+    flex: 1;
+    max-width: 49%;
+
+    @media (max-width: 768px) {
+      max-width: 100%;
+      margin-top: 3%;
+    }
+  }
+`;
 class Index extends Component {
   static contextType = EntityContext;
   context!: React.ContextType<typeof EntityContext>;
@@ -24,23 +34,41 @@ class Index extends Component {
     return (
       <AdminLayout selectedKey="home">
         ok nigga
-        <EntityCardContainer title="Categories (64)">
-          <EntityCard
-            name="nadenica"
-            image="https://sifu.unileversolutions.com/image/en-AU/recipe-topvisual/2/1260-709/beef-burger-with-deep-fried-bacon-and-thousand-island-dressing-50247463.jpg"
-          />
-          <EntityCard
-            name="nadenica"
-            description="dadasjdhffkfkkfkfkfkfkdsjfksdjfdsflsjfsf;ljsfs;lfkjdsf;lajsf;ljsdf;ljsdf;ljksdf;ljsf;sfjlsf;lsdjfsf;lsjdfdjsk"
-            image="https://sifu.unileversolutions.com/image/en-AU/recipe-topvisual/2/1260-709/beef-burger-with-deep-fried-bacon-and-thousand-island-dressing-50247463.jpg"
-          />
-          <EntityCard
-            name="nadenica"
-            price={9.99}
-            description="dadasjdhffkfkkfkfkfkfkdsjfksdjfdsflsjfsf;ljsfs;lfkjdsf;lajsf;ljsdf;ljsdf;ljksdf;ljsf;sfjlsf;lsdjfsf;lsjdfdjsk"
-            image="https://sifu.unileversolutions.com/image/en-AU/recipe-topvisual/2/1260-709/beef-burger-with-deep-fried-bacon-and-thousand-island-dressing-50247463.jpg"
-          />
-        </EntityCardContainer>
+        <FlexContainer>
+          <div className="col">
+            <EntityCardContainer
+              title={`Categories (${this.context.entities.categories.length})`}
+              type="category"
+            >
+              {this.context.entities.categories.map(category => (
+                <EntityCard
+                  key={category.id}
+                  id={category.id}
+                  name={category.name}
+                  image="https://sifu.unileversolutions.com/image/en-AU/recipe-topvisual/2/1260-709/beef-burger-with-deep-fried-bacon-and-thousand-island-dressing-50247463.jpg"
+                />
+              ))}
+            </EntityCardContainer>
+          </div>
+          <div className="col">
+            <EntityCardContainer
+              title={`Products (${this.context.entities.products.length})`}
+              type="product"
+            >
+              {this.context.entities.products.map(product => (
+                <EntityCard
+                  key={product.id}
+                  id={product.id}
+                  name={product.name}
+                  image="https://sifu.unileversolutions.com/image/en-AU/recipe-topvisual/2/1260-709/beef-burger-with-deep-fried-bacon-and-thousand-island-dressing-50247463.jpg"
+                  description={product.description}
+                  price={product.price}
+                  category={product.categories}
+                />
+              ))}
+            </EntityCardContainer>
+          </div>
+        </FlexContainer>
       </AdminLayout>
     );
   }

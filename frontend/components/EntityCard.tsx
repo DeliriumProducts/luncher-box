@@ -1,19 +1,23 @@
-import { Skeleton, Card } from 'antd';
+import { Skeleton, Card, Icon } from 'antd';
 import React, { Component } from 'react';
 import styled from 'styled-components';
 import ActionButton from './ActionButton';
 import PriceBadge from './PriceBadge';
+import { Category } from '../interfaces';
 
 interface Props {
+  key: number;
   id: number;
   name: string;
   description?: string;
   image: string;
   price?: number;
+  categories?: Category[];
 }
 
 interface State {
   loading: boolean;
+  modalVisible: boolean;
 }
 
 const { Meta } = Card;
@@ -66,7 +70,8 @@ const StyledMeta = styled(Meta)`
 
 class EntityCard extends Component<Props, State> {
   state = {
-    loading: false
+    loading: false,
+    modalVisible: false
   };
 
   render() {
@@ -76,10 +81,10 @@ class EntityCard extends Component<Props, State> {
       <StyledCard
         bordered={false}
         actions={[
-          <ActionButton type="default" icon="edit">
+          <ActionButton key="edit" type="default" icon="edit">
             Edit
           </ActionButton>,
-          <ActionButton type="default" icon="delete">
+          <ActionButton key="delete" type="default" icon="delete">
             Delete
           </ActionButton>
         ]}
@@ -93,7 +98,7 @@ class EntityCard extends Component<Props, State> {
                 <PriceBadge
                   offset={[10, 0]}
                   overflowCount={1000}
-                  count={this.props.price && `${this.props.price} / a piece`}
+                  count={this.props.price && `${this.props.price} / piece`}
                 />
               </span>
             }
