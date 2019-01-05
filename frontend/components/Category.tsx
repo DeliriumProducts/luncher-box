@@ -37,7 +37,6 @@ interface Props {
 
 export default (props: Props) => {
   const { id, name, image } = props;
-  console.log(image);
 
   return (
     <StyledDiv>

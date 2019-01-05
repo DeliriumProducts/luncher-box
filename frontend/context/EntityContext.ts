@@ -11,6 +11,7 @@ interface Values {
     updateEntities: () => void;
     pushEntity: (newEntity: EntityInstance, entityType: EntityTypes) => void;
   };
+  loading: boolean;
 }
 
 export const EntityContext = React.createContext<Values>({
@@ -23,5 +24,6 @@ export const EntityContext = React.createContext<Values>({
     updateEntities: () => {},
     pushEntity: () => {}
     // tslint:enable
-  }
+  },
+  loading: false
 });

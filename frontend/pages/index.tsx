@@ -4,6 +4,7 @@ import UserLayout from '../components/UserLayout';
 import { EntityContext } from '../context/EntityContext';
 import Product from '../components/Product';
 import styled from 'styled-components';
+import { Spin, Icon } from 'antd';
 
 const FlexContainer = styled.div`
   display: flex;
@@ -24,14 +25,20 @@ class Home extends Component {
     return (
       <UserLayout selectedKey="daily">
         <FlexContainer>
-          {this.context.entities.categories.map(category => (
-            <Category
-              key={category.id}
-              name={category.name}
-              image={category.image}
+          {this.context.loading ? (
+            <Spin
+              indicator={<Icon style={{ color: '#fff' }} type="loading" spin />}
             />
-          ))}
-          {this.context.entities.products.map(product => (
+          ) : (
+            this.context.entities.categories.map(category => (
+              <Category
+                key={category.id}
+                name={category.name}
+                image={category.image}
+              />
+            ))
+          )
+          /* {this.context.entities.products.map(product => (
             <Product
               key={product.id}
               name={product.name}
@@ -39,7 +46,8 @@ class Home extends Component {
               price={product.price}
               image={product.image}
             />
-          ))}
+          ))} */
+          }
         </FlexContainer>
       </UserLayout>
     );

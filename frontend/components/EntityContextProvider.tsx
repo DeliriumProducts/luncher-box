@@ -13,6 +13,7 @@ interface State {
     products: Product[];
     categories: Category[];
   };
+  loading: boolean;
 }
 
 class UserProvider extends Component<Props, State> {
@@ -20,54 +21,60 @@ class UserProvider extends Component<Props, State> {
     entities: {
       products: [],
       categories: []
-    }
+    },
+    loading: false
   };
 
   updateEntities = async () => {
-    const entities = { ...this.state.entities };
+    this.setState({ loading: true }, async () => {
+      console.log('started fetching');
+      const entities = { ...this.state.entities };
 
-    let newProducts: Product[] = [];
-    let newCategories: Category[] = [];
-    const newEntities: typeof entities = {
-      products: newProducts,
-      categories: newCategories
-    };
+      let newProducts: Product[] = [];
+      let newCategories: Category[] = [];
+      const newEntities: typeof entities = {
+        products: newProducts,
+        categories: newCategories
+      };
 
-    /**
-     * If there are entities in the context, we can fetch ONLY the entities that we are missing
-     */
+      /**
+       * If there are entities in the context, we can fetch ONLY the entities that we are missing
+       */
 
-    if (entities.products.length) {
-      const { products: oldProducts } = entities;
-      const { id: lastProductId } = entities.products[
-        entities.products.length - 1
-      ];
+      if (entities.products.length) {
+        const { products: oldProducts } = entities;
+        const { id: lastProductId } = entities.products[
+          entities.products.length - 1
+        ];
 
-      const fetchedProducts = await ProductAPI.getAll({ since: lastProductId });
+        const fetchedProducts = await ProductAPI.getAll({
+          since: lastProductId
+        });
 
-      newProducts.push(...oldProducts, ...fetchedProducts);
-    } else {
-      newProducts = await ProductAPI.getAll();
-    }
+        newProducts.push(...oldProducts, ...fetchedProducts);
+      } else {
+        newProducts = await ProductAPI.getAll();
+      }
 
-    if (entities.categories.length) {
-      const { categories: oldCategories } = entities;
-      const { id: lastCategoryId } = entities.categories[
-        entities.categories.length - 1
-      ];
+      if (entities.categories.length) {
+        const { categories: oldCategories } = entities;
+        const { id: lastCategoryId } = entities.categories[
+          entities.categories.length - 1
+        ];
 
-      const fetchedCategories = await CategoryAPI.getAll({
-        since: lastCategoryId
-      });
+        const fetchedCategories = await CategoryAPI.getAll({
+          since: lastCategoryId
+        });
 
-      newCategories.push(...oldCategories, ...fetchedCategories);
-    } else {
-      newCategories = await CategoryAPI.getAll();
-    }
+        newCategories.push(...oldCategories, ...fetchedCategories);
+      } else {
+        newCategories = await CategoryAPI.getAll();
+      }
 
-    newEntities.categories = newCategories;
-    newEntities.products = newProducts;
-    this.setState({ entities: newEntities });
+      newEntities.categories = newCategories;
+      newEntities.products = newProducts;
+      this.setState({ entities: newEntities, loading: false });
+    });
   };
 
   pushEntity = (newEntity: EntityInstance, entityType: EntityTypes) => {
@@ -99,7 +106,7 @@ class UserProvider extends Component<Props, State> {
    * We update the current context for every render
    */
   render() {
-    const { entities } = this.state;
+    const { entities, loading } = this.state;
 
     return (
       <EntityContext.Provider
@@ -108,7 +115,8 @@ class UserProvider extends Component<Props, State> {
           actions: {
             updateEntities: this.updateEntities,
             pushEntity: this.pushEntity
-          }
+          },
+          loading
         }}
       >
         {this.props.children}
