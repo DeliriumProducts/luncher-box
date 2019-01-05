@@ -2,11 +2,14 @@ import { Form, Icon, Input, Modal, Select } from 'antd';
 import { FormComponentProps } from 'antd/lib/form';
 import React from 'react';
 import { EntityContext } from '../context';
-import { EntityTypes } from '../types';
+import { EntityTypes, ActionTypes, EntityInstance } from '../types';
+import { Product } from '../interfaces';
 
 interface Props extends FormComponentProps {
   visible: boolean;
+  entity?: EntityInstance;
   entityType: EntityTypes;
+  actionType: ActionTypes;
   loading: boolean;
   onCancel: () => void;
   onCreate: () => void;
@@ -54,7 +57,8 @@ const EntityModal = Form.create()(
                     required: true,
                     message: 'Name field cannot be empty'
                   }
-                ]
+                ],
+                initialValue: this.props.entity && this.props.entity.name
               })(
                 <Input
                   prefix={
@@ -77,7 +81,8 @@ const EntityModal = Form.create()(
                       required: true,
                       message: 'Description field cannot be empty'
                     }
-                  ]
+                  ],
+                  initialValue: (this.props.entity as Product).description
                 })(
                   <Input
                     prefix={
@@ -103,7 +108,8 @@ const EntityModal = Form.create()(
                     required: true,
                     message: 'Image field cannot be empty'
                   }
-                ]
+                ],
+                initialValue: this.props.entity && this.props.entity.image
               })(
                 <Input
                   prefix={
@@ -127,7 +133,9 @@ const EntityModal = Form.create()(
                       required: true,
                       message: 'Price field cannot be empty'
                     }
-                  ]
+                  ],
+                  initialValue:
+                    this.props.entity && (this.props.entity as Product).price
                 })(
                   <Input
                     prefix={
@@ -154,7 +162,12 @@ const EntityModal = Form.create()(
                       required: true,
                       message: 'Categories field cannot be empty'
                     }
-                  ]
+                  ],
+                  initialValue:
+                    this.props.entity &&
+                    (this.props.entity as Product).categories.map(
+                      category => category.name
+                    )
                 })(
                   <Select
                     mode="multiple"

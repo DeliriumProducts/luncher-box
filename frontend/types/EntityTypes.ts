@@ -1,4 +1,4 @@
 /**
- * Used for when creating an entity through a modal
+ * Used for showing the right modal
  */
 export type EntityTypes = 'product' | 'category';
