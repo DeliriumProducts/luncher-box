@@ -20,9 +20,8 @@ const EntityModal = Form.create()(
     static contextType = EntityContext;
     context!: React.ContextType<typeof EntityContext>;
 
-    componentDidMount() {
-      this.context.actions.updateEntities();
-    }
+    capitalizeFirstLetter = (string: string) =>
+      string.charAt(0).toUpperCase() + string.slice(1);
 
     render() {
       const {
@@ -34,16 +33,18 @@ const EntityModal = Form.create()(
         loading
       } = this.props;
       const { getFieldDecorator } = form;
+      const actionType = this.capitalizeFirstLetter(this.props.actionType);
 
       return (
         <Modal
           visible={visible}
-          title={`Create a new ${entityType}`}
-          okText="Create"
+          title={`${actionType} a ${entityType}`}
+          okText={`${actionType}`}
           okButtonProps={{ loading }}
           onCancel={onCancel}
           onOk={onCreate}
           centered
+          destroyOnClose
         >
           <Form layout="vertical">
             <Form.Item>
@@ -82,7 +83,9 @@ const EntityModal = Form.create()(
                       message: 'Description field cannot be empty'
                     }
                   ],
-                  initialValue: (this.props.entity as Product).description
+                  initialValue:
+                    this.props.entity &&
+                    (this.props.entity as Product).description
                 })(
                   <Input
                     prefix={

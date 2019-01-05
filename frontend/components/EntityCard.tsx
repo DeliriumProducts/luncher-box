@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import ActionButton from './ActionButton';
 import PriceBadge from './PriceBadge';
 import { Category } from '../interfaces';
+import { EntityTypes, ActionTypes, EntityInstance } from '../types';
 
 interface Props {
   key: number;
@@ -13,11 +14,16 @@ interface Props {
   image: string;
   price?: number;
   categories?: Category[];
+  showModal: (
+    entityType: EntityTypes,
+    actionType: ActionTypes,
+    entity?: EntityInstance
+  ) => void;
+  entityType: EntityTypes;
 }
 
 interface State {
   loading: boolean;
-  modalVisible: boolean;
 }
 
 const { Meta } = Card;
@@ -70,18 +76,42 @@ const StyledMeta = styled(Meta)`
 
 class EntityCard extends Component<Props, State> {
   state = {
-    loading: false,
-    modalVisible: false
+    loading: false
   };
 
   render() {
     const { loading } = this.state;
+    const { showModal, entityType } = this.props;
+
+    /**
+     * Define an entity based on the entityType var which will be passed to the modal
+     */
+    const entity: EntityInstance =
+      entityType === 'product'
+        ? {
+            id: this.props.id,
+            name: this.props.name,
+            description: this.props.description,
+            image: this.props.image,
+            price: this.props.price,
+            categories: this.props.categories
+          }
+        : {
+            id: this.props.id,
+            name: this.props.name,
+            image: this.props.image
+          };
 
     return (
       <StyledCard
         bordered={false}
         actions={[
-          <ActionButton key="edit" type="default" icon="edit">
+          <ActionButton
+            key="edit"
+            type="default"
+            icon="edit"
+            onClick={() => showModal(entityType, 'edit', entity)}
+          >
             Edit
           </ActionButton>,
           <ActionButton key="delete" type="default" icon="delete">

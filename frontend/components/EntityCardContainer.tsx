@@ -2,7 +2,7 @@ import { Card, Input } from 'antd';
 import React, { Component } from 'react';
 import styled from 'styled-components';
 import ActionButton from './ActionButton';
-import { EntityTypes, ActionTypes } from '../types';
+import { EntityTypes, ActionTypes, EntityInstance } from '../types';
 import { Category, Product } from '../interfaces';
 import { ProductAPI, CategoryAPI } from '../api';
 import EntityModal from './EntityModal';
@@ -12,13 +12,14 @@ const { Search } = Input;
 
 interface Props {
   title: string;
-  type: EntityTypes;
-  children: React.ReactNode;
+  entityType: EntityTypes;
+  children: React.ReactNode[];
 }
 
 interface State {
   modalVisible: boolean;
   loading: boolean;
+  entity?: EntityInstance;
   entityType: EntityTypes;
   actionType: ActionTypes;
 }
@@ -65,17 +66,37 @@ class EntityCardContainer extends Component<Props, State> {
   state: State = {
     modalVisible: false,
     loading: false,
+    entity: undefined,
     entityType: 'product',
     actionType: 'create'
   };
   formRef: any;
 
-  showModal = (entityType: EntityTypes, actionType: 'create' | 'edit') => {
-    this.setState({ modalVisible: true, entityType: entityType });
-  };
+  showModal = (
+    entityType: EntityTypes,
+    actionType: 'create' | 'edit',
+    entity?: EntityInstance
+  ) => {
+    if (entity) {
+      this.setState({
+        modalVisible: true,
+        entityType,
+        actionType,
+        entity
+      });
+    } else {
+      this.setState({ modalVisible: true, actionType });
+    }
 
+    /**
+     * Update context every time the modal is shown
+     */
+    this.context.actions.updateEntities();
+  };
   handleCancel = () => {
-    this.setState({ modalVisible: false });
+    this.setState({
+      modalVisible: false
+    });
   };
 
   handleCreate = () => {
@@ -137,16 +158,24 @@ class EntityCardContainer extends Component<Props, State> {
             type="default"
             id="new-button"
             icon="plus"
-            onClick={() =>
-              this.showModal(this.props.type, this.state.actionType)
-            }
+            onClick={() => this.showModal(this.props.entityType, 'create')}
           >
             New
           </ActionButton>
         ]}
         bordered={false}
       >
-        {this.props.children}
+        {/**
+          We have to inject the showModal func and entity's type to children's props
+         */}
+
+        {this.props.children.map(child => {
+          return React.cloneElement(child as React.ReactElement<any>, {
+            showModal: this.showModal,
+            entityType: this.props.entityType
+          });
+        })}
+
         <EntityModal
           wrappedComponentRef={this.saveFormRef}
           visible={this.state.modalVisible}
@@ -154,6 +183,7 @@ class EntityCardContainer extends Component<Props, State> {
           onCreate={this.handleCreate}
           entityType={this.state.entityType}
           actionType={this.state.actionType}
+          entity={this.state.entity}
           loading={this.state.loading}
         />
       </StyledCard>

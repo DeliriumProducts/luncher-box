@@ -38,7 +38,7 @@ class Index extends Component {
           <div className="col">
             <EntityCardContainer
               title={`Categories (${this.context.entities.categories.length})`}
-              type="category"
+              entityType="category"
             >
               {this.context.entities.categories.map(category => (
                 <EntityCard
@@ -53,7 +53,7 @@ class Index extends Component {
           <div className="col">
             <EntityCardContainer
               title={`Products (${this.context.entities.products.length})`}
-              type="product"
+              entityType="product"
             >
               {this.context.entities.products.map(product => (
                 <EntityCard
@@ -63,7 +63,7 @@ class Index extends Component {
                   image="https://sifu.unileversolutions.com/image/en-AU/recipe-topvisual/2/1260-709/beef-burger-with-deep-fried-bacon-and-thousand-island-dressing-50247463.jpg"
                   description={product.description}
                   price={product.price}
-                  category={product.categories}
+                  categories={product.categories}
                 />
               ))}
             </EntityCardContainer>
