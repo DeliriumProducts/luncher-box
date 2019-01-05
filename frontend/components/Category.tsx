@@ -14,9 +14,13 @@ const StyledDiv: any = styled.div`
   margin: 8px 4px 0 4px;
   width: 16rem;
   height: 16rem;
+  user-select: none;
+  cursor: pointer;
   @media (max-width: 768px) {
     margin: 8px 0 0 0;
     flex-basis: 100%;
+  }
+  box-shadow: 0 4px 4px rgba(0, 0, 0, 0.5);
 `;
 
 const BlurredDiv: any = styled.div`
