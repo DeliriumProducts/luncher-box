@@ -16,12 +16,29 @@ interface Props {
   children: React.ReactNode[];
 }
 
+interface ChildProps {
+  key: number;
+  id: number;
+  name: string;
+  description?: string;
+  image: string;
+  price?: number;
+  categories?: Category[];
+  showModal?: (
+    entityType: EntityTypes,
+    actionType: ActionTypes,
+    entity?: EntityInstance
+  ) => void;
+  entityType?: EntityTypes;
+}
+
 interface State {
   modalVisible: boolean;
   loading: boolean;
   entity?: EntityInstance;
   entityType: EntityTypes;
   actionType: ActionTypes;
+  searchText: string;
 }
 
 const StyledCard = styled(Card)`
@@ -82,7 +99,8 @@ class EntityCardContainer extends Component<Props, State> {
     loading: false,
     entity: undefined,
     entityType: 'product',
-    actionType: 'create'
+    actionType: 'create',
+    searchText: ''
   };
 
   formRef: any;
@@ -108,6 +126,7 @@ class EntityCardContainer extends Component<Props, State> {
      */
     await this.context.actions.updateEntities();
   };
+
   handleCancel = () => {
     this.setState({
       modalVisible: false
@@ -182,6 +201,10 @@ class EntityCardContainer extends Component<Props, State> {
     this.formRef = formRef;
   };
 
+  handleChange = (e: React.FormEvent<HTMLInputElement>) => {
+    this.setState({ searchText: e.currentTarget.value });
+  };
+
   render() {
     return (
       <StyledCard
@@ -191,6 +214,7 @@ class EntityCardContainer extends Component<Props, State> {
             key="search"
             placeholder="Search"
             onSearch={value => console.log(value)}
+            onChange={this.handleChange}
             id="search-input"
           />,
           <ActionButton
@@ -210,14 +234,18 @@ class EntityCardContainer extends Component<Props, State> {
         {/**
           We have to inject the showModal func and entity's type to children's props
          */}
-
-        {this.props.children.map(child => {
-          return React.cloneElement(child as React.ReactElement<any>, {
-            showModal: this.showModal,
-            entityType: this.props.entityType
-          });
+        {React.Children.map(this.props.children, (child: any) => {
+          if (
+            child.props.name
+              .toLowerCase()
+              .includes(this.state.searchText.toLowerCase())
+          ) {
+            return React.cloneElement(child as React.ReactElement<any>, {
+              showModal: this.showModal,
+              entityType: this.props.entityType
+            });
+          }
         })}
-
         <EntityModal
           wrappedComponentRef={this.saveFormRef}
           visible={this.state.modalVisible}
