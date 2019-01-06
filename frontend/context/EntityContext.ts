@@ -12,6 +12,7 @@ interface Values {
     updateEntities: () => void;
     pushEntity: (newEntity: EntityInstance, entityType: EntityTypes) => void;
     editEntity: (entity: EntityInstance, entityType: EntityTypes) => void;
+    deleteEntity: (entity: EntityInstance, entityType: EntityTypes) => void;
   };
 }
 
@@ -24,7 +25,8 @@ export const EntityContext = React.createContext<Values>({
     // tslint:disable
     updateEntities: () => {},
     pushEntity: () => {},
-    editEntity: () => {}
+    editEntity: () => {},
+    deleteEntity: () => {}
     // tslint:enable
   }
 });

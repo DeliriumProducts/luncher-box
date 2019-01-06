@@ -1,4 +1,4 @@
-import { Card, Input } from 'antd';
+import { Card, Input, message } from 'antd';
 import React, { Component } from 'react';
 import styled from 'styled-components';
 import ActionButton from './ActionButton';
@@ -14,22 +14,6 @@ interface Props {
   title: string;
   entityType: EntityTypes;
   children: React.ReactNode[];
-}
-
-interface ChildProps {
-  key: number;
-  id: number;
-  name: string;
-  description?: string;
-  image: string;
-  price?: number;
-  categories?: Category[];
-  showModal?: (
-    entityType: EntityTypes,
-    actionType: ActionTypes,
-    entity?: EntityInstance
-  ) => void;
-  entityType?: EntityTypes;
 }
 
 interface State {
@@ -55,14 +39,12 @@ const StyledCard = styled(Card)`
 
   .ant-card-head-wrapper {
     flex-wrap: wrap;
-    overflow-x: auto;
   }
 
   .ant-card-head {
     border: none;
 
     .ant-card-head-title {
-      display: flex;
       flex: 1;
       text-overflow: initial;
       overflow-x: auto;
@@ -94,6 +76,8 @@ const StyledCard = styled(Card)`
 class EntityCardContainer extends Component<Props, State> {
   static contextType = EntityContext;
 
+  context!: React.ContextType<typeof EntityContext>;
+
   state: State = {
     modalVisible: false,
     loading: false,
@@ -107,7 +91,7 @@ class EntityCardContainer extends Component<Props, State> {
 
   showModal = async (
     entityType: EntityTypes,
-    actionType: 'create' | 'edit',
+    actionType: ActionTypes,
     entity?: EntityInstance
   ) => {
     if (entity) {
@@ -138,7 +122,7 @@ class EntityCardContainer extends Component<Props, State> {
 
     /**
      * We will need the entity from state when actionType == 'edit'
-     * so we destructure it now then we have to check
+     * so we destructure it now and then we have to check
      * for undefined because entity is undefined on actionType == 'create'
      */
     const { entity } = this.state;
@@ -149,47 +133,58 @@ class EntityCardContainer extends Component<Props, State> {
 
       this.setState({ loading: true });
 
-      switch (this.state.entityType) {
-        case 'category':
-          let category: Category = values;
+      try {
+        switch (this.state.entityType) {
+          case 'category':
+            let category: Category = values;
 
-          if (this.state.actionType === 'create') {
-            category = (await CategoryAPI.create(category)).data;
-            this.context.actions.pushEntity(category, 'category');
-          } else {
-            /**
-             * Firstly we check for entity because undefined is possible
-             * then inject the id of the entity manually since
-             * our modal does not return it when actionType == 'edit'
-             */
-            if (entity) {
-              category.id = entity.id;
-              category = (await CategoryAPI.edit(category)).data;
-              this.context.actions.editEntity(category, 'category');
+            if (this.state.actionType === 'create') {
+              category = (await CategoryAPI.create(category)).data;
+              this.context.actions.pushEntity(category, 'category');
+              message.success(`Successfully created category ${category.name}`);
+            } else {
+              /**
+               * First we check for entity because it may be undefined
+               * then inject the id of the entity manually since
+               * our modal does not return it when actionType == 'edit'
+               */
+              if (entity) {
+                category.id = entity.id;
+                category = (await CategoryAPI.edit(category)).data;
+                this.context.actions.editEntity(category, 'category');
+                message.success(
+                  `Successfully edited category ${category.name}`
+                );
+              }
             }
-          }
-          break;
-        case 'product':
-          let product: Product = values;
+            break;
+          case 'product':
+            let product: Product = values;
 
-          if (this.state.actionType === 'create') {
-            product = (await ProductAPI.create(product)).data;
-            this.context.actions.pushEntity(product, 'product');
-          } else {
-            /**
-             * Firstly we check for entity because unfenied is possible
-             * then inject the id of the entity manually since
-             * our modal dos not return it when actionType == 'edit'
-             */
-            if (entity) {
-              product.id = entity.id;
-              product = (await ProductAPI.edit(product)).data;
-              this.context.actions.editEntity(product, 'product');
+            if (this.state.actionType === 'create') {
+              product = (await ProductAPI.create(product)).data;
+              this.context.actions.pushEntity(product, 'product');
+              message.success(`Successfully created product ${product.name}`);
+            } else {
+              /**
+               * First we check for entity because it may be undefined
+               * then inject the id of the entity manually since
+               * our modal does not return it when actionType == 'edit'
+               */
+              if (entity) {
+                product.id = entity.id;
+                product = (await ProductAPI.edit(product)).data;
+                this.context.actions.editEntity(product, 'product');
+                message.success(`Successfully edited product ${product.name}`);
+              }
             }
-          }
-          break;
-        default:
-          break;
+            break;
+          default:
+            break;
+        }
+      } catch (err) {
+        this.setState({ loading: false });
+        message.error(`${err}`);
       }
 
       form.resetFields();
@@ -244,6 +239,8 @@ class EntityCardContainer extends Component<Props, State> {
               showModal: this.showModal,
               entityType: this.props.entityType
             });
+          } else {
+            return;
           }
         })}
         <EntityModal

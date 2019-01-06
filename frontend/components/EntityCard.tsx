@@ -1,10 +1,12 @@
-import { Skeleton, Card, Icon } from 'antd';
+import { Skeleton, Card, Icon, Popconfirm, message } from 'antd';
 import React, { Component } from 'react';
 import styled from 'styled-components';
 import ActionButton from './ActionButton';
 import PriceBadge from './PriceBadge';
-import { Category } from '../interfaces';
+import { Category, Product } from '../interfaces';
 import { EntityTypes, ActionTypes, EntityInstance } from '../types';
+import { CategoryAPI, ProductAPI } from '../api';
+import { EntityContext } from '../context';
 
 interface Props {
   key: number;
@@ -24,6 +26,7 @@ interface Props {
 
 interface State {
   loading: boolean;
+  popConfirmVisible: boolean;
 }
 
 const { Meta } = Card;
@@ -71,8 +74,12 @@ const StyledMeta = styled(Meta)`
 `;
 
 class EntityCard extends Component<Props, State> {
+  static contextType = EntityContext;
+  context!: React.ContextType<typeof EntityContext>;
+
   state = {
-    loading: false
+    loading: false,
+    popConfirmVisible: false
   };
 
   render() {
@@ -107,13 +114,39 @@ class EntityCard extends Component<Props, State> {
             key="edit"
             type="default"
             icon="edit"
-            onClick={async () => await showModal(entityType, 'edit', entity)}
+            onClick={async () => {
+              if (showModal && entityType) {
+                await showModal(entityType, 'edit', entity);
+              }
+            }}
           >
             Edit
           </ActionButton>,
-          <ActionButton key="delete" type="default" icon="delete">
-            Delete
-          </ActionButton>
+          <Popconfirm
+            title={`Are you sure you want to delete this ${entityType}?`}
+            onConfirm={async () => {
+              if (entityType) {
+                if (entityType === 'category') {
+                  await CategoryAPI.delete(entity);
+                } else {
+                  await ProductAPI.delete(entity as Product);
+                }
+
+                this.context.actions.deleteEntity(entity, entityType);
+
+                message.success(
+                  `Successfully deleted ${entityType} ${entity.name}`
+                );
+              }
+            }}
+            icon={<Icon type="question-circle-o" style={{ color: 'red' }} />}
+            okText="Yes"
+            cancelText="No"
+          >
+            <ActionButton key="delete" type="default" icon="delete">
+              Delete
+            </ActionButton>
+          </Popconfirm>
         ]}
       >
         <Skeleton loading={loading} avatar active>
