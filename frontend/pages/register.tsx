@@ -1,4 +1,4 @@
-import { Button, Form, Icon, Input } from 'antd';
+import { Button, Form, Icon, Input, message } from 'antd';
 import { FormComponentProps } from 'antd/lib/form';
 import Link from 'next/link';
 import React from 'react';
@@ -53,8 +53,25 @@ class RegisterForm extends React.Component<Props, State> {
         };
 
         this.setState({ loading: true });
-        await AuthAPI.register(credentials);
-        this.setState({ loading: false });
+        try {
+          console.log(credentials);
+          await AuthAPI.register(credentials);
+          message.success(
+            'You successfully registered! An email was sent to the restaurant owner ✉️'
+          );
+        } catch (err) {
+          if (!err.response) {
+            message.error(`${err}`);
+            return;
+          }
+          if (err.response.status === 422) {
+            message.error('An account with the same email already exists.');
+          } else {
+            message.error('Server error, please try again');
+          }
+        } finally {
+          this.setState({ loading: false });
+        }
       }
     });
   };

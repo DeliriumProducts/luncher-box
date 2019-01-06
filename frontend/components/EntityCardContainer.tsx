@@ -29,7 +29,7 @@ const StyledCard = styled(Card)`
   border-radius: 7px;
   box-shadow: 0 2px 2px rgba(0, 0, 0, 0.12);
   background-color: rgb(245, 245, 245);
-  max-width: 100%;
+
   @media (max-width: 480px) {
     .ant-card-body {
       padding-left: 0px;
@@ -75,7 +75,6 @@ const StyledCard = styled(Card)`
 
 class EntityCardContainer extends Component<Props, State> {
   static contextType = EntityContext;
-
   context!: React.ContextType<typeof EntityContext>;
 
   state: State = {
@@ -141,7 +140,9 @@ class EntityCardContainer extends Component<Props, State> {
             if (this.state.actionType === 'create') {
               category = (await CategoryAPI.create(category)).data;
               this.context.actions.pushEntity(category, 'category');
-              message.success(`Successfully created category ${category.name}`);
+              message.success(
+                `Successfully created category ${category.name} 🎉`
+              );
             } else {
               /**
                * First we check for entity because it may be undefined
@@ -153,7 +154,7 @@ class EntityCardContainer extends Component<Props, State> {
                 category = (await CategoryAPI.edit(category)).data;
                 this.context.actions.editEntity(category, 'category');
                 message.success(
-                  `Successfully edited category ${category.name}`
+                  `Successfully edited category ${category.name} 🎉`
                 );
               }
             }
@@ -164,7 +165,9 @@ class EntityCardContainer extends Component<Props, State> {
             if (this.state.actionType === 'create') {
               product = (await ProductAPI.create(product)).data;
               this.context.actions.pushEntity(product, 'product');
-              message.success(`Successfully created product ${product.name}`);
+              message.success(
+                `Successfully created product ${product.name} 🎉`
+              );
             } else {
               /**
                * First we check for entity because it may be undefined
@@ -175,7 +178,9 @@ class EntityCardContainer extends Component<Props, State> {
                 product.id = entity.id;
                 product = (await ProductAPI.edit(product)).data;
                 this.context.actions.editEntity(product, 'product');
-                message.success(`Successfully edited product ${product.name}`);
+                message.success(
+                  `Successfully edited product ${product.name} 🎉`
+                );
               }
             }
             break;

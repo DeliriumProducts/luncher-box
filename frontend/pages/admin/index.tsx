@@ -15,6 +15,7 @@ const FlexContainer = styled.div`
   .col {
     flex: 1;
     max-width: 49%;
+    height: 100%;
 
     @media (max-width: 768px) {
       max-width: 100%;
