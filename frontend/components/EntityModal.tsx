@@ -20,8 +20,8 @@ const EntityModal = Form.create()(
     static contextType = EntityContext;
     context!: React.ContextType<typeof EntityContext>;
 
-    capitalizeFirstLetter = (string: string) =>
-      string.charAt(0).toUpperCase() + string.slice(1);
+    capitalizeFirstLetter = (str: string) =>
+      str.charAt(0).toUpperCase() + str.slice(1);
 
     render() {
       const {

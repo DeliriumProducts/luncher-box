@@ -16,7 +16,7 @@ interface State {
   loading: boolean;
 }
 
-class UserProvider extends Component<Props, State> {
+class EntityProvider extends Component<Props, State> {
   state: State = {
     entities: {
       products: [],
@@ -138,6 +138,32 @@ class UserProvider extends Component<Props, State> {
     this.setState({ entities: newEntities });
   };
 
+  deleteEntity = (entity: EntityInstance, entityType: EntityTypes) => {
+    const entities = { ...this.state.entities };
+
+    const newProducts: Product[] = [...entities.products];
+    const newCategories: Category[] = [...entities.categories];
+
+    const newEntities: typeof entities = {
+      products: newProducts,
+      categories: newCategories
+    };
+
+    if (entityType === 'category') {
+      const categoryId = newCategories.findIndex(({ id }) => id === entity.id);
+      newCategories.splice(categoryId, 1);
+    } else {
+      console.log(newProducts);
+      const productId = newProducts.findIndex(({ id }) => id === entity.id);
+      newProducts.splice(productId, 1);
+    }
+
+    newEntities.products = newProducts;
+    newEntities.categories = newCategories;
+
+    this.setState({ entities: newEntities });
+  };
+
   /**
    * We update the current context for every render
    */
@@ -150,9 +176,10 @@ class UserProvider extends Component<Props, State> {
           entities,
           actions: {
             updateEntities: this.updateEntities,
-            pushEntity: this.pushEntity
-          },
-          loading
+            pushEntity: this.pushEntity,
+            editEntity: this.editEntity,
+            deleteEntity: this.deleteEntity
+          }
         }}
       >
         {this.props.children}
@@ -164,5 +191,5 @@ class UserProvider extends Component<Props, State> {
 // then make a consumer which will surface it
 const UserConsumer = EntityContext.Consumer;
 
-export default UserProvider;
+export default EntityProvider;
 export { UserConsumer };
