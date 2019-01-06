@@ -45,7 +45,7 @@ class Index extends Component {
                   key={category.id}
                   id={category.id}
                   name={category.name}
-                  image="https://sifu.unileversolutions.com/image/en-AU/recipe-topvisual/2/1260-709/beef-burger-with-deep-fried-bacon-and-thousand-island-dressing-50247463.jpg"
+                  image={category.image}
                 />
               ))}
             </EntityCardContainer>
@@ -60,7 +60,7 @@ class Index extends Component {
                   key={product.id}
                   id={product.id}
                   name={product.name}
-                  image="https://sifu.unileversolutions.com/image/en-AU/recipe-topvisual/2/1260-709/beef-burger-with-deep-fried-bacon-and-thousand-island-dressing-50247463.jpg"
+                  image={product.image}
                   description={product.description}
                   price={product.price}
                   categories={product.categories}
