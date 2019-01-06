@@ -47,7 +47,8 @@ export class CategoryController {
     if (since) {
       const categories = await this.categoryRepository.find({
         where: { id: MoreThan(since) },
-        take: limit
+        take: limit,
+        relations: ['products']
       });
 
       return categories;
@@ -56,12 +57,15 @@ export class CategoryController {
     if (page) {
       const categories = await this.categoryRepository.find({
         skip: limit * (page - 1),
-        take: limit
+        take: limit,
+        relations: ['products']
       });
 
       return categories;
     } else {
-      const categories = await this.categoryRepository.find();
+      const categories = await this.categoryRepository.find({
+        relations: ['products']
+      });
 
       return categories;
     }

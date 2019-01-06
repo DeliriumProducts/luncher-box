@@ -27,7 +27,6 @@ class UserProvider extends Component<Props, State> {
 
   updateEntities = async () => {
     this.setState({ loading: true }, async () => {
-      console.log('started fetching');
       const entities = { ...this.state.entities };
 
       let newProducts: Product[] = [];

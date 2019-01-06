@@ -18,7 +18,6 @@ class Home extends Component {
 
   componentDidMount() {
     this.context.actions.updateEntities();
-    console.log(this.context.entities.categories);
   }
 
   render() {
@@ -34,17 +33,9 @@ class Home extends Component {
               {this.context.entities.categories.map(category => (
                 <Category
                   key={category.id}
+                  id={category.id}
                   name={category.name}
                   image={category.image}
-                />
-              ))}
-              {this.context.entities.products.map(product => (
-                <Product
-                  key={product.id}
-                  name={product.name}
-                  description={product.description}
-                  price={product.price}
-                  image={product.image}
                 />
               ))}
             </>

@@ -51,16 +51,8 @@ class UserMenuBar extends Component<Props, any> {
           inlineIndent={50}
           className="styled-menu"
         >
-          <Menu.Item key="daily">
+          <Menu.Item key="home">
             <Link href="/" prefetch>
-              <StyledAnchor>
-                <Icon type="calendar" className="menu-item-icon" />
-                <span className="menu-item-title">Daily</span>
-              </StyledAnchor>
-            </Link>
-          </Menu.Item>
-          <Menu.Item key="menu">
-            <Link href="menu" prefetch>
               <StyledAnchor>
                 <Icon type="read" className="menu-item-icon" />
                 <span className="menu-item-title">Menu</span>

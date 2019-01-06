@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 import { Card } from 'antd';
+import Link from 'next/link';
 
 const StyledDiv: any = styled.div`
   display: flex;
@@ -35,6 +36,7 @@ const BlurredDiv: any = styled.div`
 `;
 
 interface Props {
+  id: number;
   name: string;
   image: string;
 }
@@ -43,28 +45,30 @@ export default (props: Props) => {
   const { id, name, image } = props;
 
   return (
-    <StyledDiv>
-      <BlurredDiv img={image}>
+    <Link href={`/category?categoryId=${id}`} as={`/category/${id}`}>
+      <StyledDiv>
+        <BlurredDiv img={image}>
+          <div
+            style={{
+              backgroundColor: 'rgba(0,0,0,0.45)',
+              width: '100%',
+              height: '100%'
+            }}
+          />
+        </BlurredDiv>
         <div
           style={{
-            backgroundColor: 'rgba(0,0,0,0.45)',
+            position: 'absolute',
             width: '100%',
-            height: '100%'
+            height: '100%',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center'
           }}
-        />
-      </BlurredDiv>
-      <div
-        style={{
-          position: 'absolute',
-          width: '100%',
-          height: '100%',
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center'
-        }}
-      >
-        {name}
-      </div>
-    </StyledDiv>
+        >
+          {name}
+        </div>
+      </StyledDiv>
+    </Link>
   );
 };
