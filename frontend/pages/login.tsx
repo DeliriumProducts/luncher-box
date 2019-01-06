@@ -65,8 +65,12 @@ class LoginForm extends Component<Props, State> {
             1
           );
           Router.push('/admin');
-        } catch ({ response }) {
-          if (response.status === 401) {
+        } catch (err) {
+          if (!err.response) {
+            message.error(`${err}`);
+            return;
+          }
+          if (err.response.status === 401) {
             message.error(
               'Invalid credentials. Try again or click Forgot password to reset it',
               1
@@ -74,8 +78,9 @@ class LoginForm extends Component<Props, State> {
           } else {
             message.error('Server error, please try again');
           }
+        } finally {
+          this.setState({ loading: false });
         }
-        this.setState({ loading: false });
       }
     });
   };

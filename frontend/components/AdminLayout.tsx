@@ -23,10 +23,9 @@ const CustomHeader = styled.div`
 
 const StyledContent = styled(Content)`
   padding: 50px;
-  min-height: 100%;
   background-color: #fff;
   margin-bottom: 50px;
-
+  height: auto;
   @media (max-width: 480px) {
     padding: 0;
   }

@@ -139,7 +139,7 @@ class EntityCard extends Component<Props, State> {
                 this.context.actions.deleteEntity(entity, entityType);
 
                 message.success(
-                  `Successfully deleted ${entityType} ${entity.name}`
+                  `Successfully deleted ${entityType} ${entity.name} 🎉`
                 );
               }
             }}
