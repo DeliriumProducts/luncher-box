@@ -57,7 +57,7 @@ class RegisterForm extends React.Component<Props, State> {
           console.log(credentials);
           await AuthAPI.register(credentials);
           message.success(
-            'You successfully registered! An email was sent to the restaurant owner ✉️'
+            'You successfully registered! An confirmation email was sent to the restaurant owner ✉️'
           );
         } catch (err) {
           if (!err.response) {
