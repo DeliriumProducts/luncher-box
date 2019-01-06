@@ -60,7 +60,7 @@ class UserMenuBar extends Component<Props, any> {
             </Link>
           </Menu.Item>
           <Menu.Item key="cart">
-            <Link href="cart" prefetch>
+            <Link href="/cart" prefetch>
               <StyledAnchor>
                 <Icon type="shopping-cart" className="menu-item-icon" />
                 <span className="menu-item-title">Cart</span>
