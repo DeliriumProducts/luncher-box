@@ -18,9 +18,17 @@ const StyledDiv: any = styled.div`
   user-select: none;
   cursor: pointer;
   @media (max-width: 768px) {
-    margin: 8px 0 0 0;
+    margin: 12px 0 0 0;
     flex-basis: 100%;
   }
+
+  &:hover {
+    .blurred-div {
+      filter: blur(3px);
+      transform: scale(1.025);
+    }
+  }
+
   box-shadow: 0 4px 4px rgba(0, 0, 0, 0.5);
 `;
 
@@ -28,11 +36,11 @@ const BlurredDiv: any = styled.div`
   width: 100%;
   height: 100%;
   border-radius: 7px;
+  transition: all 0.25s;
   height: 100%;
   background: url(${(props: any) => props.img}) no-repeat center;
   background-size: cover;
   overflow: hidden;
-  /* filter: blur(3px); */
 `;
 
 interface Props {
@@ -47,7 +55,7 @@ export default (props: Props) => {
   return (
     <Link href={`/category?categoryId=${id}`} as={`/category/${id}`}>
       <StyledDiv>
-        <BlurredDiv img={image}>
+        <BlurredDiv className="blurred-div" img={image}>
           <div
             style={{
               backgroundColor: 'rgba(0,0,0,0.45)',

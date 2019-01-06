@@ -22,7 +22,7 @@ class Home extends Component {
 
   render() {
     return (
-      <UserLayout selectedKey="daily">
+      <UserLayout selectedKey="home">
         <FlexContainer>
           {this.context.loading ? (
             <Spin
