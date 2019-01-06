@@ -14,12 +14,12 @@ interface Props {
   image: string;
   price?: number;
   categories?: Category[];
-  showModal: (
+  showModal?: (
     entityType: EntityTypes,
     actionType: ActionTypes,
     entity?: EntityInstance
   ) => void;
-  entityType: EntityTypes;
+  entityType?: EntityTypes;
 }
 
 interface State {
@@ -85,6 +85,7 @@ class EntityCard extends Component<Props, State> {
 
     /**
      * Define an entity based on the entityType var which will be passed to the modal
+     * when action button is clicked
      */
     const entity: EntityInstance =
       entityType === 'product'
@@ -126,9 +127,9 @@ class EntityCard extends Component<Props, State> {
               <span>
                 {this.props.name}
                 <PriceBadge
-                  offset={[10, 0]}
                   overflowCount={1000}
                   count={this.props.price && `${this.props.price} / piece`}
+                  style={{ marginLeft: '10px', zIndex: 0 }}
                 />
               </span>
             }
