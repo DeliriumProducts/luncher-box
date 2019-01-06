@@ -36,24 +36,38 @@ const StyledCard = styled(Card)`
     }
   }
 
+  .ant-card-head-wrapper {
+    flex-wrap: wrap;
+    overflow-x: auto;
+  }
+
   .ant-card-head {
     border: none;
 
     .ant-card-head-title {
+      display: flex;
       flex: 1;
+      text-overflow: initial;
+      overflow-x: auto;
       font-size: 18px;
+
+      @media (max-width: 380px) {
+        font-size: 16px;
+      }
     }
 
     .ant-card-extra {
       display: flex;
       flex: 1;
 
-      .ant-input {
+      #search-input {
+        min-width: 100px;
         max-width: 300px;
         border: none;
         box-shadow: 0 2px 2px rgba(0, 0, 0, 0.12);
       }
-      & > #new-button {
+
+      #new-button {
         margin-left: 10px;
       }
     }
@@ -177,6 +191,7 @@ class EntityCardContainer extends Component<Props, State> {
             key="search"
             placeholder="Search"
             onSearch={value => console.log(value)}
+            id="search-input"
           />,
           <ActionButton
             key="new"
