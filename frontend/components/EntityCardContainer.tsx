@@ -101,7 +101,12 @@ class EntityCardContainer extends Component<Props, State> {
         entity
       });
     } else {
-      this.setState({ modalVisible: true, entityType });
+      this.setState({
+        modalVisible: true,
+        entityType,
+        actionType: 'create',
+        entity: undefined
+      });
     }
 
     /**

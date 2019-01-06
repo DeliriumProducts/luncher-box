@@ -175,6 +175,3 @@ class EntityCard extends Component<Props, State> {
 }
 
 export default EntityCard;
-display: flex;
-  align-items: center;
-  overflow-

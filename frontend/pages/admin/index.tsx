@@ -34,7 +34,6 @@ class Index extends Component {
   render() {
     return (
       <AdminLayout selectedKey="home">
-        ok nigga
         <FlexContainer>
           <div className="col">
             <EntityCardContainer
