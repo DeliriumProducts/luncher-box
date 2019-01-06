@@ -1,5 +1,5 @@
-import { Middleware, ExpressErrorMiddlewareInterface, HttpError } from 'routing-controllers';
 import { Request, Response } from 'express';
+import { ExpressErrorMiddlewareInterface, Middleware } from 'routing-controllers';
 
 /**
  * Used to prevent the bug with no response being sent to the client

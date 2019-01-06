@@ -1,8 +1,7 @@
+import http from 'http';
 import 'reflect-metadata';
-import { useSocketServer } from 'socket-controllers';
 import createSocketIoServer from 'socket.io';
 import { app } from './express';
-import http from 'http';
 
 /**
  * Set up server

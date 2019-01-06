@@ -1,22 +1,36 @@
 import axios from 'axios';
-import { BACKEND_URL } from './../config';
 import { Category } from '../interfaces';
+import { BACKEND_URL } from './../config';
 
 export class CategoryAPI {
   static opts = {
     withCredentials: true
   };
 
-  static async getAll(page?: number, limit?: number) {
-    if (page && limit) {
+  static async getAll(
+    opts: { since?: number; page?: number; limit?: number } = {}
+  ) {
+    if (!opts.limit) {
+      opts.limit = 0;
+    }
+
+    if (opts.since) {
       const categories: Category[] = (await axios.get(
-        `${BACKEND_URL}/categories?page=${page}&limit=${limit}`
+        `${BACKEND_URL}/categories?since=${opts.since}&limit=${opts.limit}`
+      )).data;
+
+      return categories;
+    }
+
+    if (opts.page) {
+      const categories: Category[] = (await axios.get(
+        `${BACKEND_URL}/categories?page=${opts.page}&limit=${opts.limit}`
       )).data;
 
       return categories;
     } else {
       const categories: Category[] = (await axios.get(
-        `${BACKEND_URL}/categoreis?page=${page}&limit=${limit}`
+        `${BACKEND_URL}/categories?limit=${opts.limit}`
       )).data;
 
       return categories;

@@ -1,25 +1,24 @@
 import { TransformValidationOptions } from 'class-transformer-validator';
-import { QueryResponse } from '../types';
 import {
-  Category,
-  Product,
-  ProductNotFoundError,
-  ProductNotValidError,
-  CategoryNotFoundError
-} from '../entities';
-import { TransformAndValidateTuple } from '../types';
-import {
-  JsonController,
-  Get,
-  Param,
-  Post,
+  Authorized,
   Body,
   Delete,
+  Get,
+  JsonController,
+  Param,
+  Post,
   Put,
-  Authorized,
   QueryParam
 } from 'routing-controllers';
-import { Repository, getRepository } from 'typeorm';
+import { getRepository, MoreThan, Repository } from 'typeorm';
+import {
+  Category,
+  CategoryNotFoundError,
+  Product,
+  ProductNotFoundError,
+  ProductNotValidError
+} from '../entities';
+import { QueryResponse, TransformAndValidateTuple } from '../types';
 import { transformAndValidate } from '../utils';
 
 @JsonController('/products')
@@ -51,16 +50,35 @@ export class ProductController {
    * Gets all products
    */
   @Get()
-  async getAll(@QueryParam('page') page?: number, @QueryParam('limit') limit?: number) {
-    if (page && limit) {
-      const categories = await this.productRepository.find({
-        skip: limit * (page - 1),
-        take: limit
+  async getAll(
+    @QueryParam('page') page?: number,
+    @QueryParam('limit') limit: number = 0,
+    @QueryParam('since') since?: number
+  ) {
+    if (since) {
+      const products = await this.productRepository.find({
+        where: { id: MoreThan(since) },
+        take: limit,
+        relations: ['categories']
       });
-      return categories;
+
+      return products;
+    }
+
+    if (page) {
+      const products = await this.productRepository.find({
+        skip: limit * (page - 1),
+        take: limit,
+        relations: ['categories']
+      });
+
+      return products;
     } else {
-      const categories = await this.productRepository.find();
-      return categories;
+      const products = await this.productRepository.find({
+        relations: ['categories']
+      });
+
+      return products;
     }
   }
 
@@ -126,8 +144,7 @@ export class ProductController {
 
     product.categories = validCategories;
 
-    await this.productRepository.save(product);
-    return 'New product created!';
+    return await this.productRepository.save(product);
   }
 
   /**
@@ -181,7 +198,7 @@ export class ProductController {
       newProduct.categories = validCategories;
       newProduct.id = oldProduct.id;
 
-      await this.productRepository.save(newProduct);
+      return await this.productRepository.save(newProduct);
       return 'Product edited!';
     }
 

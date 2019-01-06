@@ -1,11 +1,11 @@
-import { Form, Icon, Input, Button } from 'antd';
-import Link from 'next/link';
-import styled from 'styled-components';
-import React from 'react';
+import { Button, Form, Icon, Input, message } from 'antd';
 import { FormComponentProps } from 'antd/lib/form';
-import { HandleRegister } from '../types';
-import CenteredDiv from '../components/CenteredDiv';
+import Link from 'next/link';
+import React from 'react';
+import styled from 'styled-components';
 import { AuthAPI } from '../api';
+import CenteredDiv from '../components/CenteredDiv';
+import { HandleRegister } from '../types';
 
 const FormItem = Form.Item;
 
@@ -53,8 +53,25 @@ class RegisterForm extends React.Component<Props, State> {
         };
 
         this.setState({ loading: true });
-        await AuthAPI.register(credentials);
-        this.setState({ loading: false });
+        try {
+          console.log(credentials);
+          await AuthAPI.register(credentials);
+          message.success(
+            'You successfully registered! An confirmation email was sent to the restaurant owner ✉️'
+          );
+        } catch (err) {
+          if (!err.response) {
+            message.error(`${err}`);
+            return;
+          }
+          if (err.response.status === 422) {
+            message.error('An account with the same email already exists.');
+          } else {
+            message.error('Server error, please try again');
+          }
+        } finally {
+          this.setState({ loading: false });
+        }
       }
     });
   };

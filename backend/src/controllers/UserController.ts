@@ -1,12 +1,12 @@
-import { JsonController, Get, Post, Body, Req, UseBefore } from 'routing-controllers';
+import { TransformValidationOptions } from 'class-transformer-validator';
 import { Request } from 'express';
 import nodemailer from 'nodemailer';
 import passport from 'passport';
-import { User, UserNotValidError, DuplicateUserError, UserNotFoundError, Token } from '../entities';
-import { Repository, getRepository } from 'typeorm';
-import { TransformValidationOptions } from 'class-transformer-validator';
-import { TransformAndValidateTuple } from '../types';
+import { Body, Get, JsonController, Post, Req, UseBefore } from 'routing-controllers';
+import { getRepository, Repository } from 'typeorm';
 import { OWNER_EMAIL, OWNER_PASS, VERIFIER_EMAIL } from '../config';
+import { DuplicateUserError, Token, User, UserNotFoundError, UserNotValidError } from '../entities';
+import { TransformAndValidateTuple } from '../types';
 import { transformAndValidate } from '../utils';
 
 @JsonController('/auth')

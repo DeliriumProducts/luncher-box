@@ -1,5 +1,5 @@
 import { ConnectionOptions } from 'typeorm';
-import { DB_HOST, DB_PORT, DB_USER, DB_PASS, DB_NAME, IS_DEV } from './env';
+import { DB_HOST, DB_NAME, DB_PASS, DB_PORT, DB_USER, IS_DEV } from './env';
 
 const dbConfig: ConnectionOptions = {
   type: 'mariadb',

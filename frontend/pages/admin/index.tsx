@@ -1,46 +1,77 @@
 import { Component } from 'react';
-import { AdminContext } from '../../context';
-import { AuthAPI } from '../../api';
-import { NextContext } from 'next';
-import Router from 'next/router';
+import AdminLayout from '../../components/AdminLayout';
+import withAuth from '../../components/withAuth';
+import { EntityContext } from '../../context';
+import EntityCard from '../../components/EntityCard';
+import styled from 'styled-components';
+import EntityCardContainer from '../../components/EntityCardContainer';
 
-interface Props {
-  isAuthenticated: boolean;
-}
+const FlexContainer = styled.div`
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: space-between;
+  width: 100%;
 
-class Home extends Component<Props> {
-  static async getInitialProps({ req, res }: NextContext) {
-    let isAuthenticated = false;
+  .col {
+    flex: 1;
+    max-width: 49%;
+    height: 100%;
 
-    /**
-     * Check for authentication
-     */
-
-    /**
-     * Check wheter authentication is happening server-side or client-side based on received context
-     */
-    if (req && res) {
-      if (req.headers.cookie) {
-        isAuthenticated = await AuthAPI.isAuthenticated(req.headers.cookie);
-      }
-      if (!isAuthenticated) {
-        res.writeHead(302, {
-          Location: '/login'
-        });
-        res.end();
-      }
-    } else {
-      isAuthenticated = await AuthAPI.isAuthenticated();
-      if (!isAuthenticated) {
-        Router.push('/login');
-      }
+    @media (max-width: 768px) {
+      max-width: 100%;
+      margin-top: 3%;
     }
+  }
+`;
+class Index extends Component {
+  static contextType = EntityContext;
+  context!: React.ContextType<typeof EntityContext>;
 
-    return { isAuthenticated };
+  async componentDidMount() {
+    await this.context.actions.updateEntities();
   }
 
   render() {
-    return <div>Welcome to Luncher Box's admin panel!</div>;
+    return (
+      <AdminLayout selectedKey="home">
+        <FlexContainer>
+          <div className="col">
+            <EntityCardContainer
+              title={`Categories (${this.context.entities.categories.length})`}
+              entityType="category"
+            >
+              {this.context.entities.categories.map(category => (
+                <EntityCard
+                  key={category.id}
+                  id={category.id}
+                  name={category.name}
+                  image={category.image}
+                />
+              ))}
+            </EntityCardContainer>
+          </div>
+          <div className="col">
+            <EntityCardContainer
+              title={`Products (${this.context.entities.products.length})`}
+              entityType="product"
+            >
+              {this.context.entities.products.map(product => (
+                <EntityCard
+                  key={product.id}
+                  id={product.id}
+                  name={product.name}
+                  image={product.image}
+                  description={product.description}
+                  price={product.price}
+                  categories={product.categories}
+                />
+              ))}
+            </EntityCardContainer>
+          </div>
+        </FlexContainer>
+      </AdminLayout>
+    );
   }
 }
-export default Home;
+
+export default withAuth(Index);

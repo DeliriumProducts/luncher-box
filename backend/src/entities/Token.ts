@@ -1,6 +1,6 @@
-import { Entity, PrimaryGeneratedColumn, OneToOne, JoinColumn, Column } from 'typeorm';
-import { User } from './User';
+import { Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { EntityNotFoundError } from '../utils';
+import { User } from './User';
 
 @Entity()
 export class Token {

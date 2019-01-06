@@ -1,8 +1,8 @@
+import { Allow, IsNumber, IsUrl, Length, Max, Min } from 'class-validator';
+import { Column, Entity, JoinTable, ManyToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { EntityError } from '../types';
-import { EntityNotValidError, DuplicateEntityError, EntityNotFoundError } from '../utils';
-import { Entity, PrimaryGeneratedColumn, Column, ManyToMany, JoinTable } from 'typeorm';
+import { DuplicateEntityError, EntityNotFoundError, EntityNotValidError } from '../utils';
 import { Category } from './Category';
-import { Length, IsNumber, Min, Max, Allow, IsUrl } from 'class-validator';
 
 @Entity()
 export class Product {

@@ -1,18 +1,18 @@
-import { TransformAndValidateTuple, QueryResponse } from '../types';
 import { TransformValidationOptions } from 'class-transformer-validator';
-import { Repository, getRepository } from 'typeorm';
-import { Product, Category, CategoryNotFoundError, CategoryNotValidError } from '../entities';
 import {
-  Get,
-  JsonController,
-  Post,
-  Param,
+  Authorized,
   Body,
   Delete,
+  Get,
+  JsonController,
+  Param,
+  Post,
   Put,
-  Authorized,
   QueryParam
 } from 'routing-controllers';
+import { getRepository, MoreThan, Repository } from 'typeorm';
+import { Category, CategoryNotFoundError, CategoryNotValidError, Product } from '../entities';
+import { QueryResponse, TransformAndValidateTuple } from '../types';
 import { transformAndValidate } from '../utils';
 
 @JsonController('/categories')
@@ -39,15 +39,34 @@ export class CategoryController {
    * Gets all categories
    */
   @Get()
-  async getAll(@QueryParam('page') page?: number, @QueryParam('limit') limit?: number) {
-    if (page && limit) {
+  async getAll(
+    @QueryParam('page') page?: number,
+    @QueryParam('limit') limit: number = 0,
+    @QueryParam('since') since?: number
+  ) {
+    if (since) {
+      const categories = await this.categoryRepository.find({
+        where: { id: MoreThan(since) },
+        take: limit,
+        relations: ['products']
+      });
+
+      return categories;
+    }
+
+    if (page) {
       const categories = await this.categoryRepository.find({
         skip: limit * (page - 1),
-        take: limit
+        take: limit,
+        relations: ['products']
       });
+
       return categories;
     } else {
-      const categories = await this.categoryRepository.find();
+      const categories = await this.categoryRepository.find({
+        relations: ['products']
+      });
+
       return categories;
     }
   }
@@ -86,8 +105,7 @@ export class CategoryController {
       throw new CategoryNotValidError(err);
     }
 
-    await this.categoryRepository.save(category);
-    return 'New category created!';
+    return await this.categoryRepository.save(category);
   }
 
   /**
@@ -112,8 +130,9 @@ export class CategoryController {
         throw new CategoryNotValidError(err);
       }
 
-      await this.categoryRepository.update(id, newCategory);
-      return 'Category updated!';
+      newCategory.id = oldCategory.id;
+
+      return await this.categoryRepository.save(newCategory);
     }
 
     throw new CategoryNotFoundError();

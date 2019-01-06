@@ -1,27 +1,20 @@
-import React from 'react';
 import App, { Container, NextAppContext } from 'next/app';
+import React from 'react';
 import { createGlobalStyle } from 'styled-components';
-import { UserContext } from '../context/';
-import { Category } from '../types';
-import { AuthAPI, CategoryAPI } from '../api';
-import { NextContext } from 'next';
+import EntityContextProvider from '../components/EntityContextProvider';
 
 const GlobalStyle = createGlobalStyle`
   html,
   body {
     margin: 0;
   }
+
   #__next {
     height: 100%;
   }
 `;
 
-interface Props {
-  isAuthenticated: boolean;
-  categories: Category[];
-}
-
-export default class MyApp extends App<Props> {
+export default class MyApp extends App {
   static async getInitialProps({ Component, ctx }: NextAppContext) {
     let pageProps = {};
 
@@ -29,23 +22,19 @@ export default class MyApp extends App<Props> {
       pageProps = await Component.getInitialProps(ctx);
     }
 
-    /**
-     * Get all categories
-     */
-    const categories = await CategoryAPI.getAll();
-    return { pageProps, categories };
+    return { pageProps };
   }
 
   render() {
-    const { Component, pageProps, categories } = this.props;
+    const { Component, pageProps } = this.props;
 
     return (
-      <UserContext.Provider value={{ categories }}>
+      <EntityContextProvider>
         <Container>
           <GlobalStyle />
           <Component {...pageProps} />
         </Container>
-      </UserContext.Provider>
+      </EntityContextProvider>
     );
   }
 }

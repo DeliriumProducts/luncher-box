@@ -1,12 +1,12 @@
-import { Form, Icon, Input, Button, Checkbox, message } from 'antd';
+import { Button, Checkbox, Form, Icon, Input, message } from 'antd';
+import { FormComponentProps } from 'antd/lib/form';
 import Link from 'next/link';
 import Router from 'next/router';
-import styled from 'styled-components';
 import React, { Component } from 'react';
-import { FormComponentProps } from 'antd/lib/form';
-import { HandleLogin } from '../types';
-import CenteredDiv from '../components/CenteredDiv';
+import styled from 'styled-components';
 import { AuthAPI } from '../api';
+import CenteredDiv from '../components/CenteredDiv';
+import { HandleLogin } from '../types';
 
 const FormItem = Form.Item;
 
@@ -64,9 +64,13 @@ class LoginForm extends Component<Props, State> {
             'You successfully logged in! Redirecting you to dashboard...',
             1
           );
-          Router.push('/admin/dashboard');
-        } catch ({ response }) {
-          if (response.status === 401) {
+          Router.push('/admin');
+        } catch (err) {
+          if (!err.response) {
+            message.error(`${err}`);
+            return;
+          }
+          if (err.response.status === 401) {
             message.error(
               'Invalid credentials. Try again or click Forgot password to reset it',
               1
@@ -74,8 +78,9 @@ class LoginForm extends Component<Props, State> {
           } else {
             message.error('Server error, please try again');
           }
+        } finally {
+          this.setState({ loading: false });
         }
-        this.setState({ loading: false });
       }
     });
   };

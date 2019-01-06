@@ -1,8 +1,8 @@
+import { IsUrl, Length } from 'class-validator';
+import { Column, Entity, ManyToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { EntityError } from '../types';
-import { EntityNotValidError, EntityNotFoundError } from '../utils';
+import { EntityNotFoundError, EntityNotValidError } from '../utils';
 import { Product } from './Product';
-import { Entity, PrimaryGeneratedColumn, Column, MinKey, ManyToMany } from 'typeorm';
-import { Length, IsUrl } from 'class-validator';
 
 @Entity()
 export class Category {

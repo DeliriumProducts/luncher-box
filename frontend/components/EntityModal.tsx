@@ -1,12 +1,15 @@
-import { Modal, Form, Input, Radio, Icon, Select } from 'antd';
-import React from 'react';
+import { Form, Icon, Input, Modal, Select } from 'antd';
 import { FormComponentProps } from 'antd/lib/form';
-import { UserContext } from '../context';
-import { EntityTypes } from '../types';
+import React from 'react';
+import { EntityContext } from '../context';
+import { EntityTypes, ActionTypes, EntityInstance } from '../types';
+import { Product } from '../interfaces';
 
 interface Props extends FormComponentProps {
   visible: boolean;
-  type: EntityTypes;
+  entity?: EntityInstance;
+  entityType: EntityTypes;
+  actionType: ActionTypes;
   loading: boolean;
   onCancel: () => void;
   onCreate: () => void;
@@ -14,22 +17,34 @@ interface Props extends FormComponentProps {
 
 const EntityModal = Form.create()(
   class extends React.Component<Props> {
-    static contextType = UserContext;
-    context!: React.ContextType<typeof UserContext>;
+    static contextType = EntityContext;
+    context!: React.ContextType<typeof EntityContext>;
+
+    capitalizeFirstLetter = (str: string) =>
+      str.charAt(0).toUpperCase() + str.slice(1);
 
     render() {
-      const { visible, onCancel, onCreate, form, type, loading } = this.props;
+      const {
+        visible,
+        onCancel,
+        onCreate,
+        form,
+        entityType,
+        loading
+      } = this.props;
       const { getFieldDecorator } = form;
+      const actionType = this.capitalizeFirstLetter(this.props.actionType);
 
       return (
         <Modal
           visible={visible}
-          title={`Create a new ${type}`}
-          okText="Create"
+          title={`${actionType} a ${entityType}`}
+          okText={`${actionType}`}
           okButtonProps={{ loading }}
           onCancel={onCancel}
           onOk={onCreate}
           centered
+          destroyOnClose
         >
           <Form layout="vertical">
             <Form.Item>
@@ -43,7 +58,8 @@ const EntityModal = Form.create()(
                     required: true,
                     message: 'Name field cannot be empty'
                   }
-                ]
+                ],
+                initialValue: this.props.entity && this.props.entity.name
               })(
                 <Input
                   prefix={
@@ -54,7 +70,7 @@ const EntityModal = Form.create()(
                 />
               )}
             </Form.Item>
-            {type === 'product' && (
+            {entityType === 'product' && (
               <Form.Item>
                 {getFieldDecorator('description', {
                   rules: [
@@ -66,7 +82,10 @@ const EntityModal = Form.create()(
                       required: true,
                       message: 'Description field cannot be empty'
                     }
-                  ]
+                  ],
+                  initialValue:
+                    this.props.entity &&
+                    (this.props.entity as Product).description
                 })(
                   <Input
                     prefix={
@@ -92,7 +111,8 @@ const EntityModal = Form.create()(
                     required: true,
                     message: 'Image field cannot be empty'
                   }
-                ]
+                ],
+                initialValue: this.props.entity && this.props.entity.image
               })(
                 <Input
                   prefix={
@@ -103,7 +123,7 @@ const EntityModal = Form.create()(
                 />
               )}
             </Form.Item>
-            {type === 'product' && (
+            {entityType === 'product' && (
               <Form.Item>
                 {getFieldDecorator('price', {
                   rules: [
@@ -116,7 +136,9 @@ const EntityModal = Form.create()(
                       required: true,
                       message: 'Price field cannot be empty'
                     }
-                  ]
+                  ],
+                  initialValue:
+                    this.props.entity && (this.props.entity as Product).price
                 })(
                   <Input
                     prefix={
@@ -131,7 +153,7 @@ const EntityModal = Form.create()(
                 )}
               </Form.Item>
             )}
-            {type === 'product' && (
+            {entityType === 'product' && (
               <Form.Item>
                 {getFieldDecorator('categories', {
                   rules: [
@@ -143,15 +165,20 @@ const EntityModal = Form.create()(
                       required: true,
                       message: 'Categories field cannot be empty'
                     }
-                  ]
+                  ],
+                  initialValue:
+                    this.props.entity &&
+                    (this.props.entity as Product).categories.map(
+                      category => category.name
+                    )
                 })(
                   <Select
                     mode="multiple"
                     style={{ width: '100%' }}
                     placeholder="Please select a category"
                   >
-                    {this.context.categories &&
-                      this.context.categories.map(category => {
+                    {this.context.entities.categories &&
+                      this.context.entities.categories.map(category => {
                         return (
                           <Select.Option key={category.id.toString()}>
                             {category.name}

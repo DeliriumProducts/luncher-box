@@ -1,9 +1,9 @@
-import React, { Component, Fragment } from 'react';
+import { Component } from 'react';
 import AdminLayout from '../../components/AdminLayout';
 import FullHeightContainer from '../../components/FullHeightContainer';
-import Index from './index';
+import withAuth from '../../components/withAuth';
 
-class StaffChat extends Index {
+class StaffChat extends Component {
   render() {
     return (
       <FullHeightContainer>
@@ -13,4 +13,4 @@ class StaffChat extends Index {
   }
 }
 
-export default StaffChat;
+export default withAuth(StaffChat);

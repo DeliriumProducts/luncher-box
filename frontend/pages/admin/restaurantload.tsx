@@ -1,9 +1,9 @@
-import React, { Component, Fragment } from 'react';
+import React, { Component } from 'react';
 import AdminLayout from '../../components/AdminLayout';
 import FullHeightContainer from '../../components/FullHeightContainer';
-import Index from './index';
+import withAuth from '../../components/withAuth';
 
-class RestaurantLoad extends Index {
+class RestaurantLoad extends Component {
   render() {
     return (
       <FullHeightContainer>
@@ -13,4 +13,4 @@ class RestaurantLoad extends Index {
   }
 }
 
-export default RestaurantLoad;
+export default withAuth(RestaurantLoad);
