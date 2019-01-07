@@ -16,8 +16,8 @@ class Home extends Component {
   static contextType = EntityContext;
   context!: React.ContextType<typeof EntityContext>;
 
-  async componentDidMount() {
-    await this.context.actions.updateEntities();
+  componentDidMount() {
+    this.context.actions.updateEntities();
   }
 
   render() {
@@ -26,7 +26,7 @@ class Home extends Component {
         <FlexContainer>
           {this.context.loading ? (
             <Spin
-              indicator={<Icon style={{ color: '#fff' }} type="loading" spin />}
+              indicator={<Icon style={{ color: '#000' }} type="loading" spin />}
             />
           ) : (
             <>

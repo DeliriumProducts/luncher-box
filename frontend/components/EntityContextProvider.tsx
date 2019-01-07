@@ -26,7 +26,7 @@ class EntityProvider extends Component<Props, State> {
   };
 
   updateEntities = async () => {
-    this.setState({ loading: true }, async () => {
+    return this.setState({ loading: true }, async () => {
       const entities = { ...this.state.entities };
 
       let newProducts: Product[] = [];
@@ -72,7 +72,8 @@ class EntityProvider extends Component<Props, State> {
 
       newEntities.categories = newCategories;
       newEntities.products = newProducts;
-      this.setState({ entities: newEntities, loading: false });
+
+      return this.setState({ entities: newEntities, loading: false });
     });
   };
 
@@ -112,11 +113,11 @@ class EntityProvider extends Component<Props, State> {
       categories: newCategories
     };
 
-    if (entityType == 'category') {
+    if (entityType === 'category') {
       newCategories.find(
         (category: Category, i: number): any => {
           if (category.id === entity.id) {
-            newCategories[i] = { ...entity };
+            newCategories[i] = { ...(entity as Category) };
             return true; // stop searching
           }
         }
@@ -173,6 +174,7 @@ class EntityProvider extends Component<Props, State> {
     return (
       <EntityContext.Provider
         value={{
+          loading,
           entities,
           actions: {
             updateEntities: this.updateEntities,

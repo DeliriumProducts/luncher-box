@@ -22,55 +22,47 @@ interface Props {
   query: CategoryQuery;
 }
 
-interface State {
-  categoryIndex: number;
-}
-
-class CategoryPage extends Component<Props, State> {
+class CategoryPage extends Component<Props> {
   static contextType = EntityContext;
   context!: React.ContextType<typeof EntityContext>;
 
-  state: State = {
-    categoryIndex: 0
-  };
-
-  async componentDidMount() {
-    const id = Number(this.props.query.categoryId);
-    await this.context.actions.updateEntities();
-
-    const categoryIndex = this.context.entities.categories.findIndex(
-      category => category.id === id
-    );
-
-    this.setState({ categoryIndex });
+  componentDidMount() {
+    this.context.actions.updateEntities();
   }
 
   render() {
-    const { categoryIndex } = this.state;
+    let categoryIndex = -2;
+    if (this.context.entities.categories.length) {
+      const id = Number(this.props.query.categoryId);
+      categoryIndex = this.context.entities.categories.findIndex(
+        category => category.id === id
+      );
+    }
 
     return (
       <UserLayout selectedKey="daily">
         <FlexContainer>
           {this.context.loading ? (
             <Spin
-              indicator={<Icon style={{ color: '#fff' }} type="loading" spin />}
+              indicator={<Icon style={{ color: '#000' }} type="loading" spin />}
             />
-          ) : categoryIndex !== -1 ? (
-            <>
-              {this.context.entities.categories[categoryIndex].products.map(
-                product => (
-                  <Product
-                    key={product.id}
-                    name={product.name}
-                    description={product.description}
-                    price={product.price}
-                    image={product.image}
-                  />
-                )
-              )}
-            </>
-          ) : (
+          ) : categoryIndex === -1 ? (
             <div>Error 404 Component</div>
+          ) : (
+            <>
+              {!!this.context.entities.categories.length &&
+                this.context.entities.categories[categoryIndex].products.map(
+                  product => (
+                    <Product
+                      key={product.id}
+                      name={product.name}
+                      description={product.description}
+                      price={product.price}
+                      image={product.image}
+                    />
+                  )
+                )}
+            </>
           )}
         </FlexContainer>
       </UserLayout>

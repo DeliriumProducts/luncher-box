@@ -101,19 +101,18 @@ class EntityCard extends Component<Props, State> {
      */
     const entity: EntityInstance =
       entityType === 'product'
-        ? {
+        ? ({
             id: this.props.id,
             name: this.props.name,
             description: this.props.description,
             image: this.props.image,
             price: this.props.price,
             categories: this.props.categories
-          }
-        : {
-            id: this.props.id,
+          } as Product)
+        : ({
             name: this.props.name,
             image: this.props.image
-          };
+          } as Category);
 
     return (
       <StyledCard
@@ -136,7 +135,7 @@ class EntityCard extends Component<Props, State> {
             onConfirm={async () => {
               if (entityType) {
                 if (entityType === 'category') {
-                  await CategoryAPI.delete(entity);
+                  await CategoryAPI.delete(entity as Category);
                 } else {
                   await ProductAPI.delete(entity as Product);
                 }
