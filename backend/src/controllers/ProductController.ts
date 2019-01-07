@@ -59,7 +59,6 @@ export class ProductController {
       const products = await this.productRepository.find({
         where: { id: MoreThan(since) },
         take: limit,
-        relations: ['categories']
       });
 
       return products;
@@ -69,14 +68,11 @@ export class ProductController {
       const products = await this.productRepository.find({
         skip: limit * (page - 1),
         take: limit,
-        relations: ['categories']
       });
 
       return products;
     } else {
-      const products = await this.productRepository.find({
-        relations: ['categories']
-      });
+      const products = await this.productRepository.find();
 
       return products;
     }
@@ -199,7 +195,6 @@ export class ProductController {
       newProduct.id = oldProduct.id;
 
       return await this.productRepository.save(newProduct);
-      return 'Product edited!';
     }
 
     throw new ProductNotFoundError();
