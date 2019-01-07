@@ -59,8 +59,13 @@ const StyledCard = styled(Card)`
 
 const StyledImg = styled.img`
   border-radius: 7px;
-  max-height: 72px;
+  width: 88px;
+  height: 88px;
+  object-fit: cover;
   box-shadow: 0 2px 2px rgba(0, 0, 0, 0.12);
+  @media (max-width: 480px) {
+    margin-left: 10px;
+  }
   @media (max-width: 250px) {
     display: none;
   }
