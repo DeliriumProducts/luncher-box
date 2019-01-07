@@ -50,24 +50,26 @@ class Index extends Component {
               ))}
             </EntityCardContainer>
           </div>
-          <div className="col">
-            <EntityCardContainer
-              title={`Products (${this.context.entities.products.length})`}
-              entityType="product"
-            >
-              {this.context.entities.products.map(product => (
-                <EntityCard
-                  key={product.id}
-                  id={product.id}
-                  name={product.name}
-                  image={product.image}
-                  description={product.description}
-                  price={product.price}
-                  categories={product.categories}
-                />
-              ))}
-            </EntityCardContainer>
-          </div>
+          {this.context.entities.categories ? (
+            <div className="col">
+              <EntityCardContainer
+                title={`Products (${this.context.entities.products.length})`}
+                entityType="product"
+              >
+                {this.context.entities.products.map(product => (
+                  <EntityCard
+                    key={product.id}
+                    id={product.id}
+                    name={product.name}
+                    image={product.image}
+                    description={product.description}
+                    price={product.price}
+                    categories={product.categories}
+                  />
+                ))}
+              </EntityCardContainer>
+            </div>
+          ) : null}
         </FlexContainer>
       </AdminLayout>
     );
