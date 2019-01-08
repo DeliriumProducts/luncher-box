@@ -24,25 +24,25 @@ interface Props {
 }
 
 interface State {
-  products: Product[] | undefined;
+  products: Product[];
   loading: boolean;
 }
 
 class CategoryPage extends Component<Props, State> {
   state: State = {
-    products: undefined,
+    products: [],
     loading: true
   };
 
   async componentDidMount() {
     try {
-      this.setState({ loading: true });
-
       const products = (await CategoryAPI.getOne(
         Number(this.props.query.categoryId)
       )).products;
 
-      this.setState({ products });
+      if (products) {
+        this.setState({ products });
+      }
     } catch (err) {
       message.error(`${err}, Redirecting you to the menu...`, 3, () =>
         Router.push('/')
@@ -60,7 +60,7 @@ class CategoryPage extends Component<Props, State> {
             <Spinner />
           ) : (
             <>
-              {this.state.products ? (
+              {this.state.products.length ? (
                 this.state.products.map(product => (
                   <ProductCard
                     key={product.id}

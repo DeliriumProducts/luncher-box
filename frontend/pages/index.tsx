@@ -1,10 +1,13 @@
 import { Component, ContextType } from 'react';
-import Category from '../components/CategoryCard';
+import CategoryCard from '../components/CategoryCard';
 import UserLayout from '../components/UserLayout';
 import { EntityContext } from '../context/EntityContext';
-import Product from '../components/ProductCard';
 import styled from 'styled-components';
-import { Spin, Icon } from 'antd';
+import { Spin, Icon, message } from 'antd';
+import { Category } from '../interfaces';
+import { CategoryAPI } from '../api';
+import Router from 'next/router';
+import Spinner from '../components/Spinner';
 
 const FlexContainer = styled.div`
   display: flex;
@@ -12,32 +15,54 @@ const FlexContainer = styled.div`
   justify-content: center;
 `;
 
-class Home extends Component {
+interface State {
+  categories: Category[];
+  loading: boolean;
+}
+
+class Home extends Component<any, State> {
   static contextType = EntityContext;
   context!: React.ContextType<typeof EntityContext>;
 
-  componentDidMount() {
-    this.context.actions.update();
+  state: State = {
+    categories: [],
+    loading: true
+  };
+
+  async componentDidMount() {
+    try {
+      const categories = await CategoryAPI.getAll();
+
+      if (categories) {
+        this.setState({ categories });
+      }
+    } catch (err) {
+      message.error(`${err}`, 3);
+    } finally {
+      this.setState({ loading: false });
+    }
   }
 
   render() {
     return (
       <UserLayout selectedKey="home">
         <FlexContainer>
-          {this.context.loading ? (
-            <Spin
-              indicator={<Icon style={{ color: '#000' }} type="loading" spin />}
-            />
+          {this.state.loading ? (
+            <Spinner />
           ) : (
             <>
-              {this.context.entities.categories.map(category => (
-                <Category
-                  key={category.id}
-                  id={category.id}
-                  name={category.name}
-                  image={category.image}
-                />
-              ))}
+              {this.state.categories.length ? (
+                this.state.categories.map(category => (
+                  <CategoryCard
+                    key={category.id}
+                    id={category.id}
+                    name={category.name}
+                    image={category.image}
+                  />
+                ))
+              ) : (
+                <div>No categories found!</div>
+              )}
             </>
           )}
         </FlexContainer>
