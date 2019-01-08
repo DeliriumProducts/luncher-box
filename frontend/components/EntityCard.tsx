@@ -97,7 +97,7 @@ class EntityCard extends Component<Props, State> {
       /**
        * Get all categories from a product
        */
-      entity = await ProductAPI.getOne(entity as Product);
+      entity = await ProductAPI.getOne(entity.id);
     }
 
     if (showModal && entityType) {
@@ -147,9 +147,9 @@ class EntityCard extends Component<Props, State> {
               if (entityType) {
                 await this.context.actions.delete(entity, entityType);
                 if (entityType === 'category') {
-                  await CategoryAPI.delete(entity as Category);
+                  await CategoryAPI.delete(entity.id);
                 } else {
-                  await ProductAPI.delete(entity as Product);
+                  await ProductAPI.delete(entity.id);
                 }
 
                 message.success(
