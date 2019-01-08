@@ -74,7 +74,7 @@ export class CategoryController {
    * @param id
    */
   @Get('/:categoryId')
-  async getOne(@Param('categoryId') id: number, @Param('relations') relations: string) {
+  async getOne(@Param('categoryId') id: number, @QueryParam('relations') relations: string) {
     let category: QueryResponse<Category>;
 
     /**
