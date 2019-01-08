@@ -27,7 +27,7 @@ class CategoryPage extends Component<Props> {
   context!: React.ContextType<typeof EntityContext>;
 
   componentDidMount() {
-    this.context.actions.updateEntities();
+    this.context.actions.update();
   }
 
   render() {

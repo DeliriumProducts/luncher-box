@@ -17,7 +17,7 @@ class Home extends Component {
   context!: React.ContextType<typeof EntityContext>;
 
   componentDidMount() {
-    this.context.actions.updateEntities();
+    this.context.actions.update();
   }
 
   render() {

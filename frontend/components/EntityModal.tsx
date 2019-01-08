@@ -3,7 +3,7 @@ import { FormComponentProps } from 'antd/lib/form';
 import React from 'react';
 import { EntityContext } from '../context';
 import { EntityTypes, ActionTypes, EntityInstance } from '../types';
-import { Product } from '../interfaces';
+import { Product, Category } from '../interfaces';
 
 interface Props extends FormComponentProps {
   visible: boolean;
@@ -30,9 +30,12 @@ const EntityModal = Form.create()(
         onCreate,
         form,
         entityType,
-        loading
+        loading,
+        entity
       } = this.props;
+
       const { getFieldDecorator } = form;
+
       const actionType = this.capitalizeFirstLetter(this.props.actionType);
 
       return (
@@ -59,7 +62,7 @@ const EntityModal = Form.create()(
                     message: 'Name field cannot be empty'
                   }
                 ],
-                initialValue: this.props.entity && this.props.entity.name
+                initialValue: entity && entity.name
               })(
                 <Input
                   prefix={
@@ -83,9 +86,7 @@ const EntityModal = Form.create()(
                       message: 'Description field cannot be empty'
                     }
                   ],
-                  initialValue:
-                    this.props.entity &&
-                    (this.props.entity as Product).description
+                  initialValue: entity && (entity as Product).description
                 })(
                   <Input
                     prefix={
@@ -112,7 +113,7 @@ const EntityModal = Form.create()(
                     message: 'Image field cannot be empty'
                   }
                 ],
-                initialValue: this.props.entity && this.props.entity.image
+                initialValue: entity && entity.image
               })(
                 <Input
                   prefix={
@@ -137,8 +138,7 @@ const EntityModal = Form.create()(
                       message: 'Price field cannot be empty'
                     }
                   ],
-                  initialValue:
-                    this.props.entity && (this.props.entity as Product).price
+                  initialValue: entity && (entity as Product).price
                 })(
                   <Input
                     prefix={
@@ -167,10 +167,9 @@ const EntityModal = Form.create()(
                     }
                   ],
                   initialValue:
-                    this.props.entity &&
-                    (this.props.entity as Product).categories.map(
-                      category => category.name
-                    )
+                    entity &&
+                    (entity as Product).categories &&
+                    (entity as Product).categories.map(category => category.id)
                 })(
                   <Select
                     mode="multiple"
@@ -178,13 +177,16 @@ const EntityModal = Form.create()(
                     placeholder="Please select a category"
                   >
                     {this.context.entities.categories &&
-                      this.context.entities.categories.map(category => {
-                        return (
-                          <Select.Option key={category.id.toString()}>
+                      this.context.entities.categories.map(
+                        (category: Category) => (
+                          <Select.Option
+                            value={category.id}
+                            key={category.id.toString()}
+                          >
                             {category.name}
                           </Select.Option>
-                        );
-                      })}
+                        )
+                      )}
                   </Select>
                 )}
               </Form.Item>

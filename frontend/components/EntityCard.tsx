@@ -91,9 +91,23 @@ class EntityCard extends Component<Props, State> {
     popConfirmVisible: false
   };
 
+  handleEditClick = async (entity: EntityInstance) => {
+    const { showModal, entityType } = this.props;
+    if (entityType === 'product') {
+      /**
+       * Get all categories from a product
+       */
+      entity = await ProductAPI.getOne(entity as Product);
+    }
+
+    if (showModal && entityType) {
+      showModal(entityType, 'edit', entity);
+    }
+  };
+
   render() {
     const { loading } = this.state;
-    const { showModal, entityType } = this.props;
+    const { entityType } = this.props;
 
     /**
      * Define an entity based on the entityType var which will be passed to the modal
@@ -110,6 +124,7 @@ class EntityCard extends Component<Props, State> {
             categories: this.props.categories
           } as Product)
         : ({
+            id: this.props.id,
             name: this.props.name,
             image: this.props.image
           } as Category);
@@ -122,11 +137,7 @@ class EntityCard extends Component<Props, State> {
             key="edit"
             type="default"
             icon="edit"
-            onClick={async () => {
-              if (showModal && entityType) {
-                await showModal(entityType, 'edit', entity);
-              }
-            }}
+            onClick={() => this.handleEditClick(entity)}
           >
             Edit
           </ActionButton>,
@@ -134,13 +145,12 @@ class EntityCard extends Component<Props, State> {
             title={`Are you sure you want to delete this ${entityType}?`}
             onConfirm={async () => {
               if (entityType) {
+                await this.context.actions.delete(entity, entityType);
                 if (entityType === 'category') {
                   await CategoryAPI.delete(entity as Category);
                 } else {
                   await ProductAPI.delete(entity as Product);
                 }
-
-                this.context.actions.deleteEntity(entity, entityType);
 
                 message.success(
                   `Successfully deleted ${entityType} ${entity.name} 🎉`

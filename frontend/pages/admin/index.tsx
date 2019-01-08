@@ -28,7 +28,7 @@ class Index extends Component {
   context!: React.ContextType<typeof EntityContext>;
 
   async componentDidMount() {
-    await this.context.actions.updateEntities();
+    await this.context.actions.update();
   }
 
   render() {
@@ -64,7 +64,6 @@ class Index extends Component {
                     image={product.image}
                     description={product.description}
                     price={product.price}
-                    categories={product.categories}
                   />
                 ))}
               </EntityCardContainer>
