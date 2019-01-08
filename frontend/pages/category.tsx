@@ -7,6 +7,7 @@ import withRouter from '../components/withRouter';
 import Router, { DefaultQuery } from 'next/router';
 import { CategoryAPI } from '../api';
 import { Product } from '../interfaces';
+import Spinner from '../components/Spinner';
 
 const FlexContainer = styled.div`
   display: flex;
@@ -56,9 +57,7 @@ class CategoryPage extends Component<Props, State> {
       <UserLayout selectedKey="daily">
         <FlexContainer>
           {this.state.loading ? (
-            <Spin
-              indicator={<Icon style={{ color: '#000' }} type="loading" spin />}
-            />
+            <Spinner />
           ) : (
             <>
               {this.state.products ? (
