@@ -161,10 +161,10 @@ class EntityProvider extends Component<Props, State> {
     };
 
     if (entityType === 'category') {
-      const categoryIndex = this._findEntityIndex(newEntity.id, 'category');
+      const categoryIndex = this.findEntityIndex(newEntity.id, 'category');
       newCategories[categoryIndex] = { ...(newEntity as Category) };
     } else {
-      const productIndex = this._findEntityIndex(newEntity.id, 'product');
+      const productIndex = this.findEntityIndex(newEntity.id, 'product');
       newProducts[productIndex] = { ...(newEntity as Product) };
     }
 
@@ -228,7 +228,7 @@ class EntityProvider extends Component<Props, State> {
     this.setState({ entities: newEntities });
   };
 
-  _findEntityIndex = (id: number, entityType: EntityTypes) => {
+  findEntityIndex = (id: number, entityType: EntityTypes) => {
     if (entityType === 'category') {
       return this.state.entities.categories.findIndex(
         ({ id: categoryId }: Category) => categoryId === id
@@ -240,9 +240,6 @@ class EntityProvider extends Component<Props, State> {
     }
   };
 
-  /**
-   * We update the current context for every render
-   */
   render() {
     const { entities, loading } = this.state;
 

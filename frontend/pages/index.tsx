@@ -1,8 +1,8 @@
 import { Component, ContextType } from 'react';
-import Category from '../components/Category';
+import Category from '../components/CategoryCard';
 import UserLayout from '../components/UserLayout';
 import { EntityContext } from '../context/EntityContext';
-import Product from '../components/Product';
+import Product from '../components/ProductCard';
 import styled from 'styled-components';
 import { Spin, Icon } from 'antd';
 

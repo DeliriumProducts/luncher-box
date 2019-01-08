@@ -1,12 +1,12 @@
 import { Component, ContextType } from 'react';
-import Category from '../components/Category';
 import UserLayout from '../components/UserLayout';
-import { EntityContext } from '../context/EntityContext';
-import Product from '../components/Product';
+import ProductCard from '../components/ProductCard';
 import styled from 'styled-components';
-import { Spin, Icon } from 'antd';
+import { Spin, Icon, message } from 'antd';
 import withRouter from '../components/withRouter';
 import { DefaultQuery } from 'next/router';
+import { CategoryAPI } from '../api';
+import { Product } from '../interfaces';
 
 const FlexContainer = styled.div`
   display: flex;
@@ -22,46 +22,53 @@ interface Props {
   query: CategoryQuery;
 }
 
-class CategoryPage extends Component<Props> {
-  static contextType = EntityContext;
-  context!: React.ContextType<typeof EntityContext>;
+interface State {
+  products: Product[] | undefined;
+  loading: boolean;
+}
 
-  componentDidMount() {
-    this.context.actions.update();
+class CategoryPage extends Component<Props, State> {
+  state: State = {
+    products: undefined,
+    loading: true
+  };
+
+  async componentDidMount() {
+    try {
+      this.setState({ loading: true });
+
+      const products = (await CategoryAPI.getOne(
+        Number(this.props.query.categoryId)
+      )).products;
+
+      this.setState({ products });
+    } catch (err) {
+      message.error(err);
+    } finally {
+      this.setState({ loading: false });
+    }
   }
 
   render() {
-    let categoryIndex = -2;
-    if (this.context.entities.categories.length) {
-      const id = Number(this.props.query.categoryId);
-      categoryIndex = this.context.entities.categories.findIndex(
-        category => category.id === id
-      );
-    }
-
     return (
       <UserLayout selectedKey="daily">
         <FlexContainer>
-          {this.context.loading ? (
+          {this.state.loading ? (
             <Spin
               indicator={<Icon style={{ color: '#000' }} type="loading" spin />}
             />
-          ) : categoryIndex === -1 ? (
-            <div>Error 404 Component</div>
           ) : (
             <>
-              {!!this.context.entities.categories.length &&
-                this.context.entities.categories[categoryIndex].products.map(
-                  product => (
-                    <Product
-                      key={product.id}
-                      name={product.name}
-                      description={product.description}
-                      price={product.price}
-                      image={product.image}
-                    />
-                  )
-                )}
+              {this.state.products &&
+                this.state.products.map(product => (
+                  <ProductCard
+                    key={product.id}
+                    name={product.name}
+                    description={product.description}
+                    price={product.price}
+                    image={product.image}
+                  />
+                ))}
             </>
           )}
         </FlexContainer>
