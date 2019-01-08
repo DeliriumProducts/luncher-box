@@ -191,7 +191,7 @@ class EntityProvider extends Component<Props, State> {
       /**
        * Fetch the category in order to get all of its products
        */
-      const categoryToBeDeleted = await CategoryAPI.getOne(entity, true);
+      const categoryToBeDeleted = await CategoryAPI.getOne(entity.id, true);
 
       if (categoryToBeDeleted.products) {
         console.log(categoryToBeDeleted.products);
@@ -237,12 +237,11 @@ class EntityProvider extends Component<Props, State> {
   };
 
   render() {
-    const { entities, loading } = this.state;
+    const { entities } = this.state;
 
     return (
       <EntityContext.Provider
         value={{
-          loading,
           entities,
           actions: {
             update: this.update,

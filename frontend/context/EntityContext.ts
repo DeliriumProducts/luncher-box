@@ -14,7 +14,6 @@ interface Values {
     edit: (entity: EntityInstance, entityType: EntityTypes) => void;
     delete: (entity: EntityInstance, entityType: EntityTypes) => void;
   };
-  loading: boolean;
 }
 
 export const EntityContext = React.createContext<Values>({
@@ -29,6 +28,5 @@ export const EntityContext = React.createContext<Values>({
     edit: () => {},
     delete: () => {}
     // tslint:enable
-  },
-  loading: false
+  }
 });
