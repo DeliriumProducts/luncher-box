@@ -212,13 +212,13 @@ class EntityCardContainer extends Component<Props, State> {
   };
 
   render() {
-    let data: React.ReactNode[];
+    let data: React.ReactNode[] | React.ReactNode;
     /**
      * Check whether data is still being fetched
      * then inject the showModal func and entity's type to children's props
      */
     if (this.props.loading) {
-      data = [<Spinner />];
+      data = <Spinner />;
     } else {
       data = React.Children.map(this.props.children, (child: any) => {
         if (

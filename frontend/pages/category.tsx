@@ -53,13 +53,13 @@ class CategoryPage extends Component<Props, State> {
   }
 
   render() {
-    let data: React.ReactNode[];
+    let data: React.ReactNode[] | React.ReactNode;
     /**
      * Check whether data is still being fetched
      * then inject the showModal func and entity's type to children's props
      */
     if (this.state.loading) {
-      data = [<Spinner />];
+      data = <Spinner />;
     } else {
       if (this.state.products.length) {
         data = this.state.products.map(product => (
@@ -72,7 +72,7 @@ class CategoryPage extends Component<Props, State> {
           />
         ));
       } else {
-        data = [<div>Some unexpected error occured!</div>];
+        data = <div>Some unexpected error occured!</div>;
       }
     }
     return (
