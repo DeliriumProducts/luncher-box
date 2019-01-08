@@ -4,7 +4,7 @@ import ProductCard from '../components/ProductCard';
 import styled from 'styled-components';
 import { Spin, Icon, message } from 'antd';
 import withRouter from '../components/withRouter';
-import { DefaultQuery } from 'next/router';
+import Router, { DefaultQuery } from 'next/router';
 import { CategoryAPI } from '../api';
 import { Product } from '../interfaces';
 
@@ -43,7 +43,9 @@ class CategoryPage extends Component<Props, State> {
 
       this.setState({ products });
     } catch (err) {
-      message.error(err);
+      message.error(`${err}, Redirecting you to the menu...`, 3, () =>
+        Router.push('/')
+      );
     } finally {
       this.setState({ loading: false });
     }
@@ -59,7 +61,7 @@ class CategoryPage extends Component<Props, State> {
             />
           ) : (
             <>
-              {this.state.products &&
+              {this.state.products ? (
                 this.state.products.map(product => (
                   <ProductCard
                     key={product.id}
@@ -68,7 +70,10 @@ class CategoryPage extends Component<Props, State> {
                     price={product.price}
                     image={product.image}
                   />
-                ))}
+                ))
+              ) : (
+                <div>Some unexpected error occured!</div>
+              )}
             </>
           )}
         </FlexContainer>
