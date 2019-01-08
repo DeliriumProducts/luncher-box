@@ -37,7 +37,7 @@ export class CategoryAPI {
     }
   }
 
-  static async getOne(id: number, relations: boolean) {
+  static async getOne(id: number, relations?: boolean) {
     let category: Category;
     if (relations) {
       category = (await axios.get(
