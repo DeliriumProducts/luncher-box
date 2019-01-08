@@ -13,7 +13,6 @@ interface State {
     products: Product[];
     categories: Category[];
   };
-  loading: boolean;
 }
 
 class EntityProvider extends Component<Props, State> {
@@ -21,8 +20,7 @@ class EntityProvider extends Component<Props, State> {
     entities: {
       products: [],
       categories: []
-    },
-    loading: false
+    }
   };
 
   update = async (entityType?: EntityTypes) => {
@@ -38,26 +36,44 @@ class EntityProvider extends Component<Props, State> {
     /**
      * If there is no entityType provided we update all entities
      */
-    this.setState({ loading: true }, async () => {
-      if (!entityType) {
+    if (!entityType) {
+      /**
+       * If there are entities in the context, we can fetch ONLY the entities that we are missing
+       */
+      if (entities.products.length) {
+        const { products: oldProducts } = entities;
+        const { id: lastProductId } = entities.products[
+          entities.products.length - 1
+        ];
+
+        const fetchedProducts = await ProductAPI.getAll({
+          since: lastProductId
+        });
+
+        newProducts.push(...oldProducts, ...fetchedProducts);
+      } else {
+        newProducts = await ProductAPI.getAll();
+      }
+
+      if (entities.categories.length) {
+        const { categories: oldCategories } = entities;
+        const { id: lastCategoryId } = entities.categories[
+          entities.categories.length - 1
+        ];
+
+        const fetchedCategories = await CategoryAPI.getAll({
+          since: lastCategoryId
+        });
+
+        newCategories.push(...oldCategories, ...fetchedCategories);
+      } else {
+        newCategories = await CategoryAPI.getAll();
+      }
+    } else {
+      if (entityType === 'category') {
         /**
-         * If there are entities in the context, we can fetch ONLY the entities that we are missing
+         * If there are categories in the context, we can fetch ONLY the categories that we are missing
          */
-        if (entities.products.length) {
-          const { products: oldProducts } = entities;
-          const { id: lastProductId } = entities.products[
-            entities.products.length - 1
-          ];
-
-          const fetchedProducts = await ProductAPI.getAll({
-            since: lastProductId
-          });
-
-          newProducts.push(...oldProducts, ...fetchedProducts);
-        } else {
-          newProducts = await ProductAPI.getAll();
-        }
-
         if (entities.categories.length) {
           const { categories: oldCategories } = entities;
           const { id: lastCategoryId } = entities.categories[
@@ -73,49 +89,29 @@ class EntityProvider extends Component<Props, State> {
           newCategories = await CategoryAPI.getAll();
         }
       } else {
-        if (entityType === 'category') {
-          /**
-           * If there are categories in the context, we can fetch ONLY the categories that we are missing
-           */
-          if (entities.categories.length) {
-            const { categories: oldCategories } = entities;
-            const { id: lastCategoryId } = entities.categories[
-              entities.categories.length - 1
-            ];
+        /**
+         * If there are products in the context, we can fetch ONLY the products that we are missing
+         */
+        if (entities.products.length) {
+          const { products: oldProducts } = entities;
+          const { id: lastProductId } = entities.products[
+            entities.products.length - 1
+          ];
 
-            const fetchedCategories = await CategoryAPI.getAll({
-              since: lastCategoryId
-            });
+          const fetchedProducts = await ProductAPI.getAll({
+            since: lastProductId
+          });
 
-            newCategories.push(...oldCategories, ...fetchedCategories);
-          } else {
-            newCategories = await CategoryAPI.getAll();
-          }
+          newProducts.push(...oldProducts, ...fetchedProducts);
         } else {
-          /**
-           * If there are products in the context, we can fetch ONLY the products that we are missing
-           */
-          if (entities.products.length) {
-            const { products: oldProducts } = entities;
-            const { id: lastProductId } = entities.products[
-              entities.products.length - 1
-            ];
-
-            const fetchedProducts = await ProductAPI.getAll({
-              since: lastProductId
-            });
-
-            newProducts.push(...oldProducts, ...fetchedProducts);
-          } else {
-            newProducts = await ProductAPI.getAll();
-          }
+          newProducts = await ProductAPI.getAll();
         }
       }
-      newEntities.categories = newCategories;
-      newEntities.products = newProducts;
+    }
+    newEntities.categories = newCategories;
+    newEntities.products = newProducts;
 
-      this.setState({ entities: newEntities, loading: false });
-    });
+    this.setState({ entities: newEntities });
   };
 
   push = (newEntity: EntityInstance, entityType: EntityTypes) => {
