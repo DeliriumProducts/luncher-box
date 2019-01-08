@@ -1,12 +1,13 @@
 import { Component, ContextType } from 'react';
-import Category from '../components/Category';
 import UserLayout from '../components/UserLayout';
-import { EntityContext } from '../context/EntityContext';
-import Product from '../components/Product';
+import ProductCard from '../components/ProductCard';
 import styled from 'styled-components';
-import { Spin, Icon } from 'antd';
+import { Spin, Icon, message } from 'antd';
 import withRouter from '../components/withRouter';
-import { DefaultQuery } from 'next/router';
+import Router, { DefaultQuery } from 'next/router';
+import { CategoryAPI } from '../api';
+import { Product } from '../interfaces';
+import Spinner from '../components/Spinner';
 
 const FlexContainer = styled.div`
   display: flex;
@@ -23,56 +24,60 @@ interface Props {
 }
 
 interface State {
-  categoryIndex: number;
+  products: Product[];
+  loading: boolean;
 }
 
 class CategoryPage extends Component<Props, State> {
-  static contextType = EntityContext;
-  context!: React.ContextType<typeof EntityContext>;
-
   state: State = {
-    categoryIndex: 0
+    products: [],
+    loading: true
   };
 
   async componentDidMount() {
-    const id = Number(this.props.query.categoryId);
-    await this.context.actions.updateEntities();
+    try {
+      const products = (await CategoryAPI.getOne(
+        Number(this.props.query.categoryId)
+      )).products;
 
-    const categoryIndex = this.context.entities.categories.findIndex(
-      category => category.id === id
-    );
-
-    this.setState({ categoryIndex });
+      if (products) {
+        this.setState({ products });
+      }
+    } catch (err) {
+      message.error(`${err}, Redirecting you to the menu...`, 3, () =>
+        Router.push('/')
+      );
+    } finally {
+      this.setState({ loading: false });
+    }
   }
 
   render() {
-    const { categoryIndex } = this.state;
-
+    let data: React.ReactNode[];
+    /**
+     * Check whether data is still being fetched
+     * then inject the showModal func and entity's type to children's props
+     */
+    if (this.state.loading) {
+      data = [<Spinner />];
+    } else {
+      if (this.state.products.length) {
+        data = this.state.products.map(product => (
+          <ProductCard
+            key={product.id}
+            name={product.name}
+            description={product.description}
+            price={product.price}
+            image={product.image}
+          />
+        ));
+      } else {
+        data = [<div>Some unexpected error occured!</div>];
+      }
+    }
     return (
       <UserLayout selectedKey="daily">
-        <FlexContainer>
-          {this.context.loading ? (
-            <Spin
-              indicator={<Icon style={{ color: '#fff' }} type="loading" spin />}
-            />
-          ) : categoryIndex !== -1 ? (
-            <>
-              {this.context.entities.categories[categoryIndex].products.map(
-                product => (
-                  <Product
-                    key={product.id}
-                    name={product.name}
-                    description={product.description}
-                    price={product.price}
-                    image={product.image}
-                  />
-                )
-              )}
-            </>
-          ) : (
-            <div>Error 404 Component</div>
-          )}
-        </FlexContainer>
+        <FlexContainer>{data}</FlexContainer>
       </UserLayout>
     );
   }

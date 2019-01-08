@@ -37,10 +37,15 @@ export class CategoryAPI {
     }
   }
 
-  static async getOne({ id }: Category) {
-    const category: Category = (await axios.get(
-      `${BACKEND_URL}/categories/${id}`
-    )).data;
+  static async getOne(id: number, relations?: boolean) {
+    let category: Category;
+    if (relations) {
+      category = (await axios.get(
+        `${BACKEND_URL}/categories/${id}?relations=1`
+      )).data;
+    } else {
+      category = (await axios.get(`${BACKEND_URL}/categories/${id}`)).data;
+    }
 
     return category;
   }
@@ -66,7 +71,7 @@ export class CategoryAPI {
     return response;
   }
 
-  static async delete({ id }: Category) {
+  static async delete(id: number) {
     const response = await axios.delete(
       `${BACKEND_URL}/categories/${id}`,
       this.opts

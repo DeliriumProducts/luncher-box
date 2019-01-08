@@ -62,9 +62,9 @@ class LoginForm extends Component<Props, State> {
           await AuthAPI.login(credentials);
           message.success(
             'You successfully logged in! Redirecting you to dashboard...',
-            1
+            3,
+            () => Router.push('/admin')
           );
-          Router.push('/admin');
         } catch (err) {
           if (!err.response) {
             message.error(`${err}`);

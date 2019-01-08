@@ -59,8 +59,13 @@ const StyledCard = styled(Card)`
 
 const StyledImg = styled.img`
   border-radius: 7px;
-  max-height: 72px;
+  width: 88px;
+  height: 88px;
+  object-fit: cover;
   box-shadow: 0 2px 2px rgba(0, 0, 0, 0.12);
+  @media (max-width: 480px) {
+    margin-left: 10px;
+  }
   @media (max-width: 250px) {
     display: none;
   }
@@ -86,9 +91,22 @@ class EntityCard extends Component<Props, State> {
     popConfirmVisible: false
   };
 
-  render() {
-    const { loading } = this.state;
+  handleEditClick = async (entity: EntityInstance) => {
     const { showModal, entityType } = this.props;
+    if (entityType === 'product') {
+      /**
+       * Get all categories from a product
+       */
+      entity = await ProductAPI.getOne(entity.id);
+    }
+
+    if (showModal && entityType) {
+      showModal(entityType, 'edit', entity);
+    }
+  };
+
+  render() {
+    const { entityType } = this.props;
 
     /**
      * Define an entity based on the entityType var which will be passed to the modal
@@ -96,19 +114,19 @@ class EntityCard extends Component<Props, State> {
      */
     const entity: EntityInstance =
       entityType === 'product'
-        ? {
+        ? ({
             id: this.props.id,
             name: this.props.name,
             description: this.props.description,
             image: this.props.image,
             price: this.props.price,
             categories: this.props.categories
-          }
-        : {
+          } as Product)
+        : ({
             id: this.props.id,
             name: this.props.name,
             image: this.props.image
-          };
+          } as Category);
 
     return (
       <StyledCard
@@ -118,11 +136,7 @@ class EntityCard extends Component<Props, State> {
             key="edit"
             type="default"
             icon="edit"
-            onClick={async () => {
-              if (showModal && entityType) {
-                await showModal(entityType, 'edit', entity);
-              }
-            }}
+            onClick={() => this.handleEditClick(entity)}
           >
             Edit
           </ActionButton>,
@@ -130,13 +144,12 @@ class EntityCard extends Component<Props, State> {
             title={`Are you sure you want to delete this ${entityType}?`}
             onConfirm={async () => {
               if (entityType) {
+                await this.context.actions.delete(entity, entityType);
                 if (entityType === 'category') {
-                  await CategoryAPI.delete(entity);
+                  await CategoryAPI.delete(entity.id);
                 } else {
-                  await ProductAPI.delete(entity as Product);
+                  await ProductAPI.delete(entity.id);
                 }
-
-                this.context.actions.deleteEntity(entity, entityType);
 
                 message.success(
                   `Successfully deleted ${entityType} ${entity.name} 🎉`
@@ -153,22 +166,20 @@ class EntityCard extends Component<Props, State> {
           </Popconfirm>
         ]}
       >
-        <Skeleton loading={loading} avatar active>
-          <StyledMeta
-            avatar={<StyledImg src={this.props.image} />}
-            title={
-              <span>
-                {this.props.name}
-                <PriceBadge
-                  overflowCount={1000}
-                  count={this.props.price && `${this.props.price} / piece`}
-                  style={{ marginLeft: '10px', zIndex: 0 }}
-                />
-              </span>
-            }
-            description={this.props.description}
-          />
-        </Skeleton>
+        <StyledMeta
+          avatar={<StyledImg src={this.props.image} />}
+          title={
+            <span>
+              {this.props.name}
+              <PriceBadge
+                overflowCount={1000}
+                count={this.props.price && `${this.props.price} / piece`}
+                style={{ marginLeft: '10px', zIndex: 0 }}
+              />
+            </span>
+          }
+          description={this.props.description}
+        />
       </StyledCard>
     );
   }

@@ -13,7 +13,6 @@ interface State {
     products: Product[];
     categories: Category[];
   };
-  loading: boolean;
 }
 
 class EntityProvider extends Component<Props, State> {
@@ -21,25 +20,26 @@ class EntityProvider extends Component<Props, State> {
     entities: {
       products: [],
       categories: []
-    },
-    loading: false
+    }
   };
 
-  updateEntities = async () => {
-    this.setState({ loading: true }, async () => {
-      const entities = { ...this.state.entities };
+  update = async (entityType?: EntityTypes) => {
+    const entities = { ...this.state.entities };
 
-      let newProducts: Product[] = [];
-      let newCategories: Category[] = [];
-      const newEntities: typeof entities = {
-        products: newProducts,
-        categories: newCategories
-      };
+    let newProducts: Product[] = [];
+    let newCategories: Category[] = [];
+    const newEntities: typeof entities = {
+      products: newProducts,
+      categories: newCategories
+    };
 
+    /**
+     * If there is no entityType provided we update all entities
+     */
+    if (!entityType) {
       /**
        * If there are entities in the context, we can fetch ONLY the entities that we are missing
        */
-
       if (entities.products.length) {
         const { products: oldProducts } = entities;
         const { id: lastProductId } = entities.products[
@@ -69,14 +69,52 @@ class EntityProvider extends Component<Props, State> {
       } else {
         newCategories = await CategoryAPI.getAll();
       }
+    } else {
+      if (entityType === 'category') {
+        /**
+         * If there are categories in the context, we can fetch ONLY the categories that we are missing
+         */
+        if (entities.categories.length) {
+          const { categories: oldCategories } = entities;
+          const { id: lastCategoryId } = entities.categories[
+            entities.categories.length - 1
+          ];
 
-      newEntities.categories = newCategories;
-      newEntities.products = newProducts;
-      this.setState({ entities: newEntities, loading: false });
-    });
+          const fetchedCategories = await CategoryAPI.getAll({
+            since: lastCategoryId
+          });
+
+          newCategories.push(...oldCategories, ...fetchedCategories);
+        } else {
+          newCategories = await CategoryAPI.getAll();
+        }
+      } else {
+        /**
+         * If there are products in the context, we can fetch ONLY the products that we are missing
+         */
+        if (entities.products.length) {
+          const { products: oldProducts } = entities;
+          const { id: lastProductId } = entities.products[
+            entities.products.length - 1
+          ];
+
+          const fetchedProducts = await ProductAPI.getAll({
+            since: lastProductId
+          });
+
+          newProducts.push(...oldProducts, ...fetchedProducts);
+        } else {
+          newProducts = await ProductAPI.getAll();
+        }
+      }
+    }
+    newEntities.categories = newCategories;
+    newEntities.products = newProducts;
+
+    this.setState({ entities: newEntities });
   };
 
-  pushEntity = (newEntity: EntityInstance, entityType: EntityTypes) => {
+  push = (newEntity: EntityInstance, entityType: EntityTypes) => {
     const entities = { ...this.state.entities };
 
     /**
@@ -92,6 +130,10 @@ class EntityProvider extends Component<Props, State> {
     if (entityType === 'category') {
       newCategories.push(newEntity as Category);
     } else if (entityType === 'product') {
+      /**
+       * Delete categories from product
+       */
+      delete (newEntity as Product).categories;
       newProducts.push(newEntity as Product);
     }
 
@@ -101,61 +143,79 @@ class EntityProvider extends Component<Props, State> {
     this.setState({ entities: newEntities });
   };
 
-  editEntity = (entity: EntityInstance, entityType: EntityTypes) => {
+  edit = (newEntity: EntityInstance, entityType: EntityTypes) => {
     const entities = { ...this.state.entities };
 
+    /**
+     * Make "deep" clones of the arrays, to prevent modifying the state directly
+     */
     const newProducts: Product[] = [...entities.products];
     const newCategories: Category[] = [...entities.categories];
-
-    const newEntities: typeof entities = {
-      products: newProducts,
-      categories: newCategories
-    };
-
-    if (entityType == 'category') {
-      newCategories.find(
-        (category: Category, i: number): any => {
-          if (category.id === entity.id) {
-            newCategories[i] = { ...entity };
-            return true; // stop searching
-          }
-        }
-      );
-    } else {
-      newProducts.find(
-        (product: Product, i: number): any => {
-          if (product.id === entity.id) {
-            newProducts[i] = { ...(entity as Product) };
-            return true; // stop searching
-          }
-        }
-      );
-    }
-
-    newEntities.categories = newCategories;
-    newEntities.products = newProducts;
-
-    this.setState({ entities: newEntities });
-  };
-
-  deleteEntity = (entity: EntityInstance, entityType: EntityTypes) => {
-    const entities = { ...this.state.entities };
-
-    const newProducts: Product[] = [...entities.products];
-    const newCategories: Category[] = [...entities.categories];
-
     const newEntities: typeof entities = {
       products: newProducts,
       categories: newCategories
     };
 
     if (entityType === 'category') {
-      const categoryId = newCategories.findIndex(({ id }) => id === entity.id);
-      newCategories.splice(categoryId, 1);
+      const categoryIndex = this.findEntityIndex(newEntity.id, 'category');
+      newCategories[categoryIndex] = { ...(newEntity as Category) };
     } else {
-      console.log(newProducts);
-      const productId = newProducts.findIndex(({ id }) => id === entity.id);
-      newProducts.splice(productId, 1);
+      const productIndex = this.findEntityIndex(newEntity.id, 'product');
+      newProducts[productIndex] = { ...(newEntity as Product) };
+    }
+
+    newEntities.categories = newCategories;
+    newEntities.products = newProducts;
+
+    this.setState({ entities: newEntities });
+  };
+
+  delete = async (entity: EntityInstance, entityType: EntityTypes) => {
+    const entities = { ...this.state.entities };
+
+    /**
+     * Make "deep" clones of the arrays, to prevent modifying the state directly
+     */
+    const newProducts: Product[] = [...entities.products];
+    const newCategories: Category[] = [...entities.categories];
+    const newEntities: typeof entities = {
+      products: newProducts,
+      categories: newCategories
+    };
+
+    if (entityType === 'category') {
+      const categoryIndex = newCategories.findIndex(
+        ({ id }) => id === entity.id
+      );
+
+      /**
+       * Fetch the category in order to get all of its products
+       */
+      const categoryToBeDeleted = await CategoryAPI.getOne(entity.id, true);
+
+      if (categoryToBeDeleted.products) {
+        console.log(categoryToBeDeleted.products);
+        /**
+         * Remove products from the category before deleting it
+         */
+        for (const product of categoryToBeDeleted.products) {
+          /**
+           * Remove the product if it desn't belong to any other categories
+           */
+          if (product.categories && product.categories.length < 2) {
+            const productIndex = newProducts.findIndex(
+              ({ id }) => id === product.id
+            );
+
+            newProducts.splice(productIndex, 1);
+          }
+        }
+      }
+
+      newCategories.splice(categoryIndex, 1);
+    } else {
+      const productIndex = newProducts.findIndex(({ id }) => id === entity.id);
+      newProducts.splice(productIndex, 1);
     }
 
     newEntities.products = newProducts;
@@ -164,21 +224,30 @@ class EntityProvider extends Component<Props, State> {
     this.setState({ entities: newEntities });
   };
 
-  /**
-   * We update the current context for every render
-   */
+  findEntityIndex = (id: number, entityType: EntityTypes) => {
+    if (entityType === 'category') {
+      return this.state.entities.categories.findIndex(
+        ({ id: categoryId }: Category) => categoryId === id
+      );
+    } else {
+      return this.state.entities.products.findIndex(
+        ({ id: productId }: Product) => productId === id
+      );
+    }
+  };
+
   render() {
-    const { entities, loading } = this.state;
+    const { entities } = this.state;
 
     return (
       <EntityContext.Provider
         value={{
           entities,
           actions: {
-            updateEntities: this.updateEntities,
-            pushEntity: this.pushEntity,
-            editEntity: this.editEntity,
-            deleteEntity: this.deleteEntity
+            update: this.update,
+            push: this.push,
+            edit: this.edit,
+            delete: this.delete
           }
         }}
       >

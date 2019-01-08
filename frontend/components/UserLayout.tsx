@@ -5,8 +5,6 @@ import styled from 'styled-components';
 
 const { Content } = Layout;
 
-const { Content } = Layout;
-
 interface Props {
   selectedKey: string;
   children?: ReactNode;

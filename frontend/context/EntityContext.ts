@@ -9,12 +9,11 @@ interface Values {
   };
 
   actions: {
-    updateEntities: () => void;
-    pushEntity: (newEntity: EntityInstance, entityType: EntityTypes) => void;
-    editEntity: (entity: EntityInstance, entityType: EntityTypes) => void;
-    deleteEntity: (entity: EntityInstance, entityType: EntityTypes) => void;
+    update: (entityType?: EntityTypes) => void;
+    push: (newEntity: EntityInstance, entityType: EntityTypes) => void;
+    edit: (entity: EntityInstance, entityType: EntityTypes) => void;
+    delete: (entity: EntityInstance, entityType: EntityTypes) => void;
   };
-  loading: boolean;
 }
 
 export const EntityContext = React.createContext<Values>({
@@ -24,11 +23,10 @@ export const EntityContext = React.createContext<Values>({
   },
   actions: {
     // tslint:disable
-    updateEntities: () => {},
-    pushEntity: () => {},
-    editEntity: () => {},
-    deleteEntity: () => {}
+    update: () => {},
+    push: () => {},
+    edit: () => {},
+    delete: () => {}
     // tslint:enable
-  },
-  loading: false
+  }
 });

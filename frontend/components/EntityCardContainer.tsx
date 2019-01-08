@@ -7,6 +7,7 @@ import { Category, Product } from '../interfaces';
 import { ProductAPI, CategoryAPI } from '../api';
 import EntityModal from './EntityModal';
 import { EntityContext } from '../context';
+import Spinner from './Spinner';
 
 const { Search } = Input;
 
@@ -14,6 +15,7 @@ interface Props {
   title: string;
   entityType: EntityTypes;
   children: React.ReactNode[];
+  loading: boolean;
 }
 
 interface State {
@@ -88,7 +90,7 @@ class EntityCardContainer extends Component<Props, State> {
 
   formRef: any;
 
-  showModal = async (
+  showModal = (
     entityType: EntityTypes,
     actionType: ActionTypes,
     entity?: EntityInstance
@@ -108,11 +110,6 @@ class EntityCardContainer extends Component<Props, State> {
         entity: undefined
       });
     }
-
-    /**
-     * Update context every time the modal is shown
-     */
-    await this.context.actions.updateEntities();
   };
 
   handleCancel = () => {
@@ -144,7 +141,7 @@ class EntityCardContainer extends Component<Props, State> {
 
             if (this.state.actionType === 'create') {
               category = (await CategoryAPI.create(category)).data;
-              this.context.actions.pushEntity(category, 'category');
+              this.context.actions.push(category, 'category');
               message.success(
                 `Successfully created category ${category.name} 🎉`
               );
@@ -157,7 +154,7 @@ class EntityCardContainer extends Component<Props, State> {
               if (entity) {
                 category.id = entity.id;
                 category = (await CategoryAPI.edit(category)).data;
-                this.context.actions.editEntity(category, 'category');
+                this.context.actions.edit(category, 'category');
                 message.success(
                   `Successfully edited category ${category.name} 🎉`
                 );
@@ -169,7 +166,7 @@ class EntityCardContainer extends Component<Props, State> {
 
             if (this.state.actionType === 'create') {
               product = (await ProductAPI.create(product)).data;
-              this.context.actions.pushEntity(product, 'product');
+              this.context.actions.push(product, 'product');
               message.success(
                 `Successfully created product ${product.name} 🎉`
               );
@@ -182,7 +179,7 @@ class EntityCardContainer extends Component<Props, State> {
               if (entity) {
                 product.id = entity.id;
                 product = (await ProductAPI.edit(product)).data;
-                this.context.actions.editEntity(product, 'product');
+                this.context.actions.edit(product, 'product');
                 message.success(
                   `Successfully edited product ${product.name} 🎉`
                 );
@@ -210,7 +207,35 @@ class EntityCardContainer extends Component<Props, State> {
     this.setState({ searchText: e.currentTarget.value });
   };
 
+  handleClick = () => {
+    this.showModal(this.props.entityType, 'create');
+  };
+
   render() {
+    let data: React.ReactNode[];
+    /**
+     * Check whether data is still being fetched
+     * then inject the showModal func and entity's type to children's props
+     */
+    if (this.props.loading) {
+      data = [<Spinner />];
+    } else {
+      data = React.Children.map(this.props.children, (child: any) => {
+        if (
+          child.props.name
+            .toLowerCase()
+            .includes(this.state.searchText.toLowerCase())
+        ) {
+          return React.cloneElement(child as React.ReactElement<any>, {
+            showModal: this.showModal,
+            entityType: this.props.entityType
+          });
+        } else {
+          return;
+        }
+      });
+    }
+
     return (
       <StyledCard
         title={this.props.title}
@@ -227,32 +252,14 @@ class EntityCardContainer extends Component<Props, State> {
             type="default"
             id="new-button"
             icon="plus"
-            onClick={async () =>
-              await this.showModal(this.props.entityType, 'create')
-            }
+            onClick={this.handleClick}
           >
             New
           </ActionButton>
         ]}
         bordered={false}
       >
-        {/**
-          We have to inject the showModal func and entity's type to children's props
-         */}
-        {React.Children.map(this.props.children, (child: any) => {
-          if (
-            child.props.name
-              .toLowerCase()
-              .includes(this.state.searchText.toLowerCase())
-          ) {
-            return React.cloneElement(child as React.ReactElement<any>, {
-              showModal: this.showModal,
-              entityType: this.props.entityType
-            });
-          } else {
-            return;
-          }
-        })}
+        {data}
         <EntityModal
           wrappedComponentRef={this.saveFormRef}
           visible={this.state.modalVisible}
