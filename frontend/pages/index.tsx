@@ -44,13 +44,13 @@ class Home extends Component<any, State> {
   }
 
   render() {
-    let data: React.ReactNode[];
+    let data: React.ReactNode[] | React.ReactNode;
     /**
      * Check whether data is still being fetched
      * then inject the showModal func and entity's type to children's props
      */
     if (this.state.loading) {
-      data = [<Spinner />];
+      data = <Spinner />;
     } else {
       if (this.state.categories.length) {
         data = this.state.categories.map(category => (
@@ -62,7 +62,7 @@ class Home extends Component<any, State> {
           />
         ));
       } else {
-        data = [<div>No categories found!</div>];
+        data = <div>No categories found!</div>;
       }
     }
 
