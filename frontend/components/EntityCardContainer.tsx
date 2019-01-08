@@ -7,6 +7,7 @@ import { Category, Product } from '../interfaces';
 import { ProductAPI, CategoryAPI } from '../api';
 import EntityModal from './EntityModal';
 import { EntityContext } from '../context';
+import Spinner from './Spinner';
 
 const { Search } = Input;
 
@@ -14,6 +15,7 @@ interface Props {
   title: string;
   entityType: EntityTypes;
   children: React.ReactNode[];
+  loading: boolean;
 }
 
 interface State {
@@ -210,6 +212,30 @@ class EntityCardContainer extends Component<Props, State> {
   };
 
   render() {
+    let data: React.ReactNode[];
+    /**
+     * Check whether data is still being fetched
+     * then inject the showModal func and entity's type to children's props
+     */
+    if (this.props.loading) {
+      data = [<Spinner />];
+    } else {
+      data = React.Children.map(this.props.children, (child: any) => {
+        if (
+          child.props.name
+            .toLowerCase()
+            .includes(this.state.searchText.toLowerCase())
+        ) {
+          return React.cloneElement(child as React.ReactElement<any>, {
+            showModal: this.showModal,
+            entityType: this.props.entityType
+          });
+        } else {
+          return;
+        }
+      });
+    }
+
     return (
       <StyledCard
         title={this.props.title}
@@ -233,23 +259,7 @@ class EntityCardContainer extends Component<Props, State> {
         ]}
         bordered={false}
       >
-        {/**
-          We have to inject the showModal func and entity's type to children's props
-         */}
-        {React.Children.map(this.props.children, (child: any) => {
-          if (
-            child.props.name
-              .toLowerCase()
-              .includes(this.state.searchText.toLowerCase())
-          ) {
-            return React.cloneElement(child as React.ReactElement<any>, {
-              showModal: this.showModal,
-              entityType: this.props.entityType
-            });
-          } else {
-            return;
-          }
-        })}
+        {data}
         <EntityModal
           wrappedComponentRef={this.saveFormRef}
           visible={this.state.modalVisible}

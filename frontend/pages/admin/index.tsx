@@ -6,7 +6,6 @@ import { EntityContext } from '../../context';
 import EntityCard from '../../components/EntityCard';
 import styled from 'styled-components';
 import EntityCardContainer from '../../components/EntityCardContainer';
-import Spinner from '../../components/Spinner';
 
 interface State {
   loading: boolean;
@@ -59,6 +58,7 @@ class Index extends Component<any, State> {
             <EntityCardContainer
               title={`Categories (${this.context.entities.categories.length})`}
               entityType="category"
+              loading={this.state.loading}
             >
               {this.context.entities.categories &&
                 this.context.entities.categories.map(category => (
@@ -75,6 +75,7 @@ class Index extends Component<any, State> {
             <EntityCardContainer
               title={`Products (${this.context.entities.products.length})`}
               entityType="product"
+              loading={this.state.loading}
             >
               {this.context.entities.products.map(product => (
                 <EntityCard

@@ -106,7 +106,6 @@ class EntityCard extends Component<Props, State> {
   };
 
   render() {
-    const { loading } = this.state;
     const { entityType } = this.props;
 
     /**
@@ -167,22 +166,20 @@ class EntityCard extends Component<Props, State> {
           </Popconfirm>
         ]}
       >
-        <Skeleton loading={loading} avatar active>
-          <StyledMeta
-            avatar={<StyledImg src={this.props.image} />}
-            title={
-              <span>
-                {this.props.name}
-                <PriceBadge
-                  overflowCount={1000}
-                  count={this.props.price && `${this.props.price} / piece`}
-                  style={{ marginLeft: '10px', zIndex: 0 }}
-                />
-              </span>
-            }
-            description={this.props.description}
-          />
-        </Skeleton>
+        <StyledMeta
+          avatar={<StyledImg src={this.props.image} />}
+          title={
+            <span>
+              {this.props.name}
+              <PriceBadge
+                overflowCount={1000}
+                count={this.props.price && `${this.props.price} / piece`}
+                style={{ marginLeft: '10px', zIndex: 0 }}
+              />
+            </span>
+          }
+          description={this.props.description}
+        />
       </StyledCard>
     );
   }
