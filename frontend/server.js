@@ -31,6 +31,8 @@ app
         throw err;
       }
 
+      console.clear();
+
       console.log(
         `🥩 Luncher-box frontend running on http://localhost:${PORT} in ${ENV}`
       );
