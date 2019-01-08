@@ -47,7 +47,7 @@ export class CategoryController {
     if (since) {
       const categories = await this.categoryRepository.find({
         where: { id: MoreThan(since) },
-        take: limit,
+        take: limit
       });
 
       return categories;
@@ -56,7 +56,7 @@ export class CategoryController {
     if (page) {
       const categories = await this.categoryRepository.find({
         skip: limit * (page - 1),
-        take: limit,
+        take: limit
       });
 
       return categories;
@@ -81,7 +81,7 @@ export class CategoryController {
      * Check if relations param was sent from the client
      * if so return nested relations
      */
-    if(relations) {
+    if (relations) {
       category = await this.categoryRepository.findOne(id, {
         relations: ['products', 'products.categories']
       });
