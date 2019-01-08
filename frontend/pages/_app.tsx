@@ -1,7 +1,7 @@
 import App, { Container, NextAppContext } from 'next/app';
 import React from 'react';
 import { createGlobalStyle } from 'styled-components';
-import EntityContextProvider from '../components/EntityContextProvider';
+import EntityContextProvider from '../components/AdminContextProvider';
 
 const GlobalStyle = createGlobalStyle`
   html,

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { CategoryAPI, ProductAPI } from '../api';
-import { EntityContext } from '../context';
+import { AdminContext } from '../context';
 import { Category, Product } from '../interfaces';
 import { EntityInstance, EntityTypes } from '../types';
 
@@ -15,7 +15,7 @@ interface State {
   };
 }
 
-class EntityProvider extends Component<Props, State> {
+class AdminContextProvider extends Component<Props, State> {
   state: State = {
     entities: {
       products: [],
@@ -240,7 +240,7 @@ class EntityProvider extends Component<Props, State> {
     const { entities } = this.state;
 
     return (
-      <EntityContext.Provider
+      <AdminContext.Provider
         value={{
           entities,
           actions: {
@@ -252,13 +252,13 @@ class EntityProvider extends Component<Props, State> {
         }}
       >
         {this.props.children}
-      </EntityContext.Provider>
+      </AdminContext.Provider>
     );
   }
 }
 
 // then make a consumer which will surface it
-const UserConsumer = EntityContext.Consumer;
+const UserConsumer = AdminContext.Consumer;
 
-export default EntityProvider;
+export default AdminContextProvider;
 export { UserConsumer };
