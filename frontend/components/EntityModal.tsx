@@ -169,7 +169,7 @@ const EntityModal = Form.create()(
                   initialValue:
                     entity &&
                     (entity as Product).categories &&
-                    (entity as Product).categories.map(category => category.id)
+                    (entity as Product).categories!.map(category => category.id)
                 })(
                   <Select
                     mode="multiple"
