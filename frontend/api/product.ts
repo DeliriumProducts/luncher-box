@@ -37,7 +37,7 @@ export class ProductAPI {
     }
   }
 
-  static async getOne({ id }: Product) {
+  static async getOne(id: number) {
     const product: Product = (await axios.get(`${BACKEND_URL}/products/${id}`))
       .data;
 
@@ -96,7 +96,7 @@ export class ProductAPI {
     return response;
   }
 
-  static async delete({ id }: Product) {
+  static async delete(id: number) {
     const response = await axios.delete(
       `${BACKEND_URL}/products/${id}`,
       this.opts

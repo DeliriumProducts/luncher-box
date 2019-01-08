@@ -37,7 +37,7 @@ export class CategoryAPI {
     }
   }
 
-  static async getOne({ id }: Category, relations: boolean) {
+  static async getOne(id: number, relations: boolean) {
     let category: Category;
     if (relations) {
       category = (await axios.get(
@@ -71,7 +71,7 @@ export class CategoryAPI {
     return response;
   }
 
-  static async delete({ id }: Category) {
+  static async delete(id: number) {
     const response = await axios.delete(
       `${BACKEND_URL}/categories/${id}`,
       this.opts
