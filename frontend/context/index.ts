@@ -1,1 +1,1 @@
-export * from './EntityContext';
+export * from './AdminContext';

@@ -16,7 +16,7 @@ interface Values {
   };
 }
 
-export const EntityContext = React.createContext<Values>({
+export const AdminContext = React.createContext<Values>({
   entities: {
     products: [],
     categories: []

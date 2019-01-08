@@ -6,7 +6,7 @@ import { EntityTypes, ActionTypes, EntityInstance } from '../types';
 import { Category, Product } from '../interfaces';
 import { ProductAPI, CategoryAPI } from '../api';
 import EntityModal from './EntityModal';
-import { EntityContext } from '../context';
+import { AdminContext } from '../context';
 import Spinner from './Spinner';
 
 const { Search } = Input;
@@ -76,8 +76,8 @@ const StyledCard = styled(Card)`
 `;
 
 class EntityCardContainer extends Component<Props, State> {
-  static contextType = EntityContext;
-  context!: React.ContextType<typeof EntityContext>;
+  static contextType = AdminContext;
+  context!: React.ContextType<typeof AdminContext>;
 
   state: State = {
     modalVisible: false,

@@ -1,12 +1,11 @@
 import { Component, ContextType } from 'react';
 import CategoryCard from '../components/CategoryCard';
 import UserLayout from '../components/UserLayout';
-import { EntityContext } from '../context/EntityContext';
+import { AdminContext } from '../context/AdminContext';
 import styled from 'styled-components';
-import { Spin, Icon, message } from 'antd';
+import { message } from 'antd';
 import { Category } from '../interfaces';
 import { CategoryAPI } from '../api';
-import Router from 'next/router';
 import Spinner from '../components/Spinner';
 
 const FlexContainer = styled.div`
@@ -21,8 +20,8 @@ interface State {
 }
 
 class Home extends Component<any, State> {
-  static contextType = EntityContext;
-  context!: React.ContextType<typeof EntityContext>;
+  static contextType = AdminContext;
+  context!: React.ContextType<typeof AdminContext>;
 
   state: State = {
     categories: [],
