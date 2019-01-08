@@ -74,10 +74,22 @@ export class CategoryController {
    * @param id
    */
   @Get('/:categoryId')
-  async getOne(@Param('categoryId') id: number) {
-    const category = await this.categoryRepository.findOne(id, {
-      relations: ['products']
-    });
+  async getOne(@Param('categoryId') id: number, @Param('relations') relations: string) {
+    let category: QueryResponse<Category>;
+
+    /**
+     * Check if relations param was sent from the client
+     * if so return nested relations
+     */
+    if(relations) {
+      category = await this.categoryRepository.findOne(id, {
+        relations: ['products', 'products.categories']
+      });
+    } else {
+      category = await this.categoryRepository.findOne(id, {
+        relations: ['products']
+      });
+    }
 
     if (category) {
       return category;
