@@ -53,29 +53,31 @@ class CategoryPage extends Component<Props, State> {
   }
 
   render() {
+    let data: React.ReactNode[];
+    /**
+     * Check whether data is still being fetched
+     * then inject the showModal func and entity's type to children's props
+     */
+    if (this.state.loading) {
+      data = [<Spinner />];
+    } else {
+      if (this.state.products.length) {
+        data = this.state.products.map(product => (
+          <ProductCard
+            key={product.id}
+            name={product.name}
+            description={product.description}
+            price={product.price}
+            image={product.image}
+          />
+        ));
+      } else {
+        data = [<div>Some unexpected error occured!</div>];
+      }
+    }
     return (
       <UserLayout selectedKey="daily">
-        <FlexContainer>
-          {this.state.loading ? (
-            <Spinner />
-          ) : (
-            <>
-              {this.state.products.length ? (
-                this.state.products.map(product => (
-                  <ProductCard
-                    key={product.id}
-                    name={product.name}
-                    description={product.description}
-                    price={product.price}
-                    image={product.image}
-                  />
-                ))
-              ) : (
-                <div>Some unexpected error occured!</div>
-              )}
-            </>
-          )}
-        </FlexContainer>
+        <FlexContainer>{data}</FlexContainer>
       </UserLayout>
     );
   }

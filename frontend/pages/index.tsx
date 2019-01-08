@@ -44,28 +44,31 @@ class Home extends Component<any, State> {
   }
 
   render() {
+    let data: React.ReactNode[];
+    /**
+     * Check whether data is still being fetched
+     * then inject the showModal func and entity's type to children's props
+     */
+    if (this.state.loading) {
+      data = [<Spinner />];
+    } else {
+      if (this.state.categories.length) {
+        data = this.state.categories.map(category => (
+          <CategoryCard
+            key={category.id}
+            id={category.id}
+            name={category.name}
+            image={category.image}
+          />
+        ));
+      } else {
+        data = [<div>No categories found!</div>];
+      }
+    }
+
     return (
       <UserLayout selectedKey="home">
-        <FlexContainer>
-          {this.state.loading ? (
-            <Spinner />
-          ) : (
-            <>
-              {this.state.categories.length ? (
-                this.state.categories.map(category => (
-                  <CategoryCard
-                    key={category.id}
-                    id={category.id}
-                    name={category.name}
-                    image={category.image}
-                  />
-                ))
-              ) : (
-                <div>No categories found!</div>
-              )}
-            </>
-          )}
-        </FlexContainer>
+        <FlexContainer>{data}</FlexContainer>
       </UserLayout>
     );
   }
