@@ -93,12 +93,12 @@ export default class extends React.Component<Props> {
 
   addToCart = () => {
     const product: Product = this.props;
-    this.context.actions.add(product);
+    this.context.actions.increment(product);
   };
 
   removeToCart = () => {
     const product: Product = this.props;
-    this.context.actions.remove(product);
+    this.context.actions.decrement(product);
   };
 
   render() {

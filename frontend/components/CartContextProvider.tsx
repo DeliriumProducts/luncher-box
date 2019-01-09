@@ -19,7 +19,7 @@ class CartContextProvider extends Component<Props, State> {
     comment: ''
   };
 
-  add = (product: Product) => {
+  increment = (product: Product) => {
     const products = [...this.state.products];
     const newProduct = { ...product };
 
@@ -41,7 +41,7 @@ class CartContextProvider extends Component<Props, State> {
     this.setState({ products });
   };
 
-  remove = (product: Product) => {
+  decrement = (product: Product) => {
     const products = [...this.state.products];
 
     const productIndex = this.findProductIndex(product.id);
@@ -86,8 +86,8 @@ class CartContextProvider extends Component<Props, State> {
           products,
           comment,
           actions: {
-            add: this.add,
-            remove: this.remove,
+            increment: this.increment,
+            decrement: this.decrement,
             comment: this.comment
           }
         }}

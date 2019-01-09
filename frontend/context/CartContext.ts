@@ -5,8 +5,8 @@ interface Values {
   products: Product[];
   comment: string;
   actions: {
-    add: (product: Product) => void;
-    remove: (product: Product) => void;
+    increment: (product: Product) => void;
+    decrement: (product: Product) => void;
     comment: (comment: string) => void;
   };
 }
@@ -16,8 +16,8 @@ export const CartContext = React.createContext<Values>({
   comment: '',
   actions: {
     // tslint:disable
-    add: () => {},
-    remove: () => {},
+    increment: () => {},
+    decrement: () => {},
     comment: () => {}
     // tslint:enable
   }
