@@ -89,7 +89,7 @@ class CartContextProvider extends Component<Props, State> {
 }
 
 // then make a consumer which will surface it
-const UserConsumer = AdminContext.Consumer;
+const CartConsumer = CartContext.Consumer;
 
 export default CartContextProvider;
-export { UserConsumer };
+export { CartConsumer };

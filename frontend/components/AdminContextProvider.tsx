@@ -258,7 +258,7 @@ class AdminContextProvider extends Component<Props, State> {
 }
 
 // then make a consumer which will surface it
-const UserConsumer = AdminContext.Consumer;
+const AdminConsumer = AdminContext.Consumer;
 
 export default AdminContextProvider;
-export { UserConsumer };
+export { AdminConsumer };
