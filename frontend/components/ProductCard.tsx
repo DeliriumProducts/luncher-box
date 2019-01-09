@@ -73,23 +73,23 @@ const addDots = (str: string, limit: number) => {
   return [str, false];
 };
 
-const viewMore = (props: Props) => {
-  Modal.info({
-    title: props.name,
-    content: (
-      <div>
-        <p>{props.description}</p>
-        <strong>{props.price} / piece</strong>
-      </div>
-    ),
-    onOk() {},
-    maskClosable: true
-  });
-};
-
 export default class extends React.Component<Props> {
   static contextType = CartContext;
   context!: React.ContextType<typeof CartContext>;
+
+  viewMore = () => {
+    Modal.info({
+      title: this.props.name,
+      content: (
+        <div>
+          <p>{this.props.description}</p>
+          <strong>{this.props.price} / piece</strong>
+        </div>
+      ),
+      onOk() {},
+      maskClosable: true
+    });
+  };
 
   addToCart = () => {
     const product: Product = this.props;
@@ -169,7 +169,7 @@ export default class extends React.Component<Props> {
                 <ViewMoreButton
                   size="small"
                   icon="info"
-                  onClick={() => viewMore(this.props)}
+                  onClick={this.viewMore}
                 >
                   View more
                 </ViewMoreButton>
