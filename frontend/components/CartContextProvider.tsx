@@ -21,8 +21,9 @@ class CartContextProvider extends Component<Props, State> {
 
   add = (product: Product) => {
     const products = [...this.state.products];
+    const newProduct = { ...product };
 
-    const productIndex = this.findProductIndex(product.id);
+    const productIndex = this.findProductIndex(newProduct.id);
 
     if (productIndex > -1) {
       /**
@@ -33,8 +34,8 @@ class CartContextProvider extends Component<Props, State> {
         products[productIndex].quantity = oldQuantity + 1;
       }
     } else {
-      product.quantity = 1;
-      products.push(product);
+      newProduct.quantity = 1;
+      products.push(newProduct);
     }
 
     this.setState({ products });
@@ -53,9 +54,9 @@ class CartContextProvider extends Component<Props, State> {
         const oldQuantity = products[productIndex].quantity;
         if (oldQuantity) {
           if (oldQuantity - 1 > 0) {
-            products.splice(productIndex, 1);
-          } else {
             products[productIndex].quantity = oldQuantity - 1;
+          } else {
+            products.splice(productIndex, 1);
           }
         }
       }

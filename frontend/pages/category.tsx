@@ -65,6 +65,7 @@ class CategoryPage extends Component<Props, State> {
         data = this.state.products.map(product => (
           <ProductCard
             key={product.id}
+            id={product.id}
             name={product.name}
             description={product.description}
             price={product.price}
