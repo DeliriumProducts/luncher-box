@@ -96,7 +96,7 @@ export default class extends React.Component<Props> {
     this.context.actions.increment(product);
   };
 
-  removeToCart = () => {
+  removeFromCart = () => {
     const product: Product = this.props;
     this.context.actions.decrement(product);
   };
@@ -156,7 +156,7 @@ export default class extends React.Component<Props> {
               }}
               icon="minus"
               shape="circle"
-              onClick={this.removeToCart}
+              onClick={this.removeFromCart}
             />
           </div>
         }
