@@ -1,4 +1,4 @@
-import { Card, Input, message } from 'antd';
+import { Card, Empty, Input, message } from 'antd';
 import React, { Component } from 'react';
 import styled from 'styled-components';
 import ActionButton from './ActionButton';
@@ -220,20 +220,24 @@ class EntityCardContainer extends Component<Props, State> {
     if (this.props.loading) {
       data = <Spinner />;
     } else {
-      data = React.Children.map(this.props.children, (child: any) => {
-        if (
-          child.props.name
-            .toLowerCase()
-            .includes(this.state.searchText.toLowerCase())
-        ) {
-          return React.cloneElement(child as React.ReactElement<any>, {
-            showModal: this.showModal,
-            entityType: this.props.entityType
-          });
-        } else {
-          return;
-        }
-      });
+      if (this.props.children.length) {
+        data = React.Children.map(this.props.children, (child: any) => {
+          if (
+            child.props.name
+              .toLowerCase()
+              .includes(this.state.searchText.toLowerCase())
+          ) {
+            return React.cloneElement(child as React.ReactElement<any>, {
+              showModal: this.showModal,
+              entityType: this.props.entityType
+            });
+          } else {
+            return;
+          }
+        });
+      } else {
+        data = <Empty description="No entries found" />;
+      }
     }
 
     return (

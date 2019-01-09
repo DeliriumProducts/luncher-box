@@ -3,7 +3,7 @@ import CategoryCard from '../components/CategoryCard';
 import UserLayout from '../components/UserLayout';
 import { AdminContext } from '../context/AdminContext';
 import styled from 'styled-components';
-import { message } from 'antd';
+import { message, Empty } from 'antd';
 import { Category } from '../interfaces';
 import { CategoryAPI } from '../api';
 import Spinner from '../components/Spinner';
@@ -61,7 +61,7 @@ class Home extends Component<any, State> {
           />
         ));
       } else {
-        data = <div>No categories found!</div>;
+        data = <Empty description="No entries found" />;
       }
     }
 
