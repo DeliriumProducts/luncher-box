@@ -10,7 +10,7 @@ interface Props {
   name: string;
   description: string;
   price: number;
-  quantity: string;
+  quantity?: number;
   interactive?: boolean;
   image: string;
 }
@@ -137,7 +137,11 @@ export default class extends React.Component<Props> {
                 fontSize: '1rem'
               }}
             >
-              {quantity}
+              {interactive
+                ? quantity
+                : quantity! < 2
+                ? `${quantity} time`
+                : `${quantity} times`}
             </div>
             {interactive && (
               <StyledButton onClick={this.addToCart}>

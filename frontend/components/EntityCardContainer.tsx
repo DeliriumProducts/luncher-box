@@ -253,7 +253,7 @@ class EntityCardContainer extends Component<Props, State> {
           />,
           <ActionButton
             key="new"
-            type="default"
+            type="primary"
             id="new-button"
             icon="plus"
             onClick={this.handleClick}

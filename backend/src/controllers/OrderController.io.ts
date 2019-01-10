@@ -50,7 +50,7 @@ export class OrderController {
      * Save orders in redis server
      */
     await redisClient.set(key, JSON.stringify(orders));
-
+    console.log('ABOUT TO EMIT', orders);
     return orders;
   }
 }
