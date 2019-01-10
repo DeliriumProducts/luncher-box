@@ -3,11 +3,14 @@ import React from 'react';
 import { Card, Icon, Button, Badge, Avatar } from 'antd';
 import styled from 'styled-components';
 import ButtonGroup from 'antd/lib/button/button-group';
+import { Product } from '../interfaces';
 
 interface Props {
+  id: number;
   name: string;
-  price: number | string;
-  quantity: number | string;
+  description: string;
+  price: number;
+  quantity?: number;
   interactive?: boolean;
   image: string;
 }
@@ -97,6 +100,16 @@ export default class extends React.Component<Props> {
   static contextType = CartContext;
   context!: React.ContextType<typeof CartContext>;
 
+  addToCart = () => {
+    const product: Product = this.props;
+    this.context.actions.increment(product);
+  };
+
+  removeFromCart = () => {
+    const product: Product = this.props;
+    this.context.actions.decrement(product);
+  };
+
   render() {
     const { name, price, quantity, interactive } = this.props;
 
@@ -105,7 +118,7 @@ export default class extends React.Component<Props> {
         <div className="quantity">
           <ButtonGroup>
             {interactive && (
-              <StyledButton>
+              <StyledButton onClick={this.removeFromCart}>
                 <Icon type="minus" />
               </StyledButton>
             )}
@@ -120,7 +133,7 @@ export default class extends React.Component<Props> {
               {quantity}
             </div>
             {interactive && (
-              <StyledButton>
+              <StyledButton onClick={this.addToCart}>
                 <Icon type="plus" />
               </StyledButton>
             )}
@@ -130,7 +143,9 @@ export default class extends React.Component<Props> {
         <div style={{ fontSize: '1rem' }} className="title">
           {name}
         </div>
-        <div className="price">$ {price}</div>
+        <div className="price">
+          $ {quantity && price && (price * quantity).toFixed(2)}
+        </div>
       </StyledCard>
     );
   }

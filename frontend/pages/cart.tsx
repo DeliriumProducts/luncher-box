@@ -1,6 +1,10 @@
 import UserLayout from '../components/UserLayout';
 import ItemCard from '../components/ItemCard';
 import styled from 'styled-components';
+import { CartContext } from '../context';
+import { Empty } from 'antd';
+import React from 'react';
+import { Product } from '../interfaces';
 
 const FlexContainer = styled.div`
   display: flex;
@@ -8,19 +12,34 @@ const FlexContainer = styled.div`
   justify-content: center;
 `;
 
-export default () => (
-  <UserLayout selectedKey="cart">
-    <FlexContainer>
-      <ItemCard name="Chicken Salad" price={5.4} quantity={5} interactive />
-      <ItemCard name="Chicken Soup" price={5.4} quantity={5} interactive />
-      <ItemCard name="Chicken Nuggers" price={5.4} quantity={5} interactive />
-      <ItemCard name="Pizza Margharitta" price={5.4} quantity={5} interactive />
-      <ItemCard
-        name="Soups with chicken negger"
-        image="https://i.imgur.com/adTaN7u.jpg"
-        price={5.4}
-        quantity="5 times"
-      />
-    </FlexContainer>
-  </UserLayout>
-);
+export default class extends React.Component {
+  static contextType = CartContext;
+  context!: React.ContextType<typeof CartContext>;
+
+  render() {
+    return (
+      <UserLayout selectedKey="cart">
+        <FlexContainer>
+          {this.context.products.length ? (
+            this.context.products.map((product: Product) => (
+              <ItemCard
+                interactive
+                id={product.id}
+                key={product.id}
+                name={product.name}
+                description={product.description}
+                image={product.image}
+                price={product.price}
+                quantity={product.quantity}
+              />
+            ))
+          ) : (
+            <Empty description="No products">
+              No items added to the cart yet. Go and add some!
+            </Empty>
+          )}
+        </FlexContainer>
+      </UserLayout>
+    );
+  }
+}

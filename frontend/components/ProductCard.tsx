@@ -98,7 +98,6 @@ export default class extends React.Component<Props> {
 
   render() {
     const { name, description, price, image } = this.props;
-    console.log(this.context);
 
     const [shortName, readMoreName] = addDots(name, 50);
     const [shortDesc, readMoreDesc] = addDots(description, 150);
