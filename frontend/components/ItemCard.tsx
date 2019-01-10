@@ -10,7 +10,7 @@ interface Props {
   name: string;
   description: string;
   price: number;
-  quantity?: number;
+  quantity: string;
   interactive?: boolean;
   image: string;
 }
