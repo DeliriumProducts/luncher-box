@@ -11,12 +11,16 @@ class Orders extends Component {
 
   componentDidMount() {
     this.socket = io(`${BACKEND_URL}`);
-    this.socket.on('orders_fetched', (data: any) => {
+    /**
+     * Listen for events
+     */
+    this.socket.on('fetched_orders', (data: any) => {
       console.log(data);
       this.socket.emit('place_order', { order: ' ei kopele' });
     });
-    this.socket.on('order_placed', (data: any) => {
-      console.log('this comes from order_placed', data);
+
+    this.socket.on('placed_order', (data: any) => {
+      console.log('this comes from placed_order', data);
     });
   }
   render() {
