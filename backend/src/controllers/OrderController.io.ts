@@ -12,51 +12,45 @@ import { redisClient } from '../config';
 @SocketController()
 export class OrderController {
   @OnConnect()
-  @EmitOnSuccess('orders_fetched')
+  @EmitOnSuccess('fetched_orders')
   async connection(@SocketIO() io: any) {
-    /**
-     * Return all orders to the client on connect
-     */
     const key = 'orders';
-    const value = await redisClient.get(key);
-    console.log('VALUE E : ', value);
-    const orders = [];
-    if (value) {
-      for (const order of value) {
-        /**
-         * Trqbva da parse-na vseki element ot array-a i suotvetno da pushna vseki edin order
-         */
-        const parsedOrder = JSON.parse(order);
-      }
-      orders.push(JSON.parse(value));
-      return [orders];
-    } else {
-      return [];
+    const ordersJSON = await redisClient.get(key);
+
+    let orders = [];
+
+    if (ordersJSON) {
+      orders = JSON.parse(ordersJSON);
     }
+
+    return orders;
   }
 
   @OnMessage('place_order')
-  @EmitOnSuccess('order_placed')
-  async place(@MessageBody() data: any) {
+  @EmitOnSuccess('placed_order')
+  async place(@MessageBody() order: any) {
     /**
-     * Attach state to order (isAccepted)
+     * Inject state of the order
      */
-    console.log(data);
-    const { isAccepted } = data;
-    let { order } = data;
-    order = { order, isAccepted };
+    order.state = 1;
 
     const key = 'orders';
-    const value = await redisClient.get(key);
-    const orders: any = [];
+    const ordersJSON = await redisClient.get(key);
 
-    if (value) {
-      orders.push(JSON.parse(value), order);
+    let orders = [];
+
+    if (ordersJSON) {
+      orders = JSON.parse(ordersJSON);
+      orders.push(order);
     } else {
-      orders.push({ order });
+      orders = [order];
     }
 
-    redisClient.set(key, orders);
-    return { orders };
+    /**
+     * Save orders in redis server
+     */
+    await redisClient.set(key, JSON.stringify(orders));
+
+    return orders;
   }
 }
