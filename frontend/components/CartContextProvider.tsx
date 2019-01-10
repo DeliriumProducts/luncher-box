@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
-import { CategoryAPI, ProductAPI } from '../api';
 import { CartContext } from '../context';
-import { Category, Product } from '../interfaces';
-import { EntityInstance, EntityTypes } from '../types';
+import { Product } from '../interfaces';
 
 interface Props {
   children: React.ReactNode;

@@ -18,7 +18,7 @@ interface Props {
 const StyledCard: any = styled(Card)`
   margin: 8px 4px 0 4px;
   border-radius: 7px;
-  width: 70%;
+  width: 100%;
   border: none;
   text-align: center;
   display: flex;
