@@ -11,16 +11,19 @@ interface Props {
 interface State {
   products: Product[];
   comment: string;
+  totalAmount: number;
 }
 
 class CartContextProvider extends Component<Props, State> {
   state: State = {
     products: [],
-    comment: ''
+    comment: '',
+    totalAmount: 0
   };
 
   increment = (product: Product) => {
     const products = [...this.state.products];
+    let { totalAmount } = this.state;
     const newProduct = { ...product };
 
     const productIndex = this.findProductIndex(newProduct.id);
@@ -38,11 +41,13 @@ class CartContextProvider extends Component<Props, State> {
       products.push(newProduct);
     }
 
-    this.setState({ products });
+    totalAmount++;
+    this.setState({ products, totalAmount });
   };
 
   decrement = (product: Product) => {
     const products = [...this.state.products];
+    let { totalAmount } = this.state;
 
     const productIndex = this.findProductIndex(product.id);
 
@@ -64,7 +69,8 @@ class CartContextProvider extends Component<Props, State> {
       return;
     }
 
-    this.setState({ products });
+    totalAmount--;
+    this.setState({ products, totalAmount });
   };
 
   comment = (comment: string) => {
@@ -78,13 +84,14 @@ class CartContextProvider extends Component<Props, State> {
   };
 
   render() {
-    const { products, comment } = this.state;
+    const { products, comment, totalAmount } = this.state;
 
     return (
       <CartContext.Provider
         value={{
           products,
           comment,
+          totalAmount,
           actions: {
             increment: this.increment,
             decrement: this.decrement,

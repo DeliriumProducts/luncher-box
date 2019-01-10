@@ -96,6 +96,13 @@ const StyledButton: any = styled(Button)`
   box-shadow: none;
 `;
 
+const SyledImage = styled.img`
+  object-fit: cover;
+  width: 72px;
+  height: 72px;
+  border-radius: 7px;
+`;
+
 export default class extends React.Component<Props> {
   static contextType = CartContext;
   context!: React.ContextType<typeof CartContext>;
@@ -111,7 +118,7 @@ export default class extends React.Component<Props> {
   };
 
   render() {
-    const { name, price, quantity, interactive } = this.props;
+    const { name, price, image, quantity, interactive } = this.props;
 
     return (
       <StyledCard>
@@ -139,7 +146,7 @@ export default class extends React.Component<Props> {
             )}
           </ButtonGroup>
         </div>
-        <Avatar shape="square" size={72} src={this.props.image} />
+        <SyledImage src={image} />
         <div style={{ fontSize: '1rem' }} className="title">
           {name}
         </div>

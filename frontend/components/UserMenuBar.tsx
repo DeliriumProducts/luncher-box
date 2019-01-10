@@ -1,7 +1,8 @@
-import { Icon, Menu } from 'antd';
+import { Icon, Menu, Badge } from 'antd';
 import Link from 'next/link';
 import React, { Component } from 'react';
 import styled from 'styled-components';
+import { CartContext } from '../context';
 
 interface Props {
   selectedKey: string;
@@ -41,6 +42,9 @@ const StyledAnchor = styled.a`
 `;
 
 class UserMenuBar extends Component<Props, any> {
+  static contextType = CartContext;
+  context!: React.ContextType<typeof CartContext>;
+
   render() {
     const { selectedKey } = this.props;
     return (
@@ -62,8 +66,10 @@ class UserMenuBar extends Component<Props, any> {
           <Menu.Item key="cart">
             <Link href="/cart" prefetch>
               <StyledAnchor>
-                <Icon type="shopping-cart" className="menu-item-icon" />
-                <span className="menu-item-title">Cart</span>
+                <Badge offset={[10, 0]} count={this.context.totalAmount}>
+                  <Icon type="shopping-cart" className="menu-item-icon" />
+                  <span className="menu-item-title">Cart</span>
+                </Badge>
               </StyledAnchor>
             </Link>
           </Menu.Item>
