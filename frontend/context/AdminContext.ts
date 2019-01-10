@@ -7,7 +7,6 @@ interface Values {
     products: Product[];
     categories: Category[];
   };
-
   actions: {
     update: (entityType?: EntityTypes) => void;
     push: (newEntity: EntityInstance, entityType: EntityTypes) => void;
