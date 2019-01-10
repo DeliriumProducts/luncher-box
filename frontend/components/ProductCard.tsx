@@ -13,7 +13,7 @@ const StyledCard = styled(Card)`
   flex-direction: column;
   text-align: center;
   margin: 8px 4px 0 4px;
-  box-shadow: 0 4px 4px rgba(0, 0, 0, 0.12);
+  box-shadow: 0 2px 2px rgba(0, 0, 0, 0.12);
   flex-basis: 16rem;
   padding-bottom: 0;
   .ant-card-body {
@@ -62,7 +62,7 @@ interface Props {
 
 const ViewMoreButton: any = styled(Button)`
   border: none;
-  box-shadow: 0 4px 4px rgba(0, 0, 0, 0.12);
+  box-shadow: 0 2px 2px rgba(0, 0, 0, 0.12);
 `;
 
 const addDots = (str: string, limit: number) => {
@@ -96,11 +96,6 @@ export default class extends React.Component<Props> {
     this.context.actions.increment(product);
   };
 
-  removeFromCart = () => {
-    const product: Product = this.props;
-    this.context.actions.decrement(product);
-  };
-
   render() {
     const { name, description, price, image } = this.props;
     console.log(this.context);
@@ -124,7 +119,7 @@ export default class extends React.Component<Props> {
                   zIndex: 0,
                   marginLeft: 10,
                   marginTop: 10,
-                  boxShadow: '0 4px 4px rgba(0, 0, 0, 0.12)'
+                  boxShadow: '0 2px 2px rgba(0, 0, 0, 0.12)'
                 }}
                 offset={[0, 0]}
                 overflowCount={1000}
@@ -139,24 +134,11 @@ export default class extends React.Component<Props> {
                 position: 'relative',
                 bottom: 22,
                 border: 'none',
-                boxShadow: '0 4px 4px rgba(0, 0, 0, 0.12)'
+                boxShadow: '0 2px 2px rgba(0, 0, 0, 0.12)'
               }}
               icon="plus"
               shape="circle"
               onClick={this.addToCart}
-            />
-            <Button
-              style={{
-                width: 44,
-                height: 44,
-                position: 'relative',
-                bottom: 22,
-                border: 'none',
-                boxShadow: '0 4px 4px rgba(0, 0, 0, 0.12)'
-              }}
-              icon="minus"
-              shape="circle"
-              onClick={this.removeFromCart}
             />
           </div>
         }
