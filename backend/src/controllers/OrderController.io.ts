@@ -2,35 +2,61 @@ import {
   ConnectedSocket,
   MessageBody,
   OnConnect,
-  OnDisconnect,
   OnMessage,
   SocketController,
-  SocketIO
+  SocketIO,
+  EmitOnSuccess
 } from 'socket-controllers';
+import { redisClient } from '../config';
 
 @SocketController()
 export class OrderController {
   @OnConnect()
-  connection(@ConnectedSocket() socket: any, @SocketIO() io: any) {
-    console.log('client connected');
-    console.log('connection count:' + io.engine.clientsCount);
+  @EmitOnSuccess('orders_fetched')
+  async connection(@SocketIO() io: any) {
+    /**
+     * Return all orders to the client on connect
+     */
+    const key = 'orders';
+    const value = await redisClient.get(key);
+    console.log('VALUE E : ', value);
+    const orders = [];
+    if (value) {
+      for (const order of value) {
+        /**
+         * Trqbva da parse-na vseki element ot array-a i suotvetno da pushna vseki edin order
+         */
+        const parsedOrder = JSON.parse(order);
+      }
+      orders.push(JSON.parse(value));
+      return [orders];
+    } else {
+      return [];
+    }
   }
 
-  @OnDisconnect()
-  disconnect(@ConnectedSocket() socket: any) {
-    console.log('client disconnected');
-  }
+  @OnMessage('place_order')
+  @EmitOnSuccess('order_placed')
+  async place(@MessageBody() data: any) {
+    /**
+     * Attach state to order (isAccepted)
+     */
+    console.log(data);
+    const { isAccepted } = data;
+    let { order } = data;
+    order = { order, isAccepted };
 
-  @OnMessage('save')
-  save(@ConnectedSocket() socket: any, @MessageBody() message: any) {
-    console.log('received message:', message);
-    console.log('setting id to the message and sending it back to the client');
-    message.id = 1;
-    socket.emit('message_saved', { message: 'hello' });
-  }
+    const key = 'orders';
+    const value = await redisClient.get(key);
+    const orders: any = [];
 
-  @OnMessage('test')
-  test() {
-    console.log('test');
+    if (value) {
+      orders.push(JSON.parse(value), order);
+    } else {
+      orders.push({ order });
+    }
+
+    redisClient.set(key, orders);
+    return { orders };
   }
 }
