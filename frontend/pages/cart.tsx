@@ -59,13 +59,7 @@ export default class extends React.Component<any, State> {
      * Remove the actions and the totalAmount before sending to the backend
      */
     const { order } = this.context;
-    this.socket.emit(
-      'place_order',
-      // JSON.parse(
-      //   `{"products":[{"name":"gosho","id":5,"price":5,"image":"https://image.com","quantity":5}]}`
-      // )
-      order
-    );
+    this.socket.emit('place_order', order);
   };
 
   handleComment = (e: React.FormEvent<HTMLTextAreaElement>) => {
