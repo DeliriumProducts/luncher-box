@@ -247,7 +247,6 @@ class EntityCardContainer extends Component<Props, State> {
           <Search
             key="search"
             placeholder="Search"
-            onSearch={value => console.log(value)}
             onChange={this.handleChange}
             id="search-input"
           />,

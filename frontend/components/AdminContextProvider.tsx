@@ -194,7 +194,6 @@ class AdminContextProvider extends Component<Props, State> {
       const categoryToBeDeleted = await CategoryAPI.getOne(entity.id, true);
 
       if (categoryToBeDeleted.products) {
-        console.log(categoryToBeDeleted.products);
         /**
          * Remove products from the category before deleting it
          */

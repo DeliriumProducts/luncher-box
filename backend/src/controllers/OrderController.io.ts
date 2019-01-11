@@ -5,15 +5,15 @@ import {
   OnMessage,
   SocketController,
   SocketIO,
-  EmitOnSuccess
+  EmitOnSuccess,
+  EmitOnFail
 } from 'socket-controllers';
 import { redisClient } from '../config';
 
 @SocketController()
 export class OrderController {
   @OnConnect()
-  @EmitOnSuccess('fetched_orders')
-  async connection(@SocketIO() io: any) {
+  async connection(@SocketIO() io: SocketIO.Socket) {
     const key = 'orders';
     const ordersJSON = await redisClient.get(key);
 
@@ -23,12 +23,14 @@ export class OrderController {
       orders = JSON.parse(ordersJSON);
     }
 
-    return orders;
+    /**
+     * Emit all of the orders to the client
+     */
+    io.emit('fetched_orders', orders);
   }
 
   @OnMessage('place_order')
-  @EmitOnSuccess('placed_order')
-  async place(@MessageBody() order: any) {
+  async place(@SocketIO() io: SocketIO.Socket, @MessageBody() order: any) {
     /**
      * Inject state of the order
      */
@@ -50,7 +52,10 @@ export class OrderController {
      * Save orders in redis server
      */
     await redisClient.set(key, JSON.stringify(orders));
-    console.log('ABOUT TO EMIT', orders);
-    return orders;
+
+    /**
+     * Emit the new orders back to the client
+     */
+    io.emit('placed_order', orders);
   }
 }

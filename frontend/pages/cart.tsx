@@ -61,11 +61,13 @@ export default class extends React.Component<any, State> {
     const { actions, totalAmount, ...order } = this.context;
     // @ts-ignore
     order.tableId = Math.floor(Math.random() * 1000);
-    this.socket.emit('place_order', order);
-  };
-
-  showModal = () => {
-    this.setState({ modalVisible: true });
+    this.socket.emit(
+      'place_order',
+      // JSON.parse(
+      //   `{"products":[{"name":"gosho","id":5,"price":5,"image":"https://image.com","quantity":5}]}`
+      // )
+      order
+    );
   };
 
   handleComment = (e: React.FormEvent<HTMLTextAreaElement>) => {
