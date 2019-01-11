@@ -10,7 +10,7 @@ export class Category {
   id: number;
 
   @Column('text')
-  @Length(4, 50)
+  @Length(3, 50)
   name: string;
 
   @Column('text')
