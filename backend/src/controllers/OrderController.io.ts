@@ -32,7 +32,7 @@ export class OrderController {
   @OnMessage('place_order')
   async place(@SocketIO() io: SocketIO.Socket, @MessageBody() order: any) {
     /**
-     * Inject state of the order
+     * Attach state of the order
      */
     order.state = 1;
 
@@ -43,6 +43,13 @@ export class OrderController {
 
     if (ordersJSON) {
       orders = JSON.parse(ordersJSON);
+
+      /**
+       * Attach id to order
+       */
+      const id = orders.length;
+      order.id = id;
+
       orders.push(order);
     } else {
       orders = [order];
