@@ -12,7 +12,7 @@ import { BACKEND_URL } from '../config';
 const { TextArea } = Input;
 
 const StyledCard = styled(Card)`
-  margin: 8px 4px 0 4px;
+  margin-top: 8px;
   border-radius: 7px;
   border: none;
   display: flex;
@@ -20,7 +20,6 @@ const StyledCard = styled(Card)`
     padding-bottom: 0;
     padding-top: 0;
   }
-  width: 100%;
   flex-direction: column;
   text-align: center;
   box-shadow: 0 2px 2px rgba(0, 0, 0, 0.12);
@@ -88,29 +87,31 @@ export default class extends React.Component<any, State> {
                   quantity={product.quantity}
                 />
               ))}
-              <StyledCard>
-                <TextArea
-                  placeholder="Write comments in case you are allergic to ingredients or want to exclude some. e.g. no onions, no mayo. "
-                  onChange={this.handleComment}
-                  rows={6}
-                  style={{ width: '100%', marginTop: '2%' }}
-                />
-                <div style={{ display: 'flex' }}>
-                  <Input
-                    placeholder="Enter table e.g. A1, A2 etc."
-                    onChange={this.handleTable}
-                    style={{ marignLeft: '1%', marginTop: '2%' }}
-                    size="large"
+              <div style={{ width: '100%' }}>
+                <StyledCard>
+                  <TextArea
+                    placeholder="Write comments in case you are allergic to ingredients or want to exclude some. e.g. no onions, no mayo. "
+                    onChange={this.handleComment}
+                    rows={6}
+                    style={{ width: '100%', marginTop: '2%' }}
                   />
-                </div>
-                <Button
-                  type="primary"
-                  style={{ marginBottom: '2%', marginTop: '2%' }}
-                  onClick={this.placeOrder}
-                >
-                  Place order!
-                </Button>
-              </StyledCard>
+                  <div style={{ display: 'flex' }}>
+                    <Input
+                      placeholder="Enter table e.g. A1, A2 etc."
+                      onChange={this.handleTable}
+                      style={{ marignLeft: '1%', marginTop: '2%' }}
+                      size="large"
+                    />
+                  </div>
+                  <Button
+                    type="primary"
+                    style={{ marginBottom: '2%', marginTop: '2%' }}
+                    onClick={this.placeOrder}
+                  >
+                    Place order!
+                  </Button>
+                </StyledCard>
+              </div>
             </>
           ) : (
             <Empty description="No products">
