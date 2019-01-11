@@ -73,13 +73,16 @@ export default class extends React.Component<any, State> {
     this.context.actions.comment(e.currentTarget.value);
   };
 
+  handleTableId = (e: React.FormEvent<HTMLInputElement>) => {
+    this.context.actions.setTableId(e.currentT);
+  };
+
   render() {
     return (
       <UserLayout selectedKey="cart">
         <FlexContainer>
-          {this.context.order.products.length ? (
+          {this.context.order && this.context.order.products.length ? (
             <>
-              {' '}
               {this.context.order.products.map((product: Product) => (
                 <ItemCard
                   interactive
@@ -91,20 +94,19 @@ export default class extends React.Component<any, State> {
                   price={product.price}
                   quantity={product.quantity}
                 />
-              ))}{' '}
+              ))}
               <StyledCard>
-                {' '}
                 <TextArea
-                  placeholder="e.g. no onions, no mayo. Write comments in case you are allergic to ingredients or want to exclude some."
+                  placeholder="Write comments in case you are allergic to ingredients or want to exclude some. e.g. no onions, no mayo. "
                   onChange={this.handleComment}
                   rows={6}
                   style={{ width: '100%', marginTop: '2%' }}
-                />{' '}
+                />
                 <div style={{ display: 'flex' }}>
                   Enter Table ID
-                  <InputNumber
-                    defaultValue={1}
-                    min={1}
+                  <Input
+                    placeholder="Input table ID e.g. A1, A2 etc."
+                    onChange={this.handleTableId}
                     style={{ marignLeft: '1%', marginTop: '2%' }}
                     size="large"
                   />

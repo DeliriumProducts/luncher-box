@@ -1,26 +1,29 @@
 import React, { Component } from 'react';
 import { CartContext } from '../context';
-import { Product } from '../interfaces';
+import { Product, Order } from '../interfaces';
 
 interface Props {
   children: React.ReactNode;
 }
 
 interface State {
-  products: Product[];
-  comment: string;
+  order: Order;
   totalAmount: number;
 }
 
 class CartContextProvider extends Component<Props, State> {
   state: State = {
-    products: [],
-    comment: '',
+    order: {
+      id: 1,
+      products: [],
+      comment: '',
+      tableId: '1'
+    },
     totalAmount: 0
   };
 
   increment = (product: Product) => {
-    const products = [...this.state.products];
+    const products = [...this.state.order.products];
     let { totalAmount } = this.state;
     const newProduct = { ...product };
 
@@ -40,11 +43,14 @@ class CartContextProvider extends Component<Props, State> {
     }
 
     totalAmount++;
-    this.setState({ products, totalAmount });
+    this.setState(prevState => ({
+      order: { ...prevState.order, products },
+      totalAmount
+    }));
   };
 
   decrement = (product: Product) => {
-    const products = [...this.state.products];
+    const products = [...this.state.order.products];
     let { totalAmount } = this.state;
 
     const productIndex = this.findProductIndex(product.id);
@@ -68,27 +74,28 @@ class CartContextProvider extends Component<Props, State> {
     }
 
     totalAmount--;
-    this.setState({ products, totalAmount });
+    this.setState(prevState => ({
+      order: { ...prevState.order, products },
+      totalAmount
+    }));
   };
 
   comment = (comment: string) => {
-    this.setState({ comment });
+    this.setState(prevState => ({ order: { ...prevState.order, comment } }));
   };
 
   findProductIndex = (id: number) => {
-    return this.state.products.findIndex(
+    return this.state.order.products.findIndex(
       ({ id: productId }: Product) => productId === id
     );
   };
 
   render() {
-    const { products, comment, totalAmount } = this.state;
-
+    const { order, totalAmount } = this.state;
     return (
       <CartContext.Provider
         value={{
-          products,
-          comment,
+          order,
           totalAmount,
           actions: {
             increment: this.increment,
