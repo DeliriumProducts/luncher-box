@@ -52,6 +52,12 @@ export class OrderController {
 
       orders.push(order);
     } else {
+      /**
+       * Attach id to order
+       */
+      const id = orders.length;
+      order.id = id;
+
       orders = [order];
     }
 
