@@ -34,7 +34,7 @@ export class OrderController {
     /**
      * Attach state of the order
      */
-    order.state = 1;
+    order.state = 0;
 
     const key = 'orders';
     const ordersJSON = await redisClient.get(key);
@@ -70,5 +70,39 @@ export class OrderController {
      * Emit the new orders back to the client
      */
     io.emit('placed_order', orders);
+  }
+
+  @OnMessage('accept_order')
+  async accept(@SocketIO() io: SocketIO.Socket, @MessageBody() orderId: number) {
+    const key = 'orders';
+    const ordersJSON = await redisClient.get(key);
+
+    let orders = [];
+
+    if (ordersJSON) {
+      orders = JSON.parse(ordersJSON);
+
+      const orderIndex = orders.findIndex((orderItem: any) => orderItem.id === orderId);
+      orders[orderIndex].state = 1;
+    }
+
+    io.emit('accepted_order');
+  }
+
+  @OnMessage('decline_order')
+  async decline(@SocketIO() io: SocketIO.Socket, @MessageBody() orderId: number) {
+    const key = 'orders';
+    const ordersJSON = await redisClient.get(key);
+
+    let orders = [];
+
+    if (ordersJSON) {
+      orders = JSON.parse(ordersJSON);
+
+      const orderIndex = orders.findIndex((orderItem: any) => orderItem.id === orderId);
+      orders[orderIndex].state = 2;
+    }
+
+    io.emit('declined_order');
   }
 }
