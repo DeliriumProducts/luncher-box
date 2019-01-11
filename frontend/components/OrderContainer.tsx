@@ -56,26 +56,26 @@ class OrderContainer extends Component<Props> {
     return (
       <Collapse bordered={false}>
         {orders.length > 0 &&
-          orders.map((order: Order) => {
-            return (
-              <Collapse.Panel
-                key={order.id.toString()}
-                header={<OrderCardHeader orderId={order.table} />}
-                style={customPanelStyle}
-              >
-                {orders.length &&
-                  order.products.map((product: Product) => (
-                    <ItemCard
-                      key={product.id}
-                      id={product.id}
-                      name={product.name}
-                      description={product.description}
-                      image={product.image}
-                      price={product.price}
-                      quantity={product.quantity}
-                      interactive={false}
-                    />
-                  ))}
+          orders.map((order: Order) => (
+            <Collapse.Panel
+              key={order.id.toString()}
+              header={<OrderCardHeader orderId={order.table} />}
+              style={customPanelStyle}
+            >
+              {orders.length &&
+                order.products.map((product: Product) => (
+                  <ItemCard
+                    key={product.id}
+                    id={product.id}
+                    name={product.name}
+                    description={product.description}
+                    image={product.image}
+                    price={product.price}
+                    quantity={product.quantity}
+                    interactive={false}
+                  />
+                ))}
+              {order.comment && (
                 <Alert
                   message="Comment"
                   description={order.comment}
@@ -83,9 +83,9 @@ class OrderContainer extends Component<Props> {
                   showIcon
                   style={{ marginTop: '8px' }}
                 />
-              </Collapse.Panel>
-            );
-          })}
+              )}
+            </Collapse.Panel>
+          ))}
       </Collapse>
     );
   }
