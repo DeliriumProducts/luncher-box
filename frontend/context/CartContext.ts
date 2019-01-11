@@ -8,6 +8,7 @@ interface Values {
     increment: (product: Product) => void;
     decrement: (product: Product) => void;
     comment: (comment: string) => void;
+    setTable: (id: string) => void;
   };
 }
 
@@ -16,14 +17,15 @@ export const CartContext = React.createContext<Values>({
     id: 1,
     products: [],
     comment: '',
-    tableId: '1'
+    table: '1'
   },
   totalAmount: 0,
   actions: {
     // tslint:disable
     increment: () => {},
     decrement: () => {},
-    comment: () => {}
+    comment: () => {},
+    setTable: () => {}
     // tslint:enable
   }
 });

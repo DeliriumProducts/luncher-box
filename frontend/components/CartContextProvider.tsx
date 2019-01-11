@@ -17,7 +17,7 @@ class CartContextProvider extends Component<Props, State> {
       id: 1,
       products: [],
       comment: '',
-      tableId: '1'
+      table: '1'
     },
     totalAmount: 0
   };
@@ -84,6 +84,10 @@ class CartContextProvider extends Component<Props, State> {
     this.setState(prevState => ({ order: { ...prevState.order, comment } }));
   };
 
+  setTable = (id: string) => {
+    this.setState(prevState => ({ order: { ...prevState.order, table: id } }));
+  };
+
   findProductIndex = (id: number) => {
     return this.state.order.products.findIndex(
       ({ id: productId }: Product) => productId === id
@@ -100,7 +104,8 @@ class CartContextProvider extends Component<Props, State> {
           actions: {
             increment: this.increment,
             decrement: this.decrement,
-            comment: this.comment
+            comment: this.comment,
+            setTable: this.setTable
           }
         }}
       >

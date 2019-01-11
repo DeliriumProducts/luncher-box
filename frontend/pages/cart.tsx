@@ -59,7 +59,6 @@ export default class extends React.Component<any, State> {
      * Remove the actions and the totalAmount before sending to the backend
      */
     const { order } = this.context;
-    order.tableId = Math.floor(Math.random() * 1000).toString();
     this.socket.emit(
       'place_order',
       // JSON.parse(
@@ -73,8 +72,8 @@ export default class extends React.Component<any, State> {
     this.context.actions.comment(e.currentTarget.value);
   };
 
-  handleTableId = (e: React.FormEvent<HTMLInputElement>) => {
-    this.context.actions.setTableId(e.currentT);
+  handleTable = (e: React.FormEvent<HTMLInputElement>) => {
+    this.context.actions.setTable(e.currentTarget.value);
   };
 
   render() {
@@ -103,10 +102,9 @@ export default class extends React.Component<any, State> {
                   style={{ width: '100%', marginTop: '2%' }}
                 />
                 <div style={{ display: 'flex' }}>
-                  Enter Table ID
                   <Input
-                    placeholder="Input table ID e.g. A1, A2 etc."
-                    onChange={this.handleTableId}
+                    placeholder="Enter table e.g. A1, A2 etc."
+                    onChange={this.handleTable}
                     style={{ marignLeft: '1%', marginTop: '2%' }}
                     size="large"
                   />

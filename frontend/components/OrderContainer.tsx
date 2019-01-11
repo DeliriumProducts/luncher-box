@@ -60,7 +60,7 @@ class OrderContainer extends Component<Props> {
             return (
               <Collapse.Panel
                 key={order.id.toString()}
-                header={<OrderCardHeader orderId={order.tableId} />}
+                header={<OrderCardHeader orderId={order.table} />}
                 style={customPanelStyle}
               >
                 {orders.length &&
