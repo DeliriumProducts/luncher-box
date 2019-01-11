@@ -1,5 +1,5 @@
 import { Component } from 'react';
-import { Collapse, Button } from 'antd';
+import { Collapse, Button, Alert } from 'antd';
 import styled from 'styled-components';
 import ItemCard from './ItemCard';
 import { Order, Product } from '../interfaces';
@@ -54,8 +54,8 @@ class OrderContainer extends Component<Props> {
   render() {
     const { orders } = this.props;
     return (
-      <Collapse bordered={false} accordion={false}>
-        {orders.length &&
+      <Collapse bordered={false}>
+        {orders.length > 0 &&
           orders.map((order: Order) => {
             return (
               <Collapse.Panel
@@ -76,6 +76,13 @@ class OrderContainer extends Component<Props> {
                       interactive={false}
                     />
                   ))}
+                <Alert
+                  message="Comment"
+                  description={order.comment}
+                  type="info"
+                  showIcon
+                  style={{ marginTop: '8px' }}
+                />
               </Collapse.Panel>
             );
           })}
