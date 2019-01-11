@@ -16,6 +16,12 @@ const customPanelStyle = {
   boxShadow: '0 2px 2px rgba(0,0,0,0.12)'
 };
 
+const StyledAlert = styled(Alert)`
+  border-radius: 7px;
+  border: 0;
+  box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.12);
+`;
+
 const FlexSpan = styled.span`
   display: flex;
   justify-content: center;
@@ -41,7 +47,7 @@ const FlexSpan = styled.span`
 const OrderCardHeader = ({ orderId }: any) => {
   return (
     <FlexSpan>
-      <span className="title">Table №{orderId}</span>
+      <span className="title">Table № {orderId}</span>
       <span className="right">
         <Button shape="circle" type="default" icon="check" />
         <Button shape="circle" type="default" icon="close" />
@@ -54,7 +60,7 @@ class OrderContainer extends Component<Props> {
   render() {
     const { orders } = this.props;
     return (
-      <Collapse bordered={false}>
+      <Collapse bordered={false} style={{ background: '#f0f2f5' }}>
         {orders.length > 0 &&
           orders.map((order: Order) => (
             <Collapse.Panel
@@ -76,7 +82,7 @@ class OrderContainer extends Component<Props> {
                   />
                 ))}
               {order.comment && (
-                <Alert
+                <StyledAlert
                   message="Comment"
                   description={order.comment}
                   type="info"
