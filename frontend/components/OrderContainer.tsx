@@ -56,10 +56,10 @@ class OrderContainer extends Component<Props> {
     return (
       <Collapse bordered={false} accordion={false}>
         {orders.length &&
-          orders.map(order => {
+          orders.map((order: Order) => {
             return (
               <Collapse.Panel
-                key={order.tableId}
+                key={order.id.toString()}
                 header={<OrderCardHeader orderId={order.tableId} />}
                 style={customPanelStyle}
               >

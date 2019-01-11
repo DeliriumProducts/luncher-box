@@ -58,9 +58,8 @@ export default class extends React.Component<any, State> {
     /**
      * Remove the actions and the totalAmount before sending to the backend
      */
-    const { actions, totalAmount, ...order } = this.context;
-    // @ts-ignore
-    order.tableId = Math.floor(Math.random() * 1000);
+    const { order } = this.context;
+    order.tableId = Math.floor(Math.random() * 1000).toString();
     this.socket.emit(
       'place_order',
       // JSON.parse(
@@ -78,9 +77,10 @@ export default class extends React.Component<any, State> {
     return (
       <UserLayout selectedKey="cart">
         <FlexContainer>
-          {this.context.products.length ? (
+          {this.context.order.products.length ? (
             <>
-              {this.context.products.map((product: Product) => (
+              {' '}
+              {this.context.order.products.map((product: Product) => (
                 <ItemCard
                   interactive
                   id={product.id}
@@ -91,15 +91,15 @@ export default class extends React.Component<any, State> {
                   price={product.price}
                   quantity={product.quantity}
                 />
-              ))}
+              ))}{' '}
               <StyledCard>
+                {' '}
                 <TextArea
-                  placeholder="e.g. no onions, no mayo.
-                Write comments in case you are allergic to ingredients or want to exclude some."
+                  placeholder="e.g. no onions, no mayo. Write comments in case you are allergic to ingredients or want to exclude some."
                   onChange={this.handleComment}
                   rows={6}
                   style={{ width: '100%', marginTop: '2%' }}
-                />
+                />{' '}
                 <div style={{ display: 'flex' }}>
                   Enter Table ID
                   <InputNumber

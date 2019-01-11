@@ -1,4 +1,4 @@
 export * from './Category';
 export * from './Credentials';
-export * from './Product';
+export * from '../pages/admin/Product';
 export * from './Order';

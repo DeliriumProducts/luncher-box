@@ -1,9 +1,8 @@
 import React from 'react';
-import { Product } from '../interfaces';
+import { Product, Order } from '../interfaces';
 
 interface Values {
-  products: Product[];
-  comment: string;
+  order: Order;
   totalAmount: number;
   actions: {
     increment: (product: Product) => void;
@@ -13,8 +12,12 @@ interface Values {
 }
 
 export const CartContext = React.createContext<Values>({
-  products: [],
-  comment: '',
+  order: {
+    id: 1,
+    products: [],
+    comment: '',
+    tableId: '1'
+  },
   totalAmount: 0,
   actions: {
     // tslint:disable
