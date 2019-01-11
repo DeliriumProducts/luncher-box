@@ -22,16 +22,18 @@ class Orders extends Component<any, State> {
     /**
      * Listen for events
      */
-
-    this.socket.on('placed_order', (orders: any) => {
-      this.setState({ orders });
-      console.log(this.state);
-    });
-
-    this.socket.on('fetched_orders', (orders: any) => {
-      this.setState({ orders });
-    });
+    this.socket.on('placed_order', this.setOrders);
+    this.socket.on('fetched_orders', this.setOrders);
   }
+
+  componentWillUnmount() {
+    this.socket.off('placed_order');
+    this.socket.off('fetched_order');
+  }
+
+  setOrders = (orders: Order[]) => {
+    this.setState({ orders });
+  };
 
   render() {
     const { orders } = this.state;
