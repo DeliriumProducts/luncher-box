@@ -6,7 +6,8 @@ import {
   SocketController,
   SocketIO,
   EmitOnSuccess,
-  EmitOnFail
+  EmitOnFail,
+  SocketId
 } from 'socket-controllers';
 import { redisClient } from '../config';
 
@@ -30,7 +31,11 @@ export class OrderController {
   }
 
   @OnMessage('place_order')
-  async place(@SocketIO() io: SocketIO.Socket, @MessageBody() order: any) {
+  async place(
+    @SocketIO() io: SocketIO.Socket,
+    @SocketId() socketId: string,
+    @MessageBody() order: any
+  ) {
     /**
      * Attach state of the order
      */
@@ -50,6 +55,11 @@ export class OrderController {
       const id = orders[orders.length - 1].id + 1;
       order.id = id;
 
+      /**
+       * Attach sender id to order
+       */
+      order.senderId = socketId;
+
       orders.push(order);
     } else {
       /**
@@ -57,6 +67,11 @@ export class OrderController {
        */
       const id = 0;
       order.id = id;
+
+      /**
+       * Attach sender id to order
+       */
+      order.senderId = socketId;
 
       orders = [order];
     }
@@ -92,7 +107,8 @@ export class OrderController {
     }
 
     await redisClient.set(key, JSON.stringify(orders));
-    io.emit('accepted_order', order);
+    // @ts-ignore
+    io.to(order.senderId).emit('accepted_order', order);
   }
 
   @OnMessage('decline_order')
@@ -123,7 +139,8 @@ export class OrderController {
       }
     }
 
-    io.emit('declined_order', order);
+    // @ts-ignore
+    io.to(order.senderId).emit('declined_order', order);
   }
 
   @OnMessage('finish_order')
@@ -146,6 +163,8 @@ export class OrderController {
     }
 
     await redisClient.set(key, JSON.stringify(orders));
-    io.emit('finished_order', order);
+
+    // @ts-ignore
+    io.to(order.senderId).emit('finished_order', order);
   }
 }
