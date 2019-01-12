@@ -65,7 +65,7 @@ class CartContextProvider extends Component<Props, State> {
 
     const productIndex = this.findProductIndex(newProduct.id);
 
-    if (productIndex > -1) {
+    if (productIndex >= 0) {
       /**
        * Gets the old quantity and adds 1
        */
@@ -97,7 +97,7 @@ class CartContextProvider extends Component<Props, State> {
 
     const productIndex = this.findProductIndex(product.id);
 
-    if (productIndex > -1) {
+    if (productIndex >= 0) {
       if (products[productIndex].quantity) {
         /**
          * Gets the old quantity and remove 1, deletes the product if it's less than or eq. to 0
