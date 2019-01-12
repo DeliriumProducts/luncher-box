@@ -108,7 +108,7 @@ class AdminMenuBar extends Component<Props, State> {
               </StyledAnchor>
             </Link>
           </Menu.Item>
-          <Menu.Item key="chat">
+          <Menu.Item key="chat" disabled>
             <Link href="/admin/staffchat" prefetch>
               <StyledAnchor>
                 <Icon type="message" className="menu-item-icon" />
@@ -116,7 +116,7 @@ class AdminMenuBar extends Component<Props, State> {
               </StyledAnchor>
             </Link>
           </Menu.Item>
-          <Menu.Item key="load">
+          <Menu.Item key="load" disabled>
             <Link href="/admin/restaurantload" prefetch>
               <StyledAnchor>
                 <Icon type="pie-chart" className="menu-item-icon" />
