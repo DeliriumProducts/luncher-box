@@ -6,6 +6,7 @@ interface Values {
   totalAmount: number;
   actions: {
     reload: () => Promise<void>;
+    clear: () => Promise<[void, void, void]>;
     increment: (product: Product) => void;
     decrement: (product: Product) => void;
     comment: (comment: string) => void;
@@ -24,7 +25,10 @@ export const CartContext = React.createContext<Values>({
   actions: {
     // tslint:disable
     reload: () => {
-      return new Promise((resolve, reject) => null);
+      return new Promise((resolve, reject) => undefined);
+    },
+    clear: () => {
+      return Promise.all([undefined, undefined, undefined]);
     },
     increment: () => {},
     decrement: () => {},

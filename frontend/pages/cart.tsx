@@ -65,7 +65,33 @@ export default class extends React.Component<any, State> {
        * Remove the actions and the totalAmount before sending to the backend
        */
       const { order } = this.context;
-      this.socket.emit('place_order', order);
+      let totalSum = 0;
+      Modal.warn({
+        title: 'Are you sure you want to place this order?',
+        content: (
+          <div>
+            {this.context.order.products.map((product: Product) => {
+              totalSum += product.price;
+              return (
+                <div
+                  style={{ display: 'flex', justifyContent: 'space-between' }}
+                >
+                  <p>{product.name}</p>
+                  <p>
+                    {product.price} x {product.quantity}
+                  </p>
+                </div>
+              );
+            })}
+            <strong>Total price: $ {totalSum.toFixed(2)}</strong>
+          </div>
+        ),
+        onOk: () => {
+          this.socket.emit('place_order', order);
+          this.context.actions.clear();
+        },
+        maskClosable: true
+      });
     }
   };
 
@@ -110,10 +136,12 @@ export default class extends React.Component<any, State> {
                   placeholder="Write comments in case you are allergic to ingredients or want to exclude some. e.g. no onions, no mayo. "
                   onChange={this.handleComment}
                   rows={6}
+                  defaultValue={this.context.order.comment}
                   style={{ width: '100%', marginTop: '2%' }}
                 />
                 <div style={{ display: 'flex' }}>
                   <Input
+                    defaultValue={this.context.order.table}
                     placeholder="Enter table e.g. A1, A2 etc."
                     onChange={this.handleTable}
                     style={{ marignLeft: '1%', marginTop: '2%' }}

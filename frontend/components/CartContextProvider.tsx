@@ -36,6 +36,24 @@ class CartContextProvider extends Component<Props, State> {
     });
   };
 
+  clear = async () => {
+    this.setState({
+      order: {
+        id: 1,
+        products: [],
+        comment: '',
+        table: '1'
+      },
+      totalAmount: 0
+    });
+
+    return Promise.all([
+      localForage.removeItem('order'),
+      localForage.removeItem('currentOrder'),
+      localForage.removeItem('totalAmount')
+    ]);
+  };
+
   increment = async (product: Product) => {
     const products = [...this.state.order.products];
     let { totalAmount } = this.state;
@@ -139,6 +157,7 @@ class CartContextProvider extends Component<Props, State> {
           totalAmount,
           actions: {
             reload: this.reload,
+            clear: this.clear,
             increment: this.increment,
             decrement: this.decrement,
             comment: this.comment,
