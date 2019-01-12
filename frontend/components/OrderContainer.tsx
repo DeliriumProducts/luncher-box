@@ -72,7 +72,9 @@ class OrderContainer extends Component<Props, State> {
               >
                 {orders.length &&
                   order.products.map((product: Product) => {
-                    totalSum += product.price;
+                    totalSum +=
+                      product.price *
+                      (product.quantity !== undefined ? product.quantity : 1);
                     return (
                       <ItemCard
                         key={product.id}

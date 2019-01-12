@@ -101,7 +101,9 @@ export default class extends React.Component<any, State> {
         content: (
           <div>
             {this.context.order.products.map((product: Product) => {
-              totalSum += product.price;
+              totalSum +=
+                product.price *
+                (product.quantity !== undefined ? product.quantity : 1);
               return (
                 <div
                   key={product.id}
@@ -149,7 +151,9 @@ export default class extends React.Component<any, State> {
         data = (
           <>
             {this.context.order.products.map((product: Product) => {
-              totalSum += product.price;
+              totalSum +=
+                product.price *
+                (product.quantity !== undefined ? product.quantity : 1);
               return (
                 <ItemCard
                   interactive
