@@ -5,4 +5,5 @@ export interface Order {
   table: string;
   products: Product[];
   comment: string;
+  state?: number;
 }

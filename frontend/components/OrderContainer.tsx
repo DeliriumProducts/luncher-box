@@ -1,10 +1,16 @@
 import { Component } from 'react';
-import { Collapse, Button, Alert } from 'antd';
+import { Collapse, Alert } from 'antd';
 import styled from 'styled-components';
 import ItemCard from './ItemCard';
 import { Order, Product } from '../interfaces';
+import OrderCardHeader from './OrderCardHeader';
+import { AdminContext } from '../context';
 
 interface Props {
+  orders: Order[];
+}
+
+interface State {
   orders: Order[];
 }
 
@@ -22,7 +28,7 @@ const StyledAlert = styled(Alert)`
   box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.12);
 `;
 
-const FlexSpan = styled.span`
+export const FlexSpan = styled.span`
   display: flex;
   justify-content: center;
   align-items: center;
@@ -44,19 +50,7 @@ const FlexSpan = styled.span`
   }
 `;
 
-const OrderCardHeader = ({ orderId }: any) => {
-  return (
-    <FlexSpan>
-      <span className="title">Table № {orderId}</span>
-      <span className="right">
-        <Button shape="circle" type="default" icon="check" />
-        <Button shape="circle" type="default" icon="close" />
-      </span>
-    </FlexSpan>
-  );
-};
-
-class OrderContainer extends Component<Props> {
+class OrderContainer extends Component<Props, State> {
   render() {
     const { orders } = this.props;
     return (
@@ -65,7 +59,13 @@ class OrderContainer extends Component<Props> {
           orders.map((order: Order) => (
             <Collapse.Panel
               key={order.id.toString()}
-              header={<OrderCardHeader orderId={order.table} />}
+              header={
+                <OrderCardHeader
+                  orderId={order.id}
+                  orderTable={order.table}
+                  orderState={order.state && order.state}
+                />
+              }
               style={customPanelStyle}
             >
               {orders.length &&

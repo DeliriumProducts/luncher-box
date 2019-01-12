@@ -12,7 +12,7 @@ import { redisClient } from '../config';
 
 @SocketController()
 export class OrderController {
-  @OnConnect()
+  @OnMessage('fetch_orders')
   async connection(@SocketIO() io: SocketIO.Socket) {
     const key = 'orders';
     const ordersJSON = await redisClient.get(key);
@@ -47,7 +47,7 @@ export class OrderController {
       /**
        * Attach id to order
        */
-      const id = orders.length;
+      const id = orders[orders.length - 1].id + 1;
       order.id = id;
 
       orders.push(order);
@@ -55,7 +55,7 @@ export class OrderController {
       /**
        * Attach id to order
        */
-      const id = orders.length;
+      const id = 0;
       order.id = id;
 
       orders = [order];
@@ -86,7 +86,8 @@ export class OrderController {
       orders[orderIndex].state = 1;
     }
 
-    io.emit('accepted_order');
+    await redisClient.set(key, JSON.stringify(orders));
+    io.emit('accepted_order', { orderId });
   }
 
   @OnMessage('decline_order')
@@ -100,9 +101,33 @@ export class OrderController {
       orders = JSON.parse(ordersJSON);
 
       const orderIndex = orders.findIndex((orderItem: any) => orderItem.id === orderId);
+      orders.splice(orderIndex, 1);
+
+      if (orders.length - 1 > 0) {
+        await redisClient.set(key, JSON.stringify(orders));
+      } else {
+        await redisClient.del(key);
+      }
+    }
+
+    io.emit('declined_order', { orderId });
+  }
+
+  @OnMessage('finish_order')
+  async finish(@SocketIO() io: SocketIO.Socket, @MessageBody() orderId: number) {
+    const key = 'orders';
+    const ordersJSON = await redisClient.get(key);
+
+    let orders = [];
+
+    if (ordersJSON) {
+      orders = JSON.parse(ordersJSON);
+
+      const orderIndex = orders.findIndex((orderItem: any) => orderItem.id === orderId);
       orders[orderIndex].state = 2;
     }
 
-    io.emit('declined_order');
+    await redisClient.set(key, JSON.stringify(orders));
+    io.emit('finished_order', { orderId });
   }
 }

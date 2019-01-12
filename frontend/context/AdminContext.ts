@@ -7,6 +7,7 @@ interface Values {
     products: Product[];
     categories: Category[];
   };
+  socket: SocketIOClient.Socket | undefined;
   actions: {
     update: (entityType?: EntityTypes) => void;
     push: (newEntity: EntityInstance, entityType: EntityTypes) => void;
@@ -20,6 +21,7 @@ export const AdminContext = React.createContext<Values>({
     products: [],
     categories: []
   },
+  socket: undefined,
   actions: {
     // tslint:disable
     update: () => {},

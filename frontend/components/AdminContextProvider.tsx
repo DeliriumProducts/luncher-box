@@ -3,6 +3,8 @@ import { CategoryAPI, ProductAPI } from '../api';
 import { AdminContext } from '../context';
 import { Category, Product } from '../interfaces';
 import { EntityInstance, EntityTypes } from '../types';
+import { BACKEND_URL } from '../config';
+import io from 'socket.io-client';
 
 interface Props {
   children: React.ReactNode;
@@ -14,6 +16,8 @@ interface State {
     categories: Category[];
   };
 }
+
+const socket = io(`${BACKEND_URL}`);
 
 class AdminContextProvider extends Component<Props, State> {
   state: State = {
@@ -242,6 +246,7 @@ class AdminContextProvider extends Component<Props, State> {
       <AdminContext.Provider
         value={{
           entities,
+          socket,
           actions: {
             update: this.update,
             push: this.push,
