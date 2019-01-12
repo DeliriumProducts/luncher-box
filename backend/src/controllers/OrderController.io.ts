@@ -78,16 +78,21 @@ export class OrderController {
     const ordersJSON = await redisClient.get(key);
 
     let orders = [];
+    let order = {};
 
     if (ordersJSON) {
       orders = JSON.parse(ordersJSON);
 
       const orderIndex = orders.findIndex((orderItem: any) => orderItem.id === orderId);
-      orders[orderIndex].state = 1;
+
+      if (orderIndex >= 0) {
+        orders[orderIndex].state = 1;
+        order = orders[orderIndex];
+      }
     }
 
     await redisClient.set(key, JSON.stringify(orders));
-    io.emit('accepted_order', { orderId });
+    io.emit('accepted_order', order);
   }
 
   @OnMessage('decline_order')
@@ -96,12 +101,17 @@ export class OrderController {
     const ordersJSON = await redisClient.get(key);
 
     let orders = [];
+    let order = {};
 
     if (ordersJSON) {
       orders = JSON.parse(ordersJSON);
 
       const orderIndex = orders.findIndex((orderItem: any) => orderItem.id === orderId);
-      orders.splice(orderIndex, 1);
+
+      if (orderIndex >= 0) {
+        order = orders[orderIndex];
+        orders.splice(orderIndex, 1);
+      }
 
       if (orders.length - 1 > 0) {
         await redisClient.set(key, JSON.stringify(orders));
@@ -110,7 +120,7 @@ export class OrderController {
       }
     }
 
-    io.emit('declined_order', { orderId });
+    io.emit('declined_order', order);
   }
 
   @OnMessage('finish_order')
@@ -119,15 +129,20 @@ export class OrderController {
     const ordersJSON = await redisClient.get(key);
 
     let orders = [];
+    let order = {};
 
     if (ordersJSON) {
       orders = JSON.parse(ordersJSON);
 
       const orderIndex = orders.findIndex((orderItem: any) => orderItem.id === orderId);
-      orders[orderIndex].state = 2;
+
+      if (orderIndex >= 0) {
+        orders[orderIndex].state = 2;
+        order = orders[orderIndex];
+      }
     }
 
     await redisClient.set(key, JSON.stringify(orders));
-    io.emit('finished_order', { orderId });
+    io.emit('finished_order', order);
   }
 }

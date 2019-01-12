@@ -47,9 +47,9 @@ class Orders extends Component<any, State> {
     });
   };
 
-  setAcceptedOrder = ({ orderId }: any) => {
+  setAcceptedOrder = ({ id }: any) => {
     const orderIndex = this.state.orders.findIndex(
-      (order: Order) => order.id === orderId
+      (order: Order) => order.id === id
     );
 
     if (orderIndex >= 0) {
@@ -64,9 +64,9 @@ class Orders extends Component<any, State> {
     }
   };
 
-  setDeclindedOrder = ({ orderId }: any) => {
+  setDeclindedOrder = ({ id }: any) => {
     const orderIndex = this.state.orders.findIndex(
-      (order: Order) => order.id === orderId
+      (order: Order) => order.id === id
     );
 
     if (orderIndex >= 0) {
@@ -76,9 +76,9 @@ class Orders extends Component<any, State> {
     }
   };
 
-  setFinishedOrder = ({ orderId }: any) => {
+  setFinishedOrder = ({ id }: any) => {
     const orderIndex = this.state.orders.findIndex(
-      (order: Order) => order.id === orderId
+      (order: Order) => order.id === id
     );
 
     if (orderIndex >= 0) {
