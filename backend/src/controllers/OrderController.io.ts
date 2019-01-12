@@ -88,7 +88,11 @@ export class OrderController {
   }
 
   @OnMessage('accept_order')
-  async accept(@SocketIO() io: SocketIO.Socket, @MessageBody() orderId: number) {
+  async accept(
+    @SocketIO() io: SocketIO.Socket,
+    @SocketId() senderId: any,
+    @MessageBody() orderId: number
+  ) {
     const key = 'orders';
     const ordersJSON = await redisClient.get(key);
 
@@ -107,12 +111,18 @@ export class OrderController {
     }
 
     await redisClient.set(key, JSON.stringify(orders));
-    // @ts-ignore
-    io.to(order.senderId).emit('accepted_order', order);
+    io.to(senderId)
+      // @ts-ignore
+      .to(order.senderId)
+      .emit('accepted_order', order);
   }
 
   @OnMessage('decline_order')
-  async decline(@SocketIO() io: SocketIO.Socket, @MessageBody() orderId: number) {
+  async decline(
+    @SocketIO() io: SocketIO.Socket,
+    @SocketId() senderId: any,
+    @MessageBody() orderId: number
+  ) {
     const key = 'orders';
     const ordersJSON = await redisClient.get(key);
 
@@ -139,12 +149,18 @@ export class OrderController {
       }
     }
 
-    // @ts-ignore
-    io.to(order.senderId).emit('declined_order', order);
+    io.to(senderId)
+      // @ts-ignore
+      .to(order.senderId)
+      .emit('declined_order', order);
   }
 
   @OnMessage('finish_order')
-  async finish(@SocketIO() io: SocketIO.Socket, @MessageBody() orderId: number) {
+  async finish(
+    @SocketIO() io: SocketIO.Socket,
+    @SocketId() senderId: any,
+    @MessageBody() orderId: number
+  ) {
     const key = 'orders';
     const ordersJSON = await redisClient.get(key);
 
@@ -164,7 +180,9 @@ export class OrderController {
 
     await redisClient.set(key, JSON.stringify(orders));
 
-    // @ts-ignore
-    io.to(order.senderId).emit('finished_order', order);
+    io.to(senderId)
+      // @ts-ignore
+      .to(order.senderId)
+      .emit('finished_order', order);
   }
 }
