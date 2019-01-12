@@ -74,7 +74,7 @@ export default class extends React.Component<any, State> {
     let data: React.ReactNode | React.ReactNode[];
 
     if (order.state === 1) {
-      data = <div>You order has been accepted 🎉</div>;
+      data = <div>You order has been accepted! 🎉</div>;
     } else if (order.state === 2) {
       data = <div>Your order is on the way! 🍚</div>;
     } else {
