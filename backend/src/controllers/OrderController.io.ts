@@ -111,10 +111,11 @@ export class OrderController {
     }
 
     await redisClient.set(key, JSON.stringify(orders));
-    io.to(senderId)
+    io
       // @ts-ignore
       .to(order.senderId)
       .emit('accepted_order', order);
+    io.emit('accepted_order_admin', order);
   }
 
   @OnMessage('decline_order')
@@ -149,10 +150,11 @@ export class OrderController {
       }
     }
 
-    io.to(senderId)
+    io
       // @ts-ignore
       .to(order.senderId)
       .emit('declined_order', order);
+    io.emit('declined_order_admin', order);
   }
 
   @OnMessage('finish_order')
@@ -180,9 +182,10 @@ export class OrderController {
 
     await redisClient.set(key, JSON.stringify(orders));
 
-    io.to(senderId)
+    io
       // @ts-ignore
       .to(order.senderId)
       .emit('finished_order', order);
+    io.emit('finished_order_admin', order);
   }
 }

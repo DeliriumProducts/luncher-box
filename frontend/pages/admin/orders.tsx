@@ -40,9 +40,9 @@ class Orders extends Component<any, State> {
     this.setState({ orders, loading: false }, () => {
       if (this.context.socket) {
         this.context.socket.on('placed_order', this.setOrders);
-        this.context.socket.on('accepted_order', this.setAcceptedOrder);
-        this.context.socket.on('declined_order', this.setDeclindedOrder);
-        this.context.socket.on('finished_order', this.setFinishedOrder);
+        this.context.socket.on('accepted_order_admin', this.setAcceptedOrder);
+        this.context.socket.on('declined_order_admin', this.setDeclindedOrder);
+        this.context.socket.on('finished_order_admin', this.setFinishedOrder);
       }
     });
   };
@@ -51,6 +51,8 @@ class Orders extends Component<any, State> {
     const orderIndex = this.state.orders.findIndex(
       (order: Order) => order.id === id
     );
+
+    console.log('aa');
 
     if (orderIndex >= 0) {
       const orders = [...this.state.orders];
