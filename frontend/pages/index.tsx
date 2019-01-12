@@ -1,12 +1,11 @@
 import { Component, ContextType } from 'react';
 import CategoryCard from '../components/CategoryCard';
 import UserLayout from '../components/UserLayout';
-import { EntityContext } from '../context/EntityContext';
+import { AdminContext } from '../context/AdminContext';
 import styled from 'styled-components';
-import { Spin, Icon, message } from 'antd';
+import { message, Empty } from 'antd';
 import { Category } from '../interfaces';
 import { CategoryAPI } from '../api';
-import Router from 'next/router';
 import Spinner from '../components/Spinner';
 
 const FlexContainer = styled.div`
@@ -21,8 +20,8 @@ interface State {
 }
 
 class Home extends Component<any, State> {
-  static contextType = EntityContext;
-  context!: React.ContextType<typeof EntityContext>;
+  static contextType = AdminContext;
+  context!: React.ContextType<typeof AdminContext>;
 
   state: State = {
     categories: [],
@@ -44,13 +43,13 @@ class Home extends Component<any, State> {
   }
 
   render() {
-    let data: React.ReactNode[];
+    let data: React.ReactNode[] | React.ReactNode;
     /**
      * Check whether data is still being fetched
      * then inject the showModal func and entity's type to children's props
      */
     if (this.state.loading) {
-      data = [<Spinner />];
+      data = <Spinner />;
     } else {
       if (this.state.categories.length) {
         data = this.state.categories.map(category => (
@@ -62,7 +61,7 @@ class Home extends Component<any, State> {
           />
         ));
       } else {
-        data = [<div>No categories found!</div>];
+        data = <Empty description="No entries found" />;
       }
     }
 

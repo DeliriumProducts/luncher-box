@@ -12,11 +12,16 @@ interface Props {
 }
 
 const StyledContent = styled(Content)`
+  min-height: 100%;
   padding: 50px;
   @media (max-width: 768px) {
     padding: 20px;
     padding-bottom: 50px;
   }
+`;
+
+const StyledLayout = styled(Layout)`
+  min-height: 100%;
 `;
 
 const CustomHeader = styled.div`
@@ -33,7 +38,7 @@ const CustomFooter = styled.div`
 
 const UserLayout: React.FunctionComponent<Props> = props => {
   return (
-    <Layout>
+    <StyledLayout>
       <CustomHeader>
         <Affix offsetTop={0}>
           <UserMenuBar selectedKey={props.selectedKey} />
@@ -45,7 +50,7 @@ const UserLayout: React.FunctionComponent<Props> = props => {
           <UserMenuBar selectedKey={props.selectedKey} />
         </CustomFooter>
       </Affix>
-    </Layout>
+    </StyledLayout>
   );
 };
 export default UserLayout;

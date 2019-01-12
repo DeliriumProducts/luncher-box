@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
 import { CategoryAPI, ProductAPI } from '../api';
-import { EntityContext } from '../context';
+import { AdminContext } from '../context';
 import { Category, Product } from '../interfaces';
 import { EntityInstance, EntityTypes } from '../types';
+import { BACKEND_URL } from '../config';
+import io from 'socket.io-client';
 
 interface Props {
   children: React.ReactNode;
@@ -15,7 +17,9 @@ interface State {
   };
 }
 
-class EntityProvider extends Component<Props, State> {
+const socket = io(`${BACKEND_URL}`);
+
+class AdminContextProvider extends Component<Props, State> {
   state: State = {
     entities: {
       products: [],
@@ -194,7 +198,6 @@ class EntityProvider extends Component<Props, State> {
       const categoryToBeDeleted = await CategoryAPI.getOne(entity.id, true);
 
       if (categoryToBeDeleted.products) {
-        console.log(categoryToBeDeleted.products);
         /**
          * Remove products from the category before deleting it
          */
@@ -240,9 +243,10 @@ class EntityProvider extends Component<Props, State> {
     const { entities } = this.state;
 
     return (
-      <EntityContext.Provider
+      <AdminContext.Provider
         value={{
           entities,
+          socket,
           actions: {
             update: this.update,
             push: this.push,
@@ -252,13 +256,13 @@ class EntityProvider extends Component<Props, State> {
         }}
       >
         {this.props.children}
-      </EntityContext.Provider>
+      </AdminContext.Provider>
     );
   }
 }
 
 // then make a consumer which will surface it
-const UserConsumer = EntityContext.Consumer;
+const AdminConsumer = AdminContext.Consumer;
 
-export default EntityProvider;
-export { UserConsumer };
+export default AdminContextProvider;
+export { AdminConsumer };

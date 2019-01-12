@@ -1,17 +1,7 @@
 import { Badge } from 'antd';
+import { BadgeProps } from 'antd/lib/badge';
 
-interface Props {
-  count?: React.ReactNode;
-  dot?: boolean;
-  offset?: [number, number];
-  overflowCount?: number;
-  showZero?: boolean;
-  text?: string;
-  title?: string;
-  style?: React.CSSProperties;
-}
-
-const PriceBadge = (props: Props) => {
+const PriceBadge = (props: BadgeProps) => {
   return (
     <Badge
       {...props}

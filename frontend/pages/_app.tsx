@@ -1,12 +1,17 @@
 import App, { Container, NextAppContext } from 'next/app';
 import React from 'react';
 import { createGlobalStyle } from 'styled-components';
-import EntityContextProvider from '../components/EntityContextProvider';
+import EntityContextProvider from '../components/AdminContextProvider';
+import CartContextProvider from '../components/CartContextProvider';
 
 const GlobalStyle = createGlobalStyle`
   html,
   body {
     margin: 0;
+  }
+
+  * {
+    box-sizing: border-box;
   }
 
   #__next {
@@ -29,12 +34,14 @@ export default class MyApp extends App {
     const { Component, pageProps } = this.props;
 
     return (
-      <EntityContextProvider>
-        <Container>
-          <GlobalStyle />
-          <Component {...pageProps} />
-        </Container>
-      </EntityContextProvider>
+      <CartContextProvider>
+        <EntityContextProvider>
+          <Container>
+            <GlobalStyle />
+            <Component {...pageProps} />
+          </Container>
+        </EntityContextProvider>
+      </CartContextProvider>
     );
   }
 }

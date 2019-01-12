@@ -12,7 +12,6 @@ interface Props {
 
 const StyledLayout = styled(Layout)`
   min-height: 100%;
-  background-color: #fff;
 `;
 
 const CustomHeader = styled.div`
@@ -23,7 +22,6 @@ const CustomHeader = styled.div`
 
 const StyledContent = styled(Content)`
   padding: 50px;
-  background-color: #fff;
   margin-bottom: 50px;
   height: auto;
   @media (max-width: 480px) {
@@ -54,4 +52,5 @@ const AdminLayout: React.FunctionComponent<Props> = props => {
     </StyledLayout>
   );
 };
+
 export default AdminLayout;

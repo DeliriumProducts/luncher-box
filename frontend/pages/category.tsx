@@ -2,7 +2,7 @@ import { Component, ContextType } from 'react';
 import UserLayout from '../components/UserLayout';
 import ProductCard from '../components/ProductCard';
 import styled from 'styled-components';
-import { Spin, Icon, message } from 'antd';
+import { Spin, Icon, message, Empty } from 'antd';
 import withRouter from '../components/withRouter';
 import Router, { DefaultQuery } from 'next/router';
 import { CategoryAPI } from '../api';
@@ -53,18 +53,18 @@ class CategoryPage extends Component<Props, State> {
   }
 
   render() {
-    let data: React.ReactNode[];
+    let data: React.ReactNode[] | React.ReactNode;
     /**
      * Check whether data is still being fetched
-     * then inject the showModal func and entity's type to children's props
      */
     if (this.state.loading) {
-      data = [<Spinner />];
+      data = <Spinner />;
     } else {
       if (this.state.products.length) {
         data = this.state.products.map(product => (
           <ProductCard
             key={product.id}
+            id={product.id}
             name={product.name}
             description={product.description}
             price={product.price}
@@ -72,7 +72,7 @@ class CategoryPage extends Component<Props, State> {
           />
         ));
       } else {
-        data = [<div>Some unexpected error occured!</div>];
+        data = <Empty description="No entries found" />;
       }
     }
     return (

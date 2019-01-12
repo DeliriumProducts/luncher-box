@@ -2,7 +2,7 @@ import { Component } from 'react';
 import { message } from 'antd';
 import AdminLayout from '../../components/AdminLayout';
 import withAuth from '../../components/withAuth';
-import { EntityContext } from '../../context';
+import { AdminContext } from '../../context';
 import EntityCard from '../../components/EntityCard';
 import styled from 'styled-components';
 import EntityCardContainer from '../../components/EntityCardContainer';
@@ -13,7 +13,7 @@ interface State {
 
 const FlexContainer = styled.div`
   display: flex;
-  flex-flow: row wrap;
+  flex-wrap: wrap;
   justify-content: space-between;
   width: 100%;
 
@@ -33,8 +33,8 @@ const FlexContainer = styled.div`
   }
 `;
 class Index extends Component<any, State> {
-  static contextType = EntityContext;
-  context!: React.ContextType<typeof EntityContext>;
+  static contextType = AdminContext;
+  context!: React.ContextType<typeof AdminContext>;
 
   state = {
     loading: true

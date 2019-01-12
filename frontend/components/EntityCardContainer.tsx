@@ -1,4 +1,4 @@
-import { Card, Input, message } from 'antd';
+import { Card, Empty, Input, message } from 'antd';
 import React, { Component } from 'react';
 import styled from 'styled-components';
 import ActionButton from './ActionButton';
@@ -6,7 +6,7 @@ import { EntityTypes, ActionTypes, EntityInstance } from '../types';
 import { Category, Product } from '../interfaces';
 import { ProductAPI, CategoryAPI } from '../api';
 import EntityModal from './EntityModal';
-import { EntityContext } from '../context';
+import { AdminContext } from '../context';
 import Spinner from './Spinner';
 
 const { Search } = Input;
@@ -76,8 +76,8 @@ const StyledCard = styled(Card)`
 `;
 
 class EntityCardContainer extends Component<Props, State> {
-  static contextType = EntityContext;
-  context!: React.ContextType<typeof EntityContext>;
+  static contextType = AdminContext;
+  context!: React.ContextType<typeof AdminContext>;
 
   state: State = {
     modalVisible: false,
@@ -212,28 +212,32 @@ class EntityCardContainer extends Component<Props, State> {
   };
 
   render() {
-    let data: React.ReactNode[];
+    let data: React.ReactNode[] | React.ReactNode;
     /**
      * Check whether data is still being fetched
      * then inject the showModal func and entity's type to children's props
      */
     if (this.props.loading) {
-      data = [<Spinner />];
+      data = <Spinner />;
     } else {
-      data = React.Children.map(this.props.children, (child: any) => {
-        if (
-          child.props.name
-            .toLowerCase()
-            .includes(this.state.searchText.toLowerCase())
-        ) {
-          return React.cloneElement(child as React.ReactElement<any>, {
-            showModal: this.showModal,
-            entityType: this.props.entityType
-          });
-        } else {
-          return;
-        }
-      });
+      if (this.props.children.length) {
+        data = React.Children.map(this.props.children, (child: any) => {
+          if (
+            child.props.name
+              .toLowerCase()
+              .includes(this.state.searchText.toLowerCase())
+          ) {
+            return React.cloneElement(child as React.ReactElement<any>, {
+              showModal: this.showModal,
+              entityType: this.props.entityType
+            });
+          } else {
+            return;
+          }
+        });
+      } else {
+        data = <Empty description="No entries found" />;
+      }
     }
 
     return (
@@ -243,13 +247,12 @@ class EntityCardContainer extends Component<Props, State> {
           <Search
             key="search"
             placeholder="Search"
-            onSearch={value => console.log(value)}
             onChange={this.handleChange}
             id="search-input"
           />,
           <ActionButton
             key="new"
-            type="default"
+            type="primary"
             id="new-button"
             icon="plus"
             onClick={this.handleClick}

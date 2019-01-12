@@ -5,7 +5,7 @@ import React, { Component } from 'react';
 import styled from 'styled-components';
 import { Exit } from 'styled-icons/icomoon/Exit';
 import { AuthAPI, CategoryAPI, ProductAPI } from '../api';
-import { EntityContext } from '../context';
+import { AdminContext } from '../context';
 import { Category, Product } from '../interfaces';
 import { EntityTypes } from '../types';
 import EntityModal from './EntityModal';
@@ -58,8 +58,8 @@ interface State {
 }
 
 class AdminMenuBar extends Component<Props, State> {
-  static contextType = EntityContext;
-  context!: React.ContextType<typeof EntityContext>;
+  static contextType = AdminContext;
+  context!: React.ContextType<typeof AdminContext>;
 
   state: State = {
     modalVisible: false,
@@ -108,7 +108,7 @@ class AdminMenuBar extends Component<Props, State> {
               </StyledAnchor>
             </Link>
           </Menu.Item>
-          <Menu.Item key="chat">
+          <Menu.Item key="chat" disabled>
             <Link href="/admin/staffchat" prefetch>
               <StyledAnchor>
                 <Icon type="message" className="menu-item-icon" />
@@ -116,7 +116,7 @@ class AdminMenuBar extends Component<Props, State> {
               </StyledAnchor>
             </Link>
           </Menu.Item>
-          <Menu.Item key="load">
+          <Menu.Item key="load" disabled>
             <Link href="/admin/restaurantload" prefetch>
               <StyledAnchor>
                 <Icon type="pie-chart" className="menu-item-icon" />

@@ -6,7 +6,7 @@ import PriceBadge from './PriceBadge';
 import { Category, Product } from '../interfaces';
 import { EntityTypes, ActionTypes, EntityInstance } from '../types';
 import { CategoryAPI, ProductAPI } from '../api';
-import { EntityContext } from '../context';
+import { AdminContext } from '../context';
 
 interface Props {
   key: number;
@@ -83,8 +83,8 @@ const StyledMeta = styled(Meta)`
 `;
 
 class EntityCard extends Component<Props, State> {
-  static contextType = EntityContext;
-  context!: React.ContextType<typeof EntityContext>;
+  static contextType = AdminContext;
+  context!: React.ContextType<typeof AdminContext>;
 
   state = {
     loading: false,

@@ -1,7 +1,7 @@
 import { Form, Icon, Input, Modal, Select } from 'antd';
 import { FormComponentProps } from 'antd/lib/form';
 import React from 'react';
-import { EntityContext } from '../context';
+import { AdminContext } from '../context';
 import { EntityTypes, ActionTypes, EntityInstance } from '../types';
 import { Product, Category } from '../interfaces';
 
@@ -17,8 +17,8 @@ interface Props extends FormComponentProps {
 
 const EntityModal = Form.create()(
   class extends React.Component<Props> {
-    static contextType = EntityContext;
-    context!: React.ContextType<typeof EntityContext>;
+    static contextType = AdminContext;
+    context!: React.ContextType<typeof AdminContext>;
 
     capitalizeFirstLetter = (str: string) =>
       str.charAt(0).toUpperCase() + str.slice(1);
@@ -169,7 +169,7 @@ const EntityModal = Form.create()(
                   initialValue:
                     entity &&
                     (entity as Product).categories &&
-                    (entity as Product).categories.map(category => category.id)
+                    (entity as Product).categories!.map(category => category.id)
                 })(
                   <Select
                     mode="multiple"

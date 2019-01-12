@@ -29,7 +29,7 @@ const StyledDiv: any = styled.div`
     }
   }
 
-  box-shadow: 0 4px 4px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 2px 2px rgba(0, 0, 0, 0.5);
 `;
 
 const BlurredDiv: any = styled.div`
