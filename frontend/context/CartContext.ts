@@ -5,6 +5,7 @@ interface Values {
   order: Order;
   totalAmount: number;
   actions: {
+    reload: () => Promise<void>;
     increment: (product: Product) => void;
     decrement: (product: Product) => void;
     comment: (comment: string) => void;
@@ -22,6 +23,9 @@ export const CartContext = React.createContext<Values>({
   totalAmount: 0,
   actions: {
     // tslint:disable
+    reload: () => {
+      return new Promise((resolve, reject) => null);
+    },
     increment: () => {},
     decrement: () => {},
     comment: () => {},

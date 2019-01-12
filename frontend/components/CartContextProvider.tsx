@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { CartContext } from '../context';
 import { Product, Order } from '../interfaces';
+import localForage from 'localforage';
 
 interface Props {
   children: React.ReactNode;
@@ -22,7 +23,20 @@ class CartContextProvider extends Component<Props, State> {
     totalAmount: 0
   };
 
-  increment = (product: Product) => {
+  reload = async (): Promise<void> => {
+    return new Promise(async (resolve, reject) => {
+      const currentOrder: Order = await localForage.getItem('currentOrder');
+      const totalAmount: number = await localForage.getItem('totalAmount');
+
+      if (currentOrder && totalAmount) {
+        this.setState({ order: currentOrder, totalAmount }, () => resolve());
+      } else {
+        resolve();
+      }
+    });
+  };
+
+  increment = async (product: Product) => {
     const products = [...this.state.order.products];
     let { totalAmount } = this.state;
     const newProduct = { ...product };
@@ -43,13 +57,19 @@ class CartContextProvider extends Component<Props, State> {
     }
 
     totalAmount++;
-    this.setState(prevState => ({
-      order: { ...prevState.order, products },
-      totalAmount
-    }));
+    this.setState(
+      prevState => ({
+        order: { ...prevState.order, products },
+        totalAmount
+      }),
+      async () => {
+        await localForage.setItem('currentOrder', this.state.order);
+        await localForage.setItem('totalAmount', this.state.totalAmount);
+      }
+    );
   };
 
-  decrement = (product: Product) => {
+  decrement = async (product: Product) => {
     const products = [...this.state.order.products];
     let { totalAmount } = this.state;
 
@@ -74,10 +94,16 @@ class CartContextProvider extends Component<Props, State> {
     }
 
     totalAmount--;
-    this.setState(prevState => ({
-      order: { ...prevState.order, products },
-      totalAmount
-    }));
+    this.setState(
+      prevState => ({
+        order: { ...prevState.order, products },
+        totalAmount
+      }),
+      async () => {
+        await localForage.setItem('currentOrder', this.state.order);
+        await localForage.setItem('totalAmount', this.state.totalAmount);
+      }
+    );
   };
 
   comment = (comment: string) => {
@@ -102,6 +128,7 @@ class CartContextProvider extends Component<Props, State> {
           order,
           totalAmount,
           actions: {
+            reload: this.reload,
             increment: this.increment,
             decrement: this.decrement,
             comment: this.comment,

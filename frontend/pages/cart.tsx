@@ -8,6 +8,7 @@ import { Product } from '../interfaces';
 import { Input } from 'antd';
 import io from 'socket.io-client';
 import { BACKEND_URL } from '../config';
+import Spinner from '../components/Spinner';
 
 const { TextArea } = Input;
 
@@ -38,6 +39,7 @@ const FlexContainer = styled.div`
 
 interface State {
   modalVisible: boolean;
+  loadingFromLocal: boolean;
 }
 
 export default class extends React.Component<any, State> {
@@ -46,10 +48,14 @@ export default class extends React.Component<any, State> {
   socket: SocketIOClient.Socket;
 
   state: State = {
-    modalVisible: false
+    modalVisible: false,
+    loadingFromLocal: true
   };
 
-  componentDidMount() {
+  async componentDidMount() {
+    await this.context.actions.reload();
+    this.setState({ loadingFromLocal: false });
+
     this.socket = io(`${BACKEND_URL}`);
   }
 
@@ -70,55 +76,67 @@ export default class extends React.Component<any, State> {
   };
 
   render() {
+    let data: React.ReactNode[] | React.ReactNode;
+    /**
+     * Check whether orders are still being fetched from localStorage
+     */
+    if (this.state.loadingFromLocal) {
+      data = <Spinner />;
+    } else {
+      if (this.context.order && this.context.order.products.length) {
+        data = (
+          <>
+            {this.context.order.products.map((product: Product) => (
+              <ItemCard
+                interactive
+                id={product.id}
+                key={product.id}
+                name={product.name}
+                description={product.description}
+                image={product.image}
+                price={product.price}
+                quantity={product.quantity}
+              />
+            ))}
+            <div style={{ width: '100%' }}>
+              <StyledCard>
+                <TextArea
+                  placeholder="Write comments in case you are allergic to ingredients or want to exclude some. e.g. no onions, no mayo. "
+                  onChange={this.handleComment}
+                  rows={6}
+                  style={{ width: '100%', marginTop: '2%' }}
+                />
+                <div style={{ display: 'flex' }}>
+                  <Input
+                    placeholder="Enter table e.g. A1, A2 etc."
+                    onChange={this.handleTable}
+                    style={{ marignLeft: '1%', marginTop: '2%' }}
+                    size="large"
+                  />
+                </div>
+                <Button
+                  type="primary"
+                  style={{ marginBottom: '2%', marginTop: '2%' }}
+                  onClick={this.placeOrder}
+                >
+                  Place order!
+                </Button>
+              </StyledCard>
+            </div>
+          </>
+        );
+      } else {
+        data = (
+          <Empty description="No products">
+            No items added to the cart yet. Go and add some!
+          </Empty>
+        );
+      }
+    }
+
     return (
       <UserLayout selectedKey="cart">
-        <FlexContainer>
-          {this.context.order && this.context.order.products.length ? (
-            <>
-              {this.context.order.products.map((product: Product) => (
-                <ItemCard
-                  interactive
-                  id={product.id}
-                  key={product.id}
-                  name={product.name}
-                  description={product.description}
-                  image={product.image}
-                  price={product.price}
-                  quantity={product.quantity}
-                />
-              ))}
-              <div style={{ width: '100%' }}>
-                <StyledCard>
-                  <TextArea
-                    placeholder="Write comments in case you are allergic to ingredients or want to exclude some. e.g. no onions, no mayo. "
-                    onChange={this.handleComment}
-                    rows={6}
-                    style={{ width: '100%', marginTop: '2%' }}
-                  />
-                  <div style={{ display: 'flex' }}>
-                    <Input
-                      placeholder="Enter table e.g. A1, A2 etc."
-                      onChange={this.handleTable}
-                      style={{ marignLeft: '1%', marginTop: '2%' }}
-                      size="large"
-                    />
-                  </div>
-                  <Button
-                    type="primary"
-                    style={{ marginBottom: '2%', marginTop: '2%' }}
-                    onClick={this.placeOrder}
-                  >
-                    Place order!
-                  </Button>
-                </StyledCard>
-              </div>
-            </>
-          ) : (
-            <Empty description="No products">
-              No items added to the cart yet. Go and add some!
-            </Empty>
-          )}
-        </FlexContainer>
+        <FlexContainer>{data}</FlexContainer>
       </UserLayout>
     );
   }

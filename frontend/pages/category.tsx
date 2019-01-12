@@ -56,7 +56,6 @@ class CategoryPage extends Component<Props, State> {
     let data: React.ReactNode[] | React.ReactNode;
     /**
      * Check whether data is still being fetched
-     * then inject the showModal func and entity's type to children's props
      */
     if (this.state.loading) {
       data = <Spinner />;
