@@ -45,7 +45,6 @@ interface State {
 export default class extends React.Component<any, State> {
   static contextType = CartContext;
   context!: React.ContextType<typeof CartContext>;
-  socket: SocketIOClient.Socket;
 
   state: State = {
     modalVisible: false,
@@ -55,8 +54,6 @@ export default class extends React.Component<any, State> {
   async componentDidMount() {
     await this.context.actions.reload();
     this.setState({ loadingFromLocal: false });
-
-    this.socket = io(`${BACKEND_URL}`);
   }
 
   placeOrder = () => {
@@ -87,8 +84,10 @@ export default class extends React.Component<any, State> {
           </div>
         ),
         onOk: () => {
-          this.socket.emit('place_order', order);
-          this.context.actions.clear();
+          if (this.context.socket) {
+            this.context.socket.emit('place_order', order);
+            this.context.actions.clear();
+          }
         },
         maskClosable: true
       });

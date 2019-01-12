@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import { CartContext } from '../context';
 import { Product, Order } from '../interfaces';
 import localForage from 'localforage';
+import { BACKEND_URL } from '../config';
+import io from 'socket.io-client';
 
 interface Props {
   children: React.ReactNode;
@@ -11,6 +13,8 @@ interface State {
   order: Order;
   totalAmount: number;
 }
+
+const socket = io(`${BACKEND_URL}`);
 
 class CartContextProvider extends Component<Props, State> {
   state: State = {
@@ -155,6 +159,7 @@ class CartContextProvider extends Component<Props, State> {
         value={{
           order,
           totalAmount,
+          socket,
           actions: {
             reload: this.reload,
             clear: this.clear,
