@@ -110,6 +110,9 @@ export class OrderController {
 
       if (orderIndex >= 0) {
         order = orders[orderIndex];
+
+        // @ts-ignore
+        order.state = 3;
         orders.splice(orderIndex, 1);
       }
 
