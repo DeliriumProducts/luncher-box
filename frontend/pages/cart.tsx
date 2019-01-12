@@ -4,10 +4,8 @@ import styled from 'styled-components';
 import { CartContext } from '../context';
 import { Empty, Card, Button, InputNumber, Modal, message, Tag } from 'antd';
 import React from 'react';
-import { Product } from '../interfaces';
+import { Product, Order } from '../interfaces';
 import { Input } from 'antd';
-import io from 'socket.io-client';
-import { BACKEND_URL } from '../config';
 import Spinner from '../components/Spinner';
 
 const { TextArea } = Input;
@@ -54,7 +52,42 @@ export default class extends React.Component<any, State> {
   async componentDidMount() {
     await this.context.actions.reload();
     this.setState({ loadingFromLocal: false });
+    if (this.context.socket) {
+      this.context.socket.on('accepted_order', this.handleNewOrderState);
+      this.context.socket.on('declined_order', this.handleNewOrderState);
+      this.context.socket.on('finished_order', this.handleNewOrderState);
+    }
   }
+
+  componentWillUnmount() {
+    if (this.context.socket) {
+      /**
+       * Prevent memory leak
+       */
+      this.context.socket.off('accepted_order');
+      this.context.socket.off('declined_order');
+      this.context.socket.off('finished_order');
+    }
+  }
+
+  handleNewOrderState = (order: Order) => {
+    let data: React.ReactNode | React.ReactNode[];
+
+    if (order.state === 1) {
+      data = <div>You order has been accepted 🎉</div>;
+    } else if (order.state === 2) {
+      data = <div>Your order is on the way! 🍚</div>;
+    } else {
+      data = <div>Your order has been declined! ❌</div>;
+    }
+
+    Modal.info({
+      title: 'Order state:',
+      content: data,
+      onOk: () => {},
+      maskClosable: true
+    });
+  };
 
   placeOrder = () => {
     if (this.context.order.table) {
@@ -71,6 +104,7 @@ export default class extends React.Component<any, State> {
               totalSum += product.price;
               return (
                 <div
+                  key={product.id}
                   style={{ display: 'flex', justifyContent: 'space-between' }}
                 >
                   <p>{product.name}</p>
