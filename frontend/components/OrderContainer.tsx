@@ -1,5 +1,5 @@
 import { Component } from 'react';
-import { Collapse, Alert } from 'antd';
+import { Collapse, Alert, Tag } from 'antd';
 import styled from 'styled-components';
 import ItemCard from './ItemCard';
 import { Order, Product } from '../interfaces';
@@ -56,42 +56,63 @@ class OrderContainer extends Component<Props, State> {
     return (
       <Collapse bordered={false} style={{ background: '#f0f2f5' }}>
         {orders.length > 0 &&
-          orders.map((order: Order) => (
-            <Collapse.Panel
-              key={order.id.toString()}
-              header={
-                <OrderCardHeader
-                  orderId={order.id}
-                  orderTable={order.table}
-                  orderState={order.state && order.state}
-                />
-              }
-              style={customPanelStyle}
-            >
-              {orders.length &&
-                order.products.map((product: Product) => (
-                  <ItemCard
-                    key={product.id}
-                    id={product.id}
-                    name={product.name}
-                    description={product.description}
-                    image={product.image}
-                    price={product.price}
-                    quantity={product.quantity}
-                    interactive={false}
+          orders.map((order: Order) => {
+            let totalSum = 0;
+            return (
+              <Collapse.Panel
+                key={order.id.toString()}
+                header={
+                  <OrderCardHeader
+                    orderId={order.id}
+                    orderTable={order.table}
+                    orderState={order.state && order.state}
                   />
-                ))}
-              {order.comment && (
-                <StyledAlert
-                  message="Comment"
-                  description={order.comment}
-                  type="info"
-                  showIcon
-                  style={{ marginTop: '8px' }}
-                />
-              )}
-            </Collapse.Panel>
-          ))}
+                }
+                style={customPanelStyle}
+              >
+                {orders.length &&
+                  order.products.map((product: Product) => {
+                    totalSum += product.price;
+                    return (
+                      <ItemCard
+                        key={product.id}
+                        id={product.id}
+                        name={product.name}
+                        description={product.description}
+                        image={product.image}
+                        price={product.price}
+                        quantity={product.quantity}
+                        interactive={false}
+                      />
+                    );
+                  })}
+                {order.comment && (
+                  <StyledAlert
+                    message="Comment"
+                    description={order.comment}
+                    type="info"
+                    showIcon
+                    style={{ marginTop: '8px' }}
+                  />
+                )}
+                {order.state === 2 && (
+                  <StyledAlert
+                    message="Success!"
+                    type="success"
+                    showIcon
+                    description={
+                      totalSum > 0 && (
+                        <Tag color="green">
+                          Total price: $ {totalSum.toFixed(2)}
+                        </Tag>
+                      )
+                    }
+                    style={{ marginTop: '8px' }}
+                  />
+                )}
+              </Collapse.Panel>
+            );
+          })}
       </Collapse>
     );
   }

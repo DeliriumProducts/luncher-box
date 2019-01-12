@@ -2,7 +2,7 @@ import UserLayout from '../components/UserLayout';
 import ItemCard from '../components/ItemCard';
 import styled from 'styled-components';
 import { CartContext } from '../context';
-import { Empty, Card, Button, InputNumber } from 'antd';
+import { Empty, Card, Button, InputNumber, Modal, message } from 'antd';
 import React from 'react';
 import { Product } from '../interfaces';
 import { Input } from 'antd';
@@ -60,11 +60,13 @@ export default class extends React.Component<any, State> {
   }
 
   placeOrder = () => {
-    /**
-     * Remove the actions and the totalAmount before sending to the backend
-     */
-    const { order } = this.context;
-    this.socket.emit('place_order', order);
+    if (this.context.order.table) {
+      /**
+       * Remove the actions and the totalAmount before sending to the backend
+       */
+      const { order } = this.context;
+      this.socket.emit('place_order', order);
+    }
   };
 
   handleComment = (e: React.FormEvent<HTMLTextAreaElement>) => {

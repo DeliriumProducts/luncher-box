@@ -107,11 +107,21 @@ class CartContextProvider extends Component<Props, State> {
   };
 
   comment = (comment: string) => {
-    this.setState(prevState => ({ order: { ...prevState.order, comment } }));
+    this.setState(
+      prevState => ({ order: { ...prevState.order, comment } }),
+      async () => {
+        await localForage.setItem('order', this.state.order);
+      }
+    );
   };
 
   setTable = (id: string) => {
-    this.setState(prevState => ({ order: { ...prevState.order, table: id } }));
+    this.setState(
+      prevState => ({ order: { ...prevState.order, table: id } }),
+      async () => {
+        await localForage.setItem('order', this.state.order);
+      }
+    );
   };
 
   findProductIndex = (id: number) => {
