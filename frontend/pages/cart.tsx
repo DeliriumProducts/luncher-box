@@ -2,7 +2,7 @@ import UserLayout from '../components/UserLayout';
 import ItemCard from '../components/ItemCard';
 import styled from 'styled-components';
 import { CartContext } from '../context';
-import { Empty, Card, Button, InputNumber, Modal, message } from 'antd';
+import { Empty, Card, Button, InputNumber, Modal, message, Tag } from 'antd';
 import React from 'react';
 import { Product } from '../interfaces';
 import { Input } from 'antd';
@@ -86,20 +86,24 @@ export default class extends React.Component<any, State> {
       data = <Spinner />;
     } else {
       if (this.context.order && this.context.order.products.length) {
+        let totalSum = 0;
         data = (
           <>
-            {this.context.order.products.map((product: Product) => (
-              <ItemCard
-                interactive
-                id={product.id}
-                key={product.id}
-                name={product.name}
-                description={product.description}
-                image={product.image}
-                price={product.price}
-                quantity={product.quantity}
-              />
-            ))}
+            {this.context.order.products.map((product: Product) => {
+              totalSum += product.price;
+              return (
+                <ItemCard
+                  interactive
+                  id={product.id}
+                  key={product.id}
+                  name={product.name}
+                  description={product.description}
+                  image={product.image}
+                  price={product.price}
+                  quantity={product.quantity}
+                />
+              );
+            })}
             <div style={{ width: '100%' }}>
               <StyledCard>
                 <TextArea
@@ -123,6 +127,9 @@ export default class extends React.Component<any, State> {
                 >
                   Place order!
                 </Button>
+                <Tag style={{ marginLeft: '2%' }} color="green">
+                  Total price: $ {totalSum.toFixed(2)}
+                </Tag>
               </StyledCard>
             </div>
           </>
