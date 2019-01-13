@@ -1,0 +1,38 @@
+version: "3"
+services:
+  backend:
+    build: ./backend
+    environment:
+      NODE_ENV: production
+    ports:
+      - "8000:8000"
+    restart_policy:
+      condition: on-failure
+      delay: 5s
+      max_attempts: 3
+      window: 120s
+  frontend:
+    build: "./frontend"
+    environment:
+      NODE_ENV: production
+    ports:
+      - "3000:3000"
+    restart_policy:
+      condition: on-failure
+      delay: 5s
+      max_attempts: 3
+      window: 120s
+  db:
+    image: mariadb
+    restart_policy:
+      condition: on-failure
+      delay: 5s
+      max_attempts: 3
+      window: 120s
+  redis:
+    image: redis
+    restart_policy:
+      condition: on-failure
+      delay: 5s
+      max_attempts: 3
+      window: 120s
