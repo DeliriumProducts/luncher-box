@@ -15,7 +15,6 @@ interface Props {
   description?: string;
   image: string;
   price?: number;
-  categories?: Category[];
   showModal?: (
     entityType: EntityTypes,
     actionType: ActionTypes,
@@ -90,13 +89,26 @@ class EntityCard extends Component<Props, State> {
     popConfirmVisible: false
   };
 
-  handleEditClick = async (entity: EntityInstance) => {
+  handleEditClick = async () => {
     const { showModal, entityType } = this.props;
+
+    /**
+     * Define an entity based on the entityType var which will be passed to the modal
+     * when action button is clicked
+     */
+    let entity: EntityInstance;
+
     if (entityType === 'product') {
       /**
        * Get all categories from a product
        */
-      entity = await ProductAPI.getOne(entity.id);
+      entity = await ProductAPI.getOne(this.props.id);
+    } else {
+      entity = {
+        id: this.props.id,
+        name: this.props.name,
+        image: this.props.image
+      };
     }
 
     if (showModal && entityType) {
@@ -106,37 +118,17 @@ class EntityCard extends Component<Props, State> {
 
   render() {
     const { entityType, hoverable } = this.props;
-
-    /**
-     * Define an entity based on the entityType var which will be passed to the modal
-     * when action button is clicked
-     */
-    const entity: EntityInstance =
-      entityType === 'product'
-        ? ({
-            id: this.props.id,
-            name: this.props.name,
-            description: this.props.description,
-            image: this.props.image,
-            price: this.props.price,
-            categories: this.props.categories
-          } as Product)
-        : ({
-            id: this.props.id,
-            name: this.props.name,
-            image: this.props.image
-          } as Category);
-
     return (
       <StyledCard
         bordered={false}
         hoverable={hoverable}
+        onClick={() => console.log('thisgotmethinking')}
         actions={[
           <ActionButton
             key="edit"
             type="default"
             icon="edit"
-            onClick={() => this.handleEditClick(entity)}
+            onClick={this.handleEditClick}
           >
             Edit
           </ActionButton>,
@@ -144,15 +136,15 @@ class EntityCard extends Component<Props, State> {
             title={`Are you sure you want to delete this ${entityType}?`}
             onConfirm={async () => {
               if (entityType) {
-                await this.context.actions.delete(entity, entityType);
+                await this.context.actions.delete(this.props.id, entityType);
                 if (entityType === 'category') {
-                  await CategoryAPI.delete(entity.id);
+                  await CategoryAPI.delete(this.props.id);
                 } else {
-                  await ProductAPI.delete(entity.id);
+                  await ProductAPI.delete(this.props.id);
                 }
 
                 message.success(
-                  `Successfully deleted ${entityType} ${entity.name} 🎉`
+                  `Successfully deleted ${entityType} ${this.props.name} 🎉`
                 );
               }
             }}
