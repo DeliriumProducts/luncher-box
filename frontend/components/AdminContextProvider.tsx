@@ -27,7 +27,7 @@ class AdminContextProvider extends Component<Props, State> {
     }
   };
 
-  update = async (entityType?: EntityTypes) => {
+  update = async (categoryIndex?: number) => {
     const entities = { ...this.state.entities };
 
     let newProducts: Product[] = [];
@@ -38,26 +38,12 @@ class AdminContextProvider extends Component<Props, State> {
     };
 
     /**
-     * If there is no entityType provided we update all entities
+     * If there is no categoryIndex provided we update only the categories
      */
-    if (!entityType) {
+    if (!categoryIndex) {
       /**
        * If there are entities in the context, we can fetch ONLY the entities that we are missing
        */
-      if (entities.products.length) {
-        const { products: oldProducts } = entities;
-        const { id: lastProductId } = entities.products[
-          entities.products.length - 1
-        ];
-
-        const fetchedProducts = await ProductAPI.getAll({
-          since: lastProductId
-        });
-
-        newProducts.push(...oldProducts, ...fetchedProducts);
-      } else {
-        newProducts = await ProductAPI.getAll();
-      }
 
       if (entities.categories.length) {
         const { categories: oldCategories } = entities;
@@ -74,58 +60,44 @@ class AdminContextProvider extends Component<Props, State> {
         newCategories = await CategoryAPI.getAll();
       }
     } else {
-      if (entityType === 'category') {
-        /**
-         * If there are categories in the context, we can fetch ONLY the categories that we are missing
-         */
-        if (entities.categories.length) {
-          const { categories: oldCategories } = entities;
-          const { id: lastCategoryId } = entities.categories[
-            entities.categories.length - 1
-          ];
+      /**
+       * If there are categories in the context, we can fetch ONLY the categories that we are missing
+       */
+      if (entities.categories.length) {
+        const { categories: oldCategories } = entities;
+        const { id: lastCategoryId } = entities.categories[
+          entities.categories.length - 1
+        ];
 
-          const fetchedCategories = await CategoryAPI.getAll({
-            since: lastCategoryId
-          });
+        const fetchedCategories = await CategoryAPI.getAll({
+          since: lastCategoryId
+        });
 
-          newCategories.push(...oldCategories, ...fetchedCategories);
-        } else {
-          newCategories = await CategoryAPI.getAll();
-        }
+        newCategories.push(...oldCategories, ...fetchedCategories);
       } else {
-        /**
-         * If there are products in the context, we can fetch ONLY the products that we are missing
-         */
-        if (entities.products.length) {
-          const { products: oldProducts } = entities;
-          const { id: lastProductId } = entities.products[
-            entities.products.length - 1
-          ];
-
-          const fetchedProducts = await ProductAPI.getAll({
-            since: lastProductId
-          });
-
-          newProducts.push(...oldProducts, ...fetchedProducts);
-        } else {
-          newProducts = await ProductAPI.getAll();
-        }
+        newCategories = await CategoryAPI.getAll();
       }
+
+      const fetchedProducts = (await CategoryAPI.getOne(categoryIndex, true))
+        .products;
+
+      newProducts = fetchedProducts!;
     }
+
     newEntities.categories = newCategories;
     newEntities.products = newProducts;
 
     this.setState({ entities: newEntities });
   };
 
-  push = (newEntity: EntityInstance, entityType: EntityTypes) => {
+  push = async (newEntity: EntityInstance, entityType: EntityTypes) => {
     const entities = { ...this.state.entities };
 
     /**
      * Make "deep" clones of the arrays, to prevent modifying the state directly
      */
-    const newProducts: Product[] = [...entities.products];
-    const newCategories: Category[] = [...entities.categories];
+    let newProducts: Product[] = [...entities.products];
+    let newCategories: Category[] = [...entities.categories];
     const newEntities: typeof entities = {
       products: newProducts,
       categories: newCategories
@@ -134,11 +106,24 @@ class AdminContextProvider extends Component<Props, State> {
     if (entityType === 'category') {
       newCategories.push(newEntity as Category);
     } else if (entityType === 'product') {
+      let shouldBeAdded = false;
+      let temp = await ProductAPI.getOne(newProducts[0].id);
+
       /**
-       * Delete categories from product
+       * Check wheter context should be updated with the new product
+       * (should be updated only if current category list of one of the products
+       * containts at least one of the categories which the new product has)
        */
+      for (const category of (newEntity as Product).categories!) {
+        if (temp.categories!.includes(category)) {
+          shouldBeAdded = true;
+        }
+      }
+
       delete (newEntity as Product).categories;
-      newProducts.push(newEntity as Product);
+      if (shouldBeAdded) {
+        newProducts.push(newEntity as Product);
+      }
     }
 
     newEntities.categories = newCategories;
@@ -153,8 +138,8 @@ class AdminContextProvider extends Component<Props, State> {
     /**
      * Make "deep" clones of the arrays, to prevent modifying the state directly
      */
-    const newProducts: Product[] = [...entities.products];
-    const newCategories: Category[] = [...entities.categories];
+    let newProducts: Product[] = [...entities.products];
+    let newCategories: Category[] = [...entities.categories];
     const newEntities: typeof entities = {
       products: newProducts,
       categories: newCategories
@@ -165,6 +150,7 @@ class AdminContextProvider extends Component<Props, State> {
       newCategories[categoryIndex] = { ...(newEntity as Category) };
     } else {
       const productIndex = this.findEntityIndex(newEntity.id, 'product');
+
       newProducts[productIndex] = { ...(newEntity as Product) };
     }
 

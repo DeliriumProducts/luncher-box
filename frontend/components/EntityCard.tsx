@@ -16,6 +16,7 @@ interface Props {
   description?: string;
   image: string;
   price?: number;
+  categories?: Category[];
   showModal?: (
     entityType: EntityTypes,
     actionType: ActionTypes,
@@ -118,8 +119,7 @@ class EntityCard extends Component<Props, State> {
     }
   };
 
-  handlePopConfirm = async (e: React.FormEvent<HTMLButtonElement>) => {
-    e.stopPropagation();
+  handlePopConfirm = async () => {
     const { entityType } = this.props;
     if (entityType) {
       await this.context.actions.delete(this.props.id, entityType);

@@ -4,7 +4,7 @@ import { message } from 'antd';
 import withRouter from '../../components/withRouter';
 import Router, { DefaultQuery } from 'next/router';
 import { CategoryAPI } from '../../api';
-import { Product } from '../../interfaces';
+import { Product, Category } from '../../interfaces';
 import withAuth from '../../components/withAuth';
 import AdminLayout from '../../components/AdminLayout';
 import EntityCardContainer from '../../components/EntityCardContainer';
@@ -43,7 +43,6 @@ interface Props {
 }
 
 interface State {
-  products: Product[];
   loading: boolean;
 }
 
@@ -52,19 +51,14 @@ class CategoryPage extends Component<Props, State> {
   context!: React.ContextType<typeof AdminContext>;
 
   state: State = {
-    products: [],
     loading: true
   };
 
   async componentDidMount() {
-    try {
-      const products = (await CategoryAPI.getOne(
-        Number(this.props.query.categoryId)
-      )).products;
+    const { categoryId } = this.props.query;
 
-      if (products) {
-        this.setState({ products });
-      }
+    try {
+      await this.context.actions.update(Number(categoryId));
     } catch (err) {
       message.error(`${err}, Redirecting you to the home page...`, 3, () =>
         Router.push('/admin')
@@ -75,16 +69,18 @@ class CategoryPage extends Component<Props, State> {
   }
 
   render() {
+    const { products } = this.context.entities;
+
     return (
       <AdminLayout selectedKey="home">
         <FlexContainer>
           <div className="col">
             <EntityCardContainer
-              title={`Products (${this.state.products.length})`}
+              title={`Products (${products.length})`}
               entityType="product"
               loading={this.state.loading}
             >
-              {this.state.products.map(product => (
+              {products.map(product => (
                 <EntityCard
                   key={product.id}
                   id={product.id}
@@ -92,6 +88,7 @@ class CategoryPage extends Component<Props, State> {
                   image={product.image}
                   description={product.description}
                   price={product.price}
+                  categories={product.categories}
                 />
               ))}
             </EntityCardContainer>
