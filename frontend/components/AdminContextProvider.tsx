@@ -107,16 +107,19 @@ class AdminContextProvider extends Component<Props, State> {
       newCategories.push(newEntity as Category);
     } else if (entityType === 'product') {
       let shouldBeAdded = false;
-      let temp = await ProductAPI.getOne(newProducts[0].id);
 
-      /**
-       * Check wheter context should be updated with the new product
-       * (should be updated only if current category list of one of the products
-       * containts at least one of the categories which the new product has)
-       */
-      for (const category of (newEntity as Product).categories!) {
-        if (temp.categories!.includes(category)) {
-          shouldBeAdded = true;
+      if (newProducts.length) {
+        let temp = await ProductAPI.getOne(newProducts[0].id);
+
+        /**
+         * Check wheter context should be updated with the new product
+         * (should be updated only if current category list of one of the products
+         * containts at least one of the categories which the new product has)
+         */
+        for (const category of (newEntity as Product).categories!) {
+          if (temp.categories!.includes(category)) {
+            shouldBeAdded = true;
+          }
         }
       }
 
