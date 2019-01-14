@@ -33,6 +33,7 @@ const FlexContainer = styled.div`
     flex-direction: column;
   }
 `;
+
 class Index extends Component<any, State> {
   static contextType = AdminContext;
   context!: React.ContextType<typeof AdminContext>;
@@ -73,24 +74,6 @@ class Index extends Component<any, State> {
                 ))}
             </EntityCardContainer>
           </div>
-          {/* <div className="col">
-            <EntityCardContainer
-              title={`Products (${this.context.entities.products.length})`}
-              entityType="product"
-              loading={this.state.loading}
-            >
-              {this.context.entities.products.map(product => (
-                <EntityCard
-                  key={product.id}
-                  id={product.id}
-                  name={product.name}
-                  image={product.image}
-                  description={product.description}
-                  price={product.price}
-                />
-              ))}
-            </EntityCardContainer>
-          </div> */}
         </FlexContainer>
       </AdminLayout>
     );

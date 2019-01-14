@@ -7,6 +7,7 @@ import { Category, Product } from '../interfaces';
 import { EntityTypes, ActionTypes, EntityInstance } from '../types';
 import { CategoryAPI, ProductAPI } from '../api';
 import { AdminContext } from '../context';
+import Router from 'next/router';
 
 interface Props {
   key: number;
@@ -89,7 +90,8 @@ class EntityCard extends Component<Props, State> {
     popConfirmVisible: false
   };
 
-  handleEditClick = async () => {
+  handleEditClick = async (e: React.FormEvent<HTMLButtonElement>) => {
+    e.stopPropagation();
     const { showModal, entityType, id, name, image } = this.props;
 
     /**
@@ -116,7 +118,8 @@ class EntityCard extends Component<Props, State> {
     }
   };
 
-  handlePopConfirm = async () => {
+  handlePopConfirm = async (e: React.FormEvent<HTMLButtonElement>) => {
+    e.stopPropagation();
     const { entityType } = this.props;
     if (entityType) {
       await this.context.actions.delete(this.props.id, entityType);
@@ -132,13 +135,30 @@ class EntityCard extends Component<Props, State> {
     }
   };
 
+  handleCardClick = () => {
+    const { entityType, id } = this.props;
+    if (entityType === 'category') {
+      Router.push(
+        {
+          pathname: '/admin/category',
+          query: { categoryId: id }
+        },
+        {
+          pathname: `/admin/category/${id}`
+        }
+      );
+    } else {
+      return;
+    }
+  };
+
   render() {
     const { entityType, hoverable } = this.props;
     return (
       <StyledCard
         bordered={false}
         hoverable={hoverable}
-        onClick={() => console.log('thisgotmethinking')}
+        onClick={this.handleCardClick}
         actions={[
           <ActionButton
             key="edit"
