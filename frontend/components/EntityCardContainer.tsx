@@ -216,7 +216,7 @@ class EntityCardContainer extends Component<Props, State> {
   render() {
     let data: React.ReactNode[] | React.ReactNode;
     /**
-     * Check whether data is still being fetched
+     * Check whether data is still being fetched (show loading spinner)
      * then inject the showModal func and entity's type to children's props
      */
     if (this.props.loading) {
