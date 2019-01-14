@@ -174,7 +174,7 @@ class AdminContextProvider extends Component<Props, State> {
     this.setState({ entities: newEntities });
   };
 
-  delete = async (entity: EntityInstance, entityType: EntityTypes) => {
+  delete = async (entityId: number, entityType: EntityTypes) => {
     const entities = { ...this.state.entities };
 
     /**
@@ -189,13 +189,13 @@ class AdminContextProvider extends Component<Props, State> {
 
     if (entityType === 'category') {
       const categoryIndex = newCategories.findIndex(
-        ({ id }) => id === entity.id
+        ({ id }) => id === entityId
       );
 
       /**
        * Fetch the category in order to get all of its products
        */
-      const categoryToBeDeleted = await CategoryAPI.getOne(entity.id, true);
+      const categoryToBeDeleted = await CategoryAPI.getOne(entityId, true);
 
       if (categoryToBeDeleted.products) {
         /**
@@ -217,7 +217,7 @@ class AdminContextProvider extends Component<Props, State> {
 
       newCategories.splice(categoryIndex, 1);
     } else {
-      const productIndex = newProducts.findIndex(({ id }) => id === entity.id);
+      const productIndex = newProducts.findIndex(({ id }) => id === entityId);
       newProducts.splice(productIndex, 1);
     }
 

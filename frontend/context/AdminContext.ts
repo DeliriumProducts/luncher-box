@@ -12,7 +12,7 @@ interface Values {
     update: (entityType?: EntityTypes) => void;
     push: (newEntity: EntityInstance, entityType: EntityTypes) => void;
     edit: (entity: EntityInstance, entityType: EntityTypes) => void;
-    delete: (entity: EntityInstance, entityType: EntityTypes) => void;
+    delete: (entityId: number, entityType: EntityTypes) => void;
   };
 }
 
