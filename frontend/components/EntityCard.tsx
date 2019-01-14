@@ -1,4 +1,4 @@
-import { Skeleton, Card, Icon, Popconfirm, message } from 'antd';
+import { Card, Icon, Popconfirm, message } from 'antd';
 import React, { Component } from 'react';
 import styled from 'styled-components';
 import ActionButton from './ActionButton';
@@ -22,6 +22,7 @@ interface Props {
     entity?: EntityInstance
   ) => void;
   entityType?: EntityTypes;
+  hoverable?: boolean;
 }
 
 interface State {
@@ -44,10 +45,6 @@ const StyledCard = styled(Card)`
     box-shadow: none;
     margin: 0;
     width: 100%;
-
-    .ant-layout-content {
-      background-color: green;
-    }
   }
 
   .ant-card-actions {
@@ -63,9 +60,11 @@ const StyledImg = styled.img`
   height: 88px;
   object-fit: cover;
   box-shadow: 0 2px 2px rgba(0, 0, 0, 0.12);
+
   @media (max-width: 480px) {
     margin-left: 10px;
   }
+
   @media (max-width: 250px) {
     display: none;
   }
@@ -106,7 +105,7 @@ class EntityCard extends Component<Props, State> {
   };
 
   render() {
-    const { entityType } = this.props;
+    const { entityType, hoverable } = this.props;
 
     /**
      * Define an entity based on the entityType var which will be passed to the modal
@@ -131,6 +130,7 @@ class EntityCard extends Component<Props, State> {
     return (
       <StyledCard
         bordered={false}
+        hoverable={hoverable}
         actions={[
           <ActionButton
             key="edit"

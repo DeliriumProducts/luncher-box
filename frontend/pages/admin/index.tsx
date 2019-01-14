@@ -67,6 +67,7 @@ class Index extends Component<any, State> {
                     id={category.id}
                     name={category.name}
                     image={category.image}
+                    hoverable={true}
                   />
                 ))}
             </EntityCardContainer>

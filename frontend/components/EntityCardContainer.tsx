@@ -33,9 +33,11 @@ const StyledCard = styled(Card)`
   background-color: rgb(245, 245, 245);
 
   @media (max-width: 480px) {
-    .ant-card-body {
+    & .ant-card-body {
       padding-left: 0px;
       padding-right: 0px;
+      cursor: pointer;
+      background-color: red;
     }
   }
 
