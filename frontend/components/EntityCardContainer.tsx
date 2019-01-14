@@ -36,8 +36,6 @@ const StyledCard = styled(Card)`
     & .ant-card-body {
       padding-left: 0px;
       padding-right: 0px;
-      cursor: pointer;
-      background-color: red;
     }
   }
 
@@ -65,7 +63,6 @@ const StyledCard = styled(Card)`
 
       #search-input {
         min-width: 100px;
-        max-width: 300px;
         border: none;
         box-shadow: 0 2px 2px rgba(0, 0, 0, 0.12);
       }

@@ -90,7 +90,7 @@ class EntityCard extends Component<Props, State> {
   };
 
   handleEditClick = async () => {
-    const { showModal, entityType } = this.props;
+    const { showModal, entityType, id, name, image } = this.props;
 
     /**
      * Define an entity based on the entityType var which will be passed to the modal
@@ -102,17 +102,33 @@ class EntityCard extends Component<Props, State> {
       /**
        * Get all categories from a product
        */
-      entity = await ProductAPI.getOne(this.props.id);
+      entity = await ProductAPI.getOne(id);
     } else {
       entity = {
-        id: this.props.id,
-        name: this.props.name,
-        image: this.props.image
+        id,
+        name,
+        image
       };
     }
 
     if (showModal && entityType) {
       showModal(entityType, 'edit', entity);
+    }
+  };
+
+  handlePopConfirm = async () => {
+    const { entityType } = this.props;
+    if (entityType) {
+      await this.context.actions.delete(this.props.id, entityType);
+      if (entityType === 'category') {
+        await CategoryAPI.delete(this.props.id);
+      } else {
+        await ProductAPI.delete(this.props.id);
+      }
+
+      message.success(
+        `Successfully deleted ${entityType} ${this.props.name} 🎉`
+      );
     }
   };
 
@@ -134,20 +150,7 @@ class EntityCard extends Component<Props, State> {
           </ActionButton>,
           <Popconfirm
             title={`Are you sure you want to delete this ${entityType}?`}
-            onConfirm={async () => {
-              if (entityType) {
-                await this.context.actions.delete(this.props.id, entityType);
-                if (entityType === 'category') {
-                  await CategoryAPI.delete(this.props.id);
-                } else {
-                  await ProductAPI.delete(this.props.id);
-                }
-
-                message.success(
-                  `Successfully deleted ${entityType} ${this.props.name} 🎉`
-                );
-              }
-            }}
+            onConfirm={this.handlePopConfirm}
             icon={<Icon type="question-circle-o" style={{ color: 'red' }} />}
             okText="Yes"
             cancelText="No"

@@ -19,8 +19,9 @@ const FlexContainer = styled.div`
 
   .col {
     flex: 1;
-    max-width: 49%;
+    max-width: 50%;
     height: 100%;
+    margin: auto;
   }
 
   @media (max-width: 768px) {
@@ -72,7 +73,7 @@ class Index extends Component<any, State> {
                 ))}
             </EntityCardContainer>
           </div>
-          <div className="col">
+          {/* <div className="col">
             <EntityCardContainer
               title={`Products (${this.context.entities.products.length})`}
               entityType="product"
@@ -89,7 +90,7 @@ class Index extends Component<any, State> {
                 />
               ))}
             </EntityCardContainer>
-          </div>
+          </div> */}
         </FlexContainer>
       </AdminLayout>
     );
