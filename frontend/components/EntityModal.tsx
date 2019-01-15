@@ -23,6 +23,9 @@ const EntityModal = Form.create()(
     capitalizeFirstLetter = (str: string) =>
       str.charAt(0).toUpperCase() + str.slice(1);
 
+    componentDidMount() {
+      console.log('Yay!');
+    }
     render() {
       const {
         visible,

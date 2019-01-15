@@ -4,12 +4,12 @@ import { message } from 'antd';
 import withRouter from '../../components/withRouter';
 import Router, { DefaultQuery } from 'next/router';
 import { CategoryAPI } from '../../api';
-import { Product, Category } from '../../interfaces';
 import withAuth from '../../components/withAuth';
 import AdminLayout from '../../components/AdminLayout';
 import EntityCardContainer from '../../components/EntityCardContainer';
 import EntityCard from '../../components/EntityCard';
 import { AdminContext } from '../../context';
+import { Products } from '../../interfaces';
 
 const FlexContainer = styled.div`
   display: flex;
@@ -43,6 +43,7 @@ interface Props {
 }
 
 interface State {
+  modalVisible: boolean;
   loading: boolean;
   products: Products[];
 }
@@ -52,9 +53,12 @@ class CategoryPage extends Component<Props, State> {
   context!: React.ContextType<typeof AdminContext>;
 
   state: State = {
+    modalVisible: false,
     loading: true,
     products: []
   };
+
+  formRef: any;
 
   async componentDidMount() {
     try {
@@ -95,6 +99,7 @@ class CategoryPage extends Component<Props, State> {
                   description={product.description}
                   price={product.price}
                   categories={product.categories}
+                  entityType="product"
                 />
               ))}
             </EntityCardContainer>

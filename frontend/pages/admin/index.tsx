@@ -8,12 +8,6 @@ import styled from 'styled-components';
 import EntityCardContainer from '../../components/EntityCardContainer';
 import { Category } from '../../interfaces';
 import { CategoryAPI } from '../../api';
-import Router from 'next/router';
-
-interface State {
-  loading: boolean;
-  categories: Category[];
-}
 
 const FlexContainer = styled.div`
   display: flex;
@@ -37,6 +31,10 @@ const FlexContainer = styled.div`
     flex-direction: column;
   }
 `;
+interface State {
+  loading: boolean;
+  categories: Category[];
+}
 
 class Index extends Component<any, State> {
   static contextType = AdminContext;
@@ -46,6 +44,8 @@ class Index extends Component<any, State> {
     loading: true,
     categories: []
   };
+
+  formRef: any;
 
   async componentDidMount() {
     try {
@@ -81,6 +81,7 @@ class Index extends Component<any, State> {
                     name={category.name}
                     image={category.image}
                     hoverable={true}
+                    entityType="category"
                   />
                 ))}
             </EntityCardContainer>

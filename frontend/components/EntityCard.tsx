@@ -8,28 +8,7 @@ import { EntityTypes, ActionTypes, EntityInstance } from '../types';
 import { CategoryAPI, ProductAPI } from '../api';
 import { AdminContext } from '../context';
 import Router from 'next/router';
-
-interface Props {
-  key: number;
-  id: number;
-  name: string;
-  description?: string;
-  image: string;
-  price?: number;
-  categories?: Category[];
-  showModal?: (
-    entityType: EntityTypes,
-    actionType: ActionTypes,
-    entity?: EntityInstance
-  ) => void;
-  entityType?: EntityTypes;
-  hoverable?: boolean;
-}
-
-interface State {
-  loading: boolean;
-  popConfirmVisible: boolean;
-}
+import EntityModal from './EntityModal';
 
 const { Meta } = Card;
 
@@ -82,18 +61,99 @@ const StyledMeta = styled(Meta)`
   }
 `;
 
+interface Props {
+  key: number;
+  id: number;
+  name: string;
+  description?: string;
+  image: string;
+  price?: number;
+  categories?: Category[];
+  entityType: EntityTypes;
+  hoverable?: boolean;
+}
+
+interface State {
+  modalVisible: boolean;
+  loading: boolean;
+  popConfirmVisible: boolean;
+  entity?: EntityInstance;
+}
+
 class EntityCard extends Component<Props, State> {
   static contextType = AdminContext;
   context!: React.ContextType<typeof AdminContext>;
 
   state = {
+    modalVisible: false,
     loading: false,
-    popConfirmVisible: false
+    popConfirmVisible: false,
+    entity: undefined
+  };
+
+  formRef: any;
+
+  showModal = (entity: EntityInstance) => {
+    this.setState({
+      modalVisible: true,
+      entity
+    });
+  };
+
+  handleCancel = () => {
+    this.setState({
+      modalVisible: false
+    });
+  };
+
+  handleCreate = () => {
+    const form = this.formRef.props.form;
+
+    form.validateFields(async (err: any, values: any) => {
+      if (err) {
+        return;
+      }
+
+      this.setState({ loading: true });
+
+      try {
+        switch (this.props.entityType) {
+          case 'category':
+            let category: Category = values;
+
+            category.id = this.props.id;
+            category = (await CategoryAPI.edit(category)).data;
+            this.context.actions.edit(category, 'category');
+            message.success(`Successfully edited category ${category.name} 🎉`);
+            break;
+          case 'product':
+            let product: Product = values;
+
+            product.id = this.props.id;
+            product = (await ProductAPI.edit(product)).data;
+            this.context.actions.edit(product, 'product');
+            message.success(`Successfully edited product ${product.name} 🎉`);
+            break;
+          default:
+            break;
+        }
+      } catch (err) {
+        this.setState({ loading: false });
+        message.error(`${err}`);
+      }
+
+      form.resetFields();
+      this.setState({ modalVisible: false, loading: false });
+    });
+  };
+
+  saveFormRef = (formRef: any) => {
+    this.formRef = formRef;
   };
 
   handleEditClick = async (e: React.FormEvent<HTMLButtonElement>) => {
     e.stopPropagation();
-    const { showModal, entityType, id, name, image } = this.props;
+    const { entityType, id, name, image } = this.props;
 
     /**
      * Define an entity based on the entityType var which will be passed to the modal
@@ -114,12 +174,10 @@ class EntityCard extends Component<Props, State> {
       };
     }
 
-    if (showModal && entityType) {
-      showModal(entityType, 'edit', entity);
-    }
+    this.showModal(entity);
   };
 
-  handlePopConfirm = async () => {
+  handleDeleteClick = async () => {
     const { entityType } = this.props;
     if (entityType) {
       await this.context.actions.delete(this.props.id, entityType);
@@ -170,7 +228,7 @@ class EntityCard extends Component<Props, State> {
           </ActionButton>,
           <Popconfirm
             title={`Are you sure you want to delete this ${entityType}?`}
-            onConfirm={this.handlePopConfirm}
+            onConfirm={this.handleDeleteClick}
             icon={<Icon type="question-circle-o" style={{ color: 'red' }} />}
             okText="Yes"
             cancelText="No"
@@ -194,6 +252,16 @@ class EntityCard extends Component<Props, State> {
             </span>
           }
           description={this.props.description}
+        />
+        <EntityModal
+          wrappedComponentRef={this.saveFormRef}
+          visible={this.state.modalVisible}
+          onCancel={this.handleCancel}
+          onCreate={this.handleCreate}
+          entityType={this.props.entityType}
+          actionType={'edit'}
+          entity={this.state.entity}
+          loading={this.state.loading}
         />
       </StyledCard>
     );

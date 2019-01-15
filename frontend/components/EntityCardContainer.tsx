@@ -11,22 +11,6 @@ import Spinner from './Spinner';
 
 const { Search } = Input;
 
-interface Props {
-  title: string;
-  entityType: EntityTypes;
-  children: React.ReactNode[];
-  loading: boolean;
-}
-
-interface State {
-  modalVisible: boolean;
-  loading: boolean;
-  entity?: EntityInstance;
-  entityType: EntityTypes;
-  actionType: ActionTypes;
-  searchText: string;
-}
-
 const StyledCard = styled(Card)`
   border-radius: 7px;
   box-shadow: 0 2px 2px rgba(0, 0, 0, 0.12);
@@ -73,6 +57,22 @@ const StyledCard = styled(Card)`
     }
   }
 `;
+
+interface Props {
+  title: string;
+  entityType: EntityTypes;
+  children: React.ReactNode[];
+  loading: boolean;
+}
+
+interface State {
+  modalVisible: boolean;
+  loading: boolean;
+  entity?: EntityInstance;
+  entityType: EntityTypes;
+  actionType: ActionTypes;
+  searchText: string;
+}
 
 class EntityCardContainer extends Component<Props, State> {
   static contextType = AdminContext;
@@ -206,7 +206,7 @@ class EntityCardContainer extends Component<Props, State> {
     this.setState({ searchText: e.currentTarget.value });
   };
 
-  handleClick = () => {
+  handleNewClick = () => {
     this.showModal(this.props.entityType, 'create');
   };
 
@@ -226,10 +226,7 @@ class EntityCardContainer extends Component<Props, State> {
               .toLowerCase()
               .includes(this.state.searchText.toLowerCase())
           ) {
-            return React.cloneElement(child as React.ReactElement<any>, {
-              showModal: this.showModal,
-              entityType: this.props.entityType
-            });
+            return child;
           } else {
             return;
           }
@@ -254,7 +251,7 @@ class EntityCardContainer extends Component<Props, State> {
             type="primary"
             id="new-button"
             icon="plus"
-            onClick={this.handleClick}
+            onClick={this.handleNewClick}
           >
             New
           </ActionButton>
