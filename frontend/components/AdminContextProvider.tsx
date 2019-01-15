@@ -106,25 +106,13 @@ class AdminContextProvider extends Component<Props, State> {
     if (entityType === 'category') {
       newCategories.push(newEntity as Category);
     } else if (entityType === 'product') {
-      let shouldBeAdded = false;
-
-      if (newProducts.length) {
-        let temp = await ProductAPI.getOne(newProducts[0].id);
-
-        /**
-         * Check wheter context should be updated with the new product
-         * (should be updated only if current category list of one of the products
-         * containts at least one of the categories which the new product has)
-         */
-        for (const category of (newEntity as Product).categories!) {
-          if (temp.categories!.includes(category)) {
-            shouldBeAdded = true;
-          }
-        }
-      }
-
       delete (newEntity as Product).categories;
-      if (shouldBeAdded) {
+
+      /**
+       * Product should be added only when one of its categories is contained in
+       * current products' categories
+       *  */
+      if (await this.shouldBeAdded(newProducts, newEntity as Product)) {
         newProducts.push(newEntity as Product);
       }
     }
@@ -135,7 +123,7 @@ class AdminContextProvider extends Component<Props, State> {
     this.setState({ entities: newEntities });
   };
 
-  edit = (newEntity: EntityInstance, entityType: EntityTypes) => {
+  edit = async (newEntity: EntityInstance, entityType: EntityTypes) => {
     const entities = { ...this.state.entities };
 
     /**
@@ -154,7 +142,13 @@ class AdminContextProvider extends Component<Props, State> {
     } else {
       const productIndex = this.findEntityIndex(newEntity.id, 'product');
 
-      newProducts[productIndex] = { ...(newEntity as Product) };
+      /**
+       * Product should be added only when one of its categories is contained in
+       * current products' categories
+       *  */
+      if (await this.shouldBeAdded(newProducts, newEntity as Product)) {
+        newProducts[productIndex] = { ...(newEntity as Product) };
+      }
     }
 
     newEntities.categories = newCategories;
@@ -226,6 +220,25 @@ class AdminContextProvider extends Component<Props, State> {
         ({ id: productId }: Product) => productId === id
       );
     }
+  };
+
+  shouldBeAdded = async (products: Product[], newProduct: Product) => {
+    if (products.length) {
+      let tempProduct = await ProductAPI.getOne(products[0].id);
+
+      /**
+       * Check whether context should be updated with the new product
+       * (should be updated only if current category list of one of the products
+       * containts at least one of the categories which the new product has)
+       */
+      for (const category of newProduct.categories!) {
+        if (tempProduct.categories!.includes(category)) {
+          return true;
+        }
+      }
+    }
+
+    return false;
   };
 
   render() {
