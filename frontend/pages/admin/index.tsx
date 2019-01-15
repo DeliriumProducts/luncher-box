@@ -6,9 +6,13 @@ import { AdminContext } from '../../context';
 import EntityCard from '../../components/EntityCard';
 import styled from 'styled-components';
 import EntityCardContainer from '../../components/EntityCardContainer';
+import { Category } from '../../interfaces';
+import { CategoryAPI } from '../../api';
+import Router from 'next/router';
 
 interface State {
   loading: boolean;
+  categories: Category[];
 }
 
 const FlexContainer = styled.div`
@@ -39,31 +43,38 @@ class Index extends Component<any, State> {
   context!: React.ContextType<typeof AdminContext>;
 
   state = {
-    loading: true
+    loading: true,
+    categories: []
   };
 
   async componentDidMount() {
     try {
-      await this.context.actions.update();
+      const categories = await CategoryAPI.getAll();
+
+      if (categories) {
+        this.setState({ categories });
+      }
     } catch (err) {
-      message.error(`${err}`);
+      message.error(`${err}`, 3);
     } finally {
       this.setState({ loading: false });
     }
   }
 
   render() {
+    const { loading, categories } = this.state;
+
     return (
       <AdminLayout selectedKey="home">
         <FlexContainer>
           <div className="col">
             <EntityCardContainer
-              title={`Categories (${this.context.entities.categories.length})`}
+              title={`Categories (${categories.length})`}
               entityType="category"
-              loading={this.state.loading}
+              loading={loading}
             >
-              {this.context.entities.categories &&
-                this.context.entities.categories.map(category => (
+              {categories &&
+                categories.map((category: Category) => (
                   <EntityCard
                     key={category.id}
                     id={category.id}

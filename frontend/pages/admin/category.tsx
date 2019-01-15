@@ -44,6 +44,7 @@ interface Props {
 
 interface State {
   loading: boolean;
+  products: Products[];
 }
 
 class CategoryPage extends Component<Props, State> {
@@ -51,14 +52,19 @@ class CategoryPage extends Component<Props, State> {
   context!: React.ContextType<typeof AdminContext>;
 
   state: State = {
-    loading: true
+    loading: true,
+    products: []
   };
 
   async componentDidMount() {
-    const { categoryId } = this.props.query;
-
     try {
-      await this.context.actions.update(Number(categoryId));
+      const products = (await CategoryAPI.getOne(
+        Number(this.props.query.categoryId)
+      )).products;
+
+      if (products) {
+        this.setState({ products });
+      }
     } catch (err) {
       message.error(`${err}, Redirecting you to the home page...`, 3, () =>
         Router.push('/admin')
@@ -69,7 +75,7 @@ class CategoryPage extends Component<Props, State> {
   }
 
   render() {
-    const { products } = this.context.entities;
+    const { loading, products } = this.state;
 
     return (
       <AdminLayout selectedKey="home">
@@ -78,7 +84,7 @@ class CategoryPage extends Component<Props, State> {
             <EntityCardContainer
               title={`Products (${products.length})`}
               entityType="product"
-              loading={this.state.loading}
+              loading={loading}
             >
               {products.map(product => (
                 <EntityCard
