@@ -217,6 +217,7 @@ class EntityCard extends Component<Props, State> {
 
   render() {
     const { entityType, hoverable } = this.props;
+
     return (
       <StyledCard
         bordered={false}

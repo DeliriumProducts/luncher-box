@@ -4,6 +4,7 @@ import React from 'react';
 import { AdminContext } from '../context';
 import { EntityTypes, ActionTypes, EntityInstance } from '../types';
 import { Product, Category } from '../interfaces';
+import { CategoryAPI } from '../api';
 
 interface Props extends FormComponentProps {
   visible: boolean;
@@ -15,14 +16,27 @@ interface Props extends FormComponentProps {
   onCreate: (e: React.FormEvent<HTMLElement>) => void;
 }
 
+interface State {
+  categories: Category[];
+}
+
 const EntityModal = Form.create()(
-  class extends React.Component<Props> {
+  class extends React.Component<Props, State> {
     static contextType = AdminContext;
     context!: React.ContextType<typeof AdminContext>;
+
+    state = {
+      categories: []
+    };
 
     capitalizeFirstLetter = (str: string) =>
       str.charAt(0).toUpperCase() + str.slice(1);
 
+    async componentDidMount() {
+      const categories = await CategoryAPI.getAll();
+
+      this.setState({ categories });
+    }
     render() {
       const {
         visible,
@@ -33,6 +47,8 @@ const EntityModal = Form.create()(
         loading,
         entity
       } = this.props;
+
+      const { categories } = this.state;
 
       const { getFieldDecorator } = form;
 
@@ -176,17 +192,15 @@ const EntityModal = Form.create()(
                     style={{ width: '100%' }}
                     placeholder="Please select a category"
                   >
-                    {this.context.entities.categories &&
-                      this.context.entities.categories.map(
-                        (category: Category) => (
-                          <Select.Option
-                            value={category.id}
-                            key={category.id.toString()}
-                          >
-                            {category.name}
-                          </Select.Option>
-                        )
-                      )}
+                    {categories &&
+                      categories.map((category: Category) => (
+                        <Select.Option
+                          value={category.id}
+                          key={category.id.toString()}
+                        >
+                          {category.name}
+                        </Select.Option>
+                      ))}
                   </Select>
                 )}
               </Form.Item>
