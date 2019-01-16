@@ -9,7 +9,7 @@ import AdminLayout from '../../components/AdminLayout';
 import EntityCardContainer from '../../components/EntityCardContainer';
 import EntityCard from '../../components/EntityCard';
 import { AdminContext } from '../../context';
-import { Products } from '../../interfaces';
+import { Product } from '../../interfaces';
 
 const FlexContainer = styled.div`
   display: flex;
@@ -45,7 +45,7 @@ interface Props {
 interface State {
   modalVisible: boolean;
   loading: boolean;
-  products: Products[];
+  products: Product[];
 }
 
 class CategoryPage extends Component<Props, State> {

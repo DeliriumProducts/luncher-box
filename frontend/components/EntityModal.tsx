@@ -11,8 +11,8 @@ interface Props extends FormComponentProps {
   entityType: EntityTypes;
   actionType: ActionTypes;
   loading: boolean;
-  onCancel: () => void;
-  onCreate: () => void;
+  onCancel: (e: React.FormEvent<HTMLElement>) => void;
+  onCreate: (e: React.FormEvent<HTMLElement>) => void;
 }
 
 const EntityModal = Form.create()(
@@ -23,9 +23,6 @@ const EntityModal = Form.create()(
     capitalizeFirstLetter = (str: string) =>
       str.charAt(0).toUpperCase() + str.slice(1);
 
-    componentDidMount() {
-      console.log('Yay!');
-    }
     render() {
       const {
         visible,

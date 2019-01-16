@@ -100,13 +100,17 @@ class EntityCard extends Component<Props, State> {
     });
   };
 
-  handleCancel = () => {
+  handleCancel = (e: React.FormEvent<HTMLElement>) => {
+    e.stopPropagation();
+
     this.setState({
       modalVisible: false
     });
   };
 
-  handleCreate = () => {
+  handleCreate = (e: React.FormEvent<HTMLElement>) => {
+    e.stopPropagation();
+
     const form = this.formRef.props.form;
 
     form.validateFields(async (err: any, values: any) => {
@@ -153,6 +157,7 @@ class EntityCard extends Component<Props, State> {
 
   handleEditClick = async (e: React.FormEvent<HTMLButtonElement>) => {
     e.stopPropagation();
+
     const { entityType, id, name, image } = this.props;
 
     /**
