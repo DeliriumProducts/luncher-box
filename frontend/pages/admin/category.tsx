@@ -3,13 +3,15 @@ import styled from 'styled-components';
 import { message } from 'antd';
 import withRouter from '../../components/withRouter';
 import Router, { DefaultQuery } from 'next/router';
-import { CategoryAPI } from '../../api';
+import { CategoryAPI, ProductAPI } from '../../api';
 import withAuth from '../../components/withAuth';
 import AdminLayout from '../../components/AdminLayout';
 import EntityCardContainer from '../../components/EntityCardContainer';
 import EntityCard from '../../components/EntityCard';
 import { AdminContext } from '../../context';
-import { Product } from '../../interfaces';
+import { Product, Category } from '../../interfaces';
+import { EntityTypes, ActionTypes, EntityInstance } from '../../types';
+import EntityModal from '../../components/EntityModal';
 
 const FlexContainer = styled.div`
   display: flex;
@@ -46,6 +48,10 @@ interface State {
   modalVisible: boolean;
   loading: boolean;
   products: Product[];
+  entity?: EntityInstance;
+  entityType: EntityTypes;
+  actionType: ActionTypes;
+  searchText: string;
 }
 
 class CategoryPage extends Component<Props, State> {
@@ -55,7 +61,11 @@ class CategoryPage extends Component<Props, State> {
   state: State = {
     modalVisible: false,
     loading: true,
-    products: []
+    products: [],
+    entity: undefined,
+    entityType: 'product',
+    actionType: 'create',
+    searchText: ''
   };
 
   formRef: any;
@@ -88,7 +98,7 @@ class CategoryPage extends Component<Props, State> {
     });
   };
 
-  handleCreate = () => {
+  handleModalFinished = () => {
     const form = this.formRef.props.form;
 
     /**
@@ -111,7 +121,6 @@ class CategoryPage extends Component<Props, State> {
 
             if (this.state.actionType === 'create') {
               category = (await CategoryAPI.create(category)).data;
-              this.context.actions.push(category, 'category');
               message.success(
                 `Successfully created category ${category.name} 🎉`
               );
@@ -124,7 +133,6 @@ class CategoryPage extends Component<Props, State> {
               if (entity) {
                 category.id = entity.id;
                 category = (await CategoryAPI.edit(category)).data;
-                this.context.actions.edit(category, 'category');
                 message.success(
                   `Successfully edited category ${category.name} 🎉`
                 );
@@ -136,7 +144,6 @@ class CategoryPage extends Component<Props, State> {
 
             if (this.state.actionType === 'create') {
               product = (await ProductAPI.create(product)).data;
-              this.context.actions.push(product, 'product');
               message.success(
                 `Successfully created product ${product.name} 🎉`
               );
@@ -149,7 +156,6 @@ class CategoryPage extends Component<Props, State> {
               if (entity) {
                 product.id = entity.id;
                 product = (await ProductAPI.edit(product)).data;
-                this.context.actions.edit(product, 'product');
                 message.success(
                   `Successfully edited product ${product.name} 🎉`
                 );
@@ -162,10 +168,18 @@ class CategoryPage extends Component<Props, State> {
       } catch (err) {
         this.setState({ loading: false });
         message.error(`${err}`);
-      }
+      } finally {
+        const products = (await CategoryAPI.getOne(
+          Number(this.props.query.categoryId)
+        )).products;
 
-      form.resetFields();
-      this.setState({ modalVisible: false, loading: false });
+        form.resetFields();
+        if (products) {
+          this.setState({ modalVisible: false, loading: false, products });
+        } else {
+          this.setState({ modalVisible: false, loading: false });
+        }
+      }
     });
   };
 
@@ -173,8 +187,42 @@ class CategoryPage extends Component<Props, State> {
     this.formRef = formRef;
   };
 
-  handleNewClick = () => {
-    this.showModal('product', 'create');
+  handleNewClick = (entityType: EntityTypes) => {
+    this.showModal(entityType, 'create');
+  };
+
+  handleEditClick = async (
+    e: React.FormEvent<HTMLButtonElement>,
+    entityType: EntityTypes,
+    entity: EntityInstance
+  ) => {
+    e.stopPropagation();
+
+    if (entityType === 'product') {
+      /**
+       * Update current product with all categories
+       */
+      entity = await ProductAPI.getOne(entity.id);
+    }
+
+    this.showModal(entityType, 'edit', entity);
+  };
+
+  handleDeleteClick = async (
+    entityType: EntityTypes,
+    { id, name }: EntityInstance
+  ) => {
+    if (entityType) {
+      await this.context.actions.delete(id, entityType);
+
+      if (entityType === 'category') {
+        await CategoryAPI.delete(id);
+      } else {
+        await ProductAPI.delete(id);
+      }
+
+      message.success(`Successfully deleted ${entityType} ${name} 🎉`);
+    }
   };
 
   async componentDidMount() {
@@ -208,7 +256,7 @@ class CategoryPage extends Component<Props, State> {
               title={`Products (${products.length})`}
               entityType="product"
               loading={loading}
-              onNewClick={this.handleNewClick}
+              handleNewClick={this.handleNewClick}
             >
               {products.map(product => (
                 <EntityCard
@@ -220,6 +268,7 @@ class CategoryPage extends Component<Props, State> {
                   price={product.price}
                   categories={product.categories}
                   entityType="product"
+                  handleEditClick={this.handleEditClick}
                 />
               ))}
             </EntityCardContainer>
@@ -227,7 +276,7 @@ class CategoryPage extends Component<Props, State> {
               wrappedComponentRef={this.saveFormRef}
               visible={this.state.modalVisible}
               onCancel={this.handleCancel}
-              onCreate={this.handleCreate}
+              onCreate={this.handleModalFinished}
               entityType={this.state.entityType}
               actionType={this.state.actionType}
               entity={this.state.entity}

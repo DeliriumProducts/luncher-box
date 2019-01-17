@@ -4,11 +4,8 @@ import styled from 'styled-components';
 import ActionButton from './ActionButton';
 import PriceBadge from './PriceBadge';
 import { Category, Product } from '../interfaces';
-import { EntityTypes, ActionTypes, EntityInstance } from '../types';
-import { CategoryAPI, ProductAPI } from '../api';
-import { AdminContext } from '../context';
+import { EntityTypes, EntityInstance } from '../types';
 import Router from 'next/router';
-import EntityModal from './EntityModal';
 
 const { Meta } = Card;
 
@@ -62,7 +59,6 @@ const StyledMeta = styled(Meta)`
 `;
 
 interface Props {
-  key: number;
   id: number;
   name: string;
   description?: string;
@@ -71,6 +67,11 @@ interface Props {
   categories?: Category[];
   entityType: EntityTypes;
   hoverable?: boolean;
+  handleEditClick: (
+    e: React.FormEvent<HTMLButtonElement>,
+    entityType: EntityTypes,
+    entity: EntityInstance
+  ) => void;
 }
 
 interface State {
@@ -81,121 +82,11 @@ interface State {
 }
 
 class EntityCard extends Component<Props, State> {
-  static contextType = AdminContext;
-  context!: React.ContextType<typeof AdminContext>;
-
   state = {
     modalVisible: false,
     loading: false,
     popConfirmVisible: false,
     entity: undefined
-  };
-
-  formRef: any;
-
-  showModal = (entity: EntityInstance) => {
-    this.setState({
-      modalVisible: true,
-      entity
-    });
-  };
-
-  handleCancel = (e: React.FormEvent<HTMLElement>) => {
-    e.stopPropagation();
-
-    this.setState({
-      modalVisible: false
-    });
-  };
-
-  handleCreate = (e: React.FormEvent<HTMLElement>) => {
-    e.stopPropagation();
-
-    const form = this.formRef.props.form;
-
-    form.validateFields(async (err: any, values: any) => {
-      if (err) {
-        return;
-      }
-
-      this.setState({ loading: true });
-
-      try {
-        switch (this.props.entityType) {
-          case 'category':
-            let category: Category = values;
-
-            category.id = this.props.id;
-            category = (await CategoryAPI.edit(category)).data;
-            this.context.actions.edit(category, 'category');
-            message.success(`Successfully edited category ${category.name} 🎉`);
-            break;
-          case 'product':
-            let product: Product = values;
-
-            product.id = this.props.id;
-            product = (await ProductAPI.edit(product)).data;
-            this.context.actions.edit(product, 'product');
-            message.success(`Successfully edited product ${product.name} 🎉`);
-            break;
-          default:
-            break;
-        }
-      } catch (err) {
-        this.setState({ loading: false });
-        message.error(`${err}`);
-      }
-
-      form.resetFields();
-      this.setState({ modalVisible: false, loading: false });
-    });
-  };
-
-  saveFormRef = (formRef: any) => {
-    this.formRef = formRef;
-  };
-
-  handleEditClick = async (e: React.FormEvent<HTMLButtonElement>) => {
-    e.stopPropagation();
-
-    const { entityType, id, name, image } = this.props;
-
-    /**
-     * Define an entity based on the entityType var which will be passed to the modal
-     * when action button is clicked
-     */
-    let entity: EntityInstance;
-
-    if (entityType === 'product') {
-      /**
-       * Get all categories from a product
-       */
-      entity = await ProductAPI.getOne(id);
-    } else {
-      entity = {
-        id,
-        name,
-        image
-      };
-    }
-
-    this.showModal(entity);
-  };
-
-  handleDeleteClick = async () => {
-    const { entityType } = this.props;
-    if (entityType) {
-      await this.context.actions.delete(this.props.id, entityType);
-      if (entityType === 'category') {
-        await CategoryAPI.delete(this.props.id);
-      } else {
-        await ProductAPI.delete(this.props.id);
-      }
-
-      message.success(
-        `Successfully deleted ${entityType} ${this.props.name} 🎉`
-      );
-    }
   };
 
   handleCardClick = () => {
@@ -216,7 +107,23 @@ class EntityCard extends Component<Props, State> {
   };
 
   render() {
-    const { entityType, hoverable } = this.props;
+    const { entityType, hoverable, handleEditClick } = this.props;
+
+    const entity: EntityInstance =
+      entityType === 'product'
+        ? ({
+            id: this.props.id,
+            name: this.props.name,
+            description: this.props.description,
+            image: this.props.image,
+            price: this.props.price,
+            categories: this.props.categories
+          } as Product)
+        : ({
+            id: this.props.id,
+            name: this.props.name,
+            image: this.props.image
+          } as Category);
 
     return (
       <StyledCard
@@ -228,7 +135,9 @@ class EntityCard extends Component<Props, State> {
             key="edit"
             type="default"
             icon="edit"
-            onClick={this.handleEditClick}
+            onClick={(e: React.FormEvent<HTMLButtonElement>) =>
+              handleEditClick(e, entityType, entity)
+            }
           >
             Edit
           </ActionButton>,
@@ -258,16 +167,6 @@ class EntityCard extends Component<Props, State> {
             </span>
           }
           description={this.props.description}
-        />
-        <EntityModal
-          wrappedComponentRef={this.saveFormRef}
-          visible={this.state.modalVisible}
-          onCancel={this.handleCancel}
-          onCreate={this.handleCreate}
-          entityType={this.props.entityType}
-          actionType={'edit'}
-          entity={this.state.entity}
-          loading={this.state.loading}
         />
       </StyledCard>
     );

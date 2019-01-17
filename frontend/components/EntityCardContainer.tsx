@@ -1,11 +1,8 @@
-import { Card, Empty, Input, message } from 'antd';
+import { Card, Empty, Input } from 'antd';
 import React, { Component } from 'react';
 import styled from 'styled-components';
 import ActionButton from './ActionButton';
 import { EntityTypes, ActionTypes, EntityInstance } from '../types';
-import { Category, Product } from '../interfaces';
-import { ProductAPI, CategoryAPI } from '../api';
-import EntityModal from './EntityModal';
 import { AdminContext } from '../context';
 import Spinner from './Spinner';
 
@@ -61,16 +58,15 @@ const StyledCard = styled(Card)`
 interface Props {
   title: string;
   entityType: EntityTypes;
-  onNewClick: () => void;
   children: React.ReactNode[];
   loading: boolean;
+  handleNewClick: (entityType: EntityTypes) => void;
 }
 
 interface State {
   modalVisible: boolean;
   loading: boolean;
   entity?: EntityInstance;
-  actionType: ActionTypes;
   searchText: string;
 }
 
@@ -82,8 +78,6 @@ class EntityCardContainer extends Component<Props, State> {
     modalVisible: false,
     loading: false,
     entity: undefined,
-    entityType: 'product',
-    actionType: 'create',
     searchText: ''
   };
 
@@ -92,16 +86,19 @@ class EntityCardContainer extends Component<Props, State> {
   };
 
   render() {
+    const { children, title, handleNewClick, loading, entityType } = this.props;
+
     let data: React.ReactNode[] | React.ReactNode;
+
     /**
      * Check whether data is still being fetched (show loading spinner)
      * then inject the showModal func and entity's type to children's props
      */
-    if (this.props.loading) {
+    if (loading) {
       data = <Spinner />;
     } else {
-      if (this.props.children.length) {
-        data = React.Children.map(this.props.children, (child: any) => {
+      if (children.length) {
+        data = React.Children.map(children, (child: any) => {
           if (
             child.props.name
               .toLowerCase()
@@ -119,7 +116,7 @@ class EntityCardContainer extends Component<Props, State> {
 
     return (
       <StyledCard
-        title={this.props.title}
+        title={title}
         extra={[
           <Search
             key="search"
@@ -132,7 +129,7 @@ class EntityCardContainer extends Component<Props, State> {
             type="primary"
             id="new-button"
             icon="plus"
-            onClick={this.handleNewClick}
+            onClick={() => handleNewClick(entityType)}
           >
             New
           </ActionButton>
