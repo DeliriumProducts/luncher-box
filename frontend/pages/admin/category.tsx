@@ -56,9 +56,6 @@ interface State {
 }
 
 class CategoryPage extends Component<Props, State> {
-  static contextType = AdminContext;
-  context!: React.ContextType<typeof AdminContext>;
-
   state: State = {
     modalVisible: false,
     pageLoading: true,
@@ -70,7 +67,7 @@ class CategoryPage extends Component<Props, State> {
     searchText: ''
   };
 
-  formRef: any;
+  modalFormRef: any;
 
   showModal = (
     entityType: EntityTypes,
@@ -94,14 +91,14 @@ class CategoryPage extends Component<Props, State> {
     }
   };
 
-  handleCancel = () => {
+  handleModalCancel = () => {
     this.setState({
       modalVisible: false
     });
   };
 
-  handleModalFinished = () => {
-    const form = this.formRef.props.form;
+  handleModalAction = () => {
+    const form = this.modalFormRef.props.form;
 
     /**
      * We will need the entity from state when actionType == 'edit'
@@ -176,6 +173,7 @@ class CategoryPage extends Component<Props, State> {
         )).products;
 
         form.resetFields();
+
         if (products) {
           this.setState({ modalVisible: false, modalLoading: false, products });
         } else {
@@ -185,8 +183,8 @@ class CategoryPage extends Component<Props, State> {
     });
   };
 
-  saveFormRef = (formRef: any) => {
-    this.formRef = formRef;
+  saveModalFormRef = (modalFormRef: any) => {
+    this.modalFormRef = modalFormRef;
   };
 
   handleNewClick = (entityType: EntityTypes) => {
@@ -291,10 +289,10 @@ class CategoryPage extends Component<Props, State> {
               ))}
             </EntityCardContainer>
             <EntityModal
-              wrappedComponentRef={this.saveFormRef}
+              wrappedComponentRef={this.saveModalFormRef}
               visible={this.state.modalVisible}
-              onCancel={this.handleCancel}
-              onCreate={this.handleModalFinished}
+              onCancel={this.handleModalCancel}
+              onCreate={this.handleModalAction}
               entityType={this.state.entityType}
               actionType={this.state.actionType}
               entity={this.state.entity}
