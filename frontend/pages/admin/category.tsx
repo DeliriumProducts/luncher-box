@@ -209,19 +209,34 @@ class CategoryPage extends Component<Props, State> {
   };
 
   handleDeleteClick = async (
+    e: React.FormEvent<HTMLButtonElement>,
     entityType: EntityTypes,
     { id, name }: EntityInstance
   ) => {
-    if (entityType) {
-      await this.context.actions.delete(id, entityType);
+    e.stopPropagation();
 
-      if (entityType === 'category') {
-        await CategoryAPI.delete(id);
-      } else {
-        await ProductAPI.delete(id);
+    try {
+      if (entityType) {
+        if (entityType === 'category') {
+          await CategoryAPI.delete(id);
+        } else {
+          await ProductAPI.delete(id);
+        }
+
+        const products = (await CategoryAPI.getOne(
+          Number(this.props.query.categoryId)
+        )).products;
+
+        if (products) {
+          this.setState({ products }, () =>
+            message.success(`Successfully deleted ${entityType} ${name} 🎉`)
+          );
+        } else {
+          message.success(`Successfully deleted ${entityType} ${name} 🎉`);
+        }
       }
-
-      message.success(`Successfully deleted ${entityType} ${name} 🎉`);
+    } catch (err) {
+      message.error(`${err}`);
     }
   };
 
@@ -269,6 +284,7 @@ class CategoryPage extends Component<Props, State> {
                   categories={product.categories}
                   entityType="product"
                   handleEditClick={this.handleEditClick}
+                  handleDeleteClick={this.handleDeleteClick}
                 />
               ))}
             </EntityCardContainer>

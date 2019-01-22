@@ -72,6 +72,11 @@ interface Props {
     entityType: EntityTypes,
     entity: EntityInstance
   ) => void;
+  handleDeleteClick: (
+    e: React.FormEvent<HTMLButtonElement>,
+    entityType: EntityTypes,
+    entity: EntityInstance
+  ) => void;
 }
 
 interface State {
@@ -107,7 +112,12 @@ class EntityCard extends Component<Props, State> {
   };
 
   render() {
-    const { entityType, hoverable, handleEditClick } = this.props;
+    const {
+      entityType,
+      hoverable,
+      handleEditClick,
+      handleDeleteClick
+    } = this.props;
 
     const entity: EntityInstance =
       entityType === 'product'
@@ -143,7 +153,7 @@ class EntityCard extends Component<Props, State> {
           </ActionButton>,
           <Popconfirm
             title={`Are you sure you want to delete this ${entityType}?`}
-            onConfirm={this.handleDeleteClick}
+            onConfirm={(e: any) => handleDeleteClick(e, entityType, entity)}
             icon={<Icon type="question-circle-o" style={{ color: 'red' }} />}
             okText="Yes"
             cancelText="No"
