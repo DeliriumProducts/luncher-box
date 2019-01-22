@@ -98,7 +98,7 @@ class CategoryPage extends Component<Props, State> {
   };
 
   handleModalAction = () => {
-    const form = this.modalFormRef.props.form;
+    const modalForm = this.modalFormRef.props.form;
 
     /**
      * We will need the entity from state when actionType == 'edit'
@@ -106,7 +106,7 @@ class CategoryPage extends Component<Props, State> {
      * for undefined because entity is undefined on actionType == 'create'
      */
     const { entity } = this.state;
-    form.validateFields(async (err: any, values: any) => {
+    modalForm.validateFields(async (err: any, values: any) => {
       if (err) {
         return;
       }
@@ -172,7 +172,7 @@ class CategoryPage extends Component<Props, State> {
           Number(this.props.query.categoryId)
         )).products;
 
-        form.resetFields();
+        modalForm.resetFields();
 
         if (products) {
           this.setState({ modalVisible: false, modalLoading: false, products });
