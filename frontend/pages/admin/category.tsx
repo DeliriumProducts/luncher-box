@@ -46,7 +46,8 @@ interface Props {
 
 interface State {
   modalVisible: boolean;
-  loading: boolean;
+  pageLoading: boolean;
+  modalLoading: boolean;
   products: Product[];
   entity?: EntityInstance;
   entityType: EntityTypes;
@@ -60,7 +61,8 @@ class CategoryPage extends Component<Props, State> {
 
   state: State = {
     modalVisible: false,
-    loading: true,
+    pageLoading: true,
+    modalLoading: false,
     products: [],
     entity: undefined,
     entityType: 'product',
@@ -112,7 +114,7 @@ class CategoryPage extends Component<Props, State> {
         return;
       }
 
-      this.setState({ loading: true });
+      this.setState({ modalLoading: true });
 
       try {
         switch (this.state.entityType) {
@@ -166,7 +168,7 @@ class CategoryPage extends Component<Props, State> {
             break;
         }
       } catch (err) {
-        this.setState({ loading: false });
+        this.setState({ modalLoading: false });
         message.error(`${err}`);
       } finally {
         const products = (await CategoryAPI.getOne(
@@ -175,9 +177,9 @@ class CategoryPage extends Component<Props, State> {
 
         form.resetFields();
         if (products) {
-          this.setState({ modalVisible: false, loading: false, products });
+          this.setState({ modalVisible: false, modalLoading: false, products });
         } else {
-          this.setState({ modalVisible: false, loading: false });
+          this.setState({ modalVisible: false, modalLoading: false });
         }
       }
     });
@@ -256,12 +258,12 @@ class CategoryPage extends Component<Props, State> {
         Router.push('/admin')
       );
     } finally {
-      this.setState({ loading: false });
+      this.setState({ pageLoading: false });
     }
   }
 
   render() {
-    const { loading, products } = this.state;
+    const { pageLoading: loading, products } = this.state;
 
     return (
       <AdminLayout selectedKey="home">
@@ -296,7 +298,7 @@ class CategoryPage extends Component<Props, State> {
               entityType={this.state.entityType}
               actionType={this.state.actionType}
               entity={this.state.entity}
-              loading={this.state.loading}
+              loading={this.state.modalLoading}
             />
           </div>
         </FlexContainer>
