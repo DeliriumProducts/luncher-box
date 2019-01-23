@@ -92,7 +92,11 @@ class CategoryPage extends Component<Props, State> {
 
   handleModalCancel = () => {
     this.setState({
-      modalVisible: false
+      modalVisible: false,
+      modalLoading: false,
+      entity: undefined,
+      entityType: 'product',
+      actionType: 'create'
     });
   };
 
