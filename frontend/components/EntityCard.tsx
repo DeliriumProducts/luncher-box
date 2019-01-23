@@ -1,5 +1,5 @@
-import { Card, Icon, Popconfirm, message } from 'antd';
-import React, { Component } from 'react';
+import { Card, Icon, Popconfirm } from 'antd';
+import React from 'react';
 import styled from 'styled-components';
 import ActionButton from './ActionButton';
 import PriceBadge from './PriceBadge';
