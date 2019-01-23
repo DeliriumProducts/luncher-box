@@ -74,6 +74,10 @@ const EntityModal = Form.create()(
                     message: 'Invalid name'
                   },
                   {
+                    min: 2,
+                    message: 'Name must be at least 2 characters long'
+                  },
+                  {
                     required: true,
                     message: 'Name field cannot be empty'
                   }
@@ -96,6 +100,10 @@ const EntityModal = Form.create()(
                     {
                       type: 'string',
                       message: 'Invalid description'
+                    },
+                    {
+                      min: 5,
+                      message: 'Description must be at least 5 characters long'
                     },
                     {
                       required: true,
