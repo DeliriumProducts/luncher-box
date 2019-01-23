@@ -79,28 +79,17 @@ interface Props {
   ) => void;
 }
 
-interface State {
-  modalVisible: boolean;
-  loading: boolean;
-  popConfirmVisible: boolean;
-  entity?: EntityInstance;
-}
+const EntityCard: React.FunctionComponent<Props> = props => {
+  const handleCardClick = () => {
+    const { entityType, id } = props;
 
-class EntityCard extends Component<Props, State> {
-  state = {
-    modalVisible: false,
-    loading: false,
-    popConfirmVisible: false,
-    entity: undefined
-  };
-
-  handleCardClick = () => {
-    const { entityType, id } = this.props;
     if (entityType === 'category') {
       Router.push(
         {
           pathname: '/admin/category',
-          query: { categoryId: id }
+          query: {
+            categoryId: id
+          }
         },
         {
           pathname: `/admin/category/${id}`
@@ -111,76 +100,77 @@ class EntityCard extends Component<Props, State> {
     }
   };
 
-  render() {
-    const {
-      entityType,
-      hoverable,
-      handleEditClick,
-      handleDeleteClick
-    } = this.props;
-
-    const entity: EntityInstance =
-      entityType === 'product'
-        ? ({
-            id: this.props.id,
-            name: this.props.name,
-            description: this.props.description,
-            image: this.props.image,
-            price: this.props.price,
-            categories: this.props.categories
-          } as Product)
-        : ({
-            id: this.props.id,
-            name: this.props.name,
-            image: this.props.image
-          } as Category);
-
-    return (
-      <StyledCard
-        bordered={false}
-        hoverable={hoverable}
-        onClick={this.handleCardClick}
-        actions={[
-          <ActionButton
-            key="edit"
-            type="default"
-            icon="edit"
-            onClick={(e: React.FormEvent<HTMLButtonElement>) =>
-              handleEditClick(e, entityType, entity)
-            }
-          >
-            Edit
-          </ActionButton>,
-          <Popconfirm
-            title={`Are you sure you want to delete this ${entityType}?`}
-            onConfirm={(e: any) => handleDeleteClick(e, entityType, entity)}
-            icon={<Icon type="question-circle-o" style={{ color: 'red' }} />}
-            okText="Yes"
-            cancelText="No"
-          >
-            <ActionButton key="delete" type="default" icon="delete">
-              Delete
-            </ActionButton>
-          </Popconfirm>
-        ]}
-      >
-        <StyledMeta
-          avatar={<StyledImg src={this.props.image} />}
-          title={
-            <span>
-              {this.props.name}
-              <PriceBadge
-                overflowCount={1000}
-                count={this.props.price && `${this.props.price} / piece`}
-                style={{ marginLeft: '10px', zIndex: 0 }}
-              />
-            </span>
+  const { entityType, hoverable, handleEditClick, handleDeleteClick } = props;
+  const entity: EntityInstance =
+    entityType === 'product'
+      ? ({
+          id: props.id,
+          name: props.name,
+          description: props.description,
+          image: props.image,
+          price: props.price,
+          categories: props.categories
+        } as Product)
+      : ({
+          id: props.id,
+          name: props.name,
+          image: props.image
+        } as Category);
+  return (
+    <StyledCard
+      bordered={false}
+      hoverable={hoverable}
+      onClick={handleCardClick}
+      actions={[
+        <ActionButton
+          key="edit"
+          type="default"
+          icon="edit"
+          onClick={(e: React.FormEvent<HTMLButtonElement>) =>
+            handleEditClick(e, entityType, entity)
           }
-          description={this.props.description}
-        />
-      </StyledCard>
-    );
-  }
-}
+        >
+          Edit
+        </ActionButton>,
+        <Popconfirm
+          title={`Are you sure you want to delete this ${entityType}?`}
+          onConfirm={(e: any) => handleDeleteClick(e, entityType, entity)}
+          icon={
+            <Icon
+              type="question-circle-o"
+              style={{
+                color: 'red'
+              }}
+            />
+          }
+          okText="Yes"
+          cancelText="No"
+        >
+          <ActionButton key="delete" type="default" icon="delete">
+            Delete
+          </ActionButton>
+        </Popconfirm>
+      ]}
+    >
+      <StyledMeta
+        avatar={<StyledImg src={props.image} />}
+        title={
+          <span>
+            {props.name}
+            <PriceBadge
+              overflowCount={1000}
+              count={props.price && `${props.price} / piece`}
+              style={{
+                marginLeft: '10px',
+                zIndex: 0
+              }}
+            />
+          </span>
+        }
+        description={props.description}
+      />
+    </StyledCard>
+  );
+};
 
 export default EntityCard;
