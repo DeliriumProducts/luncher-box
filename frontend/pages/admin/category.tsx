@@ -8,7 +8,6 @@ import withAuth from '../../components/withAuth';
 import AdminLayout from '../../components/AdminLayout';
 import EntityCardContainer from '../../components/EntityCardContainer';
 import EntityCard from '../../components/EntityCard';
-import { AdminContext } from '../../context';
 import { Product, Category } from '../../interfaces';
 import { EntityTypes, ActionTypes, EntityInstance } from '../../types';
 import EntityModal from '../../components/EntityModal';
@@ -105,8 +104,8 @@ class CategoryPage extends Component<Props, State> {
      * so we destructure it now and then we have to check
      * for undefined because entity is undefined on actionType == 'create'
      */
-    const { entity } = this.state;
-    modalForm.validateFields(async (err: any, values: any) => {
+    const { entity: entityToEdit, actionType } = { ...this.state };
+    modalForm.validateFields(async (err: any, entity: any) => {
       if (err) {
         return;
       }
@@ -116,12 +115,10 @@ class CategoryPage extends Component<Props, State> {
       try {
         switch (this.state.entityType) {
           case 'category':
-            let category: Category = values;
-
-            if (this.state.actionType === 'create') {
-              category = (await CategoryAPI.create(category)).data;
+            if (actionType === 'create') {
+              entity = (await CategoryAPI.create(entity)).data;
               message.success(
-                `Successfully created category ${category.name} 🎉`
+                `Successfully created category ${entity.name} 🎉`
               );
             } else {
               /**
@@ -129,34 +126,30 @@ class CategoryPage extends Component<Props, State> {
                * then inject the id of the entity manually since
                * our modal does not return it when actionType == 'edit'
                */
-              if (entity) {
-                category.id = entity.id;
-                category = (await CategoryAPI.edit(category)).data;
+              if (entityToEdit) {
+                entity.id = entityToEdit.id;
+                entity = (await CategoryAPI.edit(entity)).data;
                 message.success(
-                  `Successfully edited category ${category.name} 🎉`
+                  `Successfully edited category ${entity.name} 🎉`
                 );
               }
             }
             break;
           case 'product':
-            let product: Product = values;
-
-            if (this.state.actionType === 'create') {
-              product = (await ProductAPI.create(product)).data;
-              message.success(
-                `Successfully created product ${product.name} 🎉`
-              );
+            if (actionType === 'create') {
+              entity = (await ProductAPI.create(entity)).data;
+              message.success(`Successfully created product ${entity.name} 🎉`);
             } else {
               /**
                * First we check for entity because it may be undefined
                * then inject the id of the entity manually since
                * our modal does not return it when actionType == 'edit'
                */
-              if (entity) {
-                product.id = entity.id;
-                product = (await ProductAPI.edit(product)).data;
+              if (entityToEdit) {
+                entity.id = entityToEdit.id;
+                entity = (await ProductAPI.edit(entity)).data;
                 message.success(
-                  `Successfully edited product ${product.name} 🎉`
+                  `Successfully edited product ${entity.name} 🎉`
                 );
               }
             }
@@ -167,19 +160,37 @@ class CategoryPage extends Component<Props, State> {
       } catch (err) {
         this.setState({ modalLoading: false });
         message.error(`${err}`);
-      } finally {
-        const products = (await CategoryAPI.getOne(
-          Number(this.props.query.categoryId)
-        )).products;
+        return;
+      }
 
-        modalForm.resetFields();
+      const productCategories: Category[] = entity.categories;
 
-        if (products) {
-          this.setState({ modalVisible: false, modalLoading: false, products });
-        } else {
-          this.setState({ modalVisible: false, modalLoading: false });
+      for (const category of productCategories) {
+        if (category.id === +this.props.query.categoryId) {
+          const product = entity;
+
+          if (actionType === 'create') {
+            this.setState((prevState: State) => ({
+              products: [...prevState.products, product]
+            }));
+          } else {
+            const productIndex = this.state.products.findIndex(
+              ({ id }: Product) => id === product.id
+            );
+
+            if (productIndex >= 0) {
+              const products = [...this.state.products];
+              products[productIndex] = product;
+
+              this.setState({ products });
+            }
+          }
+          break;
         }
       }
+
+      modalForm.resetFields();
+      this.setState({ modalVisible: false, modalLoading: false });
     });
   };
 
@@ -245,8 +256,6 @@ class CategoryPage extends Component<Props, State> {
       const products = (await CategoryAPI.getOne(
         Number(this.props.query.categoryId)
       )).products;
-
-      const categories = await CategoryAPI.getAll();
 
       if (products) {
         this.setState({ products });
