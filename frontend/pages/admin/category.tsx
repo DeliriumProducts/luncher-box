@@ -168,7 +168,7 @@ class CategoryPage extends Component<Props, State> {
       }
 
       /**
-       * Update the list with the created/edited product
+       * Update the state with the created/edited product
        */
       const productCategories: Category[] = entity.categories;
 
