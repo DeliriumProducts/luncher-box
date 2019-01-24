@@ -167,6 +167,9 @@ class CategoryPage extends Component<Props, State> {
         return;
       }
 
+      /**
+       * Update the list with the created/edited product
+       */
       const productCategories: Category[] = entity.categories;
 
       for (const category of productCategories) {
@@ -213,12 +216,10 @@ class CategoryPage extends Component<Props, State> {
   ) => {
     e.stopPropagation();
 
-    if (entityType === 'product') {
-      /**
-       * Update current product with all categories
-       */
-      entity = await ProductAPI.getOne(entity.id);
-    }
+    /**
+     * Update current product with all categories
+     */
+    entity = await ProductAPI.getOne(entity.id);
 
     this.showModal(entityType, 'edit', entity);
   };
@@ -230,28 +231,21 @@ class CategoryPage extends Component<Props, State> {
   ) => {
     e.stopPropagation();
 
-    try {
-      if (entityType) {
-        if (entityType === 'category') {
-          await CategoryAPI.delete(id);
-        } else {
-          await ProductAPI.delete(id);
-        }
+    if (entityType) {
+      await ProductAPI.delete(id);
 
-        const products = (await CategoryAPI.getOne(
-          Number(this.props.query.categoryId)
-        )).products;
+      const products = [...this.state.products];
 
-        if (products) {
-          this.setState({ products }, () =>
-            message.success(`Successfully deleted ${entityType} ${name} 🎉`)
-          );
-        } else {
-          message.success(`Successfully deleted ${entityType} ${name} 🎉`);
-        }
+      const productIndex = products.findIndex(
+        ({ id: productId }: Product) => productId == id
+      );
+
+      if (productIndex >= 0) {
+        products.splice(productIndex, 1);
+        this.setState({ products }, () =>
+          message.success(`Successfully deleted ${entityType} ${name} 🎉`)
+        );
       }
-    } catch (err) {
-      message.error(`${err}`);
     }
   };
 
