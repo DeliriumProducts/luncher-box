@@ -115,49 +115,20 @@ class CategoryPage extends Component<Props, State> {
       this.setState({ modalLoading: true });
 
       try {
-        switch (this.state.entityType) {
-          case 'category':
-            if (actionType === 'create') {
-              entity = (await CategoryAPI.create(entity)).data;
-              message.success(
-                `Successfully created category ${entity.name} 🎉`
-              );
-            } else {
-              /**
-               * First we check for entity because it may be undefined
-               * then inject the id of the entity manually since
-               * our modal does not return it when actionType == 'edit'
-               */
-              if (entityToEdit) {
-                entity.id = entityToEdit.id;
-                entity = (await CategoryAPI.edit(entity)).data;
-                message.success(
-                  `Successfully edited category ${entity.name} 🎉`
-                );
-              }
-            }
-            break;
-          case 'product':
-            if (actionType === 'create') {
-              entity = (await ProductAPI.create(entity)).data;
-              message.success(`Successfully created product ${entity.name} 🎉`);
-            } else {
-              /**
-               * First we check for entity because it may be undefined
-               * then inject the id of the entity manually since
-               * our modal does not return it when actionType == 'edit'
-               */
-              if (entityToEdit) {
-                entity.id = entityToEdit.id;
-                entity = (await ProductAPI.edit(entity)).data;
-                message.success(
-                  `Successfully edited product ${entity.name} 🎉`
-                );
-              }
-            }
-            break;
-          default:
-            break;
+        if (actionType === 'create') {
+          entity = (await ProductAPI.create(entity)).data;
+          message.success(`Successfully created product ${entity.name} 🎉`);
+        } else {
+          /**
+           * First we check for entity because it may be undefined
+           * then inject the id of the entity manually since
+           * our modal does not return it when actionType == 'edit'
+           */
+          if (entityToEdit) {
+            entity.id = entityToEdit.id;
+            entity = (await ProductAPI.edit(entity)).data;
+            message.success(`Successfully edited product ${entity.name} 🎉`);
+          }
         }
       } catch (err) {
         this.setState({ modalLoading: false });
@@ -223,26 +194,23 @@ class CategoryPage extends Component<Props, State> {
 
   handleDeleteClick = async (
     e: React.FormEvent<HTMLButtonElement>,
-    entityType: EntityTypes,
     { id, name }: EntityInstance
   ) => {
     e.stopPropagation();
 
-    if (entityType) {
-      await ProductAPI.delete(id);
+    await ProductAPI.delete(id);
 
-      const products = [...this.state.products];
+    const products = [...this.state.products];
 
-      const productIndex = products.findIndex(
-        ({ id: productId }: Product) => productId == id
+    const productIndex = products.findIndex(
+      ({ id: productId }: Product) => productId == id
+    );
+
+    if (productIndex >= 0) {
+      products.splice(productIndex, 1);
+      this.setState({ products }, () =>
+        message.success(`Successfully deleted product ${name} 🎉`)
       );
-
-      if (productIndex >= 0) {
-        products.splice(productIndex, 1);
-        this.setState({ products }, () =>
-          message.success(`Successfully deleted ${entityType} ${name} 🎉`)
-        );
-      }
     }
   };
 

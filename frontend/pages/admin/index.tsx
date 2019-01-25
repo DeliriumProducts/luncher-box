@@ -175,26 +175,23 @@ class Index extends Component<any, State> {
 
   handleDeleteClick = async (
     e: React.FormEvent<HTMLButtonElement>,
-    entityType: EntityTypes,
     { id, name }: EntityInstance
   ) => {
     e.stopPropagation();
 
-    if (entityType) {
-      await CategoryAPI.delete(id);
+    await CategoryAPI.delete(id);
 
-      const categories = [...this.state.categories];
+    const categories = [...this.state.categories];
 
-      const categoryIndex = categories.findIndex(
-        ({ id: categoryId }: Category) => categoryId == id
+    const categoryIndex = categories.findIndex(
+      ({ id: categoryId }: Category) => categoryId == id
+    );
+
+    if (categoryIndex >= 0) {
+      categories.splice(categoryIndex, 1);
+      this.setState({ categories }, () =>
+        message.success(`Successfully deleted category ${name} 🎉`)
       );
-
-      if (categoryIndex >= 0) {
-        categories.splice(categoryIndex, 1);
-        this.setState({ categories }, () =>
-          message.success(`Successfully deleted ${entityType} ${name} 🎉`)
-        );
-      }
     }
   };
 

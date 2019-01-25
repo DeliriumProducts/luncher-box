@@ -74,7 +74,6 @@ interface Props {
   ) => void;
   handleDeleteClick: (
     e: React.FormEvent<HTMLButtonElement>,
-    entityType: EntityTypes,
     entity: EntityInstance
   ) => void;
 }
@@ -134,7 +133,7 @@ const EntityCard: React.FunctionComponent<Props> = props => {
         </ActionButton>,
         <Popconfirm
           title={`Are you sure you want to delete this ${entityType}?`}
-          onConfirm={(e: any) => handleDeleteClick(e, entityType, entity)}
+          onConfirm={(e: any) => handleDeleteClick(e, entity)}
           onCancel={(e: any) => e.stopPropagation()}
           icon={
             <Icon
