@@ -135,6 +135,7 @@ const EntityCard: React.FunctionComponent<Props> = props => {
         <Popconfirm
           title={`Are you sure you want to delete this ${entityType}?`}
           onConfirm={(e: any) => handleDeleteClick(e, entityType, entity)}
+          onCancel={(e: any) => e.stopPropagation()}
           icon={
             <Icon
               type="question-circle-o"
@@ -146,7 +147,14 @@ const EntityCard: React.FunctionComponent<Props> = props => {
           okText="Yes"
           cancelText="No"
         >
-          <ActionButton key="delete" type="default" icon="delete">
+          <ActionButton
+            key="delete"
+            type="default"
+            icon="delete"
+            onClick={(e: React.FormEvent<HTMLButtonElement>) =>
+              e.stopPropagation()
+            }
+          >
             Delete
           </ActionButton>
         </Popconfirm>

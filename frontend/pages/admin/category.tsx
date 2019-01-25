@@ -51,7 +51,6 @@ interface State {
   entity?: EntityInstance;
   entityType: EntityTypes;
   actionType: ActionTypes;
-  searchText: string;
 }
 
 class CategoryPage extends Component<Props, State> {
@@ -62,8 +61,7 @@ class CategoryPage extends Component<Props, State> {
     products: [],
     entity: undefined,
     entityType: 'product',
-    actionType: 'create',
-    searchText: ''
+    actionType: 'create'
   };
 
   modalFormRef: any;
@@ -181,14 +179,13 @@ class CategoryPage extends Component<Props, State> {
               products: [...prevState.products, product]
             }));
           } else {
-            const productIndex = this.state.products.findIndex(
+            const products = [...this.state.products];
+            const productIndex = products.findIndex(
               ({ id }: Product) => id === product.id
             );
 
             if (productIndex >= 0) {
-              const products = [...this.state.products];
               products[productIndex] = product;
-
               this.setState({ products });
             }
           }
@@ -289,6 +286,7 @@ class CategoryPage extends Component<Props, State> {
                   description={product.description}
                   price={product.price}
                   categories={product.categories}
+                  hoverable={true}
                   entityType="product"
                   handleEditClick={this.handleEditClick}
                   handleDeleteClick={this.handleDeleteClick}
