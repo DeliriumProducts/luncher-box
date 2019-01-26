@@ -15,34 +15,27 @@ const GlobalStyle = createGlobalStyle`
     box-sizing: border-box;
   }
 
-  #__next {
+  #__next,
+  #__next > div {
     height: 100%;
   }
 
   .page-transition-enter {
-    height: 100%;
     opacity: 0;
   }
 
   .page-transition-enter-active {
-    height: 100%;
     opacity: 1;
     transition: opacity 150ms;
   }
 
   .page-transition-exit {
-    height: 100%;
     opacity: 1;
   }
 
   .page-transition-exit-active {
-    height: 100%;
     opacity: 0;
     transition: opacity 150ms;
-  }
-
-  .page-transition-enter-done {
-    height: 100%;
   }
 `;
 
