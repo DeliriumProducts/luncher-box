@@ -55,7 +55,7 @@
     "routing-controllers": "^0.7.7",
     "socket-controllers": "^0.0.3",
     "socket.io": "^2.2.0",
-    "tslint": "^5.11.0",
+    "tslint": "^5.12.1",
     "typedi": "^0.8.0",
     "typeorm": "0.2.9",
     "typeorm-routing-controllers-extensions": "^0.2.0"

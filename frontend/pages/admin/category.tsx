@@ -170,7 +170,7 @@ class CategoryPage extends Component<Props, State> {
         const products = [...this.state.products];
 
         const productIndex = products.findIndex(
-          ({ id }: Product) => id == product.id
+          ({ id }: Product) => id === product.id
         );
 
         if (productIndex >= 0) {
@@ -218,7 +218,7 @@ class CategoryPage extends Component<Props, State> {
     const products = [...this.state.products];
 
     const productIndex = products.findIndex(
-      ({ id: productId }: Product) => productId == id
+      ({ id: productId }: Product) => productId === id
     );
 
     if (productIndex >= 0) {
