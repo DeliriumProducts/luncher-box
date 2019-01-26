@@ -2,7 +2,7 @@ import { Card, Empty, Input } from 'antd';
 import React, { Component } from 'react';
 import styled from 'styled-components';
 import ActionButton from './ActionButton';
-import { EntityTypes, ActionTypes, EntityInstance } from '../types';
+import { EntityTypes, EntityInstance } from '../types';
 import { AdminContext } from '../context';
 import Spinner from './Spinner';
 

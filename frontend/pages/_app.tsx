@@ -27,7 +27,7 @@ const GlobalStyle = createGlobalStyle`
   .page-transition-enter-active {
     height: 100%;
     opacity: 1;
-    transition: opacity 300ms;
+    transition: opacity 150ms;
   }
 
   .page-transition-exit {
@@ -38,7 +38,7 @@ const GlobalStyle = createGlobalStyle`
   .page-transition-exit-active {
     height: 100%;
     opacity: 0;
-    transition: opacity 300ms;
+    transition: opacity 150ms;
   }
 
   .page-transition-enter-done {
@@ -65,7 +65,7 @@ export default class MyApp extends App {
         <EntityContextProvider>
           <Container>
             <GlobalStyle />
-            <PageTransition timeout={200} classNames="page-transition">
+            <PageTransition timeout={150} classNames="page-transition">
               <Component {...pageProps} />
             </PageTransition>
           </Container>

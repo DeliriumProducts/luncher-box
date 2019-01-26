@@ -19,7 +19,7 @@ const FlexContainer = styled.div`
 
   .col {
     flex: 1;
-    max-width: 50%;
+    max-width: 70%;
     height: 100%;
     margin: auto;
   }
