@@ -150,6 +150,7 @@ class CategoryPage extends Component<Props, State> {
       }
 
       const product = entity;
+
       if (shouldKeepProduct) {
         if (actionType === 'create') {
           this.setState((prevState: State) => ({
