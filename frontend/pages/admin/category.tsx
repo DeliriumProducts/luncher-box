@@ -140,27 +140,42 @@ class CategoryPage extends Component<Props, State> {
        * Update the state with the created/edited product
        */
       const productCategories: Category[] = entity.categories;
+      let shouldKeepProduct = false;
 
       for (const category of productCategories) {
         if (category.id === +this.props.query.categoryId) {
-          const product = entity;
-
-          if (actionType === 'create') {
-            this.setState((prevState: State) => ({
-              products: [...prevState.products, product]
-            }));
-          } else {
-            const products = [...this.state.products];
-            const productIndex = products.findIndex(
-              ({ id }: Product) => id === product.id
-            );
-
-            if (productIndex >= 0) {
-              products[productIndex] = product;
-              this.setState({ products });
-            }
-          }
+          shouldKeepProduct = true;
           break;
+        }
+      }
+
+      const product = entity;
+      if (shouldKeepProduct) {
+        if (actionType === 'create') {
+          this.setState((prevState: State) => ({
+            products: [...prevState.products, product]
+          }));
+        } else {
+          const products = [...this.state.products];
+          const productIndex = products.findIndex(
+            ({ id }: Product) => id === product.id
+          );
+
+          if (productIndex >= 0) {
+            products[productIndex] = product;
+            this.setState({ products });
+          }
+        }
+      } else {
+        const products = [...this.state.products];
+
+        const productIndex = products.findIndex(
+          ({ id }: Product) => id == product.id
+        );
+
+        if (productIndex >= 0) {
+          products.splice(productIndex, 1);
+          this.setState({ products });
         }
       }
 
