@@ -11,7 +11,7 @@ const dbConfig: ConnectionOptions = {
   charset: 'UTF8_GENERAL_CI',
   synchronize: IS_DEV,
   logging: false,
-  entities: ['src/entities/*.ts']
+  entities: [__dirname + '/../entities/*.*']
 };
 
 export { dbConfig };

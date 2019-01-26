@@ -18,8 +18,8 @@ const startServer = async () => {
   useExpressServer(app, {
     classTransformer: false,
     defaultErrorHandler: false,
-    controllers: [`${__dirname}/controllers/*.ts`],
-    middlewares: [`${__dirname}/middlewares/*.ts`],
+    controllers: [`${__dirname}/controllers/*.*`],
+    middlewares: [`${__dirname}/middlewares/*.*`],
     authorizationChecker
   });
 
@@ -27,7 +27,7 @@ const startServer = async () => {
    * Set up socket-controllers
    */
   useSocketServer(io, {
-    controllers: [`${__dirname}/controllers/*.io.ts`]
+    controllers: [`${__dirname}/controllers/*.io.*`]
   });
 
   /**

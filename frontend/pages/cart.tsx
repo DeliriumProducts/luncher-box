@@ -157,8 +157,8 @@ export default class extends React.Component<any, State> {
               return (
                 <ItemCard
                   interactive
-                  id={product.id}
                   key={product.id}
+                  id={product.id}
                   name={product.name}
                   description={product.description}
                   image={product.image}
