@@ -20,6 +20,7 @@
     "localforage": "^1.7.3",
     "lodash.debounce": "^4.0.8",
     "next": "7.0.2",
+    "next-page-transitions": "^1.0.0-alpha.5",
     "react": "16.6.3",
     "react-dom": "16.6.3",
     "socket.io-client": "^2.2.0",
@@ -37,6 +38,7 @@
     "babel-plugin-import": "^1.11.0",
     "babel-plugin-styled-components": "^1.9.4",
     "next-plugin-styled-icons": "^6.0.1",
+    "tslint": "^5.12.1",
     "typescript": "3.2.2"
   },
   "license": "ISC"

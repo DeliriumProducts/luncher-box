@@ -1,14 +1,15 @@
 import { Component } from 'react';
-import { message } from 'antd';
-import AdminLayout from '../../components/AdminLayout';
-import withAuth from '../../components/withAuth';
-import { AdminContext } from '../../context';
-import EntityCard from '../../components/EntityCard';
 import styled from 'styled-components';
+import { message } from 'antd';
+import withRouter from '../../components/withRouter';
+import Router, { DefaultQuery } from 'next/router';
+import { CategoryAPI, ProductAPI } from '../../api';
+import withAuth from '../../components/withAuth';
+import AdminLayout from '../../components/AdminLayout';
 import EntityCardContainer from '../../components/EntityCardContainer';
-import { Category } from '../../interfaces';
-import { CategoryAPI } from '../../api';
-import { EntityInstance, EntityTypes, ActionTypes } from '../../types';
+import EntityCard from '../../components/EntityCard';
+import { Product, Category } from '../../interfaces';
+import { EntityTypes, ActionTypes, EntityInstance } from '../../types';
 import EntityModal from '../../components/EntityModal';
 
 const FlexContainer = styled.div`
@@ -33,27 +34,33 @@ const FlexContainer = styled.div`
     flex-direction: column;
   }
 `;
+
+interface CategoryQuery extends DefaultQuery {
+  categoryId: string;
+}
+
+interface Props {
+  query: CategoryQuery;
+}
+
 interface State {
   modalVisible: boolean;
   pageLoading: boolean;
   modalLoading: boolean;
-  categories: Category[];
+  products: Product[];
   entity?: EntityInstance;
   entityType: EntityTypes;
   actionType: ActionTypes;
 }
 
-class Index extends Component<any, State> {
-  static contextType = AdminContext;
-  context!: React.ContextType<typeof AdminContext>;
-
+class CategoryPage extends Component<Props, State> {
   state: State = {
     modalVisible: false,
     pageLoading: true,
     modalLoading: false,
-    categories: [],
+    products: [],
     entity: undefined,
-    entityType: 'category',
+    entityType: 'product',
     actionType: 'create'
   };
 
@@ -86,7 +93,7 @@ class Index extends Component<any, State> {
       modalVisible: false,
       modalLoading: false,
       entity: undefined,
-      entityType: 'category',
+      entityType: 'product',
       actionType: 'create'
     });
   };
@@ -109,8 +116,8 @@ class Index extends Component<any, State> {
 
       try {
         if (actionType === 'create') {
-          entity = (await CategoryAPI.create(entity)).data;
-          message.success(`Successfully created category ${entity.name} 🎉`);
+          entity = (await ProductAPI.create(entity)).data;
+          message.success(`Successfully created product ${entity.name} 🎉`);
         } else {
           /**
            * First we check for entity because it may be undefined
@@ -119,8 +126,8 @@ class Index extends Component<any, State> {
            */
           if (entityToEdit) {
             entity.id = entityToEdit.id;
-            entity = (await CategoryAPI.edit(entity)).data;
-            message.success(`Successfully edited category ${entity.name} 🎉`);
+            entity = (await ProductAPI.edit(entity)).data;
+            message.success(`Successfully edited product ${entity.name} 🎉`);
           }
         }
       } catch (err) {
@@ -130,23 +137,45 @@ class Index extends Component<any, State> {
       }
 
       /**
-       * Update the state with the created/edited category
+       * Update the state with the created/edited product
        */
-      const category = entity;
+      const productCategories: Category[] = entity.categories;
+      let shouldKeepProduct = false;
 
-      if (actionType === 'create') {
-        this.setState((prevState: State) => ({
-          categories: [...prevState.categories, category]
-        }));
+      for (const category of productCategories) {
+        if (category.id === +this.props.query.categoryId) {
+          shouldKeepProduct = true;
+          break;
+        }
+      }
+
+      const product = entity;
+      if (shouldKeepProduct) {
+        if (actionType === 'create') {
+          this.setState((prevState: State) => ({
+            products: [...prevState.products, product]
+          }));
+        } else {
+          const products = [...this.state.products];
+          const productIndex = products.findIndex(
+            ({ id }: Product) => id === product.id
+          );
+
+          if (productIndex >= 0) {
+            products[productIndex] = product;
+            this.setState({ products });
+          }
+        }
       } else {
-        const categories = [...this.state.categories];
-        const categoryIndex = categories.findIndex(
-          ({ id }: Category) => id === category.id
+        const products = [...this.state.products];
+
+        const productIndex = products.findIndex(
+          ({ id }: Product) => id === product.id
         );
 
-        if (categoryIndex >= 0) {
-          categories[categoryIndex] = category;
-          this.setState({ categories });
+        if (productIndex >= 0) {
+          products.splice(productIndex, 1);
+          this.setState({ products });
         }
       }
 
@@ -170,6 +199,11 @@ class Index extends Component<any, State> {
   ) => {
     e.stopPropagation();
 
+    /**
+     * Update current product with all categories
+     */
+    entity = await ProductAPI.getOne(entity.id);
+
     this.showModal(entityType, 'edit', entity);
   };
 
@@ -179,62 +213,68 @@ class Index extends Component<any, State> {
   ) => {
     e.stopPropagation();
 
-    await CategoryAPI.delete(id);
+    await ProductAPI.delete(id);
 
-    const categories = [...this.state.categories];
+    const products = [...this.state.products];
 
-    const categoryIndex = categories.findIndex(
-      ({ id: categoryId }: Category) => categoryId === id
+    const productIndex = products.findIndex(
+      ({ id: productId }: Product) => productId === id
     );
 
-    if (categoryIndex >= 0) {
-      categories.splice(categoryIndex, 1);
-      this.setState({ categories }, () =>
-        message.success(`Successfully deleted category ${name} 🎉`)
+    if (productIndex >= 0) {
+      products.splice(productIndex, 1);
+      this.setState({ products }, () =>
+        message.success(`Successfully deleted product ${name} 🎉`)
       );
     }
   };
 
   async componentDidMount() {
     try {
-      const categories = await CategoryAPI.getAll();
+      const products = (await CategoryAPI.getOne(
+        Number(this.props.query.categoryId)
+      )).products;
 
-      if (categories) {
-        this.setState({ categories });
+      if (products) {
+        this.setState({ products });
       }
     } catch (err) {
-      message.error(`${err}`, 3);
+      message.error(`${err}, Redirecting you to the home page...`, 3, () =>
+        Router.push('/admin')
+      );
     } finally {
       this.setState({ pageLoading: false });
     }
   }
 
   render() {
-    const { pageLoading: loading, categories } = this.state;
+    const { pageLoading: loading, products } = this.state;
 
     return (
       <AdminLayout selectedKey="home">
         <FlexContainer>
           <div className="col">
             <EntityCardContainer
-              title={`Categories (${categories.length})`}
-              entityType="category"
+              title={`Products (${products.length})`}
+              entityType="product"
               loading={loading}
               handleNewClick={this.handleNewClick}
             >
-              {categories &&
-                categories.map((category: Category) => (
-                  <EntityCard
-                    key={category.id}
-                    id={category.id}
-                    name={category.name}
-                    image={category.image}
-                    hoverable={true}
-                    entityType="category"
-                    handleEditClick={this.handleEditClick}
-                    handleDeleteClick={this.handleDeleteClick}
-                  />
-                ))}
+              {products.map(product => (
+                <EntityCard
+                  key={product.id}
+                  id={product.id}
+                  name={product.name}
+                  image={product.image}
+                  description={product.description}
+                  price={product.price}
+                  categories={product.categories}
+                  hoverable={true}
+                  entityType="product"
+                  handleEditClick={this.handleEditClick}
+                  handleDeleteClick={this.handleDeleteClick}
+                />
+              ))}
             </EntityCardContainer>
             <EntityModal
               wrappedComponentRef={this.saveModalFormRef}
@@ -253,4 +293,4 @@ class Index extends Component<any, State> {
   }
 }
 
-export default withAuth(Index);
+export default withRouter(withAuth(CategoryPage));

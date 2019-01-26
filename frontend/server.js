@@ -22,6 +22,15 @@ app
       app.render(req, res, actualPage, queryParams);
     });
 
+    server.get('/admin/category/:categoryId', (req, res) => {
+      const actualPage = '/admin/category';
+      const queryParams = Object.assign({}, req.params, {
+        categoryId: req.params.categoryId
+      });
+
+      app.render(req, res, actualPage, queryParams);
+    });
+
     server.get('*', (req, res) => {
       return handle(req, res);
     });
