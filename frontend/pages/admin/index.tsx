@@ -184,7 +184,7 @@ class Index extends Component<any, State> {
     const categories = [...this.state.categories];
 
     const categoryIndex = categories.findIndex(
-      ({ id: categoryId }: Category) => categoryId == id
+      ({ id: categoryId }: Category) => categoryId === id
     );
 
     if (categoryIndex >= 0) {

@@ -79,9 +79,15 @@ interface Props {
 }
 
 const EntityCard: React.FunctionComponent<Props> = props => {
-  const handleCardClick = () => {
-    const { entityType, id } = props;
+  const {
+    entityType,
+    id,
+    hoverable,
+    handleEditClick,
+    handleDeleteClick
+  } = props;
 
+  const handleCardClick = () => {
     if (entityType === 'category') {
       Router.push(
         {
@@ -99,7 +105,6 @@ const EntityCard: React.FunctionComponent<Props> = props => {
     }
   };
 
-  const { entityType, hoverable, handleEditClick, handleDeleteClick } = props;
   const entity: EntityInstance =
     entityType === 'product'
       ? ({
@@ -115,6 +120,7 @@ const EntityCard: React.FunctionComponent<Props> = props => {
           name: props.name,
           image: props.image
         } as Category);
+
   return (
     <StyledCard
       bordered={false}

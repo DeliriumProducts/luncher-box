@@ -96,8 +96,8 @@ class AdminContextProvider extends Component<Props, State> {
     /**
      * Make "deep" clones of the arrays, to prevent modifying the state directly
      */
-    let newProducts: Product[] = [...entities.products];
-    let newCategories: Category[] = [...entities.categories];
+    const newProducts: Product[] = [...entities.products];
+    const newCategories: Category[] = [...entities.categories];
     const newEntities: typeof entities = {
       products: newProducts,
       categories: newCategories
@@ -111,7 +111,7 @@ class AdminContextProvider extends Component<Props, State> {
       /**
        * Product should be added only when one of its categories is contained in
        * current products' categories
-       *  */
+       */
       if (await this.shouldBeAdded(newProducts, newEntity as Product)) {
         newProducts.push(newEntity as Product);
       }
@@ -129,8 +129,8 @@ class AdminContextProvider extends Component<Props, State> {
     /**
      * Make "deep" clones of the arrays, to prevent modifying the state directly
      */
-    let newProducts: Product[] = [...entities.products];
-    let newCategories: Category[] = [...entities.categories];
+    const newProducts: Product[] = [...entities.products];
+    const newCategories: Category[] = [...entities.categories];
     const newEntities: typeof entities = {
       products: newProducts,
       categories: newCategories
@@ -145,7 +145,7 @@ class AdminContextProvider extends Component<Props, State> {
       /**
        * Product should be added only when one of its categories is contained in
        * current products' categories
-       *  */
+       */
       if (await this.shouldBeAdded(newProducts, newEntity as Product)) {
         newProducts[productIndex] = { ...(newEntity as Product) };
       }
@@ -224,7 +224,7 @@ class AdminContextProvider extends Component<Props, State> {
 
   shouldBeAdded = async (products: Product[], newProduct: Product) => {
     if (products.length) {
-      let tempProduct = await ProductAPI.getOne(products[0].id);
+      const tempProduct = await ProductAPI.getOne(products[0].id);
 
       /**
        * Check whether context should be updated with the new product
