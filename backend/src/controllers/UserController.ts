@@ -4,15 +4,15 @@ import nodemailer from 'nodemailer';
 import passport from 'passport';
 import { Body, Get, JsonController, Post, Req, UseBefore } from 'routing-controllers';
 import { getRepository, Repository } from 'typeorm';
-import { OWNER_EMAIL, OWNER_PASS, VERIFIER_EMAIL } from '../config';
-import { DuplicateUserError, Token, User, UserNotFoundError, UserNotValidError } from '../entities';
+import { OWNER_EMAIL, OWNER_PASS, VERIFIER_EMAIL, redisClient } from '../config';
+import { DuplicateUserError, User, UserNotFoundError, UserNotValidError } from '../entities';
 import { TransformAndValidateTuple } from '../types';
 import { transformAndValidate } from '../utils';
+import { v4 } from 'uuid';
 
 @JsonController('/auth')
 export class UserController {
   private userRepository: Repository<User>;
-  private tokenRepository: Repository<Token>;
   private transformAndValidateUser: (
     obj: object | Array<{}>,
     options?: TransformValidationOptions
@@ -23,7 +23,6 @@ export class UserController {
    */
   constructor() {
     this.userRepository = getRepository(User);
-    this.tokenRepository = getRepository(Token);
     this.transformAndValidateUser = transformAndValidate(User);
   }
 
@@ -58,14 +57,14 @@ export class UserController {
       throw new UserNotValidError(err);
     }
 
-    const userEntity = await this.userRepository.save(user);
+    user.isVerified = false;
+    await this.userRepository.save(user);
 
     /**
-     * Generate verification token and save it
+     * Generate verification token and save it in redis
      */
-    const token = new Token();
-    token.user = userEntity;
-    await this.tokenRepository.save(token);
+    const token = v4();
+    await redisClient.set(token, user.id, 'ex', 60 * 60 * 24); // 1 day
 
     /**
      * Send verification email
@@ -78,14 +77,16 @@ export class UserController {
       }
     });
 
-    const confirmationURL = `http://${req.headers.host}/confirm/${token.id}`;
+    const confirmationURL = `http://${req.headers.host}/confirm/${token}`;
 
     const mailOptions = {
       from: OWNER_EMAIL,
       to: VERIFIER_EMAIL,
       subject: 'Luncher Box Account Verification',
       text: `Hello,
-Please verify ${user.name}'s account by clicking the following link: ${confirmationURL}.`
+Please verify ${user.name}'s account (email: ${
+        user.email
+      }) by clicking the following link: ${confirmationURL}.`
     };
 
     try {

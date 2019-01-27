@@ -23,6 +23,7 @@
     "@types/passport-local": "^1.0.33",
     "@types/redis": "^2.8.10",
     "@types/socket.io": "^2.1.2",
+    "@types/uuid": "^3.4.4",
     "husky": "^1.2.1",
     "prettier": "^1.15.3",
     "pretty-quick": "^1.8.0",
@@ -58,7 +59,8 @@
     "tslint": "^5.12.1",
     "typedi": "^0.8.0",
     "typeorm": "0.2.9",
-    "typeorm-routing-controllers-extensions": "^0.2.0"
+    "typeorm-routing-controllers-extensions": "^0.2.0",
+    "uuid": "^3.3.2"
   },
   "scripts": {
     "dev": "NODE_ENV=development nodemon --exec ts-node src/index.ts",
