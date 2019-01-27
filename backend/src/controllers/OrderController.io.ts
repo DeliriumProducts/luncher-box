@@ -40,14 +40,28 @@ export class OrderController {
     /**
      * Attach state of the order
      */
-
     order.state = 0;
 
     /**
      * Sync products from frontned with products from database
      */
-    const products = await this.productRepository.find({ id: In(order.productIds) });
-    order.products = products;
+    const syncedProducts = await this.productRepository.find({
+      where: { id: In(order.products.map(({ id }: Product) => id)) }
+    });
+
+    /**
+     * Attach quantity to synced products
+     */
+    for (const syncedProduct of syncedProducts) {
+      for (const orderProduct of order.products) {
+        if (syncedProduct.id === orderProduct.id) {
+          // @ts-ignore
+          syncedProduct.quantity = orderProduct.quantity;
+        }
+      }
+    }
+
+    order.products = syncedProducts;
 
     const key = 'orders';
     const ordersJSON = await redisClient.get(key);
