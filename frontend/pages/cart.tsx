@@ -121,6 +121,16 @@ export default class extends React.Component<any, State> {
         ),
         onOk: () => {
           if (this.context.socket) {
+            /**
+             * Instead of sending every product, send only the product id
+             */
+            const productsId = order.products.reduce(
+              (accumulator: any, { id }: Product) => [...accumulator, id],
+              []
+            );
+
+            order.products = productsId;
+
             this.context.socket.emit('place_order', order);
             this.context.actions.clear();
           }

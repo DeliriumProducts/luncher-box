@@ -10,9 +10,20 @@ import {
   SocketId
 } from 'socket-controllers';
 import { redisClient } from '../config';
+import { getRepository, Repository } from 'typeorm';
+import { Product } from 'src/entities';
 
 @SocketController()
 export class OrderController {
+  private productRepository: Repository<Product>;
+
+  /**
+   * Load the Product repository
+   */
+  constructor() {
+    this.productRepository = getRepository(Product);
+  }
+
   @OnMessage('fetch_orders')
   async connection(@SocketIO() io: SocketIO.Socket) {
     const key = 'orders';
@@ -39,8 +50,8 @@ export class OrderController {
     /**
      * Attach state of the order
      */
-    order.state = 0;
 
+    order.state = 0;
     const key = 'orders';
     const ordersJSON = await redisClient.get(key);
 

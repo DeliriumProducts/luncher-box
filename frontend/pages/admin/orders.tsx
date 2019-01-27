@@ -15,13 +15,13 @@ interface State {
   loading: boolean;
 }
 class Orders extends Component<any, State> {
+  static contextType = AdminContext;
+  context!: React.ContextType<typeof AdminContext>;
+
   state = {
     orders: [],
     loading: true
   };
-
-  static contextType = AdminContext;
-  context!: React.ContextType<typeof AdminContext>;
 
   componentDidMount() {
     /**
@@ -51,8 +51,6 @@ class Orders extends Component<any, State> {
     const orderIndex = this.state.orders.findIndex(
       (order: Order) => order.id === id
     );
-
-    console.log('aa');
 
     if (orderIndex >= 0) {
       const orders = [...this.state.orders];
