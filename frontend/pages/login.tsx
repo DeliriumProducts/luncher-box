@@ -134,13 +134,6 @@ class LoginForm extends Component<Props, State> {
               )}
             </FormItem>
             <FormItem>
-              {getFieldDecorator('remember', {
-                valuePropName: 'checked',
-                initialValue: true
-              })(<Checkbox>Remember me</Checkbox>)}
-              <a className="login-form-forgot" href="">
-                Forgot password
-              </a>
               <Button
                 type="primary"
                 htmlType="submit"
@@ -153,6 +146,9 @@ class LoginForm extends Component<Props, State> {
               <Link href="/register">
                 <a>register now!</a>
               </Link>
+              <a className="login-form-forgot" href="">
+                Forgot password
+              </a>
             </FormItem>
           </Form>
         </Container>

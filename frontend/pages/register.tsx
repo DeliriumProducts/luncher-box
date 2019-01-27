@@ -6,6 +6,7 @@ import styled from 'styled-components';
 import { AuthAPI } from '../api';
 import CenteredDiv from '../components/CenteredDiv';
 import { HandleRegister } from '../types';
+import Router from 'next/router';
 
 const FormItem = Form.Item;
 
@@ -56,7 +57,9 @@ class RegisterForm extends React.Component<Props, State> {
         try {
           await AuthAPI.register(credentials);
           message.success(
-            'You successfully registered! An confirmation email was sent to the restaurant owner ✉️'
+            'You successfully registered! An confirmation email was sent to the restaurant owner ✉️',
+            3,
+            () => Router.push('/login')
           );
         } catch (err) {
           if (!err.response) {
