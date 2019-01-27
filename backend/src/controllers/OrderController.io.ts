@@ -1,17 +1,7 @@
-import {
-  ConnectedSocket,
-  MessageBody,
-  OnConnect,
-  OnMessage,
-  SocketController,
-  SocketIO,
-  EmitOnSuccess,
-  EmitOnFail,
-  SocketId
-} from 'socket-controllers';
+import { MessageBody, OnMessage, SocketController, SocketIO, SocketId } from 'socket-controllers';
 import { redisClient } from '../config';
-import { getRepository, Repository } from 'typeorm';
-import { Product } from 'src/entities';
+import { getRepository, Repository, In } from 'typeorm';
+import { Product } from '../entities';
 
 @SocketController()
 export class OrderController {
@@ -52,6 +42,13 @@ export class OrderController {
      */
 
     order.state = 0;
+
+    /**
+     * Sync products from frontned with products from database
+     */
+    const products = await this.productRepository.find({ id: In(order.productIds) });
+    order.products = products;
+
     const key = 'orders';
     const ordersJSON = await redisClient.get(key);
 
