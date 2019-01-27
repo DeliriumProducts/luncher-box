@@ -59,7 +59,7 @@ export default class MyApp extends App {
           <Container>
             <GlobalStyle />
             <PageTransition timeout={150} classNames="page-transition">
-              <Component {...pageProps} />
+              <Component key={this.props.router.route} {...pageProps} />
             </PageTransition>
           </Container>
         </EntityContextProvider>
