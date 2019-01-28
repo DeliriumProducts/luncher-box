@@ -264,12 +264,7 @@ class CategoryPage extends Component<Props, State> {
               {products.map(product => (
                 <EntityCard
                   key={product.id}
-                  id={product.id}
-                  name={product.name}
-                  image={product.image}
-                  description={product.description}
-                  price={product.price}
-                  categories={product.categories}
+                  {...product}
                   hoverable={true}
                   entityType="product"
                   handleEditClick={this.handleEditClick}
