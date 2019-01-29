@@ -53,12 +53,7 @@ class Home extends Component<any, State> {
     } else {
       if (this.state.categories.length) {
         data = this.state.categories.map(category => (
-          <CategoryCard
-            key={category.id}
-            id={category.id}
-            name={category.name}
-            image={category.image}
-          />
+          <CategoryCard key={category.id} {...category} />
         ));
       } else {
         data = <Empty description="No entries found" />;

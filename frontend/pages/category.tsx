@@ -62,14 +62,7 @@ class CategoryPage extends Component<Props, State> {
     } else {
       if (this.state.products.length) {
         data = this.state.products.map(product => (
-          <ProductCard
-            key={product.id}
-            id={product.id}
-            name={product.name}
-            description={product.description}
-            price={product.price}
-            image={product.image}
-          />
+          <ProductCard key={product.id} {...product} />
         ));
       } else {
         data = <Empty description="No entries found" />;
