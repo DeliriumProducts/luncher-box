@@ -226,9 +226,7 @@ class Index extends Component<any, State> {
                 categories.map((category: Category) => (
                   <EntityCard
                     key={category.id}
-                    id={category.id}
-                    name={category.name}
-                    image={category.image}
+                    {...category}
                     hoverable={true}
                     entityType="category"
                     handleEditClick={this.handleEditClick}
