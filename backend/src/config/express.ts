@@ -9,7 +9,7 @@ import expressValidator from 'express-validator';
 import lusca from 'lusca';
 import passport from 'passport';
 import 'reflect-metadata';
-import { redisClient } from './';
+import { redisConnection } from '../connections';
 import { FRONTEND_URL, IS_DEV, SESSION_SECRET } from './env';
 
 /**
@@ -43,7 +43,7 @@ app.use(expressValidator());
 app.use(
   session({
     store: new RedisStore({
-      client: redisClient as any
+      client: redisConnection as any
     }),
     secret: SESSION_SECRET,
     resave: false,

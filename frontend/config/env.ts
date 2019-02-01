@@ -3,7 +3,9 @@ import * as dotenv from 'dotenv';
 /**
  * Load env variables
  */
-dotenv.config();
+dotenv.config({
+  path: '../../.env'
+});
 
 /**
  * Backend url
