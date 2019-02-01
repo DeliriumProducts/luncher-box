@@ -2,7 +2,7 @@ import 'reflect-metadata';
 import { dbConnection } from './connections';
 import { useExpressServer } from 'routing-controllers';
 import { useSocketServer } from 'socket-controllers';
-import { dbConfig, app, ENV, initPassport, io, PORT, server } from './config';
+import { app, ENV, initPassport, io, PORT, server } from './config';
 import { authorizationChecker } from './utils';
 
 const startServer = async () => {
