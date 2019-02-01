@@ -1,9 +1,9 @@
-import Redis from 'ioredis';
+import Redis, { RedisOptions } from 'ioredis';
 import { REDIS_HOST, REDIS_PORT } from './env';
 
-const redisClient = new Redis({
+const redisConfig: RedisOptions = {
   host: REDIS_HOST,
   port: REDIS_PORT
-});
+};
 
-export { redisClient };
+export { redisConfig };

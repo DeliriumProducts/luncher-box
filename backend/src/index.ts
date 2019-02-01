@@ -1,8 +1,8 @@
 import 'reflect-metadata';
+import { dbConnection } from './connections';
 import { useExpressServer } from 'routing-controllers';
 import { useSocketServer } from 'socket-controllers';
-import { Connection, createConnection } from 'typeorm';
-import { app, dbConfig, ENV, initPassport, io, PORT, server } from './config';
+import { dbConfig, app, ENV, initPassport, io, PORT, server } from './config';
 import { authorizationChecker } from './utils';
 
 const startServer = async () => {
@@ -10,7 +10,7 @@ const startServer = async () => {
   /**
    * Establish database connection
    */
-  const connection: Connection = await createConnection(dbConfig);
+  const connection = await dbConnection();
 
   /**
    * Set up routing-controllers
@@ -44,4 +44,7 @@ const startServer = async () => {
 
 startServer();
 
-export default startServer;
+export default {
+  startServer,
+  app
+};

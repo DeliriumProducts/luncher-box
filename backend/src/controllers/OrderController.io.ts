@@ -1,5 +1,5 @@
 import { MessageBody, OnMessage, SocketController, SocketIO, SocketId } from 'socket-controllers';
-import { redisClient } from '../config';
+import { redisConnection } from '../connections';
 import { getRepository, Repository, In } from 'typeorm';
 import { Product } from '../entities';
 
@@ -17,7 +17,7 @@ export class OrderController {
   @OnMessage('fetch_orders')
   async connection(@SocketIO() io: SocketIO.Socket) {
     const key = 'orders';
-    const ordersJSON = await redisClient.get(key);
+    const ordersJSON = await redisConnection.get(key);
 
     let orders = [];
 
@@ -64,7 +64,7 @@ export class OrderController {
     order.products = syncedProducts;
 
     const key = 'orders';
-    const ordersJSON = await redisClient.get(key);
+    const ordersJSON = await redisConnection.get(key);
 
     let orders = [];
 
@@ -101,7 +101,7 @@ export class OrderController {
     /**
      * Save orders in redis server
      */
-    await redisClient.set(key, JSON.stringify(orders));
+    await redisConnection.set(key, JSON.stringify(orders));
 
     /**
      * Emit the new orders back to the client
@@ -116,7 +116,7 @@ export class OrderController {
     @MessageBody() orderId: number
   ) {
     const key = 'orders';
-    const ordersJSON = await redisClient.get(key);
+    const ordersJSON = await redisConnection.get(key);
 
     let orders = [];
     let order = {};
@@ -132,7 +132,7 @@ export class OrderController {
       }
     }
 
-    await redisClient.set(key, JSON.stringify(orders));
+    await redisConnection.set(key, JSON.stringify(orders));
     io
       // @ts-ignore
       .to(order.senderId)
@@ -147,7 +147,7 @@ export class OrderController {
     @MessageBody() orderId: number
   ) {
     const key = 'orders';
-    const ordersJSON = await redisClient.get(key);
+    const ordersJSON = await redisConnection.get(key);
 
     let orders = [];
     let order = {};
@@ -166,9 +166,9 @@ export class OrderController {
       }
 
       if (orders.length - 1 > 0) {
-        await redisClient.set(key, JSON.stringify(orders));
+        await redisConnection.set(key, JSON.stringify(orders));
       } else {
-        await redisClient.del(key);
+        await redisConnection.del(key);
       }
     }
 
@@ -186,7 +186,7 @@ export class OrderController {
     @MessageBody() orderId: number
   ) {
     const key = 'orders';
-    const ordersJSON = await redisClient.get(key);
+    const ordersJSON = await redisConnection.get(key);
 
     let orders = [];
     let order = {};
@@ -202,7 +202,7 @@ export class OrderController {
       }
     }
 
-    await redisClient.set(key, JSON.stringify(orders));
+    await redisConnection.set(key, JSON.stringify(orders));
 
     io
       // @ts-ignore
