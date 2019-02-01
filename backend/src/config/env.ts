@@ -4,7 +4,7 @@ import * as dotenv from 'dotenv';
  * Load env variables
  */
 dotenv.config({
-  path: '../../../.env'
+  path: `${__dirname}../../../.env`
 });
 
 /**
