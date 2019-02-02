@@ -23,8 +23,6 @@ describe('Registering users', () => {
       password: 'FAKEpassword123'
     };
 
-    console.log(userCredentials.email);
-
     await request(server)
       .post('/auth/register')
       .send(userCredentials)
