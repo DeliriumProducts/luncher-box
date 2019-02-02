@@ -30,7 +30,7 @@ services:
       max_attempts: 3
       window: 120s
     environment:
-      MYSQL_ROOT_PASSWORD: toor
+      MYSQL_ROOT_PASSWORD: "${DB_PASS}"
     volumes:
       - "data:/var/lib/mysql"
   redis:
