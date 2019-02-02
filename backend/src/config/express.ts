@@ -10,12 +10,20 @@ import lusca from 'lusca';
 import passport from 'passport';
 import 'reflect-metadata';
 import { redisConnection } from '../connections';
-import { FRONTEND_URL, IS_DEV, SESSION_SECRET } from './env';
+import { FRONTEND_URL, IS_DEV, SESSION_SECRET, ENV } from './env';
 
 /**
  * Initialize connect-redis session
  */
 const RedisStore = createRedisStore(session);
+const store = new RedisStore({
+  client: redisConnection as any
+});
+
+if (ENV === 'test') {
+  // @ts-ignore
+  store.client.unref();
+}
 
 /**
  * Create express app
@@ -42,9 +50,7 @@ app.use(cookieParser(SESSION_SECRET));
 app.use(expressValidator());
 app.use(
   session({
-    store: new RedisStore({
-      client: redisConnection as any
-    }),
+    store,
     secret: SESSION_SECRET,
     resave: false,
     saveUninitialized: false,

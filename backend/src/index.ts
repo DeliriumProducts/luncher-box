@@ -10,7 +10,7 @@ const startServer = async () => {
   /**
    * Establish database connection
    */
-  const connection = await dbConnection();
+  await dbConnection();
 
   /**
    * Set up routing-controllers
@@ -38,13 +38,15 @@ const startServer = async () => {
   /**
    * Start server
    */
-  server.listen(PORT);
-  console.log(`🥩 Luncher-box backend running on http://localhost:${PORT} in ${ENV}`);
+  return server.listen(PORT, () => {
+    console.log(`🥩 Luncher-box backend running on http://localhost:${PORT} in ${ENV}`);
+  });
+};
+
+const stopServer = () => {
+  server.close();
 };
 
 startServer();
 
-export default {
-  startServer,
-  app
-};
+export { startServer, stopServer };
