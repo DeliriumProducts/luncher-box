@@ -4,7 +4,8 @@ import nodemailer from 'nodemailer';
 import passport from 'passport';
 import { Body, Get, JsonController, Post, Req, UseBefore } from 'routing-controllers';
 import { getRepository, Repository } from 'typeorm';
-import { OWNER_EMAIL, OWNER_PASS, VERIFIER_EMAIL, redisClient } from '../config';
+import { OWNER_EMAIL, OWNER_PASS, VERIFIER_EMAIL } from '../config';
+import { redisConnection } from '../connections';
 import { DuplicateUserError, User, UserNotFoundError, UserNotValidError } from '../entities';
 import { TransformAndValidateTuple } from '../types';
 import { transformAndValidate } from '../utils';
@@ -64,7 +65,7 @@ export class UserController {
      * Generate verification token and save it in redis
      */
     const token = v4();
-    await redisClient.set(token, user.id, 'ex', 60 * 60 * 24); // 1 day
+    await redisConnection.set(token, user.id, 'ex', 60 * 60 * 24); // 1 day
 
     /**
      * Send verification email

@@ -4,11 +4,11 @@ import * as dotenv from 'dotenv';
  * Load env variables
  */
 dotenv.config({
-  path: `${__dirname}../../../.env`
+  path: `${__dirname}/../../../.env`
 });
 
 /**
- * DEV or PROD enviroment
+ * development, production or test enviroment
  */
 export const ENV = process.env.NODE_ENV || 'development';
 export const IS_DEV = ENV === 'development';

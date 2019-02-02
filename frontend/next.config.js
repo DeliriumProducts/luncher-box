@@ -2,7 +2,7 @@ const withStyledIcons = require('next-plugin-styled-icons');
 const withTypescript = require('@zeit/next-typescript');
 const withCss = require('@zeit/next-css');
 const webpack = require('webpack');
-const { parsed: localEnv } = require('dotenv').config();
+const { parsed: localEnv } = require('dotenv').config({ path: '../.env' });
 
 // fix: prevents error when .css files are required by node
 if (typeof require !== 'undefined') {

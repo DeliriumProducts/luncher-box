@@ -29,6 +29,10 @@ services:
       delay: 5s
       max_attempts: 3
       window: 120s
+    environment:
+      MYSQL_ROOT_PASSWORD: toor
+    volumes:
+      - "data:/var/lib/mysql"
   redis:
     image: redis
     restart_policy:

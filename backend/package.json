@@ -69,8 +69,7 @@
   },
   "scripts": {
     "dev": "NODE_ENV=development nodemon --exec ts-node src/index.ts",
-    "build": "tsc -b",
-    "debug": "NODE_ENV=development nodemon --exec ts-node src/index.ts"
+    "test": "NODE_ENV=test jest"
   },
   "husky": {
     "hooks": {

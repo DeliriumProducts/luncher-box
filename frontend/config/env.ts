@@ -1,12 +1,3 @@
-import * as dotenv from 'dotenv';
-
-/**
- * Load env variables
- */
-dotenv.config({
-  path: `${__dirname}../../.env`
-});
-
 /**
  * Backend url
  */

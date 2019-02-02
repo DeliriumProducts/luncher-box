@@ -4,7 +4,7 @@ import { Get, JsonController, Param, Redirect, NotFoundError } from 'routing-con
 import { getRepository, Repository } from 'typeorm';
 import { User } from '../entities';
 import { FRONTEND_URL } from './../config/env';
-import { redisClient } from '../config';
+import { redisConnection } from '../connections';
 
 @JsonController()
 export class TokenController {
@@ -23,7 +23,7 @@ export class TokenController {
     /**
      * Get the userId which matches to the corresponding token
      */
-    const userId = await redisClient.get(id);
+    const userId = await redisConnection.get(id);
 
     if (!userId) {
       throw new NotFoundError('Token not found!');
@@ -41,6 +41,6 @@ export class TokenController {
       throw new UserNotFoundError();
     }
 
-    await redisClient.del(id);
+    await redisConnection.del(id);
   }
 }
