@@ -27,6 +27,7 @@
     "@types/socket.io": "^2.1.2",
     "@types/supertest": "^2.0.7",
     "@types/uuid": "^3.4.4",
+    "cross-env": "^5.2.0",
     "husky": "^1.2.1",
     "jest": "^24.0.0",
     "prettier": "^1.15.3",
@@ -71,8 +72,8 @@
     "uuid": "^3.3.2"
   },
   "scripts": {
-    "dev": "NODE_ENV=development nodemon --exec ts-node src/index.ts",
-    "test": "NODE_ENV=test jest --forceExit --detectOpenHandles"
+    "dev": "cross-env NODE_ENV=development nodemon --exec ts-node src/index.ts",
+    "test": "cross-env NODE_ENV=test jest --forceExit --detectOpenHandles"
   },
   "husky": {
     "hooks": {
