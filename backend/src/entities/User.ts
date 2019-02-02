@@ -1,5 +1,5 @@
 import bcrypt from 'bcryptjs';
-import { IsEmail, Length, Matches } from 'class-validator';
+import { IsEmail, Length, Matches, IsUrl } from 'class-validator';
 import { BeforeInsert, Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 import { EntityError } from '../types';
 import { DuplicateEntityError, EntityNotFoundError, EntityNotValidError } from '../utils';

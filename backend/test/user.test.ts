@@ -1,6 +1,6 @@
 import { getRepository, Repository } from 'typeorm';
 import request from 'supertest';
-import { stopServer, initServer } from '../src';
+import { initServer } from '../src';
 import { Server } from 'http';
 import { redisConnection, store } from '../src/connections';
 import { User } from '../src/entities';
@@ -23,6 +23,8 @@ describe('Registering users', () => {
       password: 'FAKEpassword123'
     };
 
+    console.log(userCredentials.email);
+
     await request(server)
       .post('/auth/register')
       .send(userCredentials)
@@ -33,10 +35,10 @@ describe('Registering users', () => {
 
     const users = await userRepository.find();
 
-    const { password: _, ...data } = userCredentials;
+    const { password, ...data } = userCredentials;
     data.isVerified = false;
 
-    return expect(users).toMatchObject([data]);
+    expect(users).toMatchObject([data]);
   });
 
   it('throws an error when registering a user with an invalid email', async () => {
@@ -51,8 +53,11 @@ describe('Registering users', () => {
       .send(userCredentials)
       .then((res: Response) => {
         expect(res.status).toEqual(400);
-        // TODO: Verify errors!
-        // expect(res.body).toEqual({ errors: [{ 'User email': [] }] });
+        expect(res.body).toEqual({
+          errors: ['email must be an email'],
+          name: 'NotValidError',
+          message: 'User not valid!'
+        });
       });
   });
 });
@@ -83,5 +88,4 @@ describe('Registering users', () => {
 
 afterAll(async () => {
   await redisConnection.quit();
-  // stopServer();
 });
