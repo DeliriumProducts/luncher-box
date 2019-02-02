@@ -9,21 +9,8 @@ import expressValidator from 'express-validator';
 import lusca from 'lusca';
 import passport from 'passport';
 import 'reflect-metadata';
-import { redisConnection } from '../connections';
+import { store } from '../connections';
 import { FRONTEND_URL, IS_DEV, SESSION_SECRET, ENV } from './env';
-
-/**
- * Initialize connect-redis session
- */
-const RedisStore = createRedisStore(session);
-const store = new RedisStore({
-  client: redisConnection as any
-});
-
-if (ENV === 'test') {
-  // @ts-ignore
-  store.client.unref();
-}
 
 /**
  * Create express app
@@ -61,7 +48,7 @@ app.use(
 );
 app.use(
   lusca({
-    csrf: !IS_DEV,
+    csrf: ENV === 'production',
     xframe: 'SAMEORIGIN',
     p3p: 'ABCDEF',
     hsts: { maxAge: 31536000, includeSubDomains: true, preload: true },

@@ -5,7 +5,7 @@ import { useSocketServer } from 'socket-controllers';
 import { app, ENV, initPassport, io, PORT, server } from './config';
 import { authorizationChecker } from './utils';
 
-const startServer = async () => {
+const initServer = async () => {
   console.clear();
   /**
    * Establish database connection
@@ -36,9 +36,13 @@ const startServer = async () => {
   initPassport();
 
   /**
-   * Start server
+   * Return server
    */
-  return server.listen(PORT, () => {
+  return server;
+};
+
+const startServer = async () => {
+  (await initServer()).listen(PORT, () => {
     console.log(`🥩 Luncher-box backend running on http://localhost:${PORT} in ${ENV}`);
   });
 };
@@ -47,6 +51,8 @@ const stopServer = () => {
   server.close();
 };
 
-startServer();
+if (ENV !== 'test') {
+  startServer();
+}
 
-export { startServer, stopServer };
+export { initServer, startServer, stopServer };
