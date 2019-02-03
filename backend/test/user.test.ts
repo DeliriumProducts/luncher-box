@@ -15,7 +15,7 @@ beforeAll(async () => {
   userRepository = getRepository(User);
 });
 
-describe('Registering users with invalid fields', () => {
+describe('Registering users with valid fields', () => {
   it('adds a valid user to the database when registering', async () => {
     const userCredentials: Partial<User> = {
       email: faker.internet.exampleEmail(),
