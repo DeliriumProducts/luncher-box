@@ -110,6 +110,33 @@ describe('Not registering users with invalid fields', () => {
         });
       });
   });
+
+  it('throws an error when registering a user with a duplicate email', async () => {
+    const userCredentials: Partial<User> = {
+      email: faker.internet.exampleEmail(),
+      name: 'John Doe',
+      password: 'FAKEpassword123'
+    };
+
+    await request(server)
+      .post('/auth/register')
+      .send(userCredentials)
+      .then((res: Response) => {
+        expect(res.status).toEqual(200);
+        expect(res.body).toEqual('Verification email sent!');
+      });
+
+    return request(server)
+      .post('/auth/register')
+      .send({ ...userCredentials, name: 'Sam Doe' })
+      .then((res: Response) => {
+        expect(res.status).toEqual(422);
+        expect(res.body).toEqual({
+          name: 'DuplicateError',
+          message: 'Duplicate User entry!'
+        });
+      });
+  });
 });
 
 describe('Not registering users with empty fields', () => {
