@@ -15,34 +15,36 @@ interface State {
   loading: boolean;
 }
 class Orders extends Component<any, State> {
+  static contextType = AdminContext;
+  context!: React.ContextType<typeof AdminContext>;
+
   state = {
     orders: [],
     loading: true
   };
-
-  static contextType = AdminContext;
-  context!: React.ContextType<typeof AdminContext>;
 
   componentDidMount() {
     /**
      * Listen for events
      */
     if (this.context.socket) {
-      this.context.socket.on('fetched_orders', this.setOrders);
       this.context.socket.emit('fetch_orders');
-
       /**
-       * We will start the other listeners in the callback to prevent errors.
+       * We will the other listeners in the callback to prevent errors.
        */
-      this.context.socket.on('placed_order', this.setOrders);
-      this.context.socket.on('accepted_order_admin', this.setAcceptedOrder);
-      this.context.socket.on('declined_order_admin', this.setDeclindedOrder);
-      this.context.socket.on('finished_order_admin', this.setFinishedOrder);
+      this.context.socket.on('fetched_orders', this.setOrders);
     }
   }
 
   setOrders = (orders: Order[]) => {
-    this.setState({ orders, loading: false });
+    this.setState({ orders, loading: false }, () => {
+      if (this.context.socket) {
+        this.context.socket.on('placed_order', this.setOrders);
+        this.context.socket.on('accepted_order_admin', this.setAcceptedOrder);
+        this.context.socket.on('declined_order_admin', this.setDeclindedOrder);
+        this.context.socket.on('finished_order_admin', this.setFinishedOrder);
+      }
+    });
   };
 
   setAcceptedOrder = ({ id }: any) => {

@@ -121,6 +121,19 @@ export default class extends React.Component<any, State> {
         ),
         onOk: () => {
           if (this.context.socket) {
+            /**
+             * Instead of sending every product, send only the product id
+             */
+            const productsIdsAndQuantities = order.products.reduce(
+              (accumulator: any, { id, quantity }: Product) => [
+                ...accumulator,
+                { id, quantity }
+              ],
+              []
+            );
+
+            order.products = productsIdsAndQuantities;
+
             this.context.socket.emit('place_order', order);
             this.context.actions.clear();
           }
@@ -157,8 +170,8 @@ export default class extends React.Component<any, State> {
               return (
                 <ItemCard
                   interactive
-                  key={product.id}
                   id={product.id}
+                  key={product.id}
                   name={product.name}
                   description={product.description}
                   image={product.image}
