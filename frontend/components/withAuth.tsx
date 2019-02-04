@@ -24,7 +24,7 @@ const withAuth = <T extends object>(C: ComponentClass<T>) =>
       } else {
         isAuthenticated = await AuthAPI.isAuthenticated();
         if (!isAuthenticated) {
-          Router.push('/login');
+          Router.replace('/login');
         }
       }
     }

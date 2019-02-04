@@ -63,7 +63,7 @@ class LoginForm extends Component<Props, State> {
           message.success(
             'You successfully logged in! Redirecting you to dashboard...',
             3,
-            () => Router.push('/admin')
+            () => Router.replace('/admin')
           );
         } catch (err) {
           if (!err.response) {

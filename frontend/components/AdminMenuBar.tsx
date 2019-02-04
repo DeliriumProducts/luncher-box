@@ -73,7 +73,7 @@ class AdminMenuBar extends Component<Props, State> {
     switch (key) {
       case 'logout':
         await AuthAPI.logout();
-        Router.push('/login');
+        Router.replace('/login');
         break;
       default:
         break;
