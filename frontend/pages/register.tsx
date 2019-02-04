@@ -59,7 +59,7 @@ class RegisterForm extends React.Component<Props, State> {
           message.success(
             'You successfully registered! An confirmation email was sent to the restaurant owner ✉️',
             3,
-            () => Router.push('/login')
+            () => Router.replace('/login')
           );
         } catch (err) {
           if (!err.response) {

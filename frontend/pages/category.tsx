@@ -45,7 +45,7 @@ class CategoryPage extends Component<Props, State> {
       }
     } catch (err) {
       message.error(`${err}, Redirecting you to the menu...`, 3, () =>
-        Router.push('/')
+        Router.replace('/')
       );
     } finally {
       this.setState({ loading: false });

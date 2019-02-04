@@ -241,7 +241,7 @@ class CategoryPage extends Component<Props, State> {
       }
     } catch (err) {
       message.error(`${err}, Redirecting you to the home page...`, 3, () =>
-        Router.push('/admin')
+        Router.replace('/admin')
       );
     } finally {
       this.setState({ pageLoading: false });
