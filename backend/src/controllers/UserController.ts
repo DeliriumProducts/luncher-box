@@ -2,14 +2,24 @@ import { TransformValidationOptions } from 'class-transformer-validator';
 import { Request } from 'express';
 import nodemailer from 'nodemailer';
 import passport from 'passport';
-import { Body, Get, JsonController, Post, Req, UseBefore } from 'routing-controllers';
+import {
+  Body,
+  Get,
+  JsonController,
+  Post,
+  Req,
+  UseBefore,
+  InternalServerError
+} from 'routing-controllers';
 import { getRepository, Repository } from 'typeorm';
-import { OWNER_EMAIL, OWNER_PASS, VERIFIER_EMAIL } from '../config';
+import { OWNER_EMAIL, OWNER_PASS, VERIFIER_EMAIL, ENV } from '../config';
 import { redisConnection } from '../connections';
 import { DuplicateUserError, User, UserNotFoundError, UserNotValidError } from '../entities';
 import { TransformAndValidateTuple } from '../types';
 import { transformAndValidate } from '../utils';
 import { v4 } from 'uuid';
+import { MailOptions } from 'nodemailer/lib/sendmail-transport';
+import { sendEmail } from '../utils';
 
 @JsonController('/auth')
 export class UserController {
@@ -70,17 +80,13 @@ export class UserController {
     /**
      * Send verification email
      */
-    const transporter = nodemailer.createTransport({
-      service: 'Gmail',
-      auth: {
-        user: OWNER_EMAIL,
-        pass: OWNER_PASS
-      }
-    });
-
     const confirmationURL = `http://${req.headers.host}/confirm/${token}`;
 
-    const mailOptions = {
+    if (ENV === 'test') {
+      return confirmationURL;
+    }
+
+    const mailOptions: MailOptions = {
       from: OWNER_EMAIL,
       to: VERIFIER_EMAIL,
       subject: 'Luncher Box Account Verification',
@@ -91,10 +97,9 @@ Please verify ${user.name}'s account (email: ${
     };
 
     try {
-      await transporter.sendMail(mailOptions);
-      return 'Verification email sent!';
+      return await sendEmail(mailOptions);
     } catch (error) {
-      return 'Verification email not sent!';
+      throw new InternalServerError('Verification email not sent!');
     }
   }
 
