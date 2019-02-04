@@ -65,6 +65,7 @@
   "scripts": {
     "dev": "NODE_ENV=development nodemon --exec ts-node src/index.ts",
     "build": "tsc -b",
+    "start": "NODE_ENV=production node dist/index.js",
     "debug": "NODE_ENV=development nodemon --exec ts-node src/index.ts"
   },
   "husky": {
