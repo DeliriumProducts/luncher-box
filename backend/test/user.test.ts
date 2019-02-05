@@ -330,19 +330,16 @@ describe('Bad logins', () => {
   });
 
   it('throws an error when logging in with an non-existing user', async () => {
-    const { body } = await request(server)
+    const { text } = await request(server)
       .post('/auth/login')
       .send({
         name: faker.name.findName(),
         email: faker.internet.exampleEmail(),
         password: 'QualityPassword123'
       })
-      .expect(404);
+      .expect(401);
 
-    expect(body).toEqual({
-      name: 'NotFoundError',
-      message: 'User not not found!'
-    });
+    expect(text).toEqual('Unauthorized');
   });
 });
 
