@@ -1,6 +1,6 @@
+import { InternalServerError } from 'routing-controllers';
 import bodyParser from 'body-parser';
 import compression from 'compression';
-import createRedisStore from 'connect-redis';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import express, { Application } from 'express';
@@ -8,9 +8,8 @@ import session from 'express-session';
 import expressValidator from 'express-validator';
 import lusca from 'lusca';
 import passport from 'passport';
-import 'reflect-metadata';
-import { store } from '../connections';
 import { FRONTEND_URL, IS_DEV, SESSION_SECRET, ENV } from './env';
+import { store } from '../connections';
 
 /**
  * Create express app
@@ -33,16 +32,20 @@ app.use(
 app.use(compression());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(cookieParser(SESSION_SECRET));
 app.use(expressValidator());
 app.use(
   session({
     store,
+    name: 'luncherbox-api',
     secret: SESSION_SECRET,
+    /**
+     * You need to have HTTPs to use this
+     */
+    // secure: true,
     resave: false,
     saveUninitialized: false,
     cookie: {
-      maxAge: 60 * 60 * 24
+      maxAge: 60 * 60 * 24 * 1000
     }
   })
 );
@@ -65,7 +68,7 @@ app.use(passport.session());
  */
 app.use((req, _, next) => {
   if (!req.session) {
-    return next(new Error('Internal server error'));
+    return next(new InternalServerError('Internal server error'));
   }
   next();
 });
