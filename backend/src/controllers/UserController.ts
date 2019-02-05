@@ -83,7 +83,7 @@ export class UserController {
     const confirmationURL = `http://${req.headers.host}/confirm/${token}`;
 
     if (ENV === 'test') {
-      return confirmationURL;
+      return `/confirm/${token}`;
     }
 
     const mailOptions: MailOptions = {
@@ -97,7 +97,8 @@ Please verify ${user.name}'s account (email: ${
     };
 
     try {
-      return await sendEmail(mailOptions);
+      await sendEmail(mailOptions);
+      return 'Verification email sent!';
     } catch (error) {
       throw new InternalServerError('Verification email not sent!');
     }

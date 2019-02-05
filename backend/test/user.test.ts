@@ -2,7 +2,7 @@ import { getRepository, Repository } from 'typeorm';
 import request from 'supertest';
 import { initServer } from '../src';
 import { Server } from 'http';
-import { redisConnection, store } from '../src/connections';
+import { redisConnection } from '../src/connections';
 import { User } from '../src/entities';
 import faker from 'faker';
 import { Response } from 'superagent';
@@ -26,10 +26,7 @@ describe('Registering users with valid fields', () => {
     await request(server)
       .post('/auth/register')
       .send(userCredentials)
-      .expect(200)
-      .then((res: Response) => {
-        expect(res.body).toEqual('Verification email sent!');
-      });
+      .expect(200);
 
     const users = await userRepository.find();
 
@@ -118,20 +115,18 @@ describe('Not registering users with invalid fields', () => {
       password: 'FAKEpassword123'
     };
 
-    await request(server)
+    const res = await request(server)
       .post('/auth/register')
-      .send(userCredentials)
-      .then((res: Response) => {
-        expect(res.status).toEqual(200);
-        expect(res.body).toEqual('Verification email sent!');
-      });
+      .send(userCredentials);
+
+    expect(res.status).toEqual(200);
 
     return request(server)
       .post('/auth/register')
       .send({ ...userCredentials, name: 'Sam Doe' })
-      .then((res: Response) => {
-        expect(res.status).toEqual(422);
-        expect(res.body).toEqual({
+      .then((res1: Response) => {
+        expect(res1.status).toEqual(422);
+        expect(res1.body).toEqual({
           name: 'DuplicateError',
           message: 'Duplicate User entry!'
         });
@@ -231,29 +226,38 @@ describe('Not registering users with empty fields', () => {
   });
 });
 
-// describe('Logging in users', () => {
-//   it('logs a user in after confriming', async () => {
-//     const userCredentials: Partial<User> = {
-//       email: faker.internet.email(),
-//       password: faker.internet.password(8, false, /^(?=.*[a-z])(?=.*[0-9])(?=.{8,})/)
-//     };
+describe('Logging in registered users', () => {
+  it('logs a user in after confriming email', async () => {
+    const userCredentials: Partial<User> = {
+      name: faker.name.findName(),
+      email: faker.internet.email(),
+      password: 'FAKEpassword123'
+    };
 
-//     await request(server)
-//       .post('/auth/register')
-//       .send(userCredentials)
-//       .expect(200)
-//       .then((res: Response) => {
-//         expect(res.body).toEqual('Verification email sent!');
-//       });
+    const res = await request(server)
+      .post('/auth/register')
+      .send(userCredentials)
+      .expect(200);
 
-//     const users = await userRepository.find();
+    const { body: confirmationURL } = res;
 
-//     const { password: _, ...data } = userCredentials;
-//     data.isVerified = false;
+    await request(server)
+      .get(confirmationURL)
+      .expect(302);
 
-//     return expect(users).toMatchObject([data]);
-//   });
-// });
+    await request(server)
+      .post('/auth/login')
+      .send(userCredentials)
+      .expect(200);
+
+    const users = await userRepository.find();
+
+    const { password, ...data } = userCredentials;
+    data.isVerified = true;
+
+    return expect(users).toMatchObject([data]);
+  });
+});
 
 afterAll(async () => {
   await redisConnection.quit();

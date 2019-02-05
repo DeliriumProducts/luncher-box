@@ -12,7 +12,7 @@ export const sendEmail = async (options: MailOptions) => {
   });
 
   try {
-    return await transporter.sendMail(options);
+    return transporter.sendMail(options);
   } catch (error) {
     throw new Error(error);
   }
