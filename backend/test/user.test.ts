@@ -240,21 +240,38 @@ describe('Logging in registered users', () => {
       .send(userCredentials)
       .expect(200);
 
+    const { password, ...data } = userCredentials;
+    data.isVerified = false;
+
+    const users = await userRepository.find();
+
+    expect(users).toEqual(expect.arrayContaining([expect.objectContaining(data)]));
+
     await request(server)
       .get(confirmationURL)
       .expect(302);
 
-    await request(server)
+    const res = await request(server)
       .post('/auth/login')
       .send(userCredentials)
       .expect(200);
 
-    const users = await userRepository.find();
+    const cookie = res.header['set-cookie'][0]
+      .split(/,(?=\S)/)
+      .map((item: string) => item.split(';')[0]);
 
-    const { password, ...data } = userCredentials;
+    const { body: isLoggedIn } = await request(server)
+      .get('/auth')
+      .set('Cookie', cookie)
+      .expect(200);
+
+    expect(isLoggedIn).toEqual(true);
+
+    const users1 = await userRepository.find();
+
     data.isVerified = true;
 
-    expect(users).toEqual(expect.arrayContaining([expect.objectContaining(data)]));
+    expect(users1).toEqual(expect.arrayContaining([expect.objectContaining(data)]));
   });
 });
 
