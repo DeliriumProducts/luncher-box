@@ -1,11 +1,11 @@
-import { getRepository, Repository } from 'typeorm';
-import request from 'supertest';
-import { initServer } from '../src';
+import faker from 'faker';
 import { Server } from 'http';
+import { Response } from 'superagent';
+import request from 'supertest';
+import { getRepository, Repository } from 'typeorm';
+import { initServer } from '../src';
 import { redisConnection } from '../src/connections';
 import { User } from '../src/entities';
-import faker from 'faker';
-import { Response } from 'superagent';
 
 let server: Server;
 let userRepository: Repository<User>;
@@ -255,7 +255,7 @@ describe('Logging in registered users', () => {
     const { password, ...data } = userCredentials;
     data.isVerified = true;
 
-    return expect(users).toMatchObject([data]);
+    return expect(users).toEqual(expect.arrayContaining([expect.objectContaining(data)]));
   });
 });
 
