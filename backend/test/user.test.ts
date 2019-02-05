@@ -1,6 +1,5 @@
 import faker from 'faker';
 import { Server } from 'http';
-import { Response } from 'superagent';
 import request from 'supertest';
 import { getRepository, Repository } from 'typeorm';
 import { initServer } from '../src';
@@ -33,7 +32,7 @@ describe('Registering users with valid fields', () => {
     const { password, ...data } = userCredentials;
     data.isVerified = false;
 
-    expect(users).toMatchObject([data]);
+    expect(users).toEqual(expect.arrayContaining([expect.objectContaining(data)]));
   });
 });
 
@@ -45,17 +44,16 @@ describe('Not registering users with invalid fields', () => {
       password: 'FAKEpassword123'
     };
 
-    return request(server)
+    const { body } = await request(server)
       .post('/auth/register')
       .send(userCredentials)
-      .then((res: Response) => {
-        expect(res.status).toEqual(400);
-        expect(res.body).toEqual({
-          errors: ['email must be an email'],
-          name: 'NotValidError',
-          message: 'User not valid!'
-        });
-      });
+      .expect(400);
+
+    expect(body).toEqual({
+      errors: ['email must be an email'],
+      name: 'NotValidError',
+      message: 'User not valid!'
+    });
   });
 
   it('throws an error when registering a user with an invalid password', async () => {
@@ -65,21 +63,20 @@ describe('Not registering users with invalid fields', () => {
       password: 'remember'
     };
 
-    return request(server)
+    const { body } = await request(server)
       .post('/auth/register')
       .send(userCredentials)
-      .then((res: Response) => {
-        expect(res.status).toEqual(400);
-        expect(res.body).toEqual({
-          errors: [
-            // tslint:disable
-            'Password must contain at least 1 lowercase alphabetical character, 1 numeric character and be at least 8 characters long'
-            // tslint:enable
-          ],
-          name: 'NotValidError',
-          message: 'User not valid!'
-        });
-      });
+      .expect(400);
+
+    expect(body).toEqual({
+      errors: [
+        // tslint:disable
+        'Password must contain at least 1 lowercase alphabetical character, 1 numeric character and be at least 8 characters long'
+        // tslint:enable
+      ],
+      name: 'NotValidError',
+      message: 'User not valid!'
+    });
   });
 
   it('throws an error when registering a user with all fields invalid', async () => {
@@ -89,23 +86,22 @@ describe('Not registering users with invalid fields', () => {
       password: 'badpass'
     };
 
-    return request(server)
+    const { body } = await request(server)
       .post('/auth/register')
       .send(userCredentials)
-      .then((res: Response) => {
-        expect(res.status).toEqual(400);
-        expect(res.body).toEqual({
-          errors: [
-            'name must be longer than or equal to 1 characters',
-            'email must be an email',
-            // tslint:disable
-            'Password must contain at least 1 lowercase alphabetical character, 1 numeric character and be at least 8 characters long'
-            // tslint:enable
-          ],
-          name: 'NotValidError',
-          message: 'User not valid!'
-        });
-      });
+      .expect(400);
+
+    expect(body).toEqual({
+      errors: [
+        'name must be longer than or equal to 1 characters',
+        'email must be an email',
+        // tslint:disable
+        'Password must contain at least 1 lowercase alphabetical character, 1 numeric character and be at least 8 characters long'
+        // tslint:enable
+      ],
+      name: 'NotValidError',
+      message: 'User not valid!'
+    });
   });
 
   it('throws an error when registering a user with a duplicate email', async () => {
@@ -115,22 +111,31 @@ describe('Not registering users with invalid fields', () => {
       password: 'FAKEpassword123'
     };
 
-    const res = await request(server)
+    await request(server)
       .post('/auth/register')
-      .send(userCredentials);
+      .send(userCredentials)
+      .expect(200);
 
-    expect(res.status).toEqual(200);
+    const users = await userRepository.find();
 
-    return request(server)
+    const { password, ...data } = userCredentials;
+    data.isVerified = false;
+
+    expect(users).toEqual(expect.arrayContaining([expect.objectContaining(data)]));
+
+    const { body } = await request(server)
       .post('/auth/register')
       .send({ ...userCredentials, name: 'Sam Doe' })
-      .then((res1: Response) => {
-        expect(res1.status).toEqual(422);
-        expect(res1.body).toEqual({
-          name: 'DuplicateError',
-          message: 'Duplicate User entry!'
-        });
-      });
+      .expect(422);
+
+    expect(body).toEqual({
+      name: 'DuplicateError',
+      message: 'Duplicate User entry!'
+    });
+
+    const users1 = await userRepository.find();
+
+    expect(users1).toEqual(users);
   });
 });
 
@@ -142,17 +147,16 @@ describe('Not registering users with empty fields', () => {
       password: 'FAKEpassword123'
     };
 
-    return request(server)
+    const { body } = await request(server)
       .post('/auth/register')
       .send(userCredentials)
-      .then((res: Response) => {
-        expect(res.status).toEqual(400);
-        expect(res.body).toEqual({
-          errors: ['email must be an email'],
-          name: 'NotValidError',
-          message: 'User not valid!'
-        });
-      });
+      .expect(400);
+
+    expect(body).toEqual({
+      errors: ['email must be an email'],
+      name: 'NotValidError',
+      message: 'User not valid!'
+    });
   });
 
   it('throws an error when registering a user with an empty name', async () => {
@@ -162,17 +166,16 @@ describe('Not registering users with empty fields', () => {
       password: 'FAKEpassword123'
     };
 
-    return request(server)
+    const { body } = await request(server)
       .post('/auth/register')
       .send(userCredentials)
-      .then((res: Response) => {
-        expect(res.status).toEqual(400);
-        expect(res.body).toEqual({
-          errors: ['name must be longer than or equal to 1 characters'],
-          name: 'NotValidError',
-          message: 'User not valid!'
-        });
-      });
+      .expect(400);
+
+    expect(body).toEqual({
+      errors: ['name must be longer than or equal to 1 characters'],
+      name: 'NotValidError',
+      message: 'User not valid!'
+    });
   });
 
   it('throws an error when registering a user with an empty password', async () => {
@@ -182,21 +185,20 @@ describe('Not registering users with empty fields', () => {
       password: ''
     };
 
-    return request(server)
+    const { body } = await request(server)
       .post('/auth/register')
       .send(userCredentials)
-      .then((res: Response) => {
-        expect(res.status).toEqual(400);
-        expect(res.body).toEqual({
-          errors: [
-            // tslint:disable
-            'Password must contain at least 1 lowercase alphabetical character, 1 numeric character and be at least 8 characters long'
-            // tslint:enable
-          ],
-          name: 'NotValidError',
-          message: 'User not valid!'
-        });
-      });
+      .expect(400);
+
+    expect(body).toEqual({
+      errors: [
+        // tslint:disable
+        'Password must contain at least 1 lowercase alphabetical character, 1 numeric character and be at least 8 characters long'
+        // tslint:enable
+      ],
+      name: 'NotValidError',
+      message: 'User not valid!'
+    });
   });
 
   it('throws an error when registering a user with all fields empty', async () => {
@@ -206,23 +208,22 @@ describe('Not registering users with empty fields', () => {
       password: ''
     };
 
-    return request(server)
+    const { body } = await request(server)
       .post('/auth/register')
       .send(userCredentials)
-      .then((res: Response) => {
-        expect(res.status).toEqual(400);
-        expect(res.body).toEqual({
-          errors: [
-            'name must be longer than or equal to 1 characters',
-            'email must be an email',
-            // tslint:disable
-            'Password must contain at least 1 lowercase alphabetical character, 1 numeric character and be at least 8 characters long'
-            // tslint:enable
-          ],
-          name: 'NotValidError',
-          message: 'User not valid!'
-        });
-      });
+      .expect(400);
+
+    expect(body).toEqual({
+      errors: [
+        'name must be longer than or equal to 1 characters',
+        'email must be an email',
+        // tslint:disable
+        'Password must contain at least 1 lowercase alphabetical character, 1 numeric character and be at least 8 characters long'
+        // tslint:enable
+      ],
+      name: 'NotValidError',
+      message: 'User not valid!'
+    });
   });
 });
 
@@ -230,16 +231,14 @@ describe('Logging in registered users', () => {
   it('logs a user in after confriming email', async () => {
     const userCredentials: Partial<User> = {
       name: faker.name.findName(),
-      email: faker.internet.email(),
+      email: faker.internet.exampleEmail(),
       password: 'FAKEpassword123'
     };
 
-    const res = await request(server)
+    const { body: confirmationURL } = await request(server)
       .post('/auth/register')
       .send(userCredentials)
       .expect(200);
-
-    const { body: confirmationURL } = res;
 
     await request(server)
       .get(confirmationURL)
@@ -255,7 +254,7 @@ describe('Logging in registered users', () => {
     const { password, ...data } = userCredentials;
     data.isVerified = true;
 
-    return expect(users).toEqual(expect.arrayContaining([expect.objectContaining(data)]));
+    expect(users).toEqual(expect.arrayContaining([expect.objectContaining(data)]));
   });
 });
 
