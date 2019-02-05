@@ -1,15 +1,23 @@
-import { InternalServerError } from 'routing-controllers';
 import bodyParser from 'body-parser';
 import compression from 'compression';
-import cookieParser from 'cookie-parser';
+import createRedisStore from 'connect-redis';
 import cors from 'cors';
 import express, { Application } from 'express';
 import session from 'express-session';
 import expressValidator from 'express-validator';
 import lusca from 'lusca';
 import passport from 'passport';
-import { FRONTEND_URL, IS_DEV, SESSION_SECRET, ENV } from './env';
-import { store } from '../connections';
+import { InternalServerError } from 'routing-controllers';
+import { redisConnection } from '../connections';
+import { ENV, FRONTEND_URL, IS_DEV, SESSION_SECRET } from './env';
+
+let store;
+if (ENV !== 'test') {
+  const RedisStore = createRedisStore(session);
+  store = new RedisStore({
+    client: redisConnection as any
+  });
+}
 
 /**
  * Create express app
