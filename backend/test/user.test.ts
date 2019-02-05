@@ -14,7 +14,7 @@ beforeAll(async () => {
   userRepository = getRepository(User);
 });
 
-describe('Registering users with valid fields', () => {
+describe('Valid registrations', () => {
   it('adds a valid user to the database when registering', async () => {
     const userCredentials: Partial<User> = {
       email: faker.internet.exampleEmail(),
@@ -36,7 +36,7 @@ describe('Registering users with valid fields', () => {
   });
 });
 
-describe('Not registering users with invalid fields', () => {
+describe('Bad registrations', () => {
   it('throws an error when registering a user with an invalid email', async () => {
     const userCredentials: Partial<User> = {
       email: 'this_is-not_an_email123',
@@ -137,9 +137,7 @@ describe('Not registering users with invalid fields', () => {
 
     expect(users1).toEqual(users);
   });
-});
 
-describe('Not registering users with empty fields', () => {
   it('throws an error when registering a user with an empty email', async () => {
     const userCredentials: Partial<User> = {
       email: '',
@@ -227,7 +225,30 @@ describe('Not registering users with empty fields', () => {
   });
 });
 
-describe('Logging in registered users', () => {
+describe('User confirmation', () => {
+  it('deletes the token from Redis after confirmation', async () => {
+    const userCredentials: Partial<User> = {
+      name: faker.name.findName(),
+      email: faker.internet.exampleEmail(),
+      password: 'FAKEpassword123'
+    };
+
+    const { body: confirmationURL } = await request(server)
+      .post('/auth/register')
+      .send(userCredentials)
+      .expect(200);
+
+    await request(server)
+      .get(confirmationURL)
+      .expect(302);
+
+    const token = confirmationURL.split('/')[2];
+
+    expect(await redisConnection.get(token)).toEqual(null);
+  });
+});
+
+describe('Good logins', () => {
   it('logs a user in after confriming email', async () => {
     const userCredentials: Partial<User> = {
       name: faker.name.findName(),
@@ -251,12 +272,14 @@ describe('Logging in registered users', () => {
       .get(confirmationURL)
       .expect(302);
 
-    const res = await request(server)
+    const { body, header } = await request(server)
       .post('/auth/login')
       .send(userCredentials)
       .expect(200);
 
-    const cookie = res.header['set-cookie'][0]
+    expect(body).toEqual('User logged in!');
+
+    const cookie = header['set-cookie'][0]
       .split(/,(?=\S)/)
       .map((item: string) => item.split(';')[0]);
 
@@ -272,6 +295,54 @@ describe('Logging in registered users', () => {
     data.isVerified = true;
 
     expect(users1).toEqual(expect.arrayContaining([expect.objectContaining(data)]));
+  });
+});
+
+describe('Bad logins', () => {
+  const userCredentials: Partial<User> = {
+    name: faker.name.findName(),
+    email: faker.internet.exampleEmail(),
+    password: 'FAKEpassword123'
+  };
+
+  beforeAll(async () => {
+    await request(server)
+      .post('/auth/register')
+      .send(userCredentials);
+  });
+
+  it('throws an error when logging in with an incorrect password', async () => {
+    const { text } = await request(server)
+      .post('/auth/login')
+      .send({ ...userCredentials, password: 'WRONGpassword123' })
+      .expect(401);
+
+    expect(text).toEqual('Unauthorized');
+  });
+
+  it('throws an error when logging in with an unconfirmed user', async () => {
+    const { text } = await request(server)
+      .post('/auth/login')
+      .send(userCredentials)
+      .expect(401);
+
+    expect(text).toEqual('Unauthorized');
+  });
+
+  it('throws an error when logging in with an non-existing user', async () => {
+    const { body } = await request(server)
+      .post('/auth/login')
+      .send({
+        name: faker.name.findName(),
+        email: faker.internet.exampleEmail(),
+        password: 'QualityPassword123'
+      })
+      .expect(404);
+
+    expect(body).toEqual({
+      name: 'NotFoundError',
+      message: 'User not not found!'
+    });
   });
 });
 
