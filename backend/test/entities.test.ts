@@ -25,7 +25,7 @@ beforeAll(async () => {
 });
 
 describe('Creating Categories', () => {
-  it('adds valid categories to the database', async () => {
+  xit('adds valid categories to the database', async () => {
     const category: Partial<Category> = {
       name: 'Burgers',
       image: 'https://image.com/image.com'
