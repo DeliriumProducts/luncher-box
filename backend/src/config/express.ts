@@ -11,6 +11,9 @@ import { InternalServerError } from 'routing-controllers';
 import { redisConnection } from '../connections';
 import { ENV, FRONTEND_URL, IS_DEV, SESSION_SECRET } from './env';
 
+/**
+ * During tests, we use the default MemoryStore
+ */
 let store;
 if (ENV !== 'test') {
   const RedisStore = createRedisStore(session);
