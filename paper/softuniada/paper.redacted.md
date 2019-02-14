@@ -29,13 +29,13 @@
 ## Screenshots
 
 <div style="display: flex; flex-wrap: wrap; align-items: center; justify-content: center;">
-<img style="box-shadow: rgba(0, 0, 0, 0.12) 0px 4px 4px; margin: 1%; border-radius: 10px" src="images/screenshots.png" height="512px" />
-<img style="box-shadow: rgba(0, 0, 0, 0.12) 0px 4px 4px; margin: 1%; border-radius: 10px" src="images/screenshot7.png" height="512px" />
-<img style="box-shadow: rgba(0, 0, 0, 0.12) 0px 4px 4px; margin: 1%; border-radius: 10px" src="images/screenshot2.png" height="512px" />
-<img style="box-shadow: rgba(0, 0, 0, 0.12) 0px 4px 4px; margin: 1%; border-radius: 10px" src="images/screenshot3.png" width="424px"/>
-<img style="box-shadow: rgba(0, 0, 0, 0.12) 0px 4px 4px; margin: 1%; border-radius: 10px" src="images/screenshot4.png" width="424px"/>
-<img style="box-shadow: rgba(0, 0, 0, 0.12) 0px 4px 4px; margin: 1%; border-radius: 10px" src="images/screenshot5.png" width="424px"/>
-<img style="box-shadow: rgba(0, 0, 0, 0.12) 0px 4px 4px; margin: 1%; border-radius: 10px" src="images/screenshot6.png" width="424px"/>
+<img style="box-shadow: rgba(0, 0, 0, 0.12) 0px 4px 4px; margin: 1%; border-radius: 10px" src="images/screenshots.png" height="356px" />
+<img style="box-shadow: rgba(0, 0, 0, 0.12) 0px 4px 4px; margin: 1%; border-radius: 10px" src="images/screenshot7.png" height="356px" />
+<img style="box-shadow: rgba(0, 0, 0, 0.12) 0px 4px 4px; margin: 1%; border-radius: 10px" src="images/screenshot2.png" height="356px" />
+<img style="box-shadow: rgba(0, 0, 0, 0.12) 0px 4px 4px; margin: 1%; border-radius: 10px" src="images/screenshot6.png" width="300px"/>
+<img style="box-shadow: rgba(0, 0, 0, 0.12) 0px 4px 4px; margin: 1%; border-radius: 10px" src="images/screenshot3.png" width="300px"/>
+<img style="box-shadow: rgba(0, 0, 0, 0.12) 0px 4px 4px; margin: 1%; border-radius: 10px" src="images/screenshot4.png" width="300px"/>
+<img style="box-shadow: rgba(0, 0, 0, 0.12) 0px 4px 4px; margin: 1%; border-radius: 10px" src="images/screenshot5.png" width="300px"/>
 </div>
 
 ## Екип
