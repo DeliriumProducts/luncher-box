@@ -55,7 +55,7 @@ app.use(
 );
 app.use(
   lusca({
-    csrf: !IS_DEV,
+    csrf: false,
     xframe: 'SAMEORIGIN',
     p3p: 'ABCDEF',
     hsts: { maxAge: 31536000, includeSubDomains: true, preload: true },
