@@ -7,6 +7,8 @@ import { Category, Product, User } from '../src/entities';
 
 let server: Server;
 let productRepository: Repository<Product>;
+let categoryRepository: Repository<Category>;
+
 const userCredentials: Partial<User> = {
   name: faker.name.findName(),
   email: faker.internet.exampleEmail(),
@@ -16,6 +18,7 @@ const userCredentials: Partial<User> = {
 beforeAll(async () => {
   server = await initServer();
   productRepository = getRepository(Product);
+  categoryRepository = getRepository(Category);
 
   beforeAll(async () => {
     await request(server)

@@ -1,4 +1,4 @@
-import { capitalizeFirstLetter } from '../src/utils/capitalizeFirstLetter';
+import { capitalizeFirstLetter } from '../src/utils';
 
 describe('Capitalize First Letter', () => {
   const str = 'this is an example sentence';

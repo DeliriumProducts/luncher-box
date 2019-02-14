@@ -249,7 +249,7 @@ describe('User confirmation', () => {
 });
 
 describe('Good logins', () => {
-  it('logs a user in after confriming email', async () => {
+  it('logs a user in after confirming token', async () => {
     const userCredentials: Partial<User> = {
       name: faker.name.findName(),
       email: faker.internet.exampleEmail(),
