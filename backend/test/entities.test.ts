@@ -10,12 +10,25 @@ let server: Server;
 let dbConnection: Connection;
 let productRepository: Repository<Product>;
 let categoryRepository: Repository<Category>;
+let cookie: string;
 
 beforeAll(async () => {
   server = await initServer();
   dbConnection = await getDbConnection();
   productRepository = getRepository(Product);
   categoryRepository = getRepository(Category);
+
+  const { body: confirmationURL } = await request(server)
+    .post('/auth/register')
+    .send(userCredentials);
+
+  await request(server).get(confirmationURL);
+
+  const { header } = await request(server)
+    .post('/auth/login')
+    .send(userCredentials);
+
+  cookie = header['set-cookie'][0].split(/,(?=\S)/).map((item: string) => item.split(';')[0]);
 });
 
 const userCredentials: Partial<User> = {
@@ -24,18 +37,23 @@ const userCredentials: Partial<User> = {
   password: 'FAKEpassword123'
 };
 
-describe('Creating Categories', () => {
-  beforeAll(async () => {
-    await request(server)
-      .post('/auth/register')
-      .send(userCredentials);
-  });
-
-  xit('adds valid categories to the database', async () => {
+describe('Valid categories', () => {
+  it('adds valid categories to the database', async () => {
     const category: Partial<Category> = {
       name: 'Burgers',
       image: 'https://image.com/image.com'
     };
+
+    const { body } = await request(server)
+      .post('/categories')
+      .set('Cookie', cookie)
+      .send(category)
+      .expect(200);
+
+    expect(body).toMatchObject(category);
+
+    const categories = await categoryRepository.find();
+    expect(categories).toEqual(expect.arrayContaining([expect.objectContaining(category)]));
   });
 });
 

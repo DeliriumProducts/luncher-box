@@ -38,7 +38,7 @@ describe('Valid registrations', () => {
   });
 });
 
-describe('Bad registrations', () => {
+describe('Invalid registrations', () => {
   it('throws an error when registering a user with an invalid email', async () => {
     const userCredentials: Partial<User> = {
       email: 'this_is-not_an_email123',
@@ -250,7 +250,7 @@ describe('User confirmation', () => {
   });
 });
 
-describe('Good logins', () => {
+describe('Valid logins', () => {
   it('logs a user in after confirming token', async () => {
     const userCredentials: Partial<User> = {
       name: faker.name.findName(),
@@ -300,7 +300,7 @@ describe('Good logins', () => {
   });
 });
 
-describe('Bad logins', () => {
+describe('Invalid logins', () => {
   const userCredentials: Partial<User> = {
     name: faker.name.findName(),
     email: faker.internet.exampleEmail(),
