@@ -56,6 +56,12 @@ describe('Invalid registrations', () => {
       name: 'NotValidError',
       message: 'User not valid!'
     });
+
+    const users = await userRepository.find();
+
+    const { password, ...data } = userCredentials;
+
+    expect(users).not.toEqual(expect.arrayContaining([expect.objectContaining(data)]));
   });
 
   it('throws an error when registering a user with an invalid password', async () => {
@@ -79,6 +85,12 @@ describe('Invalid registrations', () => {
       name: 'NotValidError',
       message: 'User not valid!'
     });
+
+    const users = await userRepository.find();
+
+    const { password, ...data } = userCredentials;
+
+    expect(users).not.toEqual(expect.arrayContaining([expect.objectContaining(data)]));
   });
 
   it('throws an error when registering a user with all fields invalid', async () => {
@@ -104,6 +116,12 @@ describe('Invalid registrations', () => {
       name: 'NotValidError',
       message: 'User not valid!'
     });
+
+    const users = await userRepository.find();
+
+    const { password, ...data } = userCredentials;
+
+    expect(users).not.toEqual(expect.arrayContaining([expect.objectContaining(data)]));
   });
 
   it('throws an error when registering a user with a duplicate email', async () => {
@@ -118,12 +136,10 @@ describe('Invalid registrations', () => {
       .send(userCredentials)
       .expect(200);
 
-    const users = await userRepository.find();
-
     const { password, ...data } = userCredentials;
     data.isVerified = false;
 
-    expect(users).toEqual(expect.arrayContaining([expect.objectContaining(data)]));
+    const user = await userRepository.find({ where: { data } });
 
     const { body } = await request(server)
       .post('/auth/register')
@@ -135,9 +151,9 @@ describe('Invalid registrations', () => {
       message: 'Duplicate User entry!'
     });
 
-    const users1 = await userRepository.find();
+    const user1 = await userRepository.find({ where: { data } });
 
-    expect(users1).toEqual(users);
+    expect(user1).toEqual(user);
   });
 
   it('throws an error when registering a user with an empty email', async () => {
@@ -157,6 +173,12 @@ describe('Invalid registrations', () => {
       name: 'NotValidError',
       message: 'User not valid!'
     });
+
+    const users = await userRepository.find();
+
+    const { password, ...data } = userCredentials;
+
+    expect(users).not.toEqual(expect.arrayContaining([expect.objectContaining(data)]));
   });
 
   it('throws an error when registering a user with an empty name', async () => {
@@ -176,6 +198,12 @@ describe('Invalid registrations', () => {
       name: 'NotValidError',
       message: 'User not valid!'
     });
+
+    const users = await userRepository.find();
+
+    const { password, ...data } = userCredentials;
+
+    expect(users).not.toEqual(expect.arrayContaining([expect.objectContaining(data)]));
   });
 
   it('throws an error when registering a user with an empty password', async () => {
@@ -199,6 +227,12 @@ describe('Invalid registrations', () => {
       name: 'NotValidError',
       message: 'User not valid!'
     });
+
+    const users = await userRepository.find();
+
+    const { password, ...data } = userCredentials;
+
+    expect(users).not.toEqual(expect.arrayContaining([expect.objectContaining(data)]));
   });
 
   it('throws an error when registering a user with all fields empty', async () => {
@@ -224,6 +258,12 @@ describe('Invalid registrations', () => {
       name: 'NotValidError',
       message: 'User not valid!'
     });
+
+    const users = await userRepository.find();
+
+    const { password, ...data } = userCredentials;
+
+    expect(users).not.toEqual(expect.arrayContaining([expect.objectContaining(data)]));
   });
 });
 
