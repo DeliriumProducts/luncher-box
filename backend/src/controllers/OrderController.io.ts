@@ -1,6 +1,6 @@
-import { MessageBody, OnMessage, SocketController, SocketIO, SocketId } from 'socket-controllers';
+import { MessageBody, OnMessage, SocketController, SocketId, SocketIO } from 'socket-controllers';
+import { getRepository, In, Repository } from 'typeorm';
 import { redisConnection } from '../connections';
-import { getRepository, Repository, In } from 'typeorm';
 import { Product } from '../entities';
 
 @SocketController()

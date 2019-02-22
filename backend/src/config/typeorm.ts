@@ -1,5 +1,5 @@
 import { ConnectionOptions } from 'typeorm';
-import { DB_HOST, DB_PASS, DB_PORT, DB_USER, IS_DEV, ENV } from './env';
+import { DB_HOST, DB_PASS, DB_PORT, DB_USER, ENV, IS_DEV } from './env';
 
 interface DbConfigs {
   development: ConnectionOptions;
@@ -27,12 +27,13 @@ const dbConfigs: DbConfigs = {
     username: DB_USER,
     password: DB_PASS,
     database: 'luncherbox_production',
-    /**
-     * Tables aren't created when this is set to false, check slack for answer!!
-     */
     synchronize: IS_DEV,
     logging: false,
-    entities: ['src/entities/*.ts']
+    entities: ['src/entities/*.ts'],
+    migrations: ['src/migration/*.ts'],
+    cli: {
+      migrationsDir: 'src/migration/*.ts'
+    }
   },
   test: {
     type: 'mariadb',
@@ -42,10 +43,13 @@ const dbConfigs: DbConfigs = {
     password: DB_PASS,
     database: 'luncherbox_test',
     dropSchema: true,
-    synchronize: true,
+    synchronize: IS_DEV,
     logging: false,
-    entities: ['src/entities/*.ts']
+    entities: ['src/entities/*.ts'],
+    migrations: ['src/migration/*.ts']
   }
 };
 
-export { dbConfigs };
+const dbConfig = dbConfigs[ENV];
+
+export { dbConfig };

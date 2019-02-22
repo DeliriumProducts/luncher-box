@@ -1,8 +1,8 @@
 import 'reflect-metadata';
-import { dbConnection } from './connections';
 import { useExpressServer } from 'routing-controllers';
 import { useSocketServer } from 'socket-controllers';
 import { app, ENV, initPassport, io, PORT, server } from './config';
+import { dbConnection as initDbConnection } from './connections';
 import { authorizationChecker } from './utils';
 
 const initServer = async () => {
@@ -10,7 +10,7 @@ const initServer = async () => {
   /**
    * Establish database connection
    */
-  await dbConnection();
+  await initDbConnection();
 
   /**
    * Set up routing-controllers
