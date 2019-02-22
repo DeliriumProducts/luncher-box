@@ -57,6 +57,30 @@ describe('Valid categories', () => {
   });
 });
 
+describe('Invalid categories', async () => {
+  it('throws an error when adding a product with an invalid name', async () => {
+    const category: Partial<Category> = {
+      name: 'Bu',
+      image: 'https://image.com/image.com'
+    };
+
+    const { body } = await request(server)
+      .post('/categories')
+      .set('Cookie', cookie)
+      .send(category)
+      .expect(400);
+
+    expect(body).toEqual({
+      errors: ['name must be longer than or equal to 3 characters'],
+      name: 'NotValidError',
+      message: 'Category not valid!'
+    });
+
+    const categories = await categoryRepository.find();
+    expect(categories).not.toEqual(expect.arrayContaining([expect.objectContaining(category)]));
+  });
+});
+
 afterAll(async () => {
   await dbConnection.close();
 });
