@@ -21,7 +21,7 @@ describe('Valid registrations', () => {
     const userCredentials: Partial<User> = {
       email: faker.internet.exampleEmail(),
       name: faker.name.findName(),
-      password: 'FAKEpassword123'
+      password: 'FAKEpassword123VALID-REGISTRATION'
     };
 
     await request(server)
@@ -43,7 +43,7 @@ describe('Invalid registrations', () => {
     const userCredentials: Partial<User> = {
       email: 'this_is-not_an_email123',
       name: faker.name.findName(),
-      password: 'FAKEpassword123'
+      password: 'FAKEpassword123INVALID-EMAIL'
     };
 
     const { body } = await request(server)
@@ -128,7 +128,7 @@ describe('Invalid registrations', () => {
     const userCredentials: Partial<User> = {
       email: faker.internet.exampleEmail(),
       name: 'John Doe',
-      password: 'FAKEpassword123'
+      password: 'FAKEpassword123DUPLICATE-EMAIL'
     };
 
     await request(server)
@@ -160,7 +160,7 @@ describe('Invalid registrations', () => {
     const userCredentials: Partial<User> = {
       email: '',
       name: faker.name.findName(),
-      password: 'FAKEpassword123'
+      password: 'FAKEpassword123EMPTY-EMAIL'
     };
 
     const { body } = await request(server)
@@ -185,7 +185,7 @@ describe('Invalid registrations', () => {
     const userCredentials: Partial<User> = {
       email: faker.internet.exampleEmail(),
       name: '',
-      password: 'FAKEpassword123'
+      password: 'FAKEpassword123EMPTY-NAME'
     };
 
     const { body } = await request(server)
@@ -272,7 +272,7 @@ describe('User confirmation', () => {
     const userCredentials: Partial<User> = {
       name: faker.name.findName(),
       email: faker.internet.exampleEmail(),
-      password: 'FAKEpassword123'
+      password: 'FAKEpassword123REDIS-DELETE'
     };
 
     const { body: confirmationURL } = await request(server)
@@ -295,7 +295,7 @@ describe('Valid logins', () => {
     const userCredentials: Partial<User> = {
       name: faker.name.findName(),
       email: faker.internet.exampleEmail(),
-      password: 'FAKEpassword123'
+      password: 'FAKEpassword123CONFIRM-TOKEN'
     };
 
     const { body: confirmationURL } = await request(server)
@@ -344,7 +344,7 @@ describe('Invalid logins', () => {
   const userCredentials: Partial<User> = {
     name: faker.name.findName(),
     email: faker.internet.exampleEmail(),
-    password: 'FAKEpassword123'
+    password: 'FAKEpassword123INVALID-LOGIN'
   };
 
   beforeAll(async () => {
