@@ -79,6 +79,7 @@ describe('Invalid categories', async () => {
     const categories = await categoryRepository.find();
     expect(categories).not.toEqual(expect.arrayContaining([expect.objectContaining(category)]));
   });
+
   it('throws an error when adding a category with an invalid image', async () => {
     const category: Partial<Category> = {
       name: 'Burgers',
@@ -100,6 +101,7 @@ describe('Invalid categories', async () => {
     const categories = await categoryRepository.find();
     expect(categories).not.toEqual(expect.arrayContaining([expect.objectContaining(category)]));
   });
+
   it('throws an error when adding a category with all fields invalid', async () => {
     const category: Partial<Category> = {
       name: 'ba',
@@ -121,6 +123,7 @@ describe('Invalid categories', async () => {
     const categories = await categoryRepository.find();
     expect(categories).not.toEqual(expect.arrayContaining([expect.objectContaining(category)]));
   });
+
   it('throws an error when adding a category with an empty name', async () => {
     const category: Partial<Category> = {
       name: '',
@@ -142,6 +145,7 @@ describe('Invalid categories', async () => {
     const categories = await categoryRepository.find();
     expect(categories).not.toEqual(expect.arrayContaining([expect.objectContaining(category)]));
   });
+
   it('throws an error when adding a category with an empty image', async () => {
     const category: Partial<Category> = {
       name: 'Burgers',
@@ -166,6 +170,7 @@ describe('Invalid categories', async () => {
     const categories = await categoryRepository.find();
     expect(categories).not.toEqual(expect.arrayContaining([expect.objectContaining(category)]));
   });
+
   it('throws an error when adding a category with all fields empty', async () => {
     const category: Partial<Category> = {
       name: '',
@@ -227,6 +232,191 @@ describe('Valid products', async () => {
     const products = await productRepository.find({ relations: ['categories'] });
 
     expect(products).toEqual(expect.arrayContaining([expect.objectContaining(product)]));
+  });
+});
+
+describe('Invalid products', async () => {
+  let category: Partial<Category>;
+
+  beforeAll(async () => {
+    category = {
+      name: 'Soups',
+      image: 'https://image.com/image.com'
+    };
+
+    const { body } = await request(server)
+      .post('/categories')
+      .set('Cookie', cookie)
+      .send(category);
+
+    category.id = body.id;
+  });
+
+  it('throws an errors when adding a product with an invalid name', async () => {
+    const product: Partial<Product> = {
+      name: 'ab',
+      description: `It's invalid, sorta`,
+      image: 'https://image.com/product.com',
+      price: 5.0,
+      // @ts-ignore
+      categories: [category]
+    };
+
+    const { body } = await request(server)
+      .post('/products')
+      .set('Cookie', cookie)
+      .send(product)
+      .expect(400);
+
+    expect(body).toEqual({
+      errors: ['name must be longer than or equal to 3 characters'],
+      name: 'NotValidError',
+      message: 'Product not valid!'
+    });
+
+    const products = await productRepository.find({ relations: ['categories'] });
+
+    expect(products).not.toEqual(expect.arrayContaining([expect.objectContaining(product)]));
+  });
+
+  it('throws an errors when adding a product with an invalid description', async () => {
+    const product: Partial<Product> = {
+      name: 'Chicken',
+      description: 'inv',
+      image: 'https://image.com/product.com',
+      price: 5.0,
+      // @ts-ignore
+      categories: [category]
+    };
+
+    const { body } = await request(server)
+      .post('/products')
+      .set('Cookie', cookie)
+      .send(product)
+      .expect(400);
+
+    expect(body).toEqual({
+      errors: ['description must be longer than or equal to 5 characters'],
+      name: 'NotValidError',
+      message: 'Product not valid!'
+    });
+
+    const products = await productRepository.find({ relations: ['categories'] });
+
+    expect(products).not.toEqual(expect.arrayContaining([expect.objectContaining(product)]));
+  });
+
+  it('throws an errors when adding a product with an invalid image', async () => {
+    const product: Partial<Product> = {
+      name: 'Chicken',
+      description: 'Good description',
+      image: 'bad-url',
+      price: 5.0,
+      // @ts-ignore
+      categories: [category]
+    };
+
+    const { body } = await request(server)
+      .post('/products')
+      .set('Cookie', cookie)
+      .send(product)
+      .expect(400);
+
+    expect(body).toEqual({
+      errors: ['image must be an URL address'],
+      name: 'NotValidError',
+      message: 'Product not valid!'
+    });
+
+    const products = await productRepository.find({ relations: ['categories'] });
+
+    expect(products).not.toEqual(expect.arrayContaining([expect.objectContaining(product)]));
+  });
+
+  it('throws an errors when adding a product with an invalid image', async () => {
+    const product: Partial<Product> = {
+      name: 'Chicken',
+      description: 'Good description',
+      image: 'bad-url',
+      price: 5.0,
+      // @ts-ignore
+      categories: [category]
+    };
+
+    const { body } = await request(server)
+      .post('/products')
+      .set('Cookie', cookie)
+      .send(product)
+      .expect(400);
+
+    expect(body).toEqual({
+      errors: ['image must be an URL address'],
+      name: 'NotValidError',
+      message: 'Product not valid!'
+    });
+
+    const products = await productRepository.find({ relations: ['categories'] });
+
+    expect(products).not.toEqual(expect.arrayContaining([expect.objectContaining(product)]));
+  });
+
+  it('throws an errors when adding a product with an invalid price', async () => {
+    const product: Partial<Product> = {
+      name: 'Chicken',
+      description: 'Good description',
+      image: 'https://image.com/image.com',
+      price: -13234234,
+      // @ts-ignore
+      categories: [category]
+    };
+
+    const { body } = await request(server)
+      .post('/products')
+      .set('Cookie', cookie)
+      .send(product)
+      .expect(400);
+
+    expect(body).toEqual({
+      errors: ['price must not be less than 0'],
+      name: 'NotValidError',
+      message: 'Product not valid!'
+    });
+
+    const products = await productRepository.find({ relations: ['categories'] });
+
+    expect(products).not.toEqual(expect.arrayContaining([expect.objectContaining(product)]));
+  });
+
+  it('throws an errors when adding a product with all fields invalid', async () => {
+    const product: Partial<Product> = {
+      name: 'Ab',
+      description: 'Ab',
+      image: 'not-a-url',
+      price: -13234234,
+      // @ts-ignore
+      categories: [category]
+    };
+
+    const { body } = await request(server)
+      .post('/products')
+      .set('Cookie', cookie)
+      .send(product)
+      .expect(400);
+
+    expect(body).toEqual({
+      errors: [
+        'name must be longer than or equal to 3 characters',
+        'description must be longer than or equal to 5 characters',
+        'image must be an URL address',
+        'price must not be less than 0'
+      ],
+      name: 'NotValidError',
+      message: 'Product not valid!'
+    });
+
+    const products = await productRepository.find({ relations: ['categories'] });
+
+    expect(products).not.toEqual(expect.arrayContaining([expect.objectContaining(product)]));
   });
 });
 

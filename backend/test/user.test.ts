@@ -267,7 +267,7 @@ describe('Invalid registrations', () => {
   });
 });
 
-describe('User confirmation', () => {
+describe('Valid user confirmation', () => {
   it('deletes the token from Redis after confirmation', async () => {
     const userCredentials: Partial<User> = {
       name: faker.name.findName(),
@@ -288,14 +288,12 @@ describe('User confirmation', () => {
 
     expect(await redisConnection.get(token)).toEqual(null);
   });
-});
 
-describe('Valid logins', () => {
-  it('logs a user in after confirming token', async () => {
+  it('confirms the user in the database', async () => {
     const userCredentials: Partial<User> = {
       name: faker.name.findName(),
       email: faker.internet.exampleEmail(),
-      password: 'FAKEpassword123CONFIRM-TOKEN'
+      password: 'FAKEpassword123CONFIRM-USER'
     };
 
     const { body: confirmationURL } = await request(server)
@@ -309,6 +307,31 @@ describe('Valid logins', () => {
     const users = await userRepository.find();
 
     expect(users).toEqual(expect.arrayContaining([expect.objectContaining(data)]));
+
+    await request(server)
+      .get(confirmationURL)
+      .expect(302);
+
+    const users1 = await userRepository.find();
+
+    data.isVerified = true;
+
+    expect(users1).toEqual(expect.arrayContaining([expect.objectContaining(data)]));
+  });
+});
+
+describe('Valid logins', () => {
+  it('logs a user in after confirming token', async () => {
+    const userCredentials: Partial<User> = {
+      name: faker.name.findName(),
+      email: faker.internet.exampleEmail(),
+      password: 'FAKEpassword123LOGIN-USER'
+    };
+
+    const { body: confirmationURL } = await request(server)
+      .post('/auth/register')
+      .send(userCredentials)
+      .expect(200);
 
     await request(server)
       .get(confirmationURL)
@@ -331,12 +354,6 @@ describe('Valid logins', () => {
       .expect(200);
 
     expect(isLoggedIn).toEqual(true);
-
-    const users1 = await userRepository.find();
-
-    data.isVerified = true;
-
-    expect(users1).toEqual(expect.arrayContaining([expect.objectContaining(data)]));
   });
 });
 
