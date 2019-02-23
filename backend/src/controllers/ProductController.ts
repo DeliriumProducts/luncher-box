@@ -103,11 +103,8 @@ export class ProductController {
     const [product, productErr] = await this.transformAndValidateProduct(productJSON);
 
     /**
-     * Throw an error if a category doesn't exist when creating a product
+     * Check if the request contains any categories
      */
-    const categories = await this.categoryRepository.find();
-    const validCategories: Category[] = [];
-
     if (!productJSON.categories) {
       if (productErr.length) {
         throw new ProductNotValidError([...productErr, 'categories must be created beforehand']);
@@ -115,6 +112,12 @@ export class ProductController {
 
       throw new ProductNotValidError(['categories must be created beforehand']);
     }
+
+    /**
+     * Throw an error if a category doesn't exist when creating a product
+     */
+    const categories = await this.categoryRepository.find();
+    const validCategories: Category[] = [];
 
     /**
      * Iterate over the productJSON, as the product might be empty after the validation has passed
@@ -171,11 +174,8 @@ export class ProductController {
       const [newProduct, productErr] = await this.transformAndValidateProduct(newProductJSON);
 
       /**
-       * Throw an error if a category doesn't exist when creating a product
+       * Check if the request contains any categories
        */
-      const categories = await this.categoryRepository.find();
-      const validCategories: Category[] = [];
-
       if (!newProductJSON.categories) {
         if (productErr.length) {
           throw new ProductNotValidError([...productErr, 'categories must be created beforehand']);
@@ -183,6 +183,12 @@ export class ProductController {
 
         throw new ProductNotValidError(['categories must be created beforehand']);
       }
+
+      /**
+       * Throw an error if a category doesn't exist when creating a product
+       */
+      const categories = await this.categoryRepository.find();
+      const validCategories: Category[] = [];
 
       /**
        * Iterate over the productJSON, as the product might be empty after the validation has passed
