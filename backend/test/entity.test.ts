@@ -37,8 +37,8 @@ const userCredentials: Partial<User> = {
   password: 'FAKEpassword123'
 };
 
-describe('Valid categories', () => {
-  it('adds valid categories to the database', async () => {
+describe('Creating valid categories', () => {
+  it('creates valid categories to the database', async () => {
     const category: Partial<Category> = {
       name: 'Burgers',
       image: 'https://image.com/image.com'
@@ -57,8 +57,8 @@ describe('Valid categories', () => {
   });
 });
 
-describe('Invalid categories', async () => {
-  it('throws an error when adding a category with an invalid name', async () => {
+describe('Not creating invalid categories', async () => {
+  it('throws an error when creating a category with an invalid name', async () => {
     const category: Partial<Category> = {
       name: 'Bu',
       image: 'https://image.com/image.com'
@@ -80,7 +80,7 @@ describe('Invalid categories', async () => {
     expect(categories).not.toEqual(expect.arrayContaining([expect.objectContaining(category)]));
   });
 
-  it('throws an error when adding a category with an invalid image', async () => {
+  it('throws an error when creating a category with an invalid image', async () => {
     const category: Partial<Category> = {
       name: 'Burgers',
       image: 'not-a-url'
@@ -102,7 +102,7 @@ describe('Invalid categories', async () => {
     expect(categories).not.toEqual(expect.arrayContaining([expect.objectContaining(category)]));
   });
 
-  it('throws an error when adding a category with all fields invalid', async () => {
+  it('throws an error when creating a category with all fields invalid', async () => {
     const category: Partial<Category> = {
       name: 'ba',
       image: 'anoter-not-a-url'
@@ -125,8 +125,8 @@ describe('Invalid categories', async () => {
   });
 });
 
-describe('Valid products', async () => {
-  it('adds valid products to the database', async () => {
+describe('Creating valid products', async () => {
+  it('creates valid products to the database', async () => {
     const category: Partial<Category> = {
       name: 'Soups',
       image: 'https://image.com/image.com'
@@ -162,7 +162,7 @@ describe('Valid products', async () => {
   });
 });
 
-describe('Invalid products', async () => {
+describe('Not creating invalid products', async () => {
   let category: Partial<Category>;
 
   beforeAll(async () => {
@@ -179,7 +179,7 @@ describe('Invalid products', async () => {
     category.id = body.id;
   });
 
-  it('throws an errors when adding a product with an invalid name', async () => {
+  it('throws an errors when creating a product with an invalid name', async () => {
     const product: Partial<Product> = {
       name: 'ab',
       description: `It's invalid, sorta`,
@@ -206,7 +206,7 @@ describe('Invalid products', async () => {
     expect(products).not.toEqual(expect.arrayContaining([expect.objectContaining(product)]));
   });
 
-  it('throws an errors when adding a product with an invalid description', async () => {
+  it('throws an errors when creating a product with an invalid description', async () => {
     const product: Partial<Product> = {
       name: 'Chicken',
       description: 'inv',
@@ -233,7 +233,7 @@ describe('Invalid products', async () => {
     expect(products).not.toEqual(expect.arrayContaining([expect.objectContaining(product)]));
   });
 
-  it('throws an errors when adding a product with an invalid image', async () => {
+  it('throws an errors when creating a product with an invalid image', async () => {
     const product: Partial<Product> = {
       name: 'Chicken',
       description: 'Good description',
@@ -260,7 +260,7 @@ describe('Invalid products', async () => {
     expect(products).not.toEqual(expect.arrayContaining([expect.objectContaining(product)]));
   });
 
-  it('throws an errors when adding a product with an invalid image', async () => {
+  it('throws an errors when creating a product with an invalid image', async () => {
     const product: Partial<Product> = {
       name: 'Chicken',
       description: 'Good description',
@@ -287,7 +287,7 @@ describe('Invalid products', async () => {
     expect(products).not.toEqual(expect.arrayContaining([expect.objectContaining(product)]));
   });
 
-  it('throws an errors when adding a product with an invalid price', async () => {
+  it('throws an errors when creating a product with an invalid price', async () => {
     const product: Partial<Product> = {
       name: 'Chicken',
       description: 'Good description',
@@ -314,7 +314,7 @@ describe('Invalid products', async () => {
     expect(products).not.toEqual(expect.arrayContaining([expect.objectContaining(product)]));
   });
 
-  it('throws an errors when adding a product with invalid categories', async () => {
+  it('throws an errors when creating a product with invalid categories', async () => {
     const product: Partial<Product> = {
       name: 'Chicken',
       description: 'Good description',
@@ -347,7 +347,7 @@ describe('Invalid products', async () => {
     expect(products).not.toEqual(expect.arrayContaining([expect.objectContaining(product)]));
   });
 
-  it('throws an errors when adding a product with all fields invalid', async () => {
+  it('throws an errors when creating a product with all fields invalid', async () => {
     const product: Partial<Product> = {
       name: 'Ab',
       description: 'Ab',
@@ -383,6 +383,51 @@ describe('Invalid products', async () => {
 
     const products = await productRepository.find({ relations: ['categories'] });
 
+    expect(products).not.toEqual(expect.arrayContaining([expect.objectContaining(product)]));
+  });
+});
+
+describe('Authorization', async () => {
+  it(`doesn't create categories when not logged in`, async () => {
+    const category: Partial<Category> = {
+      name: 'even-badder-examplers',
+      image: 'https://image.com/image.com'
+    };
+
+    const { body } = await request(server)
+      .post('/categories')
+      .send(category)
+      .expect(401);
+
+    expect(body).toEqual({
+      name: 'AuthorizationRequiredError',
+      message: 'Authorization is required for request on POST /categories'
+    });
+
+    const categories = await categoryRepository.find();
+    expect(categories).not.toEqual(expect.arrayContaining([expect.objectContaining(category)]));
+  });
+
+  it(`doesn't create products when not logged in`, async () => {
+    const product: Partial<Product> = {
+      name: 'very-bad-example123>_>',
+      description: `very-good-example123<_>`,
+      image: 'https://image.com/product.com',
+      price: 5.0,
+      categories: []
+    };
+
+    const { body } = await request(server)
+      .post('/products')
+      .send(product)
+      .expect(401);
+
+    expect(body).toEqual({
+      name: 'AuthorizationRequiredError',
+      message: 'Authorization is required for request on POST /products'
+    });
+
+    const products = await categoryRepository.find();
     expect(products).not.toEqual(expect.arrayContaining([expect.objectContaining(product)]));
   });
 });
