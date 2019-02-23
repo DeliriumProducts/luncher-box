@@ -150,7 +150,9 @@ describe('Deleting categories', () => {
     const categories = await categoryRepository.find();
     expect(categories).toEqual(expect.not.arrayContaining([expect.objectContaining(category)]));
   });
+});
 
+describe('Not deleting categories', () => {
   it('throws an error when deleting a non-existing category from the database', async () => {
     const { body } = await request(server)
       .delete(`/categories/${-420}`)
@@ -468,7 +470,9 @@ describe('Deleting products', () => {
     const products = await categoryRepository.find();
     expect(products).toEqual(expect.not.arrayContaining([expect.objectContaining(product)]));
   });
+});
 
+describe('Not deleting products', () => {
   it('throws an error when deleting a non-existing product from the database', async () => {
     const { body } = await request(server)
       .delete(`/products/${-420}`)
