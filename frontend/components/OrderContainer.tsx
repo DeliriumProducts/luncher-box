@@ -1,10 +1,10 @@
+import { Alert, Collapse, Tag } from 'antd';
 import { Component } from 'react';
-import { Collapse, Alert, Tag } from 'antd';
 import styled from 'styled-components';
-import ItemCard from './ItemCard';
+import { THEME_VARIABLES } from '../config';
 import { Order, Product } from '../interfaces';
+import ItemCard from './ItemCard';
 import OrderCardHeader from './OrderCardHeader';
-import { AdminContext } from '../context';
 
 interface Props {
   orders: Order[];
@@ -43,8 +43,8 @@ export const FlexSpan = styled.span`
 
     & > * {
       margin-right: 20px;
+      color: ${THEME_VARIABLES['@primary-color']};
       border: 0;
-      color: #1890ff;
       box-shadow: 0 2px 2px rgba(0, 0, 0, 0.12);
     }
   }

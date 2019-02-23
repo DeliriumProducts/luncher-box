@@ -23,5 +23,5 @@
     "preserveConstEnums": true
   },
   "exclude": ["node_modules"],
-  "include": ["./**/*.tsx", "./**/*.ts"]
+  "include": ["./**/*.tsx", "./**/*.ts", "assets/antd-custom.js"]
 }

@@ -1,7 +1,7 @@
-import React from 'react';
-import App, { Container, NextAppContext } from 'next/app';
-import { createGlobalStyle } from 'styled-components';
 import { PageTransition } from 'next-page-transitions';
+import App, { Container, NextAppContext } from 'next/app';
+import React from 'react';
+import { createGlobalStyle } from 'styled-components';
 import EntityContextProvider from '../components/AdminContextProvider';
 import CartContextProvider from '../components/CartContextProvider';
 
