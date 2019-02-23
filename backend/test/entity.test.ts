@@ -428,11 +428,26 @@ describe('Not creating invalid products', async () => {
 
 describe('Deleting products', () => {
   it('deletes an existing product from the database', async () => {
+    const category: Partial<Category> = {
+      name: 'useless',
+      image: 'https://image.com/image.com'
+    };
+
+    const { body } = await request(server)
+      .post('/categories')
+      .set('Cookie', cookie)
+      .send(category)
+      .expect(200);
+
+    category.id = body.id;
+
     const product: Partial<Product> = {
       name: 'to-be-deleted',
       description: 'good-desc',
       image: 'https://image.com/image.com',
-      price: 5.99
+      price: 5.99,
+      // @ts-ignore
+      categories: [category]
     };
 
     const {
@@ -443,14 +458,12 @@ describe('Deleting products', () => {
       .send(product)
       .expect(200);
 
-    console.log(id);
-
-    const { body } = await request(server)
+    const { body: body1 } = await request(server)
       .delete(`/products/${id}`)
       .set('Cookie', cookie)
       .expect(200);
 
-    expect(body).toEqual('Product deleted!');
+    expect(body1).toEqual('Product deleted!');
 
     const products = await categoryRepository.find();
     expect(products).toEqual(expect.not.arrayContaining([expect.objectContaining(product)]));
