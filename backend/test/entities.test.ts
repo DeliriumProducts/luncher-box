@@ -193,6 +193,43 @@ describe('Invalid categories', async () => {
   });
 });
 
+describe('Valid products', async () => {
+  it('adds valid products to the database', async () => {
+    const category: Partial<Category> = {
+      name: 'Soups',
+      image: 'https://image.com/image.com'
+    };
+
+    const { body } = await request(server)
+      .post('/categories')
+      .set('Cookie', cookie)
+      .send(category);
+
+    category.id = body.id;
+
+    const product: Partial<Product> = {
+      name: 'Chicken Soup',
+      description: `It's tasty and it has chicken`,
+      image: 'https://image.com/product.com',
+      price: 5.0,
+      // @ts-ignore
+      categories: [category]
+    };
+
+    const { body: body1 } = await request(server)
+      .post('/products')
+      .set('Cookie', cookie)
+      .send(product)
+      .expect(200);
+
+    expect(body1).toMatchObject(product);
+
+    const products = await productRepository.find({ relations: ['categories'] });
+
+    expect(products).toEqual(expect.arrayContaining([expect.objectContaining(product)]));
+  });
+});
+
 afterAll(async () => {
   await dbConnection.close();
 });
