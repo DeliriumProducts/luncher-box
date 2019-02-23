@@ -124,8 +124,6 @@ export class OrderController {
     @MessageBody() orderId: number,
     @SocketRequest() req: Request
   ) {
-    console.log(req.isAuthenticated());
-
     const key = 'orders';
     const ordersJSON = await redisConnection.get(key);
 
