@@ -1,7 +1,15 @@
-import { MessageBody, OnMessage, SocketController, SocketId, SocketIO } from 'socket-controllers';
+import {
+  MessageBody,
+  OnMessage,
+  SocketController,
+  SocketId,
+  SocketIO,
+  SocketRequest
+} from 'socket-controllers';
 import { getRepository, In, Repository } from 'typeorm';
 import { redisConnection } from '../connections';
 import { Product } from '../entities';
+import { Request } from 'express';
 
 @SocketController()
 export class OrderController {
@@ -113,8 +121,11 @@ export class OrderController {
   async accept(
     @SocketIO() io: SocketIO.Socket,
     @SocketId() senderId: any,
-    @MessageBody() orderId: number
+    @MessageBody() orderId: number,
+    @SocketRequest() req: Request
   ) {
+    console.log(req.isAuthenticated());
+
     const key = 'orders';
     const ordersJSON = await redisConnection.get(key);
 
