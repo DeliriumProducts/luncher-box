@@ -1,4 +1,3 @@
-import { capitalizeFirstLetter } from './capitalizeFirstLetter';
 import { transformAndValidate, TransformValidationOptions } from 'class-transformer-validator';
 import deepmerge from 'deepmerge';
 import { ClassType } from '../interfaces';

@@ -314,6 +314,39 @@ describe('Invalid products', async () => {
     expect(products).not.toEqual(expect.arrayContaining([expect.objectContaining(product)]));
   });
 
+  it('throws an errors when adding a product with invalid categories', async () => {
+    const product: Partial<Product> = {
+      name: 'Chicken',
+      description: 'Good description',
+      image: 'https://image.com/image.com',
+      price: 5.0,
+      // @ts-ignore
+      categories: [
+        {
+          id: -54545,
+          name: 'b',
+          image: 'ff'
+        }
+      ]
+    };
+
+    const { body } = await request(server)
+      .post('/products')
+      .set('Cookie', cookie)
+      .send(product)
+      .expect(400);
+
+    expect(body).toEqual({
+      errors: ['categories must be created beforehand'],
+      message: 'Product not valid!',
+      name: 'NotValidError'
+    });
+
+    const products = await productRepository.find({ relations: ['categories'] });
+
+    expect(products).not.toEqual(expect.arrayContaining([expect.objectContaining(product)]));
+  });
+
   it('throws an errors when adding a product with all fields invalid', async () => {
     const product: Partial<Product> = {
       name: 'Ab',
@@ -321,7 +354,13 @@ describe('Invalid products', async () => {
       image: 'not-a-url',
       price: -13234234,
       // @ts-ignore
-      categories: [category]
+      categories: [
+        {
+          id: -54545,
+          name: 'b',
+          image: 'ff'
+        }
+      ]
     };
 
     const { body } = await request(server)
@@ -335,7 +374,8 @@ describe('Invalid products', async () => {
         'name must be longer than or equal to 3 characters',
         'description must be longer than or equal to 5 characters',
         'image must be an URL address',
-        'price must not be less than 0'
+        'price must not be less than 0',
+        'categories must be created beforehand'
       ],
       name: 'NotValidError',
       message: 'Product not valid!'
