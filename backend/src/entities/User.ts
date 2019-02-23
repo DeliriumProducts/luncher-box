@@ -6,7 +6,7 @@ import { DuplicateEntityError, EntityNotFoundError, EntityNotValidError } from '
 
 @Entity()
 export class User {
-  @PrimaryGeneratedColumn()
+  @PrimaryGeneratedColumn('uuid')
   id: number;
 
   @Column('text')
