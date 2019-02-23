@@ -108,6 +108,14 @@ export class ProductController {
     const categories = await this.categoryRepository.find();
     const validCategories: Category[] = [];
 
+    if (!productJSON.categories) {
+      if (productErr.length) {
+        throw new ProductNotValidError([...productErr, 'categories must be created beforehand']);
+      }
+
+      throw new ProductNotValidError(['categories must be created beforehand']);
+    }
+
     /**
      * Iterate over the productJSON, as the product might be empty after the validation has passed
      */
@@ -167,6 +175,14 @@ export class ProductController {
        */
       const categories = await this.categoryRepository.find();
       const validCategories: Category[] = [];
+
+      if (!newProductJSON.categories) {
+        if (productErr.length) {
+          throw new ProductNotValidError([...productErr, 'categories must be created beforehand']);
+        }
+
+        throw new ProductNotValidError(['categories must be created beforehand']);
+      }
 
       /**
        * Iterate over the productJSON, as the product might be empty after the validation has passed

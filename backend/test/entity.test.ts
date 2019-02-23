@@ -38,7 +38,7 @@ const userCredentials: Partial<User> = {
 };
 
 describe('Creating valid categories', () => {
-  it('creates valid categories to the database', async () => {
+  it('creates a valid category to the database', async () => {
     const category: Partial<Category> = {
       name: 'Burgers',
       image: 'https://image.com/image.com'
@@ -82,7 +82,7 @@ describe('Not creating invalid categories', async () => {
 
   it('throws an error when creating a category with an invalid image', async () => {
     const category: Partial<Category> = {
-      name: 'Burgers',
+      name: 'ValidName',
       image: 'not-a-url'
     };
 
@@ -122,6 +122,45 @@ describe('Not creating invalid categories', async () => {
 
     const categories = await categoryRepository.find();
     expect(categories).not.toEqual(expect.arrayContaining([expect.objectContaining(category)]));
+  });
+});
+
+describe('Deleting categories', () => {
+  it('deletes an existing category from the database', async () => {
+    const category: Partial<Category> = {
+      name: 'to-be-deleted',
+      image: 'https://image.com/image.com'
+    };
+
+    const {
+      body: { id }
+    } = await request(server)
+      .post('/categories')
+      .set('Cookie', cookie)
+      .send(category)
+      .expect(200);
+
+    const { body } = await request(server)
+      .delete(`/categories/${id}`)
+      .set('Cookie', cookie)
+      .expect(200);
+
+    expect(body).toEqual('Category deleted!');
+
+    const categories = await categoryRepository.find();
+    expect(categories).toEqual(expect.not.arrayContaining([expect.objectContaining(category)]));
+  });
+
+  it('throws an error when deleting a non-existing category from the database', async () => {
+    const { body } = await request(server)
+      .delete(`/categories/${-420}`)
+      .set('Cookie', cookie)
+      .expect(404);
+
+    expect(body).toEqual({
+      name: 'NotFoundError',
+      message: 'Category not found!'
+    });
   });
 });
 
@@ -387,8 +426,51 @@ describe('Not creating invalid products', async () => {
   });
 });
 
+describe('Deleting products', () => {
+  it('deletes an existing product from the database', async () => {
+    const product: Partial<Product> = {
+      name: 'to-be-deleted',
+      description: 'good-desc',
+      image: 'https://image.com/image.com',
+      price: 5.99
+    };
+
+    const {
+      body: { id }
+    } = await request(server)
+      .post('/products')
+      .set('Cookie', cookie)
+      .send(product)
+      .expect(200);
+
+    console.log(id);
+
+    const { body } = await request(server)
+      .delete(`/products/${id}`)
+      .set('Cookie', cookie)
+      .expect(200);
+
+    expect(body).toEqual('Product deleted!');
+
+    const products = await categoryRepository.find();
+    expect(products).toEqual(expect.not.arrayContaining([expect.objectContaining(product)]));
+  });
+
+  it('throws an error when deleting a non-existing product from the database', async () => {
+    const { body } = await request(server)
+      .delete(`/products/${-420}`)
+      .set('Cookie', cookie)
+      .expect(404);
+
+    expect(body).toEqual({
+      name: 'NotFoundError',
+      message: 'Product not found!'
+    });
+  });
+});
+
 describe('Authorization', async () => {
-  it(`doesn't create categories when not logged in`, async () => {
+  it('throws an error when creating a category when not logged in', async () => {
     const category: Partial<Category> = {
       name: 'even-badder-examplers',
       image: 'https://image.com/image.com'
@@ -408,7 +490,7 @@ describe('Authorization', async () => {
     expect(categories).not.toEqual(expect.arrayContaining([expect.objectContaining(category)]));
   });
 
-  it(`doesn't create products when not logged in`, async () => {
+  it('throws an error when creating a product when not logged in', async () => {
     const product: Partial<Product> = {
       name: 'very-bad-example123>_>',
       description: `very-good-example123<_>`,
