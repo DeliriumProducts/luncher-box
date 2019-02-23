@@ -16,7 +16,7 @@ beforeAll(async () => {
   userRepository = getRepository(User);
 });
 
-describe('Valid registrations', () => {
+describe('POST /auth/register', () => {
   it('adds a valid user to the database when registering', async () => {
     const userCredentials: Partial<User> = {
       email: faker.internet.exampleEmail(),
@@ -36,9 +36,7 @@ describe('Valid registrations', () => {
 
     expect(users).toEqual(expect.arrayContaining([expect.objectContaining(data)]));
   });
-});
 
-describe('Invalid registrations', () => {
   it('throws an error when registering a user with an invalid email', async () => {
     const userCredentials: Partial<User> = {
       email: 'this_is-not_an_email123',
@@ -157,7 +155,7 @@ describe('Invalid registrations', () => {
   });
 });
 
-describe('Valid user confirmation', () => {
+describe('GET /confirm/:tokenId', () => {
   it('deletes the token from Redis after confirmation', async () => {
     const userCredentials: Partial<User> = {
       name: faker.name.findName(),
@@ -210,7 +208,7 @@ describe('Valid user confirmation', () => {
   });
 });
 
-describe('Valid logins', () => {
+describe('POST /auth/login', () => {
   it('logs a user in after confirming token', async () => {
     const userCredentials: Partial<User> = {
       name: faker.name.findName(),
@@ -245,9 +243,7 @@ describe('Valid logins', () => {
 
     expect(isLoggedIn).toEqual(true);
   });
-});
 
-describe('Invalid logins', () => {
   const userCredentials: Partial<User> = {
     name: faker.name.findName(),
     email: faker.internet.exampleEmail(),

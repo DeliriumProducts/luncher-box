@@ -37,7 +37,7 @@ const userCredentials: Partial<User> = {
   password: 'FAKEpassword123'
 };
 
-describe('Creating valid categories', () => {
+describe('POST /categories', () => {
   it('creates a valid category to the database', async () => {
     const category: Partial<Category> = {
       name: 'Burgers',
@@ -55,9 +55,7 @@ describe('Creating valid categories', () => {
     const categories = await categoryRepository.find();
     expect(categories).toEqual(expect.arrayContaining([expect.objectContaining(category)]));
   });
-});
 
-describe('Not creating invalid categories', async () => {
   it('throws an error when creating a category with an invalid name', async () => {
     const category: Partial<Category> = {
       name: 'Bu',
@@ -125,7 +123,7 @@ describe('Not creating invalid categories', async () => {
   });
 });
 
-describe('Deleting categories', () => {
+describe('DELETE /categories/:id', () => {
   it('deletes an existing category from the database', async () => {
     const category: Partial<Category> = {
       name: 'to-be-deleted',
@@ -150,9 +148,7 @@ describe('Deleting categories', () => {
     const categories = await categoryRepository.find();
     expect(categories).toEqual(expect.not.arrayContaining([expect.objectContaining(category)]));
   });
-});
 
-describe('Not deleting categories', () => {
   it('throws an error when deleting a non-existing category from the database', async () => {
     const { body } = await request(server)
       .delete(`/categories/${-420}`)
@@ -166,7 +162,7 @@ describe('Not deleting categories', () => {
   });
 });
 
-describe('Creating valid products', async () => {
+describe('POST /products', async () => {
   it('creates a valid product to the database', async () => {
     const category: Partial<Category> = {
       name: 'Soups',
@@ -201,9 +197,7 @@ describe('Creating valid products', async () => {
 
     expect(products).toEqual(expect.arrayContaining([expect.objectContaining(product)]));
   });
-});
 
-describe('Not creating invalid products', async () => {
   let category: Partial<Category>;
 
   beforeAll(async () => {
@@ -428,7 +422,7 @@ describe('Not creating invalid products', async () => {
   });
 });
 
-describe('Deleting products', () => {
+describe('DELETE /products/:id', () => {
   it('deletes an existing product from the database', async () => {
     const category: Partial<Category> = {
       name: 'useless',
@@ -470,9 +464,7 @@ describe('Deleting products', () => {
     const products = await categoryRepository.find();
     expect(products).toEqual(expect.not.arrayContaining([expect.objectContaining(product)]));
   });
-});
 
-describe('Not deleting products', () => {
   it('throws an error when deleting a non-existing product from the database', async () => {
     const { body } = await request(server)
       .delete(`/products/${-420}`)
