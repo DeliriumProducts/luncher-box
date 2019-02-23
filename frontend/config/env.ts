@@ -1,10 +1,3 @@
-import * as dotenv from 'dotenv';
-
-/**
- * Load env variables
- */
-dotenv.config();
-
 /**
  * Backend url
  */

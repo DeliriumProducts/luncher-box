@@ -3,10 +3,12 @@ import * as dotenv from 'dotenv';
 /**
  * Load env variables
  */
-dotenv.config();
+dotenv.config({
+  path: `${__dirname}/../../../.env`
+});
 
 /**
- * DEV or PROD enviroment
+ * Development, production or test enviroment
  */
 export const ENV = process.env.NODE_ENV || 'development';
 export const IS_DEV = ENV === 'development';
@@ -15,11 +17,6 @@ export const IS_DEV = ENV === 'development';
  * Server port
  */
 export const PORT = Number(process.env.PORT) || 8000;
-
-/**
- * Database name
- */
-export const DB_NAME = process.env.DB_NAME || 'luncher-box';
 
 /**
  * Database host and port

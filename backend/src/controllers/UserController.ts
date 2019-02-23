@@ -2,13 +2,24 @@ import { TransformValidationOptions } from 'class-transformer-validator';
 import { Request } from 'express';
 import nodemailer from 'nodemailer';
 import passport from 'passport';
-import { Body, Get, JsonController, Post, Req, UseBefore } from 'routing-controllers';
+import {
+  Body,
+  Get,
+  JsonController,
+  Post,
+  Req,
+  UseBefore,
+  InternalServerError
+} from 'routing-controllers';
 import { getRepository, Repository } from 'typeorm';
-import { OWNER_EMAIL, OWNER_PASS, VERIFIER_EMAIL, redisClient } from '../config';
+import { OWNER_EMAIL, OWNER_PASS, VERIFIER_EMAIL, ENV } from '../config';
+import { redisConnection } from '../connections';
 import { DuplicateUserError, User, UserNotFoundError, UserNotValidError } from '../entities';
 import { TransformAndValidateTuple } from '../types';
 import { transformAndValidate } from '../utils';
 import { v4 } from 'uuid';
+import { MailOptions } from 'nodemailer/lib/sendmail-transport';
+import { sendEmail } from '../utils';
 
 @JsonController('/auth')
 export class UserController {
@@ -64,22 +75,18 @@ export class UserController {
      * Generate verification token and save it in redis
      */
     const token = v4();
-    await redisClient.set(token, user.id, 'ex', 60 * 60 * 24); // 1 day
+    await redisConnection.set(token, user.id, 'ex', 60 * 60 * 24); // 1 day
 
     /**
      * Send verification email
      */
-    const transporter = nodemailer.createTransport({
-      service: 'Gmail',
-      auth: {
-        user: OWNER_EMAIL,
-        pass: OWNER_PASS
-      }
-    });
-
     const confirmationURL = `http://${req.headers.host}/confirm/${token}`;
 
-    const mailOptions = {
+    if (ENV === 'test') {
+      return `/confirm/${token}`;
+    }
+
+    const mailOptions: MailOptions = {
       from: OWNER_EMAIL,
       to: VERIFIER_EMAIL,
       subject: 'Luncher Box Account Verification',
@@ -90,10 +97,10 @@ Please verify ${user.name}'s account (email: ${
     };
 
     try {
-      await transporter.sendMail(mailOptions);
+      await sendEmail(mailOptions);
       return 'Verification email sent!';
     } catch (error) {
-      return 'Verification email not sent!';
+      throw new InternalServerError('Verification email not sent!');
     }
   }
 
