@@ -165,7 +165,7 @@ describe('Deleting categories', () => {
 });
 
 describe('Creating valid products', async () => {
-  it('creates valid products to the database', async () => {
+  it('creates a valid product to the database', async () => {
     const category: Partial<Category> = {
       name: 'Soups',
       image: 'https://image.com/image.com'
