@@ -4,11 +4,9 @@ import Router from 'next/router';
 import React, { Component } from 'react';
 import styled from 'styled-components';
 import { Exit } from 'styled-icons/icomoon/Exit';
-import { AuthAPI, CategoryAPI, ProductAPI } from '../api';
+import { AuthAPI } from '../api';
 import { AdminContext } from '../context';
-import { Category, Product } from '../interfaces';
 import { EntityTypes } from '../types';
-import EntityModal from './EntityModal';
 
 interface Props {
   selectedKey: string;

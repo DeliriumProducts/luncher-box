@@ -1,3 +1,4 @@
+import { Request } from 'express';
 import {
   MessageBody,
   OnMessage,
@@ -9,7 +10,6 @@ import {
 import { getRepository, In, Repository } from 'typeorm';
 import { redisConnection } from '../connections';
 import { Product } from '../entities';
-import { Request } from 'express';
 
 @SocketController()
 export class OrderController {

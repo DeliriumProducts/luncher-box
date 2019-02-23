@@ -1,15 +1,15 @@
-import { Component } from 'react';
 import { message } from 'antd';
+import { Component } from 'react';
+import styled from 'styled-components';
+import { CategoryAPI } from '../../api';
 import AdminLayout from '../../components/AdminLayout';
+import EntityCard from '../../components/EntityCard';
+import EntityCardContainer from '../../components/EntityCardContainer';
+import EntityModal from '../../components/EntityModal';
 import withAuth from '../../components/withAuth';
 import { AdminContext } from '../../context';
-import EntityCard from '../../components/EntityCard';
-import styled from 'styled-components';
-import EntityCardContainer from '../../components/EntityCardContainer';
 import { Category } from '../../interfaces';
-import { CategoryAPI } from '../../api';
-import { EntityInstance, EntityTypes, ActionTypes } from '../../types';
-import EntityModal from '../../components/EntityModal';
+import { ActionTypes, EntityInstance, EntityTypes } from '../../types';
 
 const FlexContainer = styled.div`
   display: flex;

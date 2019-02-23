@@ -1,4 +1,3 @@
-const withStyledIcons = require('next-plugin-styled-icons');
 const withTypescript = require('@zeit/next-typescript');
 const withCss = require('@zeit/next-css');
 const webpack = require('webpack');
@@ -20,4 +19,4 @@ const wcss = withCss({
     return config;
   }
 });
-module.exports = withStyledIcons(withTypescript({ ...wcss }));
+module.exports = withTypescript({ ...wcss });
