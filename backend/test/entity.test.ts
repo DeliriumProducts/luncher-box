@@ -12,6 +12,12 @@ let productRepository: Repository<Product>;
 let categoryRepository: Repository<Category>;
 let cookie: string;
 
+const userCredentials: Partial<User> = {
+  name: faker.name.findName(),
+  email: faker.internet.exampleEmail(),
+  password: 'FAKEpassword123'
+};
+
 beforeAll(async () => {
   server = await initServer();
   dbConnection = await getDbConnection();
@@ -30,12 +36,6 @@ beforeAll(async () => {
 
   cookie = header['set-cookie'][0].split(/,(?=\S)/).map((item: string) => item.split(';')[0]);
 });
-
-const userCredentials: Partial<User> = {
-  name: faker.name.findName(),
-  email: faker.internet.exampleEmail(),
-  password: 'FAKEpassword123'
-};
 
 describe('POST /categories', () => {
   it('creates a valid category to the database', async () => {
@@ -163,41 +163,6 @@ describe('DELETE /categories/:id', () => {
 });
 
 describe('POST /products', async () => {
-  it('creates a valid product to the database', async () => {
-    const category: Partial<Category> = {
-      name: 'Soups',
-      image: 'https://image.com/image.com'
-    };
-
-    const { body } = await request(server)
-      .post('/categories')
-      .set('Cookie', cookie)
-      .send(category);
-
-    category.id = body.id;
-
-    const product: Partial<Product> = {
-      name: 'Chicken Soup',
-      description: `It's tasty and it has chicken`,
-      image: 'https://image.com/product.com',
-      price: 5.0,
-      // @ts-ignore
-      categories: [category]
-    };
-
-    const { body: body1 } = await request(server)
-      .post('/products')
-      .set('Cookie', cookie)
-      .send(product)
-      .expect(200);
-
-    expect(body1).toMatchObject(product);
-
-    const products = await productRepository.find({ relations: ['categories'] });
-
-    expect(products).toEqual(expect.arrayContaining([expect.objectContaining(product)]));
-  });
-
   let category: Partial<Category>;
 
   beforeAll(async () => {
@@ -212,6 +177,41 @@ describe('POST /products', async () => {
       .send(category);
 
     category.id = body.id;
+  });
+
+  it('creates a valid product to the database', async () => {
+    const validCategory: Partial<Category> = {
+      name: 'Salads',
+      image: 'https://image.com/image.com'
+    };
+
+    const { body } = await request(server)
+      .post('/categories')
+      .set('Cookie', cookie)
+      .send(validCategory);
+
+    validCategory.id = body.id;
+
+    const product: Partial<Product> = {
+      name: 'Shopska Salad',
+      description: `It's tasty and it has cheese`,
+      image: 'https://image.com/product.com',
+      price: 5.0,
+      // @ts-ignore
+      categories: [validCategory]
+    };
+
+    const { body: body1 } = await request(server)
+      .post('/products')
+      .set('Cookie', cookie)
+      .send(product)
+      .expect(200);
+
+    expect(body1).toMatchObject(product);
+
+    const products = await productRepository.find({ relations: ['categories'] });
+
+    expect(products).toEqual(expect.arrayContaining([expect.objectContaining(product)]));
   });
 
   it('throws an errors when creating a product with an invalid name', async () => {
