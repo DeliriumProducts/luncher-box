@@ -11,13 +11,7 @@ import {
   QueryParam
 } from 'routing-controllers';
 import { getRepository, MoreThan, Repository } from 'typeorm';
-import {
-  Category,
-  CategoryNotFoundError,
-  Product,
-  ProductNotFoundError,
-  ProductNotValidError
-} from '../entities';
+import { Category, Product, ProductNotFoundError, ProductNotValidError } from '../entities';
 import { QueryResponse, TransformAndValidateTuple } from '../types';
 import { transformAndValidate } from '../utils';
 
@@ -114,6 +108,9 @@ export class ProductController {
     const categories = await this.categoryRepository.find();
     const validCategories: Category[] = [];
 
+    /**
+     * Iterate over the productJSON, as the product might be empty after the validation has passed
+     */
     for (const category of productJSON.categories) {
       /**
        * Make sure only an array of objects are being passed
@@ -165,17 +162,16 @@ export class ProductController {
     if (oldProduct) {
       const [newProduct, productErr] = await this.transformAndValidateProduct(newProductJSON);
 
-      if (productErr.length) {
-        throw new ProductNotValidError(productErr);
-      }
-
       /**
        * Throw an error if a category doesn't exist when creating a product
        */
       const categories = await this.categoryRepository.find();
       const validCategories: Category[] = [];
 
-      for (const category of newProduct.categories) {
+      /**
+       * Iterate over the productJSON, as the product might be empty after the validation has passed
+       */
+      for (const category of newProductJSON.categories) {
         /**
          * Make sure only an array of objects are being passed
          */
@@ -191,8 +187,16 @@ export class ProductController {
         }
       }
 
+      if (productErr.length) {
+        if (!validCategories.length) {
+          throw new ProductNotValidError([...productErr, 'categories must be created beforehand']);
+        }
+
+        throw new ProductNotValidError(productErr);
+      }
+
       if (!validCategories.length) {
-        throw new CategoryNotFoundError();
+        throw new ProductNotValidError(['categories must be created beforehand']);
       }
 
       newProduct.categories = validCategories;
