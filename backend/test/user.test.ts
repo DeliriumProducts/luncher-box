@@ -139,9 +139,14 @@ describe('POST /auth/register', () => {
 
     const user = await userRepository.find({ where: { data } });
 
+    const userCredentials1: Partial<User> = {
+      ...userCredentials,
+      name: 'Sam Doe'
+    };
+
     const { body } = await request(server)
       .post('/auth/register')
-      .send({ ...userCredentials, name: 'Sam Doe' })
+      .send(userCredentials1)
       .expect(422);
 
     expect(body).toEqual({
@@ -209,6 +214,18 @@ describe('GET /confirm/:tokenId', () => {
 });
 
 describe('POST /auth/login', () => {
+  const registeredUserCredentials: Partial<User> = {
+    name: faker.name.findName(),
+    email: faker.internet.exampleEmail(),
+    password: 'FAKEpassword123INVALID-LOGIN'
+  };
+
+  beforeAll(async () => {
+    await request(server)
+      .post('/auth/register')
+      .send(registeredUserCredentials);
+  });
+
   it('logs a user in after confirming token', async () => {
     const userCredentials: Partial<User> = {
       name: faker.name.findName(),
@@ -244,22 +261,10 @@ describe('POST /auth/login', () => {
     expect(isLoggedIn).toEqual(true);
   });
 
-  const userCredentials: Partial<User> = {
-    name: faker.name.findName(),
-    email: faker.internet.exampleEmail(),
-    password: 'FAKEpassword123INVALID-LOGIN'
-  };
-
-  beforeAll(async () => {
-    await request(server)
-      .post('/auth/register')
-      .send(userCredentials);
-  });
-
   it('throws an error when logging in with an incorrect password', async () => {
     const { text } = await request(server)
       .post('/auth/login')
-      .send({ ...userCredentials, password: 'WRONGpassword123' })
+      .send({ ...registeredUserCredentials, password: 'WRONGpassword123' })
       .expect(401);
 
     expect(text).toEqual('Unauthorized');
@@ -268,7 +273,7 @@ describe('POST /auth/login', () => {
   it('throws an error when logging in with an unconfirmed user', async () => {
     const { text } = await request(server)
       .post('/auth/login')
-      .send(userCredentials)
+      .send(registeredUserCredentials)
       .expect(401);
 
     expect(text).toEqual('Unauthorized');

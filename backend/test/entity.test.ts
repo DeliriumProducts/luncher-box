@@ -123,6 +123,160 @@ describe('POST /categories', () => {
   });
 });
 
+describe('PUT /categories/:id', () => {
+  it('edits a valid category from the database', async () => {
+    const category: Partial<Category> = {
+      name: 'Old Burgers',
+      image: 'https://image.com/image.com'
+    };
+
+    const {
+      body: { id: categoryId }
+    } = await request(server)
+      .post('/categories')
+      .set('Cookie', cookie)
+      .send(category)
+      .expect(200);
+
+    category.id = categoryId;
+
+    const editedCategory: Partial<Category> = {
+      ...category,
+      name: 'New Burgers',
+      image: 'https://new-image.com/image.com'
+    };
+
+    const { body } = await request(server)
+      .put(`/categories/${categoryId}`)
+      .set('Cookie', cookie)
+      .send(editedCategory)
+      .expect(200);
+
+    expect(body).toMatchObject(editedCategory);
+
+    const categories = await categoryRepository.find({ where: { id: categoryId } });
+
+    expect(categories).toEqual([editedCategory]);
+  });
+
+  it('throws an error when editing a category with an invalid name', async () => {
+    const category: Partial<Category> = {
+      name: 'Old Soups',
+      image: 'https://image-soup.com/image.com'
+    };
+
+    const {
+      body: { id: categoryId }
+    } = await request(server)
+      .post('/categories')
+      .set('Cookie', cookie)
+      .send(category)
+      .expect(200);
+
+    category.id = categoryId;
+
+    const editedCategory: Partial<Category> = {
+      ...category,
+      name: 'b',
+      image: 'https://new-image.com/image.com'
+    };
+
+    const { body } = await request(server)
+      .put(`/categories/${categoryId}`)
+      .set('Cookie', cookie)
+      .send(editedCategory)
+      .expect(400);
+
+    expect(body).toEqual({
+      errors: ['name must be longer than or equal to 3 characters'],
+      message: 'Category not valid!',
+      name: 'NotValidError'
+    });
+
+    const categories = await categoryRepository.find({ where: { id: categoryId } });
+
+    expect(categories).not.toEqual([editedCategory]);
+  });
+
+  it('throws an error when editing a category with an invalid image', async () => {
+    const category: Partial<Category> = {
+      name: 'Old Salads',
+      image: 'https://image-soup.com/image.com'
+    };
+
+    const {
+      body: { id: categoryId }
+    } = await request(server)
+      .post('/categories')
+      .set('Cookie', cookie)
+      .send(category)
+      .expect(200);
+
+    category.id = categoryId;
+
+    const editedCategory: Partial<Category> = {
+      ...category,
+      name: 'New Salads',
+      image: 'not-a-good-url'
+    };
+
+    const { body } = await request(server)
+      .put(`/categories/${categoryId}`)
+      .set('Cookie', cookie)
+      .send(editedCategory)
+      .expect(400);
+
+    expect(body).toEqual({
+      errors: ['image must be an URL address'],
+      message: 'Category not valid!',
+      name: 'NotValidError'
+    });
+
+    const categories = await categoryRepository.find({ where: { id: categoryId } });
+
+    expect(categories).not.toEqual([editedCategory]);
+  });
+
+  it('throws an error when editing a category with a all fields invalid', async () => {
+    const category: Partial<Category> = {
+      name: 'Old Salads',
+      image: 'https://image-soup.com/image.com'
+    };
+
+    const {
+      body: { id: categoryId }
+    } = await request(server)
+      .post('/categories')
+      .set('Cookie', cookie)
+      .send(category)
+      .expect(200);
+
+    category.id = categoryId;
+
+    const editedCategory: Partial<Category> = {
+      ...category,
+      name: 'bf',
+      image: 'VERY-bad-URL'
+    };
+
+    const { body } = await request(server)
+      .put(`/categories/${categoryId}`)
+      .set('Cookie', cookie)
+      .send(editedCategory)
+      .expect(400);
+
+    expect(body).toEqual({
+      errors: ['name must be longer than or equal to 3 characters', 'image must be an URL address'],
+      message: 'Category not valid!',
+      name: 'NotValidError'
+    });
+
+    const categories = await categoryRepository.find({ where: { id: categoryId } });
+
+    expect(categories).not.toEqual([editedCategory]);
+  });
+});
+
 describe('DELETE /categories/:id', () => {
   it('deletes an existing category from the database', async () => {
     const category: Partial<Category> = {
@@ -171,12 +325,14 @@ describe('POST /products', async () => {
       image: 'https://image.com/image.com'
     };
 
-    const { body } = await request(server)
+    const {
+      body: { id }
+    } = await request(server)
       .post('/categories')
       .set('Cookie', cookie)
       .send(category);
 
-    category.id = body.id;
+    category.id = id;
   });
 
   it('creates a valid product to the database', async () => {
@@ -185,12 +341,14 @@ describe('POST /products', async () => {
       image: 'https://image.com/image.com'
     };
 
-    const { body } = await request(server)
+    const {
+      body: { id }
+    } = await request(server)
       .post('/categories')
       .set('Cookie', cookie)
       .send(validCategory);
 
-    validCategory.id = body.id;
+    validCategory.id = id;
 
     const product: Partial<Product> = {
       name: 'Shopska Salad',
@@ -429,13 +587,15 @@ describe('DELETE /products/:id', () => {
       image: 'https://image.com/image.com'
     };
 
-    const { body } = await request(server)
+    const {
+      body: { id: categoryId }
+    } = await request(server)
       .post('/categories')
       .set('Cookie', cookie)
       .send(category)
       .expect(200);
 
-    category.id = body.id;
+    category.id = categoryId;
 
     const product: Partial<Product> = {
       name: 'to-be-deleted',
@@ -447,7 +607,7 @@ describe('DELETE /products/:id', () => {
     };
 
     const {
-      body: { id }
+      body: { id: productId }
     } = await request(server)
       .post('/products')
       .set('Cookie', cookie)
@@ -455,7 +615,7 @@ describe('DELETE /products/:id', () => {
       .expect(200);
 
     const { body: body1 } = await request(server)
-      .delete(`/products/${id}`)
+      .delete(`/products/${productId}`)
       .set('Cookie', cookie)
       .expect(200);
 
