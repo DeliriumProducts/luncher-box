@@ -317,14 +317,12 @@ describe('DELETE /categories/:id', () => {
 });
 
 describe('POST /products', async () => {
-  let category: Partial<Category>;
+  const category: Partial<Category> = {
+    name: 'Soups',
+    image: 'https://image.com/image.com'
+  };
 
   beforeAll(async () => {
-    category = {
-      name: 'Soups',
-      image: 'https://image.com/image.com'
-    };
-
     const {
       body: { id }
     } = await request(server)
@@ -336,27 +334,13 @@ describe('POST /products', async () => {
   });
 
   it('creates a valid product to the database', async () => {
-    const validCategory: Partial<Category> = {
-      name: 'Salads',
-      image: 'https://image.com/image.com'
-    };
-
-    const {
-      body: { id }
-    } = await request(server)
-      .post('/categories')
-      .set('Cookie', cookie)
-      .send(validCategory);
-
-    validCategory.id = id;
-
     const product: Partial<Product> = {
-      name: 'Shopska Salad',
+      name: 'Chicken Soup',
       description: `It's tasty and it has cheese`,
       image: 'https://image.com/product.com',
       price: 5.0,
       // @ts-ignore
-      categories: [validCategory]
+      categories: [category]
     };
 
     const { body: body1 } = await request(server)
