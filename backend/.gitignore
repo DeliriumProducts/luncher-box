@@ -4,5 +4,6 @@ node_modules/
 /dist
 tmp/
 temp/
+coverage/
 .env
 failed_tests

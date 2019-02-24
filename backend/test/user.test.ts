@@ -29,12 +29,11 @@ describe('POST /auth/register', () => {
       .send(userCredentials)
       .expect(200);
 
-    const users = await userRepository.find();
+    const { password, ...userWithoutPassword } = userCredentials;
 
-    const { password, ...data } = userCredentials;
-    data.isVerified = false;
+    const user = await userRepository.findOne({ where: { ...userWithoutPassword } });
 
-    expect(users).toEqual(expect.arrayContaining([expect.objectContaining(data)]));
+    expect(user).toMatchObject(userWithoutPassword);
   });
 
   it('throws an error when registering a user with an invalid email', async () => {
@@ -55,11 +54,11 @@ describe('POST /auth/register', () => {
       message: 'User not valid!'
     });
 
-    const users = await userRepository.find();
+    const { password, ...userWithoutPassword } = userCredentials;
 
-    const { password, ...data } = userCredentials;
+    const user = await userRepository.findOne({ where: { ...userWithoutPassword } });
 
-    expect(users).not.toEqual(expect.arrayContaining([expect.objectContaining(data)]));
+    expect(user).not.toBeDefined();
   });
 
   it('throws an error when registering a user with an invalid password', async () => {
@@ -84,11 +83,11 @@ describe('POST /auth/register', () => {
       message: 'User not valid!'
     });
 
-    const users = await userRepository.find();
+    const { password, ...userWithoutPassword } = userCredentials;
 
-    const { password, ...data } = userCredentials;
+    const user = await userRepository.findOne({ where: { ...userWithoutPassword } });
 
-    expect(users).not.toEqual(expect.arrayContaining([expect.objectContaining(data)]));
+    expect(user).not.toBeDefined();
   });
 
   it('throws an error when registering a user with all fields invalid', async () => {
@@ -115,11 +114,11 @@ describe('POST /auth/register', () => {
       message: 'User not valid!'
     });
 
-    const users = await userRepository.find();
+    const { password, ...userWithoutPassword } = userCredentials;
 
-    const { password, ...data } = userCredentials;
+    const user = await userRepository.findOne({ where: { ...userWithoutPassword } });
 
-    expect(users).not.toEqual(expect.arrayContaining([expect.objectContaining(data)]));
+    expect(user).not.toBeDefined();
   });
 
   it('throws an error when registering a user with a duplicate email', async () => {
@@ -133,11 +132,6 @@ describe('POST /auth/register', () => {
       .post('/auth/register')
       .send(userCredentials)
       .expect(200);
-
-    const { password, ...data } = userCredentials;
-    data.isVerified = false;
-
-    const user = await userRepository.find({ where: { data } });
 
     const userCredentials1: Partial<User> = {
       ...userCredentials,
@@ -154,13 +148,48 @@ describe('POST /auth/register', () => {
       message: 'Duplicate User entry!'
     });
 
-    const user1 = await userRepository.find({ where: { data } });
+    const { password, ...userWithoutPassword } = userCredentials1;
 
-    expect(user1).toEqual(user);
+    const user = await userRepository.findOne({ where: { ...userWithoutPassword } });
+
+    expect(user).not.toBeDefined();
   });
 });
 
 describe('GET /confirm/:tokenId', () => {
+  it('confirms the user in the database', async () => {
+    const userCredentials: Partial<User> = {
+      name: faker.name.findName(),
+      email: faker.internet.exampleEmail(),
+      password: 'FAKEpassword123CONFIRM-USER'
+    };
+
+    const { body: confirmationURL } = await request(server)
+      .post('/auth/register')
+      .send(userCredentials)
+      .expect(200);
+
+    const { password, ...userWithoutPassword } = userCredentials;
+
+    const user = await userRepository.findOne({ where: { ...userWithoutPassword } });
+
+    expect(user).toMatchObject({
+      ...userWithoutPassword,
+      isVerified: false
+    });
+
+    await request(server)
+      .get(confirmationURL)
+      .expect(302);
+
+    const user1 = await userRepository.findOne({ where: { ...userWithoutPassword } });
+
+    expect(user1).toMatchObject({
+      ...userWithoutPassword,
+      isVerified: true
+    });
+  });
+
   it('deletes the token from Redis after confirmation', async () => {
     const userCredentials: Partial<User> = {
       name: faker.name.findName(),
@@ -181,36 +210,6 @@ describe('GET /confirm/:tokenId', () => {
 
     expect(await redisConnection.get(token)).toEqual(null);
   });
-
-  it('confirms the user in the database', async () => {
-    const userCredentials: Partial<User> = {
-      name: faker.name.findName(),
-      email: faker.internet.exampleEmail(),
-      password: 'FAKEpassword123CONFIRM-USER'
-    };
-
-    const { body: confirmationURL } = await request(server)
-      .post('/auth/register')
-      .send(userCredentials)
-      .expect(200);
-
-    const { password, ...data } = userCredentials;
-    data.isVerified = false;
-
-    const users = await userRepository.find();
-
-    expect(users).toEqual(expect.arrayContaining([expect.objectContaining(data)]));
-
-    await request(server)
-      .get(confirmationURL)
-      .expect(302);
-
-    const users1 = await userRepository.find();
-
-    data.isVerified = true;
-
-    expect(users1).toEqual(expect.arrayContaining([expect.objectContaining(data)]));
-  });
 });
 
 describe('POST /auth/login', () => {
@@ -224,6 +223,15 @@ describe('POST /auth/login', () => {
     await request(server)
       .post('/auth/register')
       .send(registeredUserCredentials);
+  });
+
+  it('throws an error when logging in with an unconfirmed user', async () => {
+    const { text } = await request(server)
+      .post('/auth/login')
+      .send(registeredUserCredentials)
+      .expect(401);
+
+    expect(text).toEqual('Unauthorized');
   });
 
   it('logs a user in after confirming token', async () => {
@@ -270,23 +278,16 @@ describe('POST /auth/login', () => {
     expect(text).toEqual('Unauthorized');
   });
 
-  it('throws an error when logging in with an unconfirmed user', async () => {
-    const { text } = await request(server)
-      .post('/auth/login')
-      .send(registeredUserCredentials)
-      .expect(401);
-
-    expect(text).toEqual('Unauthorized');
-  });
-
   it('throws an error when logging in with an non-existing user', async () => {
+    const userCredentials: Partial<User> = {
+      name: faker.name.findName(),
+      email: faker.internet.exampleEmail(),
+      password: 'QualityPassword123'
+    };
+
     const { text } = await request(server)
       .post('/auth/login')
-      .send({
-        name: faker.name.findName(),
-        email: faker.internet.exampleEmail(),
-        password: 'QualityPassword123'
-      })
+      .send(userCredentials)
       .expect(401);
 
     expect(text).toEqual('Unauthorized');
