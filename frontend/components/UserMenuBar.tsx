@@ -1,4 +1,4 @@
-import { Icon, Menu, Badge } from 'antd';
+import { Badge, Icon, Menu } from 'antd';
 import Link from 'next/link';
 import React, { Component } from 'react';
 import styled from 'styled-components';
@@ -56,7 +56,7 @@ class UserMenuBar extends Component<Props, any> {
           className="styled-menu"
         >
           <Menu.Item key="home">
-            <Link href="/" prefetch>
+            <Link href="/">
               <StyledAnchor>
                 <Icon type="read" className="menu-item-icon" />
                 <span className="menu-item-title">Menu</span>
@@ -64,7 +64,7 @@ class UserMenuBar extends Component<Props, any> {
             </Link>
           </Menu.Item>
           <Menu.Item key="cart">
-            <Link href="/cart" prefetch>
+            <Link href="/cart">
               <StyledAnchor>
                 <Badge offset={[10, 0]} count={this.context.totalAmount}>
                   <Icon type="shopping-cart" className="menu-item-icon" />

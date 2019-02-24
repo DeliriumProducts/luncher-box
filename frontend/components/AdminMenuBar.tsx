@@ -91,7 +91,7 @@ class AdminMenuBar extends Component<Props, State> {
           className="styled-menu"
         >
           <Menu.Item key="home">
-            <Link href="/admin" prefetch>
+            <Link href="/admin">
               <StyledAnchor>
                 <Icon type="home" className="menu-item-icon" />
                 <span className="menu-item-title">Home</span>
@@ -99,7 +99,7 @@ class AdminMenuBar extends Component<Props, State> {
             </Link>
           </Menu.Item>
           <Menu.Item key="orders">
-            <Link href="/admin/orders" prefetch>
+            <Link href="/admin/orders">
               <StyledAnchor>
                 <Icon type="table" className="menu-item-icon" />
                 <span className="menu-item-title">Orders</span>
@@ -107,7 +107,7 @@ class AdminMenuBar extends Component<Props, State> {
             </Link>
           </Menu.Item>
           <Menu.Item key="chat">
-            <Link href="/admin/staffchat" prefetch>
+            <Link href="/admin/staffchat">
               <StyledAnchor>
                 <Icon type="message" className="menu-item-icon" />
                 <span className="menu-item-title">Staff chat</span>
@@ -115,7 +115,7 @@ class AdminMenuBar extends Component<Props, State> {
             </Link>
           </Menu.Item>
           <Menu.Item key="load" disabled>
-            <Link href="/admin/restaurantload" prefetch>
+            <Link href="/admin/restaurantload">
               <StyledAnchor>
                 <Icon type="pie-chart" className="menu-item-icon" />
                 <span className="menu-item-title">Restaurant load</span>

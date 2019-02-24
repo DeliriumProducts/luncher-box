@@ -78,7 +78,7 @@ const StaffChat = () => {
             <Radio value={4}>D</Radio>
           </RadioGroup>
           <Switch defaultChecked />
-          <TextArea rows={4} />
+          <TextArea rows={5} />
           <Dropdown
             overlay={
               <Menu>

@@ -1,7 +1,7 @@
-import React from 'react';
 import { Button, message } from 'antd';
-import { FlexSpan } from './OrderContainer';
+import React from 'react';
 import { AdminContext } from '../context';
+import { FlexSpan } from './OrderContainer';
 
 interface Props {
   orderId: number;
