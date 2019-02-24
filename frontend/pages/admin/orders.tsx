@@ -1,14 +1,12 @@
+import { Empty } from 'antd';
 import { Component } from 'react';
-import io from 'socket.io-client';
 import AdminLayout from '../../components/AdminLayout';
 import FullHeightContainer from '../../components/FullHeightContainer';
-import withAuth from '../../components/withAuth';
 import OrderContainer from '../../components/OrderContainer';
-import { BACKEND_URL } from '../../config';
-import { Order } from '../../interfaces/Order';
-import { AdminContext } from '../../context';
 import Spinner from '../../components/Spinner';
-import { Empty } from 'antd';
+import withAuth from '../../components/withAuth';
+import { AdminContext } from '../../context';
+import { Order } from '../../interfaces/Order';
 
 interface State {
   orders: Order[];

@@ -1,9 +1,9 @@
 import { NextContext } from 'next';
 import Router from 'next/router';
-import React, { Component, ComponentClass } from 'react';
+import React, { Component, ComponentType } from 'react';
 import { AuthAPI } from '../api';
 
-const withAuth = <T extends object>(C: ComponentClass<T>) =>
+const withAuth = <T extends object>(C: ComponentType<T>) =>
   class extends Component<T> {
     static async getInitialProps({ req, res }: NextContext) {
       let isAuthenticated = false;

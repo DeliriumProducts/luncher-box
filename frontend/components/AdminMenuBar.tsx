@@ -106,7 +106,7 @@ class AdminMenuBar extends Component<Props, State> {
               </StyledAnchor>
             </Link>
           </Menu.Item>
-          <Menu.Item key="chat" disabled>
+          <Menu.Item key="chat">
             <Link href="/admin/staffchat" prefetch>
               <StyledAnchor>
                 <Icon type="message" className="menu-item-icon" />
