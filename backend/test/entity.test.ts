@@ -278,14 +278,14 @@ describe('PUT /categories/:id', () => {
 });
 
 describe('DELETE /categories/:id', () => {
-  it('deletes an existing category from the database', async () => {
+  it('deletes an existing category with no products from the database', async () => {
     const category: Partial<Category> = {
       name: 'to-be-deleted',
       image: 'https://image.com/image.com'
     };
 
     const {
-      body: { id }
+      body: { id: categoryId }
     } = await request(server)
       .post('/categories')
       .set('Cookie', cookie)
@@ -293,14 +293,190 @@ describe('DELETE /categories/:id', () => {
       .expect(200);
 
     const { body } = await request(server)
-      .delete(`/categories/${id}`)
+      .delete(`/categories/${categoryId}`)
       .set('Cookie', cookie)
       .expect(200);
 
     expect(body).toEqual('Category deleted!');
 
-    const categories = await categoryRepository.find();
-    expect(categories).toEqual(expect.not.arrayContaining([expect.objectContaining(category)]));
+    const categories = await categoryRepository.find({ where: { id: categoryId } });
+    expect(categories).toEqual([]);
+  });
+
+  it('deletes an existing category with products that only belong to it from the database', async () => {
+    const category: Partial<Category> = {
+      name: 'to-be-deleted-again',
+      image: 'https://image.com/image.com'
+    };
+
+    const {
+      body: { id: categoryId }
+    } = await request(server)
+      .post('/categories')
+      .set('Cookie', cookie)
+      .send(category)
+      .expect(200);
+
+    const product: Partial<Product> = {
+      name: 'tobedeleted',
+      description: 'denial',
+      price: 5,
+      image: 'https://image.com/image',
+      // @ts-ignore
+      categories: [{ id: categoryId }]
+    };
+
+    const {
+      body: { id: productId }
+    } = await request(server)
+      .post('/products')
+      .set('Cookie', cookie)
+      .send(product)
+      .expect(200);
+
+    const {
+      body: { id: product1Id }
+    } = await request(server)
+      .post('/products')
+      .set('Cookie', cookie)
+      .send({
+        ...product,
+        name: 'tobedeletedagain'
+      })
+      .expect(200);
+
+    const { body } = await request(server)
+      .delete(`/categories/${categoryId}`)
+      .set('Cookie', cookie)
+      .expect(200);
+
+    expect(body).toEqual('Category deleted!');
+
+    const categories = await categoryRepository.find({ where: { id: categoryId } });
+    expect(categories).toEqual([]);
+
+    const products = await productRepository.find({ where: { id: productId } });
+    const products1 = await productRepository.find({ where: { id: product1Id } });
+
+    expect(products).toEqual([]);
+    expect(products1).toEqual([]);
+  });
+
+  it('deletes an existing category with products that only some of which belong to it from the database', async () => {
+    const category: Partial<Category> = {
+      name: 'to-be-deleted-again-again',
+      image: 'https://image.com/image.com'
+    };
+
+    const category1: Partial<Category> = {
+      name: 'to-be-deleted-again-again2',
+      image: 'https://image.com/image.com'
+    };
+
+    const {
+      body: { id: categoryId }
+    } = await request(server)
+      .post('/categories')
+      .set('Cookie', cookie)
+      .send(category)
+      .expect(200);
+
+    const {
+      body: { id: categoryId1 }
+    } = await request(server)
+      .post('/categories')
+      .set('Cookie', cookie)
+      .send(category1)
+      .expect(200);
+
+    category1.id = categoryId1;
+
+    const product: Partial<Product> = {
+      name: 'tobedeleted2',
+      description: 'denial',
+      price: 5,
+      image: 'https://image.com/image',
+      // @ts-ignore
+      categories: [
+        {
+          id: categoryId
+        }
+      ]
+    };
+
+    const {
+      body: { id: productId }
+    } = await request(server)
+      .post('/products')
+      .set('Cookie', cookie)
+      .send(product)
+      .expect(200);
+
+    product.id = productId;
+
+    const product1: Partial<Product> = {
+      ...product,
+      name: 'tobedeletedagainaaa',
+      // @ts-ignore
+      categories: [
+        {
+          // this was accidentally set to id: categoryId1 and it was causing an internal server error - investigate!!!
+          id: categoryId
+        },
+        {
+          id: categoryId1
+        }
+      ]
+    };
+
+    const {
+      body: { id: productId1 }
+    } = await request(server)
+      .post('/products')
+      .set('Cookie', cookie)
+      .send(product1)
+      .expect(200);
+
+    product1.id = productId1;
+
+    const { body } = await request(server)
+      .delete(`/categories/${categoryId}`)
+      .set('Cookie', cookie)
+      .expect(200);
+
+    expect(body).toEqual('Category deleted!');
+
+    const categoryQuery = await categoryRepository.find({
+      where: { id: categoryId }
+    });
+
+    expect(categoryQuery).toEqual([]);
+
+    const categoryQuery1 = await categoryRepository.find({
+      where: { id: categoryId1 },
+      relations: ['products']
+    });
+
+    const { categories, ...data } = product1;
+
+    expect(categoryQuery1).toEqual([
+      {
+        ...category1,
+        products: [data]
+      }
+    ]);
+
+    const productQuery = await productRepository.find({
+      where: { id: productId }
+    });
+    const productQuery1 = await productRepository.find({
+      where: { id: productId1 }
+    });
+
+    const { categories: categories1, ...data1 } = product1;
+
+    expect(productQuery).toEqual([]);
+    expect(productQuery1).toEqual([data1]);
   });
 
   it('throws an error when deleting a non-existing category from the database', async () => {
@@ -335,7 +511,7 @@ describe('POST /products', async () => {
 
   it('creates a valid product to the database', async () => {
     const product: Partial<Product> = {
-      name: 'Chicken Soup',
+      name: 'ihicken Soup',
       description: `It's tasty and it has cheese`,
       image: 'https://image.com/product.com',
       price: 5.0,
@@ -349,6 +525,7 @@ describe('POST /products', async () => {
       .send(product)
       .expect(200);
 
+    // doesn't pass because the db returns what you passed in - the categories without the extra fields
     expect(body1).toMatchObject(product);
 
     const products = await productRepository.find({ relations: ['categories'] });
@@ -605,8 +782,8 @@ describe('DELETE /products/:id', () => {
 
     expect(body1).toEqual('Product deleted!');
 
-    const products = await categoryRepository.find();
-    expect(products).toEqual(expect.not.arrayContaining([expect.objectContaining(product)]));
+    const products = await productRepository.find({ where: { id: productId } });
+    expect(products).toEqual([]);
   });
 
   it('throws an error when deleting a non-existing product from the database', async () => {
@@ -662,7 +839,7 @@ describe('Authorization', async () => {
       message: 'Authorization is required for request on POST /products'
     });
 
-    const products = await categoryRepository.find();
+    const products = await productRepository.find();
     expect(products).not.toEqual(expect.arrayContaining([expect.objectContaining(product)]));
   });
 });

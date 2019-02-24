@@ -132,7 +132,9 @@ export class ProductController {
            * Add only the valid categories
            */
           if (category.id === entities.id) {
-            validCategories.push(category);
+            // setting validCategories' type to Partial<Category>[], causes TypeORM to crash during tests (???)
+            // @ts-ignore
+            validCategories.push({ id: category.id });
           }
         }
       }
@@ -203,7 +205,9 @@ export class ProductController {
              * Add only the valid categories
              */
             if (category.id === entities.id) {
-              validCategories.push(category);
+              // setting validCategories' type to Partial<Category>[], causes TypeORM to crash during tests (???)
+              // @ts-ignore
+              validCategories.push({ id: category.id });
             }
           }
         }
