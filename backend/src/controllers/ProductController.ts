@@ -140,6 +140,17 @@ export class ProductController {
       }
     }
 
+    /**
+     * Remove duplicate categories
+     */
+    validCategories = validCategories.filter(
+      (currentCategory, index) =>
+        index ===
+        validCategories.findIndex(
+          currentCategory1 => JSON.stringify(currentCategory1) === JSON.stringify(currentCategory)
+        )
+    );
+
     if (productErr.length) {
       if (!validCategories.length) {
         throw new ProductNotValidError([...productErr, 'categories must be created beforehand']);
@@ -151,17 +162,6 @@ export class ProductController {
     if (!validCategories.length) {
       throw new ProductNotValidError(['categories must be created beforehand']);
     }
-
-    /**
-     * Remove duplicate categories
-     */
-    validCategories = validCategories.filter(
-      (currentCategory, index) =>
-        index ===
-        validCategories.findIndex(
-          currentCategory1 => JSON.stringify(currentCategory1) === JSON.stringify(currentCategory)
-        )
-    );
 
     product.categories = validCategories;
 
@@ -224,6 +224,17 @@ export class ProductController {
         }
       }
 
+      /**
+       * Remove duplicate categories
+       */
+      validCategories = validCategories.filter(
+        (currentCategory, index) =>
+          index ===
+          validCategories.findIndex(
+            currentCategory1 => JSON.stringify(currentCategory1) === JSON.stringify(currentCategory)
+          )
+      );
+
       if (productErr.length) {
         if (!validCategories.length) {
           throw new ProductNotValidError([...productErr, 'categories must be created beforehand']);
@@ -235,17 +246,6 @@ export class ProductController {
       if (!validCategories.length) {
         throw new ProductNotValidError(['categories must be created beforehand']);
       }
-
-      /**
-       * Remove duplicate categories
-       */
-      validCategories = validCategories.filter(
-        (currentCategory, index) =>
-          index ===
-          validCategories.findIndex(
-            currentCategory1 => JSON.stringify(currentCategory1) === JSON.stringify(currentCategory)
-          )
-      );
 
       newProduct.categories = validCategories;
       newProduct.id = oldProduct.id;
