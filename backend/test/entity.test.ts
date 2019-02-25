@@ -750,6 +750,10 @@ describe('POST /products', async () => {
   });
 });
 
+describe('PUT /products/:id', () => {
+  // TODO
+});
+
 describe('DELETE /products/:id', () => {
   it('deletes an existing product from the database', async () => {
     const category: Partial<Category> = {
