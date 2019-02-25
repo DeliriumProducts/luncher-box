@@ -827,12 +827,44 @@ describe('Authorization', async () => {
     expect(categoryQuery).not.toBeDefined();
   });
 
+  it('throws an error when deleting a category when not logged in', async () => {
+    const category: Partial<Category> = {
+      name: 'even-badder-examplers-deletion',
+      image: 'https://image.com/image.com'
+    };
+
+    const {
+      body: { id: categoryId }
+    } = await request(server)
+      .post('/categories')
+      .send(category)
+      .set('Cookie', cookie)
+      .expect(200);
+
+    const { body } = await request(server)
+      .delete(`/categories/${categoryId}`)
+      .send(category)
+      .expect(401);
+
+    console.log(body);
+
+    expect(body).toEqual({
+      name: 'AuthorizationRequiredError',
+      message: `Authorization is required for request on DELETE /categories/${categoryId}`
+    });
+
+    const categoryQuery = await categoryRepository.findOne({ where: { ...category } });
+
+    expect(categoryQuery).toBeDefined();
+  });
+
   it('throws an error when creating a product when not logged in', async () => {
     const product: Partial<Product> = {
       name: 'very-bad-example123>_>',
-      description: `very-good-example123<_>`,
+      description: 'very-good-example123<_>',
       image: 'https://image.com/product.com',
       price: 5.0,
+      // @ts-ignore
       categories: []
     };
 
@@ -846,9 +878,62 @@ describe('Authorization', async () => {
       message: 'Authorization is required for request on POST /products'
     });
 
-    const productQuery = await categoryRepository.findOne({ where: { ...product } });
+    const { categories, ...productWithoutCategories } = product;
+
+    const productQuery = await productRepository.findOne({
+      where: { ...productWithoutCategories }
+    });
 
     expect(productQuery).not.toBeDefined();
+  });
+
+  it('throws an error when deleting a product when not logged in', async () => {
+    const category: Partial<Category> = {
+      name: 'asdf',
+      image: 'https://image.com/image.com'
+    };
+
+    const {
+      body: { id: categoryId }
+    } = await request(server)
+      .post('/categories')
+      .set('Cookie', cookie)
+      .send(category)
+      .expect(200);
+
+    const product: Partial<Product> = {
+      name: 'very-bad-example123>_>',
+      description: `very-good-example123<_>`,
+      image: 'https://image.com/product.com',
+      price: 5.0,
+      // @ts-ignore
+      categories: [
+        {
+          id: categoryId
+        }
+      ]
+    };
+
+    const {
+      body: { id: productId }
+    } = await request(server)
+      .post('/products')
+      .set('Cookie', cookie)
+      .send(product)
+      .expect(200);
+
+    const { body } = await request(server)
+      .delete(`/products/${productId}`)
+      .expect(401);
+
+    expect(body).toEqual({
+      name: 'AuthorizationRequiredError',
+      message: `Authorization is required for request on DELETE /products/${productId}`
+    });
+
+    const productQuery = await productRepository.findOne(productId);
+
+    expect(productQuery).toBeDefined();
   });
 });
 
