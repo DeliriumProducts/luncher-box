@@ -526,7 +526,6 @@ describe('POST /products', async () => {
 
     product.id = body.id;
 
-    // doesn't pass because the db returns what you passed in - the categories without the extra fields
     expect(body).toEqual({
       ...product,
       categories: [
@@ -654,7 +653,8 @@ describe('POST /products', async () => {
       name: 'Chicken',
       description: 'Good description',
       image: 'https://image.com/image.com',
-      price: -13234234,
+      // @ts-ignore
+      price: 'az',
       // @ts-ignore
       categories: [category]
     };
@@ -666,7 +666,11 @@ describe('POST /products', async () => {
       .expect(400);
 
     expect(body).toEqual({
-      errors: ['price must not be less than 0'],
+      errors: [
+        'price must not be greater than 1000',
+        'price must not be less than 0',
+        'price must be a number'
+      ],
       name: 'NotValidError',
       message: 'Product not valid!'
     });
@@ -714,7 +718,8 @@ describe('POST /products', async () => {
       name: 'Ab',
       description: 'Ab',
       image: 'not-a-url',
-      price: -13234234,
+      // @ts-ignore
+      price: 'a',
       // @ts-ignore
       categories: [
         {
@@ -736,7 +741,9 @@ describe('POST /products', async () => {
         'name must be longer than or equal to 3 characters',
         'description must be longer than or equal to 5 characters',
         'image must be an URL address',
+        'price must not be greater than 1000',
         'price must not be less than 0',
+        'price must be a number',
         'categories must be created beforehand'
       ],
       name: 'NotValidError',
@@ -750,7 +757,385 @@ describe('POST /products', async () => {
 });
 
 describe('PUT /products/:id', () => {
-  // TODO
+  const category: Partial<Category> = {
+    name: 'Soups-To-Be-Put',
+    image: 'https://image.com/image.com'
+  };
+
+  beforeAll(async () => {
+    const {
+      body: { id }
+    } = await request(server)
+      .post('/categories')
+      .set('Cookie', cookie)
+      .send(category);
+
+    category.id = id;
+  });
+
+  it('edits a valid product from the database', async () => {
+    const oldProduct: Partial<Product> = {
+      name: 'ye olde Soup',
+      description: `It's tasty and it has cheese`,
+      image: 'https://image.com/product.com',
+      price: 5.0,
+      // @ts-ignore
+      categories: [category]
+    };
+
+    const {
+      body: { id: oldProductId }
+    } = await request(server)
+      .post('/products')
+      .set('Cookie', cookie)
+      .send(oldProduct)
+      .expect(200);
+
+    oldProduct.id = oldProductId;
+
+    const editedProduct: Partial<Product> = {
+      ...oldProduct,
+      name: 'Edited Chicken',
+      description: 'new desc',
+      image: 'https://iamge.com/thesequel',
+      price: 999.0,
+      // @ts-ignore
+      categories: [category]
+    };
+
+    const { body } = await request(server)
+      .put(`/products/${oldProductId}`)
+      .set('Cookie', cookie)
+      .send(editedProduct)
+      .expect(200);
+
+    expect(body).toEqual({
+      ...editedProduct,
+      categories: [
+        {
+          id: category.id
+        }
+      ]
+    });
+
+    const oldProductQuery = await productRepository.findOne(oldProductId, {
+      relations: ['categories']
+    });
+
+    expect(oldProductQuery).toEqual(editedProduct);
+  });
+
+  it('throws an errors when editing a product with an invalid name', async () => {
+    const oldProduct: Partial<Product> = {
+      name: 'Valid Old Name',
+      description: `It's invalid, sorta`,
+      image: 'https://image.com/product.com',
+      price: 5.0,
+      // @ts-ignore
+      categories: [category]
+    };
+
+    const {
+      body: { id: oldProductId }
+    } = await request(server)
+      .post('/products')
+      .set('Cookie', cookie)
+      .send(oldProduct)
+      .expect(200);
+
+    oldProduct.id = oldProductId;
+
+    const editedProduct: Partial<Product> = {
+      ...oldProduct,
+      name: 'ab',
+      description: 'new desc',
+      image: 'https://iamge.com/thesequel',
+      price: 999.0,
+      // @ts-ignore
+      categories: [category]
+    };
+
+    const { body } = await request(server)
+      .put(`/products/${oldProductId}`)
+      .set('Cookie', cookie)
+      .send(editedProduct)
+      .expect(400);
+
+    expect(body).toEqual({
+      errors: ['name must be longer than or equal to 3 characters'],
+      name: 'NotValidError',
+      message: 'Product not valid!'
+    });
+
+    const oldProductQuery = await productRepository.findOne(oldProductId, {
+      relations: ['categories']
+    });
+
+    expect(oldProductQuery).not.toEqual(editedProduct);
+  });
+
+  it('throws an errors when editing a product with an invalid description', async () => {
+    const oldProduct: Partial<Product> = {
+      name: 'Valid Old Name2',
+      description: `It's invalid, sorta`,
+      image: 'https://image.com/product.com',
+      price: 5.0,
+      // @ts-ignore
+      categories: [category]
+    };
+
+    const {
+      body: { id: oldProductId }
+    } = await request(server)
+      .post('/products')
+      .set('Cookie', cookie)
+      .send(oldProduct)
+      .expect(200);
+
+    oldProduct.id = oldProductId;
+
+    const editedProduct: Partial<Product> = {
+      ...oldProduct,
+      name: 'Valid-Name',
+      description: 'ab',
+      image: 'https://iamge.com/thesequel',
+      price: 999.0,
+      // @ts-ignore
+      categories: [category]
+    };
+
+    const { body } = await request(server)
+      .put(`/products/${oldProductId}`)
+      .set('Cookie', cookie)
+      .send(editedProduct)
+      .expect(400);
+
+    expect(body).toEqual({
+      errors: ['description must be longer than or equal to 5 characters'],
+      name: 'NotValidError',
+      message: 'Product not valid!'
+    });
+
+    const oldProductQuery = await productRepository.findOne(oldProductId, {
+      relations: ['categories']
+    });
+
+    expect(oldProductQuery).not.toEqual(editedProduct);
+  });
+
+  it('throws an errors when editing a product with an invalid image', async () => {
+    const oldProduct: Partial<Product> = {
+      name: 'Valid Old Name23',
+      description: `It's invalid, sorta`,
+      image: 'https://image.com/product.com',
+      price: 5.0,
+      // @ts-ignore
+      categories: [category]
+    };
+
+    const {
+      body: { id: oldProductId }
+    } = await request(server)
+      .post('/products')
+      .set('Cookie', cookie)
+      .send(oldProduct)
+      .expect(200);
+
+    oldProduct.id = oldProductId;
+
+    const editedProduct: Partial<Product> = {
+      ...oldProduct,
+      name: 'Valid-Name',
+      description: 'valid-desc',
+      image: 'bad-img',
+      price: 999.0,
+      // @ts-ignore
+      categories: [category]
+    };
+
+    const { body } = await request(server)
+      .put(`/products/${oldProductId}`)
+      .set('Cookie', cookie)
+      .send(editedProduct)
+      .expect(400);
+
+    expect(body).toEqual({
+      errors: ['image must be an URL address'],
+      name: 'NotValidError',
+      message: 'Product not valid!'
+    });
+
+    const oldProductQuery = await productRepository.findOne(oldProductId, {
+      relations: ['categories']
+    });
+
+    expect(oldProductQuery).not.toEqual(editedProduct);
+  });
+
+  it('throws an errors when editing a product with an invalid price', async () => {
+    const oldProduct: Partial<Product> = {
+      name: 'Valid Old Name234',
+      description: `It's invalid, sorta`,
+      image: 'https://image.com/product.com',
+      price: 5.0,
+      // @ts-ignore
+      categories: [category]
+    };
+
+    const {
+      body: { id: oldProductId }
+    } = await request(server)
+      .post('/products')
+      .set('Cookie', cookie)
+      .send(oldProduct)
+      .expect(200);
+
+    oldProduct.id = oldProductId;
+
+    const editedProduct: Partial<Product> = {
+      ...oldProduct,
+      name: 'Valid-Name',
+      description: 'valid-desc',
+      image: 'https://example.com/',
+      // @ts-ignore
+      price: 'a',
+      // @ts-ignore
+      categories: [category]
+    };
+
+    const { body } = await request(server)
+      .put(`/products/${oldProductId}`)
+      .set('Cookie', cookie)
+      .send(editedProduct)
+      .expect(400);
+
+    expect(body).toEqual({
+      errors: [
+        'price must not be greater than 1000',
+        'price must not be less than 0',
+        'price must be a number'
+      ],
+      name: 'NotValidError',
+      message: 'Product not valid!'
+    });
+
+    const oldProductQuery = await productRepository.findOne(oldProductId, {
+      relations: ['categories']
+    });
+
+    expect(oldProductQuery).not.toEqual(editedProduct);
+  });
+
+  it('throws an errors when editing a product with a invalid categories', async () => {
+    const oldProduct: Partial<Product> = {
+      name: 'Valid Old Name2331',
+      description: `It's invalid, sorta`,
+      image: 'https://image.com/product.com',
+      price: 5.0,
+      // @ts-ignore
+      categories: [category]
+    };
+
+    const {
+      body: { id: oldProductId }
+    } = await request(server)
+      .post('/products')
+      .set('Cookie', cookie)
+      .send(oldProduct)
+      .expect(200);
+
+    oldProduct.id = oldProductId;
+
+    const editedProduct: Partial<Product> = {
+      ...oldProduct,
+      name: 'Valid-Name',
+      description: 'valid-desc',
+      image: 'https://image.com',
+      price: 999.0,
+      // @ts-ignore
+      categories: [
+        {
+          id: -30
+        }
+      ]
+    };
+
+    const { body } = await request(server)
+      .put(`/products/${oldProductId}`)
+      .set('Cookie', cookie)
+      .send(editedProduct)
+      .expect(400);
+
+    expect(body).toEqual({
+      errors: ['categories must be created beforehand'],
+      name: 'NotValidError',
+      message: 'Product not valid!'
+    });
+
+    const oldProductQuery = await productRepository.findOne(oldProductId, {
+      relations: ['categories']
+    });
+
+    expect(oldProductQuery).not.toEqual(editedProduct);
+  });
+
+  it('throws an errors when editing a product with an all fields invalid', async () => {
+    const oldProduct: Partial<Product> = {
+      name: 'Valid Old Name2345',
+      description: `It's invalid, sorta`,
+      image: 'https://image.com/product.com',
+      price: 5.0,
+      // @ts-ignore
+      categories: [category]
+    };
+
+    const {
+      body: { id: oldProductId }
+    } = await request(server)
+      .post('/products')
+      .set('Cookie', cookie)
+      .send(oldProduct)
+      .expect(200);
+
+    oldProduct.id = oldProductId;
+
+    const editedProduct: Partial<Product> = {
+      ...oldProduct,
+      name: 'b',
+      description: 'a',
+      image: 'bad-url',
+      // @ts-ignore
+      price: 'cak',
+      // @ts-ignore
+      categories: [{ a: 'b' }]
+    };
+
+    const { body } = await request(server)
+      .put(`/products/${oldProductId}`)
+      .set('Cookie', cookie)
+      .send(editedProduct)
+      .expect(400);
+
+    expect(body).toEqual({
+      errors: [
+        'name must be longer than or equal to 3 characters',
+        'description must be longer than or equal to 5 characters',
+        'image must be an URL address',
+        'price must not be greater than 1000',
+        'price must not be less than 0',
+        'price must be a number',
+        'categories must be created beforehand'
+      ],
+      name: 'NotValidError',
+      message: 'Product not valid!'
+    });
+
+    const oldProductQuery = await productRepository.findOne(oldProductId, {
+      relations: ['categories']
+    });
+
+    expect(oldProductQuery).not.toEqual(editedProduct);
+  });
 });
 
 describe('DELETE /products/:id', () => {
