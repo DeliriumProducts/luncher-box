@@ -1026,7 +1026,7 @@ describe('PUT /products/:id', () => {
     expect(oldProductQuery).not.toEqual(editedProduct);
   });
 
-  it('throws an errors when editing a product with a invalid categories', async () => {
+  it('throws an errors when editing a product with invalid categories', async () => {
     const oldProduct: Partial<Product> = {
       name: 'Valid Old Name2331',
       description: `It's invalid, sorta`,
@@ -1079,7 +1079,7 @@ describe('PUT /products/:id', () => {
     expect(oldProductQuery).not.toEqual(editedProduct);
   });
 
-  it('throws an errors when editing a product with an all fields invalid', async () => {
+  it('throws an errors when editing a product with all fields invalid', async () => {
     const oldProduct: Partial<Product> = {
       name: 'Valid Old Name2345',
       description: `It's invalid, sorta`,
