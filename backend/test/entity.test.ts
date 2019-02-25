@@ -12,27 +12,27 @@ let productRepository: Repository<Product>;
 let categoryRepository: Repository<Category>;
 let cookie: string;
 
-const userCredentials: Partial<User> = {
-  name: faker.name.findName(),
-  email: faker.internet.exampleEmail(),
-  password: 'FAKEpassword123'
-};
-
 beforeAll(async () => {
   server = await initServer();
   dbConnection = await getDbConnection();
   productRepository = getRepository(Product);
   categoryRepository = getRepository(Category);
 
+  const user: Partial<User> = {
+    name: faker.name.findName(),
+    email: faker.internet.exampleEmail(),
+    password: 'FAKEpassword123'
+  };
+
   const { body: confirmationURL } = await request(server)
     .post('/auth/register')
-    .send(userCredentials);
+    .send(user);
 
   await request(server).get(confirmationURL);
 
   const { header } = await request(server)
     .post('/auth/login')
-    .send(userCredentials);
+    .send(user);
 
   cookie = header['set-cookie'][0].split(/,(?=\S)/).map((item: string) => item.split(';')[0]);
 });
@@ -52,8 +52,9 @@ describe('POST /categories', () => {
 
     expect(body).toMatchObject(category);
 
-    const categories = await categoryRepository.find();
-    expect(categories).toEqual(expect.arrayContaining([expect.objectContaining(category)]));
+    const categoryQuery = await categoryRepository.findOne(body.id);
+
+    expect(categoryQuery).toMatchObject(category);
   });
 
   it('throws an error when creating a category with an invalid name', async () => {
@@ -74,8 +75,8 @@ describe('POST /categories', () => {
       message: 'Category not valid!'
     });
 
-    const categories = await categoryRepository.find();
-    expect(categories).not.toEqual(expect.arrayContaining([expect.objectContaining(category)]));
+    const categoryQuery = await categoryRepository.findOne({ where: { ...category } });
+    expect(categoryQuery).not.toBeDefined();
   });
 
   it('throws an error when creating a category with an invalid image', async () => {
@@ -96,8 +97,8 @@ describe('POST /categories', () => {
       message: 'Category not valid!'
     });
 
-    const categories = await categoryRepository.find();
-    expect(categories).not.toEqual(expect.arrayContaining([expect.objectContaining(category)]));
+    const categoryQuery = await categoryRepository.findOne({ where: { ...category } });
+    expect(categoryQuery).not.toBeDefined();
   });
 
   it('throws an error when creating a category with all fields invalid', async () => {
@@ -118,71 +119,71 @@ describe('POST /categories', () => {
       message: 'Category not valid!'
     });
 
-    const categories = await categoryRepository.find();
-    expect(categories).not.toEqual(expect.arrayContaining([expect.objectContaining(category)]));
+    const categoryQuery = await categoryRepository.findOne({ where: { ...category } });
+    expect(categoryQuery).not.toBeDefined();
   });
 });
 
 describe('PUT /categories/:id', () => {
   it('edits a valid category from the database', async () => {
-    const category: Partial<Category> = {
+    const oldCategory: Partial<Category> = {
       name: 'Old Burgers',
       image: 'https://image.com/image.com'
     };
 
     const {
-      body: { id: categoryId }
+      body: { id: oldCategoryId }
     } = await request(server)
       .post('/categories')
       .set('Cookie', cookie)
-      .send(category)
+      .send(oldCategory)
       .expect(200);
 
-    category.id = categoryId;
+    oldCategory.id = oldCategoryId;
 
     const editedCategory: Partial<Category> = {
-      ...category,
+      ...oldCategory,
       name: 'New Burgers',
       image: 'https://new-image.com/image.com'
     };
 
     const { body } = await request(server)
-      .put(`/categories/${categoryId}`)
+      .put(`/categories/${oldCategoryId}`)
       .set('Cookie', cookie)
       .send(editedCategory)
       .expect(200);
 
-    expect(body).toMatchObject(editedCategory);
+    expect(body).toEqual(editedCategory);
 
-    const categories = await categoryRepository.find({ where: { id: categoryId } });
+    const oldCategoryQuery = await categoryRepository.findOne(oldCategoryId);
 
-    expect(categories).toEqual([editedCategory]);
+    expect(oldCategoryQuery).toEqual(editedCategory);
   });
 
   it('throws an error when editing a category with an invalid name', async () => {
-    const category: Partial<Category> = {
+    const oldCategory: Partial<Category> = {
       name: 'Old Soups',
       image: 'https://image-soup.com/image.com'
     };
 
     const {
-      body: { id: categoryId }
+      body: { id: oldCategoryId }
     } = await request(server)
       .post('/categories')
       .set('Cookie', cookie)
-      .send(category)
+      .send(oldCategory)
       .expect(200);
 
-    category.id = categoryId;
+    oldCategory.id = oldCategoryId;
 
     const editedCategory: Partial<Category> = {
-      ...category,
+      ...oldCategory,
       name: 'b',
       image: 'https://new-image.com/image.com'
     };
 
     const { body } = await request(server)
-      .put(`/categories/${categoryId}`)
+      .put(`/categories/${oldCategoryId}`)
       .set('Cookie', cookie)
       .send(editedCategory)
       .expect(400);
@@ -193,35 +194,35 @@ describe('PUT /categories/:id', () => {
       name: 'NotValidError'
     });
 
-    const categories = await categoryRepository.find({ where: { id: categoryId } });
+    const oldCategoryQuery = await categoryRepository.findOne(oldCategoryId);
 
-    expect(categories).not.toEqual([editedCategory]);
+    expect(oldCategoryQuery).not.toEqual(editedCategory);
   });
 
   it('throws an error when editing a category with an invalid image', async () => {
-    const category: Partial<Category> = {
+    const oldCategory: Partial<Category> = {
       name: 'Old Salads',
       image: 'https://image-soup.com/image.com'
     };
 
     const {
-      body: { id: categoryId }
+      body: { id: oldCategoryId }
     } = await request(server)
       .post('/categories')
       .set('Cookie', cookie)
-      .send(category)
+      .send(oldCategory)
       .expect(200);
 
-    category.id = categoryId;
+    oldCategory.id = oldCategoryId;
 
     const editedCategory: Partial<Category> = {
-      ...category,
+      ...oldCategory,
       name: 'New Salads',
       image: 'not-a-good-url'
     };
 
     const { body } = await request(server)
-      .put(`/categories/${categoryId}`)
+      .put(`/categories/${oldCategoryId}`)
       .set('Cookie', cookie)
       .send(editedCategory)
       .expect(400);
@@ -232,35 +233,35 @@ describe('PUT /categories/:id', () => {
       name: 'NotValidError'
     });
 
-    const categories = await categoryRepository.find({ where: { id: categoryId } });
+    const oldCategoryQuery = await categoryRepository.findOne(oldCategoryId);
 
-    expect(categories).not.toEqual([editedCategory]);
+    expect(oldCategoryQuery).not.toEqual(editedCategory);
   });
 
   it('throws an error when editing a category with a all fields invalid', async () => {
-    const category: Partial<Category> = {
+    const oldCategory: Partial<Category> = {
       name: 'Old Salads',
       image: 'https://image-soup.com/image.com'
     };
 
     const {
-      body: { id: categoryId }
+      body: { id: oldCategoryId }
     } = await request(server)
       .post('/categories')
       .set('Cookie', cookie)
-      .send(category)
+      .send(oldCategory)
       .expect(200);
 
-    category.id = categoryId;
+    oldCategory.id = oldCategoryId;
 
     const editedCategory: Partial<Category> = {
-      ...category,
+      ...oldCategory,
       name: 'bf',
       image: 'VERY-bad-URL'
     };
 
     const { body } = await request(server)
-      .put(`/categories/${categoryId}`)
+      .put(`/categories/${oldCategoryId}`)
       .set('Cookie', cookie)
       .send(editedCategory)
       .expect(400);
@@ -271,9 +272,9 @@ describe('PUT /categories/:id', () => {
       name: 'NotValidError'
     });
 
-    const categories = await categoryRepository.find({ where: { id: categoryId } });
+    const oldCategoryQuery = await categoryRepository.findOne(oldCategoryId);
 
-    expect(categories).not.toEqual([editedCategory]);
+    expect(oldCategoryQuery).not.toEqual(editedCategory);
   });
 });
 
@@ -299,8 +300,9 @@ describe('DELETE /categories/:id', () => {
 
     expect(body).toEqual('Category deleted!');
 
-    const categories = await categoryRepository.find({ where: { id: categoryId } });
-    expect(categories).toEqual([]);
+    const categoryQuery = await categoryRepository.findOne(categoryId);
+
+    expect(categoryQuery).not.toBeDefined();
   });
 
   it('deletes an existing category with products that only belong to it from the database', async () => {
@@ -323,7 +325,11 @@ describe('DELETE /categories/:id', () => {
       price: 5,
       image: 'https://image.com/image',
       // @ts-ignore
-      categories: [{ id: categoryId }]
+      categories: [
+        {
+          id: categoryId
+        }
+      ]
     };
 
     const {
@@ -352,24 +358,20 @@ describe('DELETE /categories/:id', () => {
 
     expect(body).toEqual('Category deleted!');
 
-    const categories = await categoryRepository.find({ where: { id: categoryId } });
-    expect(categories).toEqual([]);
+    const categoryQuery = await categoryRepository.findOne(categoryId);
 
-    const products = await productRepository.find({ where: { id: productId } });
-    const products1 = await productRepository.find({ where: { id: product1Id } });
+    expect(categoryQuery).not.toBeDefined();
 
-    expect(products).toEqual([]);
-    expect(products1).toEqual([]);
+    const productQuery = await productRepository.findOne(productId);
+    const productQuery1 = await productRepository.findOne(product1Id);
+
+    expect(productQuery).not.toBeDefined();
+    expect(productQuery1).not.toBeDefined();
   });
 
   it('deletes an existing category with products that only some of which belong to it from the database', async () => {
     const category: Partial<Category> = {
       name: 'to-be-deleted-again-again',
-      image: 'https://image.com/image.com'
-    };
-
-    const category1: Partial<Category> = {
-      name: 'to-be-deleted-again-again2',
       image: 'https://image.com/image.com'
     };
 
@@ -380,6 +382,11 @@ describe('DELETE /categories/:id', () => {
       .set('Cookie', cookie)
       .send(category)
       .expect(200);
+
+    const category1: Partial<Category> = {
+      name: 'to-be-deleted-again-again2',
+      image: 'https://image.com/image.com'
+    };
 
     const {
       body: { id: categoryId1 }
@@ -446,37 +453,28 @@ describe('DELETE /categories/:id', () => {
 
     expect(body).toEqual('Category deleted!');
 
-    const categoryQuery = await categoryRepository.find({
-      where: { id: categoryId }
-    });
+    const categoryQuery = await categoryRepository.findOne(categoryId);
 
-    expect(categoryQuery).toEqual([]);
+    expect(categoryQuery).not.toBeDefined();
 
-    const categoryQuery1 = await categoryRepository.find({
-      where: { id: categoryId1 },
+    const categoryQuery1 = await categoryRepository.findOne(categoryId1, {
       relations: ['products']
     });
 
-    const { categories, ...data } = product1;
+    const { categories, ...product1WithoutCategories } = product1;
 
-    expect(categoryQuery1).toEqual([
-      {
-        ...category1,
-        products: [data]
-      }
-    ]);
-
-    const productQuery = await productRepository.find({
-      where: { id: productId }
-    });
-    const productQuery1 = await productRepository.find({
-      where: { id: productId1 }
+    expect(categoryQuery1).toEqual({
+      ...category1,
+      products: [product1WithoutCategories]
     });
 
-    const { categories: categories1, ...data1 } = product1;
+    const productQuery = await productRepository.findOne(productId);
 
-    expect(productQuery).toEqual([]);
-    expect(productQuery1).toEqual([data1]);
+    expect(productQuery).not.toBeDefined();
+
+    const productQuery1 = await productRepository.findOne(productId1);
+
+    expect(productQuery1).toEqual(product1WithoutCategories);
   });
 
   it('throws an error when deleting a non-existing category from the database', async () => {
@@ -519,18 +517,25 @@ describe('POST /products', async () => {
       categories: [category]
     };
 
-    const { body: body1 } = await request(server)
+    const { body } = await request(server)
       .post('/products')
       .set('Cookie', cookie)
       .send(product)
       .expect(200);
 
     // doesn't pass because the db returns what you passed in - the categories without the extra fields
-    expect(body1).toMatchObject(product);
+    expect(body).toMatchObject({
+      ...product,
+      categories: [
+        {
+          id: category.id
+        }
+      ]
+    });
 
-    const products = await productRepository.find({ relations: ['categories'] });
+    const products = await productRepository.findOne(body.id, { relations: ['categories'] });
 
-    expect(products).toEqual(expect.arrayContaining([expect.objectContaining(product)]));
+    expect(products).toMatchObject(product);
   });
 
   it('throws an errors when creating a product with an invalid name', async () => {
@@ -555,9 +560,9 @@ describe('POST /products', async () => {
       message: 'Product not valid!'
     });
 
-    const products = await productRepository.find({ relations: ['categories'] });
+    const productQuery = await productRepository.findOne(body.id, { relations: ['categories'] });
 
-    expect(products).not.toEqual(expect.arrayContaining([expect.objectContaining(product)]));
+    expect(productQuery).not.toEqual(product);
   });
 
   it('throws an errors when creating a product with an invalid description', async () => {
@@ -582,9 +587,9 @@ describe('POST /products', async () => {
       message: 'Product not valid!'
     });
 
-    const products = await productRepository.find({ relations: ['categories'] });
+    const productQuery = await productRepository.findOne(body.id, { relations: ['categories'] });
 
-    expect(products).not.toEqual(expect.arrayContaining([expect.objectContaining(product)]));
+    expect(productQuery).not.toEqual(product);
   });
 
   it('throws an errors when creating a product with an invalid image', async () => {
@@ -609,9 +614,9 @@ describe('POST /products', async () => {
       message: 'Product not valid!'
     });
 
-    const products = await productRepository.find({ relations: ['categories'] });
+    const productQuery = await productRepository.findOne(body.id, { relations: ['categories'] });
 
-    expect(products).not.toEqual(expect.arrayContaining([expect.objectContaining(product)]));
+    expect(productQuery).not.toEqual(product);
   });
 
   it('throws an errors when creating a product with an invalid image', async () => {
@@ -636,9 +641,9 @@ describe('POST /products', async () => {
       message: 'Product not valid!'
     });
 
-    const products = await productRepository.find({ relations: ['categories'] });
+    const productQuery = await productRepository.findOne(body.id, { relations: ['categories'] });
 
-    expect(products).not.toEqual(expect.arrayContaining([expect.objectContaining(product)]));
+    expect(productQuery).not.toEqual(product);
   });
 
   it('throws an errors when creating a product with an invalid price', async () => {
@@ -663,9 +668,9 @@ describe('POST /products', async () => {
       message: 'Product not valid!'
     });
 
-    const products = await productRepository.find({ relations: ['categories'] });
+    const productQuery = await productRepository.findOne(body.id, { relations: ['categories'] });
 
-    expect(products).not.toEqual(expect.arrayContaining([expect.objectContaining(product)]));
+    expect(productQuery).not.toEqual(product);
   });
 
   it('throws an errors when creating a product with invalid categories', async () => {
@@ -696,9 +701,9 @@ describe('POST /products', async () => {
       name: 'NotValidError'
     });
 
-    const products = await productRepository.find({ relations: ['categories'] });
+    const productQuery = await productRepository.findOne(body.id, { relations: ['categories'] });
 
-    expect(products).not.toEqual(expect.arrayContaining([expect.objectContaining(product)]));
+    expect(productQuery).not.toEqual(product);
   });
 
   it('throws an errors when creating a product with all fields invalid', async () => {
@@ -735,9 +740,9 @@ describe('POST /products', async () => {
       message: 'Product not valid!'
     });
 
-    const products = await productRepository.find({ relations: ['categories'] });
+    const productQuery = await productRepository.findOne(body.id, { relations: ['categories'] });
 
-    expect(products).not.toEqual(expect.arrayContaining([expect.objectContaining(product)]));
+    expect(productQuery).not.toEqual(product);
   });
 });
 
@@ -782,8 +787,9 @@ describe('DELETE /products/:id', () => {
 
     expect(body1).toEqual('Product deleted!');
 
-    const products = await productRepository.find({ where: { id: productId } });
-    expect(products).toEqual([]);
+    const productQuery = await productRepository.findOne(productId);
+
+    expect(productQuery).not.toBeDefined();
   });
 
   it('throws an error when deleting a non-existing product from the database', async () => {
@@ -816,8 +822,9 @@ describe('Authorization', async () => {
       message: 'Authorization is required for request on POST /categories'
     });
 
-    const categories = await categoryRepository.find();
-    expect(categories).not.toEqual(expect.arrayContaining([expect.objectContaining(category)]));
+    const categoryQuery = await categoryRepository.findOne({ where: { ...category } });
+
+    expect(categoryQuery).not.toBeDefined();
   });
 
   it('throws an error when creating a product when not logged in', async () => {
@@ -839,8 +846,9 @@ describe('Authorization', async () => {
       message: 'Authorization is required for request on POST /products'
     });
 
-    const products = await productRepository.find();
-    expect(products).not.toEqual(expect.arrayContaining([expect.objectContaining(product)]));
+    const productQuery = await categoryRepository.findOne({ where: { ...product } });
+
+    expect(productQuery).not.toBeDefined();
   });
 });
 

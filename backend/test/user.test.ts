@@ -18,7 +18,7 @@ beforeAll(async () => {
 
 describe('POST /auth/register', () => {
   it('adds a valid user to the database when registering', async () => {
-    const userCredentials: Partial<User> = {
+    const user: Partial<User> = {
       email: faker.internet.exampleEmail(),
       name: faker.name.findName(),
       password: 'FAKEpassword123VALID-REGISTRATION'
@@ -26,18 +26,18 @@ describe('POST /auth/register', () => {
 
     await request(server)
       .post('/auth/register')
-      .send(userCredentials)
+      .send(user)
       .expect(200);
 
-    const { password, ...userWithoutPassword } = userCredentials;
+    const { password, ...userWithoutPassword } = user;
 
-    const user = await userRepository.findOne({ where: { ...userWithoutPassword } });
+    const userQuery = await userRepository.findOne({ where: { ...userWithoutPassword } });
 
-    expect(user).toMatchObject(userWithoutPassword);
+    expect(userQuery).toMatchObject(userWithoutPassword);
   });
 
   it('throws an error when registering a user with an invalid email', async () => {
-    const userCredentials: Partial<User> = {
+    const user: Partial<User> = {
       email: 'this_is-not_an_email123',
       name: faker.name.findName(),
       password: 'FAKEpassword123INVALID-EMAIL'
@@ -45,7 +45,7 @@ describe('POST /auth/register', () => {
 
     const { body } = await request(server)
       .post('/auth/register')
-      .send(userCredentials)
+      .send(user)
       .expect(400);
 
     expect(body).toEqual({
@@ -54,15 +54,15 @@ describe('POST /auth/register', () => {
       message: 'User not valid!'
     });
 
-    const { password, ...userWithoutPassword } = userCredentials;
+    const { password, ...userWithoutPassword } = user;
 
-    const user = await userRepository.findOne({ where: { ...userWithoutPassword } });
+    const userQuery = await userRepository.findOne({ where: { ...userWithoutPassword } });
 
-    expect(user).not.toBeDefined();
+    expect(userQuery).not.toBeDefined();
   });
 
   it('throws an error when registering a user with an invalid password', async () => {
-    const userCredentials: Partial<User> = {
+    const user: Partial<User> = {
       email: faker.internet.exampleEmail(),
       name: faker.name.findName(),
       password: 'remember'
@@ -70,7 +70,7 @@ describe('POST /auth/register', () => {
 
     const { body } = await request(server)
       .post('/auth/register')
-      .send(userCredentials)
+      .send(user)
       .expect(400);
 
     expect(body).toEqual({
@@ -83,15 +83,15 @@ describe('POST /auth/register', () => {
       message: 'User not valid!'
     });
 
-    const { password, ...userWithoutPassword } = userCredentials;
+    const { password, ...userWithoutPassword } = user;
 
-    const user = await userRepository.findOne({ where: { ...userWithoutPassword } });
+    const userQuery = await userRepository.findOne({ where: { ...userWithoutPassword } });
 
-    expect(user).not.toBeDefined();
+    expect(userQuery).not.toBeDefined();
   });
 
   it('throws an error when registering a user with all fields invalid', async () => {
-    const userCredentials: Partial<User> = {
+    const user: Partial<User> = {
       email: 'not-an-email',
       name: '',
       password: 'badpass'
@@ -99,7 +99,7 @@ describe('POST /auth/register', () => {
 
     const { body } = await request(server)
       .post('/auth/register')
-      .send(userCredentials)
+      .send(user)
       .expect(400);
 
     expect(body).toEqual({
@@ -114,15 +114,15 @@ describe('POST /auth/register', () => {
       message: 'User not valid!'
     });
 
-    const { password, ...userWithoutPassword } = userCredentials;
+    const { password, ...userWithoutPassword } = user;
 
-    const user = await userRepository.findOne({ where: { ...userWithoutPassword } });
+    const userQuery = await userRepository.findOne({ where: { ...userWithoutPassword } });
 
-    expect(user).not.toBeDefined();
+    expect(userQuery).not.toBeDefined();
   });
 
   it('throws an error when registering a user with a duplicate email', async () => {
-    const userCredentials: Partial<User> = {
+    const user: Partial<User> = {
       email: faker.internet.exampleEmail(),
       name: 'John Doe',
       password: 'FAKEpassword123DUPLICATE-EMAIL'
@@ -130,17 +130,17 @@ describe('POST /auth/register', () => {
 
     await request(server)
       .post('/auth/register')
-      .send(userCredentials)
+      .send(user)
       .expect(200);
 
-    const userCredentials1: Partial<User> = {
-      ...userCredentials,
+    const duplicateUser: Partial<User> = {
+      ...user,
       name: 'Sam Doe'
     };
 
     const { body } = await request(server)
       .post('/auth/register')
-      .send(userCredentials1)
+      .send(duplicateUser)
       .expect(422);
 
     expect(body).toEqual({
@@ -148,17 +148,17 @@ describe('POST /auth/register', () => {
       message: 'Duplicate User entry!'
     });
 
-    const { password, ...userWithoutPassword } = userCredentials1;
+    const { password, ...userWithoutPassword } = duplicateUser;
 
-    const user = await userRepository.findOne({ where: { ...userWithoutPassword } });
+    const userQuery = await userRepository.findOne({ where: { ...userWithoutPassword } });
 
-    expect(user).not.toBeDefined();
+    expect(userQuery).not.toBeDefined();
   });
 });
 
 describe('GET /confirm/:tokenId', () => {
   it('confirms the user in the database', async () => {
-    const userCredentials: Partial<User> = {
+    const user: Partial<User> = {
       name: faker.name.findName(),
       email: faker.internet.exampleEmail(),
       password: 'FAKEpassword123CONFIRM-USER'
@@ -166,14 +166,14 @@ describe('GET /confirm/:tokenId', () => {
 
     const { body: confirmationURL } = await request(server)
       .post('/auth/register')
-      .send(userCredentials)
+      .send(user)
       .expect(200);
 
-    const { password, ...userWithoutPassword } = userCredentials;
+    const { password, ...userWithoutPassword } = user;
 
-    const user = await userRepository.findOne({ where: { ...userWithoutPassword } });
+    const userQuery = await userRepository.findOne({ where: { ...userWithoutPassword } });
 
-    expect(user).toMatchObject({
+    expect(userQuery).toMatchObject({
       ...userWithoutPassword,
       isVerified: false
     });
@@ -182,16 +182,16 @@ describe('GET /confirm/:tokenId', () => {
       .get(confirmationURL)
       .expect(302);
 
-    const user1 = await userRepository.findOne({ where: { ...userWithoutPassword } });
+    const userQuery1 = await userRepository.findOne({ where: { ...userWithoutPassword } });
 
-    expect(user1).toMatchObject({
+    expect(userQuery1).toMatchObject({
       ...userWithoutPassword,
       isVerified: true
     });
   });
 
   it('deletes the token from Redis after confirmation', async () => {
-    const userCredentials: Partial<User> = {
+    const user: Partial<User> = {
       name: faker.name.findName(),
       email: faker.internet.exampleEmail(),
       password: 'FAKEpassword123REDIS-DELETE'
@@ -199,7 +199,7 @@ describe('GET /confirm/:tokenId', () => {
 
     const { body: confirmationURL } = await request(server)
       .post('/auth/register')
-      .send(userCredentials)
+      .send(user)
       .expect(200);
 
     await request(server)
@@ -213,7 +213,7 @@ describe('GET /confirm/:tokenId', () => {
 });
 
 describe('POST /auth/login', () => {
-  const registeredUserCredentials: Partial<User> = {
+  const registeredUser: Partial<User> = {
     name: faker.name.findName(),
     email: faker.internet.exampleEmail(),
     password: 'FAKEpassword123INVALID-LOGIN'
@@ -222,20 +222,20 @@ describe('POST /auth/login', () => {
   beforeAll(async () => {
     await request(server)
       .post('/auth/register')
-      .send(registeredUserCredentials);
+      .send(registeredUser);
   });
 
   it('throws an error when logging in with an unconfirmed user', async () => {
     const { text } = await request(server)
       .post('/auth/login')
-      .send(registeredUserCredentials)
+      .send(registeredUser)
       .expect(401);
 
     expect(text).toEqual('Unauthorized');
   });
 
   it('logs a user in after confirming token', async () => {
-    const userCredentials: Partial<User> = {
+    const user: Partial<User> = {
       name: faker.name.findName(),
       email: faker.internet.exampleEmail(),
       password: 'FAKEpassword123LOGIN-USER'
@@ -243,7 +243,7 @@ describe('POST /auth/login', () => {
 
     const { body: confirmationURL } = await request(server)
       .post('/auth/register')
-      .send(userCredentials)
+      .send(user)
       .expect(200);
 
     await request(server)
@@ -252,7 +252,7 @@ describe('POST /auth/login', () => {
 
     const { body, header } = await request(server)
       .post('/auth/login')
-      .send(userCredentials)
+      .send(user)
       .expect(200);
 
     expect(body).toEqual('User logged in!');
@@ -272,14 +272,14 @@ describe('POST /auth/login', () => {
   it('throws an error when logging in with an incorrect password', async () => {
     const { text } = await request(server)
       .post('/auth/login')
-      .send({ ...registeredUserCredentials, password: 'WRONGpassword123' })
+      .send({ ...registeredUser, password: 'WRONGpassword123' })
       .expect(401);
 
     expect(text).toEqual('Unauthorized');
   });
 
   it('throws an error when logging in with an non-existing user', async () => {
-    const userCredentials: Partial<User> = {
+    const user: Partial<User> = {
       name: faker.name.findName(),
       email: faker.internet.exampleEmail(),
       password: 'QualityPassword123'
@@ -287,7 +287,7 @@ describe('POST /auth/login', () => {
 
     const { text } = await request(server)
       .post('/auth/login')
-      .send(userCredentials)
+      .send(user)
       .expect(401);
 
     expect(text).toEqual('Unauthorized');
