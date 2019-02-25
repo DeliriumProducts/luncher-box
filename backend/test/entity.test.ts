@@ -50,11 +50,13 @@ describe('POST /categories', () => {
       .send(category)
       .expect(200);
 
-    expect(body).toMatchObject(category);
+    category.id = body.id;
+
+    expect(body).toEqual(category);
 
     const categoryQuery = await categoryRepository.findOne(body.id);
 
-    expect(categoryQuery).toMatchObject(category);
+    expect(categoryQuery).toEqual(category);
   });
 
   it('throws an error when creating a category with an invalid name', async () => {
@@ -523,8 +525,10 @@ describe('POST /products', async () => {
       .send(product)
       .expect(200);
 
+    product.id = body.id;
+
     // doesn't pass because the db returns what you passed in - the categories without the extra fields
-    expect(body).toMatchObject({
+    expect(body).toEqual({
       ...product,
       categories: [
         {
@@ -533,9 +537,9 @@ describe('POST /products', async () => {
       ]
     });
 
-    const products = await productRepository.findOne(body.id, { relations: ['categories'] });
+    const productQuery = await productRepository.findOne(body.id, { relations: ['categories'] });
 
-    expect(products).toMatchObject(product);
+    expect(productQuery).toEqual(product);
   });
 
   it('throws an errors when creating a product with an invalid name', async () => {
@@ -827,6 +831,40 @@ describe('Authorization', async () => {
     expect(categoryQuery).not.toBeDefined();
   });
 
+  it('throws an error when editing a category when not logged in', async () => {
+    const category: Partial<Category> = {
+      name: 'even-badder-examplers-edition',
+      image: 'https://image.com/image.com'
+    };
+
+    const {
+      body: { id: categoryId }
+    } = await request(server)
+      .post('/categories')
+      .send(category)
+      .set('Cookie', cookie)
+      .expect(200);
+
+    category.id = categoryId;
+
+    const { body } = await request(server)
+      .put(`/categories/${categoryId}`)
+      .send({
+        ...category,
+        name: 'edited lmao'
+      })
+      .expect(401);
+
+    expect(body).toEqual({
+      name: 'AuthorizationRequiredError',
+      message: `Authorization is required for request on PUT /categories/${categoryId}`
+    });
+
+    const categoryQuery = await categoryRepository.findOne(categoryId);
+
+    expect(categoryQuery).toEqual(category);
+  });
+
   it('throws an error when deleting a category when not logged in', async () => {
     const category: Partial<Category> = {
       name: 'even-badder-examplers-deletion',
@@ -843,10 +881,7 @@ describe('Authorization', async () => {
 
     const { body } = await request(server)
       .delete(`/categories/${categoryId}`)
-      .send(category)
       .expect(401);
-
-    console.log(body);
 
     expect(body).toEqual({
       name: 'AuthorizationRequiredError',
@@ -885,6 +920,64 @@ describe('Authorization', async () => {
     });
 
     expect(productQuery).not.toBeDefined();
+  });
+
+  it('throws an error when editing a product when not logged in', async () => {
+    const category: Partial<Category> = {
+      name: 'even-badder-examplers-edition',
+      image: 'https://image.com/image.com'
+    };
+
+    const {
+      body: { id: categoryId }
+    } = await request(server)
+      .post('/categories')
+      .send(category)
+      .set('Cookie', cookie)
+      .expect(200);
+
+    const product: Partial<Product> = {
+      name: 'very-bad-example123>_>',
+      description: 'very-good-example123<_>',
+      image: 'https://image.com/product.com',
+      price: 5.0,
+      // @ts-ignore
+      categories: [
+        {
+          id: categoryId
+        }
+      ]
+    };
+
+    const {
+      body: { id: productId }
+    } = await request(server)
+      .post('/products')
+      .send(product)
+      .set('Cookie', cookie)
+      .expect(200);
+
+    product.id = productId;
+
+    const { body } = await request(server)
+      .put(`/products/${productId}`)
+      .send({
+        ...product,
+        name: 'new-name',
+        description: 'new-desccc'
+      })
+      .expect(401);
+
+    expect(body).toEqual({
+      name: 'AuthorizationRequiredError',
+      message: `Authorization is required for request on PUT /products/${productId}`
+    });
+
+    const { categories, ...productWithoutCategories } = product;
+
+    const productQuery = await productRepository.findOne(productId);
+
+    expect(productQuery).toEqual(productWithoutCategories);
   });
 
   it('throws an error when deleting a product when not logged in', async () => {
