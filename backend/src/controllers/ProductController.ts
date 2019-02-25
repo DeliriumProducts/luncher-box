@@ -117,7 +117,7 @@ export class ProductController {
      * Throw an error if a category doesn't exist when creating a product
      */
     const categories = await this.categoryRepository.find();
-    const validCategories: Category[] = [];
+    let validCategories: Category[] = [];
 
     /**
      * Iterate over the productJSON, as the product might be empty after the validation has passed
@@ -151,6 +151,17 @@ export class ProductController {
     if (!validCategories.length) {
       throw new ProductNotValidError(['categories must be created beforehand']);
     }
+
+    /**
+     * Remove duplicate categories
+     */
+    validCategories = validCategories.filter(
+      (currentCategory, index) =>
+        index ===
+        validCategories.findIndex(
+          currentCategory1 => JSON.stringify(currentCategory1) === JSON.stringify(currentCategory)
+        )
+    );
 
     product.categories = validCategories;
 
@@ -190,7 +201,7 @@ export class ProductController {
        * Throw an error if a category doesn't exist when creating a product
        */
       const categories = await this.categoryRepository.find();
-      const validCategories: Category[] = [];
+      let validCategories: Category[] = [];
 
       /**
        * Iterate over the productJSON, as the product might be empty after the validation has passed
@@ -224,6 +235,17 @@ export class ProductController {
       if (!validCategories.length) {
         throw new ProductNotValidError(['categories must be created beforehand']);
       }
+
+      /**
+       * Remove duplicate categories
+       */
+      validCategories = validCategories.filter(
+        (currentCategory, index) =>
+          index ===
+          validCategories.findIndex(
+            currentCategory1 => JSON.stringify(currentCategory1) === JSON.stringify(currentCategory)
+          )
+      );
 
       newProduct.categories = validCategories;
       newProduct.id = oldProduct.id;

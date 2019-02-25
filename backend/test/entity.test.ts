@@ -429,7 +429,6 @@ describe('DELETE /categories/:id', () => {
       // @ts-ignore
       categories: [
         {
-          // this was accidentally set to id: categoryId1 and it was causing an internal server error - investigate!!!
           id: categoryId
         },
         {
