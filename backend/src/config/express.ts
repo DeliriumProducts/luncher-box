@@ -3,7 +3,7 @@ import compression from 'compression';
 import createRedisStore from 'connect-redis';
 import cors from 'cors';
 import express, { Application } from 'express';
-import session from 'express-session';
+import session, { Store } from 'express-session';
 import expressValidator from 'express-validator';
 import lusca from 'lusca';
 import passport from 'passport';
@@ -14,7 +14,7 @@ import { ENV, FRONTEND_URL, IS_DEV, SESSION_SECRET } from './env';
 /**
  * During tests, we use the default MemoryStore
  */
-let store;
+let store: Store | undefined;
 if (ENV !== 'test') {
   const RedisStore = createRedisStore(session);
   store = new RedisStore({
@@ -84,4 +84,4 @@ app.use((req, _, next) => {
   next();
 });
 
-export { app };
+export { app, store };

@@ -1,7 +1,6 @@
 import { transformAndValidate, TransformValidationOptions } from 'class-transformer-validator';
 import deepmerge from 'deepmerge';
-import { ClassType } from '../interfaces';
-import { TransformAndValidateTuple } from '../types';
+import { ClassType, TransformAndValidateTuple } from '../types';
 
 /**
  * HOF / Curry func around the transformAndValidate method which can be easily awaited without the need of a try/catch.

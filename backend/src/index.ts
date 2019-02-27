@@ -35,9 +35,6 @@ const initServer = async () => {
    */
   initPassport();
 
-  /**
-   * Return server
-   */
   return server;
 };
 

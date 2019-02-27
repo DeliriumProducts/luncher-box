@@ -1,7 +1,7 @@
 import React from 'react';
-import { AdminContext } from '../context';
-import { BACKEND_URL } from '../config';
 import io from 'socket.io-client';
+import { BACKEND_URL } from '../config';
+import { AdminContext } from '../context';
 
 interface Props {
   children: React.ReactNode;
