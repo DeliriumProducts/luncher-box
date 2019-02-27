@@ -73,8 +73,7 @@
   },
   "scripts": {
     "dev": "cross-env NODE_ENV=development nodemon --exec ts-node src/index.ts",
-    "build": "tsc -b",
-    "start": "cross-env NODE_ENV=production node dist/index.js",
+    "prod": "cross-env NODE_ENV=production ts-node -T src/index.ts",
     "debug": "cross-env NODE_ENV=development nodemon --exec ts-node src/index.ts",
     "pretest": "cross-env NODE_ENV=test ts-node test/utils/initTestDbConnection.ts",
     "pretest-debug": "cross-env NODE_ENV=test ts-node test/utils/initTestDbConnection.ts",
