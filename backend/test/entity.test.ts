@@ -254,6 +254,18 @@ describe('GET /categories/:id', () => {
 
     expect(body).toEqual(category);
   });
+
+  it('throws an error when getting a non-existing category', async () => {
+    const { body } = await request(server)
+      .get(`/categories/${-420}`)
+      .set('Cookie', cookie)
+      .expect(404);
+
+    expect(body).toEqual({
+      name: 'NotFoundError',
+      message: 'Category not found!'
+    });
+  });
 });
 
 describe('PUT /categories/:id', () => {
@@ -407,6 +419,18 @@ describe('PUT /categories/:id', () => {
     const oldCategoryQuery = await categoryRepository.findOne(oldCategoryId);
 
     expect(oldCategoryQuery).not.toEqual(editedCategory);
+  });
+
+  it('throws an error when editing a non-existing category', async () => {
+    const { body } = await request(server)
+      .put(`/categories/${-420}`)
+      .set('Cookie', cookie)
+      .expect(404);
+
+    expect(body).toEqual({
+      name: 'NotFoundError',
+      message: 'Category not found!'
+    });
   });
 });
 
@@ -986,6 +1010,18 @@ describe('GET /products/:id', () => {
 
     expect(body).toEqual(product);
   });
+
+  it('throws an error when trying to get a non-existing product', async () => {
+    const { body } = await request(server)
+      .get(`/products/${-420}`)
+      .set('Cookie', cookie)
+      .expect(404);
+
+    expect(body).toEqual({
+      name: 'NotFoundError',
+      message: 'Product not found!'
+    });
+  });
 });
 
 describe('PUT /products/:id', () => {
@@ -1124,7 +1160,7 @@ describe('PUT /products/:id', () => {
     expect(oldProductQuery).toEqual(editedProduct);
   });
 
-  it('throws an errors when editing a product with an invalid name', async () => {
+  it('throws an error when editing a product with an invalid name', async () => {
     const oldProduct: Partial<Product> = {
       name: 'Valid Old Name',
       description: `It's invalid, sorta`,
@@ -1173,7 +1209,7 @@ describe('PUT /products/:id', () => {
     expect(oldProductQuery).not.toEqual(editedProduct);
   });
 
-  it('throws an errors when editing a product with an invalid description', async () => {
+  it('throws an error when editing a product with an invalid description', async () => {
     const oldProduct: Partial<Product> = {
       name: 'Valid Old Name2',
       description: `It's invalid, sorta`,
@@ -1222,7 +1258,7 @@ describe('PUT /products/:id', () => {
     expect(oldProductQuery).not.toEqual(editedProduct);
   });
 
-  it('throws an errors when editing a product with an invalid image', async () => {
+  it('throws an error when editing a product with an invalid image', async () => {
     const oldProduct: Partial<Product> = {
       name: 'Valid Old Name23',
       description: `It's invalid, sorta`,
@@ -1271,7 +1307,7 @@ describe('PUT /products/:id', () => {
     expect(oldProductQuery).not.toEqual(editedProduct);
   });
 
-  it('throws an errors when editing a product with an invalid price', async () => {
+  it('throws an error when editing a product with an invalid price', async () => {
     const oldProduct: Partial<Product> = {
       name: 'Valid Old Name234',
       description: `It's invalid, sorta`,
@@ -1325,7 +1361,7 @@ describe('PUT /products/:id', () => {
     expect(oldProductQuery).not.toEqual(editedProduct);
   });
 
-  it('throws an errors when editing a product with invalid categories', async () => {
+  it('throws an error when editing a product with invalid categories', async () => {
     const oldProduct: Partial<Product> = {
       name: 'Valid Old Name2331',
       description: `It's invalid, sorta`,
@@ -1378,7 +1414,7 @@ describe('PUT /products/:id', () => {
     expect(oldProductQuery).not.toEqual(editedProduct);
   });
 
-  it('throws an errors when editing a product with all fields invalid', async () => {
+  it('throws an error when editing a product with all fields invalid', async () => {
     const oldProduct: Partial<Product> = {
       name: 'Valid Old Name2345',
       description: `It's invalid, sorta`,
@@ -1434,6 +1470,18 @@ describe('PUT /products/:id', () => {
     });
 
     expect(oldProductQuery).not.toEqual(editedProduct);
+  });
+
+  it('throws an error when editing a non-existing product', async () => {
+    const { body } = await request(server)
+      .put(`/products/${-420}`)
+      .set('Cookie', cookie)
+      .expect(404);
+
+    expect(body).toEqual({
+      name: 'NotFoundError',
+      message: 'Product not found!'
+    });
   });
 });
 
