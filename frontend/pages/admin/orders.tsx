@@ -15,7 +15,7 @@ const useOrders = (initialOrders: Order[]): [Order[], boolean] => {
 
   useEffect(() => {
     if (context.socket) {
-      context.socket.emit('fetch_orders');
+      console.log('asdf');
       context.socket.on('fetched_orders', handleOrders);
       context.socket.on('placed_order', handleOrders);
       context.socket.on('accepted_order_admin', setAcceptedOrder);
@@ -35,18 +35,24 @@ const useOrders = (initialOrders: Order[]): [Order[], boolean] => {
     };
   }, [orders]);
 
+  useEffect(() => {
+    if (context.socket) {
+      context.socket.emit('fetch_orders');
+    }
+  }, []);
+
   const setAcceptedOrder = ({ id }: any) => {
     const orderIndex = orders.findIndex((order: Order) => order.id === id);
 
     if (orderIndex >= 0) {
+      console.log('nigger');
       const editedOrders = [...orders];
       // @ts-ignore
       const acceptedOrder: Order = { ...editedOrders[orderIndex] };
       acceptedOrder.state = 1;
       // @ts-ignore
       editedOrders[orderIndex] = acceptedOrder;
-
-      setOrders(orders);
+      setOrders(editedOrders);
     }
   };
 
@@ -84,6 +90,7 @@ const useOrders = (initialOrders: Order[]): [Order[], boolean] => {
 
 const Orders: React.FunctionComponent<any> = () => {
   const [orders, loading] = useOrders([]);
+  console.log(orders);
 
   let data: React.ReactNode | React.ReactNode[];
   if (loading) {
