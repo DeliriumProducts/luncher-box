@@ -222,16 +222,8 @@ describe('POST /auth/login', () => {
   beforeAll(async () => {
     await request(server)
       .post('/auth/register')
-      .send(registeredUser);
-  });
-
-  it('throws an error when logging in with an unconfirmed user', async () => {
-    const { text } = await request(server)
-      .post('/auth/login')
       .send(registeredUser)
-      .expect(401);
-
-    expect(text).toEqual('Unauthorized');
+      .expect(200);
   });
 
   it('logs a user in after confirming token', async () => {
@@ -269,6 +261,15 @@ describe('POST /auth/login', () => {
     expect(isLoggedIn).toEqual(true);
   });
 
+  it('throws an error when logging in with an unconfirmed user', async () => {
+    const { text } = await request(server)
+      .post('/auth/login')
+      .send(registeredUser)
+      .expect(401);
+
+    expect(text).toEqual('Unauthorized');
+  });
+
   it('throws an error when logging in with an incorrect password', async () => {
     const { text } = await request(server)
       .post('/auth/login')
@@ -291,6 +292,50 @@ describe('POST /auth/login', () => {
       .expect(401);
 
     expect(text).toEqual('Unauthorized');
+  });
+});
+
+describe('GET /auth/logout', () => {
+  const registeredUser: Partial<User> = {
+    name: faker.name.findName(),
+    email: faker.internet.exampleEmail(),
+    password: 'FAKEpassword123LOGOUT-LOGIN'
+  };
+  let cookie: string;
+
+  beforeAll(async () => {
+    const { body: confirmationURL } = await request(server)
+      .post('/auth/register')
+      .send(registeredUser)
+      .expect(200);
+
+    await request(server)
+      .get(confirmationURL)
+      .expect(302);
+
+    const { header } = await request(server)
+      .post('/auth/login')
+      .send(registeredUser)
+      .expect(200);
+
+    cookie = header['set-cookie'][0].split(/,(?=\S)/).map((item: string) => item.split(';')[0]);
+  });
+
+  it('logs a user out after logging in', async () => {
+    const { body } = await request(server)
+      .get('/auth/logout')
+      .set('Cookie', cookie)
+      .expect(200);
+
+    expect(body).toEqual('User logged out!');
+  });
+
+  it('throws an error when logging out without logging in', async () => {
+    const { body } = await request(server)
+      .get('/auth/logout')
+      .expect(200);
+
+    expect(body).toEqual('Login to logout!');
   });
 });
 
