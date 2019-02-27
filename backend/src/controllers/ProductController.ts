@@ -66,7 +66,9 @@ export class ProductController {
 
       return products;
     } else {
-      const products = await this.productRepository.find();
+      const products = await this.productRepository.find({
+        take: limit
+      });
 
       return products;
     }

@@ -1,7 +1,7 @@
 import faker from 'faker';
 import { Server } from 'http';
 import request from 'supertest';
-import { Connection, getRepository, Repository } from 'typeorm';
+import { Connection, getRepository, MoreThan, Repository } from 'typeorm';
 import { initServer } from '../src';
 import { dbConnection as getDbConnection } from '../src/connections';
 import { Category, Product, User } from '../src/entities';
@@ -123,6 +123,136 @@ describe('POST /categories', () => {
 
     const categoryQuery = await categoryRepository.findOne({ where: { ...category } });
     expect(categoryQuery).not.toBeDefined();
+  });
+});
+
+describe('GET /categories', () => {
+  it('gets all the categories', async () => {
+    const { body } = await request(server)
+      .get('/categories')
+      .expect(200);
+
+    const categoryQuery = await categoryRepository.find();
+
+    expect(categoryQuery).toEqual(expect.arrayContaining(body));
+  });
+
+  it('gets all the categories on a given page', async () => {
+    const { body } = await request(server)
+      .get('/categories?page=1')
+      .expect(200);
+
+    const categoryQuery = await categoryRepository.find({
+      skip: 0,
+      take: 0
+    });
+
+    expect(categoryQuery).toEqual(expect.arrayContaining(body));
+  });
+
+  it(`gets all the categories after a given category's id`, async () => {
+    const { body } = await request(server)
+      .get('/categories?since=1')
+      .expect(200);
+
+    const categoryQuery = await categoryRepository.find({
+      where: { id: MoreThan(1) },
+      take: 0
+    });
+
+    expect(categoryQuery).toEqual(expect.arrayContaining(body));
+  });
+
+  it('gets all the categories with a limit', async () => {
+    const { body } = await request(server)
+      .get('/categories?limit=1')
+      .expect(200);
+
+    expect(body).toHaveLength(1);
+
+    const categoryQuery = await categoryRepository.find({
+      take: 1
+    });
+
+    expect(categoryQuery).toEqual(expect.arrayContaining(body));
+  });
+});
+
+describe('GET /categories/:id', () => {
+  it('gets a specific category with its products', async () => {
+    const category: Partial<Category> = {
+      name: 'to-be-requested',
+      image: 'https://image.com',
+      products: []
+    };
+
+    const {
+      body: { id: categoryId }
+    } = await request(server)
+      .post('/categories')
+      .send(category)
+      .set('Cookie', cookie)
+      .expect(200);
+
+    category.id = categoryId;
+
+    const { body } = await request(server)
+      .get(`/categories/${categoryId}`)
+      .expect(200);
+
+    expect(body).toEqual(category);
+  });
+
+  it('gets a specific category with its products and nested relations', async () => {
+    const category: Partial<Category> = {
+      name: 'to-be-requested-again',
+      image: 'https://image.com',
+      products: []
+    };
+
+    const {
+      body: { id: categoryId }
+    } = await request(server)
+      .post('/categories')
+      .send(category)
+      .set('Cookie', cookie)
+      .expect(200);
+
+    category.id = categoryId;
+
+    const product: Partial<Product> = {
+      name: 'aaaaa',
+      description: 'asdfasdf',
+      image: 'https://iamge.com',
+      price: 5.99,
+      // @ts-ignore
+      categories: [
+        {
+          id: categoryId
+        }
+      ]
+    };
+
+    const {
+      body: { id: productId }
+    } = await request(server)
+      .post('/products')
+      .send(product)
+      .set('Cookie', cookie)
+      .expect(200);
+
+    product.id = productId;
+    // @ts-ignore
+    category.products.push(product);
+    const { products, ...categoryWithoutProducts } = category;
+    // @ts-ignore
+    product.categories = [categoryWithoutProducts];
+
+    const { body } = await request(server)
+      .get(`/categories/${categoryId}?relations=true`)
+      .expect(200);
+
+    expect(body).toEqual(category);
   });
 });
 
@@ -756,6 +886,108 @@ describe('POST /products', async () => {
   });
 });
 
+describe('GET /products', () => {
+  it('gets all the products', async () => {
+    const { body } = await request(server)
+      .get('/products')
+      .expect(200);
+
+    const productQuery = await productRepository.find();
+
+    expect(productQuery).toEqual(expect.arrayContaining(body));
+  });
+
+  it('gets all the products on a given page', async () => {
+    const { body } = await request(server)
+      .get('/products?page=1')
+      .expect(200);
+
+    const productQuery = await productRepository.find({
+      skip: 0,
+      take: 0
+    });
+
+    expect(productQuery).toEqual(expect.arrayContaining(body));
+  });
+
+  it(`gets all the products after a given product's id`, async () => {
+    const { body } = await request(server)
+      .get('/products?since=1')
+      .expect(200);
+
+    const productQuery = await productRepository.find({
+      where: { id: MoreThan(1) },
+      take: 0
+    });
+
+    expect(productQuery).toEqual(expect.arrayContaining(body));
+  });
+
+  it('gets all the categories with a limit', async () => {
+    const { body } = await request(server)
+      .get('/products?limit=1')
+      .expect(200);
+
+    expect(body).toHaveLength(1);
+
+    const productQuery = await productRepository.find({
+      take: 1
+    });
+
+    expect(productQuery).toEqual(expect.arrayContaining(body));
+  });
+});
+
+describe('GET /products/:id', () => {
+  it('gets a specific product with its categories', async () => {
+    const category: Partial<Category> = {
+      name: 'asdfasdfaaa',
+      image: 'https://good-image.com'
+    };
+
+    const {
+      body: { id: categoryId }
+    } = await request(server)
+      .post('/categories')
+      .send(category)
+      .set('Cookie', cookie)
+      .expect(200);
+
+    category.id = categoryId;
+
+    const product: Partial<Product> = {
+      name: 'to-be-requested-again-again',
+      description: 'asdfasdfasdfasdf',
+      image: 'https://image.com',
+      price: 5.99,
+      // @ts-ignore
+      categories: [
+        {
+          id: categoryId
+        }
+      ]
+    };
+
+    const {
+      body: { id: productId }
+    } = await request(server)
+      .post('/products/')
+      .send(product)
+      .set('Cookie', cookie)
+      .expect(200);
+
+    product.id = productId;
+    // @ts-ignore
+    product.categories = [category];
+
+    const { body } = await request(server)
+      .get(`/products/${productId}`)
+      .expect(200);
+
+    expect(body).toEqual(product);
+  });
+});
+
 describe('PUT /products/:id', () => {
   const category: Partial<Category> = {
     name: 'Soups-To-Be-Put',
@@ -814,6 +1046,73 @@ describe('PUT /products/:id', () => {
       categories: [
         {
           id: category.id
+        }
+      ]
+    });
+
+    const oldProductQuery = await productRepository.findOne(oldProductId, {
+      relations: ['categories']
+    });
+
+    expect(oldProductQuery).toEqual(editedProduct);
+  });
+
+  it('changes the categories of product', async () => {
+    const oldProduct: Partial<Product> = {
+      name: 'ye olde Soup',
+      description: `It's tasty and it has cheese`,
+      image: 'https://image.com/product.com',
+      price: 5.0,
+      // @ts-ignore
+      categories: [category]
+    };
+
+    const {
+      body: { id: oldProductId }
+    } = await request(server)
+      .post('/products')
+      .set('Cookie', cookie)
+      .send(oldProduct)
+      .expect(200);
+
+    oldProduct.id = oldProductId;
+
+    const newCategory: Partial<Category> = {
+      name: 'NEW-NEW_NEW',
+      image: 'https://image.com'
+    };
+
+    const {
+      body: { id: newCategoryId }
+    } = await request(server)
+      .post('/categories')
+      .set('Cookie', cookie)
+      .send(newCategory)
+      .expect(200);
+
+    newCategory.id = newCategoryId;
+
+    const editedProduct: Partial<Product> = {
+      ...oldProduct,
+      name: 'Edited Chicken',
+      description: 'new desc',
+      image: 'https://iamge.com/thesequel',
+      price: 999.0,
+      // @ts-ignore
+      categories: [newCategory]
+    };
+
+    const { body } = await request(server)
+      .put(`/products/${oldProductId}`)
+      .set('Cookie', cookie)
+      .send(editedProduct)
+      .expect(200);
+
+    expect(body).toEqual({
+      ...editedProduct,
+      categories: [
+        {
+          id: newCategoryId
         }
       ]
     });

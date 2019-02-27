@@ -61,7 +61,9 @@ export class CategoryController {
 
       return categories;
     } else {
-      const categories = await this.categoryRepository.find();
+      const categories = await this.categoryRepository.find({
+        take: limit
+      });
 
       return categories;
     }
