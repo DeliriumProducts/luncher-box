@@ -32,6 +32,7 @@ class OrderCardHeader extends React.Component<Props> {
       message.success(`Successfully declined order ${orderId + 1} 🎉`);
     }
   };
+
   handleFinish = (e: React.FormEvent<HTMLButtonElement>) => {
     e.stopPropagation();
     const { orderId } = this.props;

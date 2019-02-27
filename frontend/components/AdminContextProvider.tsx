@@ -21,7 +21,6 @@ const AdminContextProvider = (props: Props) => {
   );
 };
 
-// then make a consumer which will surface it
 const AdminConsumer = AdminContext.Consumer;
 
 export default AdminContextProvider;

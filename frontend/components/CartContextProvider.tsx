@@ -1,9 +1,9 @@
-import React, { Component } from 'react';
-import { CartContext } from '../context';
-import { Product, Order } from '../interfaces';
 import localForage from 'localforage';
-import { BACKEND_URL } from '../config';
+import React, { Component } from 'react';
 import io from 'socket.io-client';
+import { BACKEND_URL } from '../config';
+import { CartContext } from '../context';
+import { Order, Product } from '../interfaces';
 
 interface Props {
   children: React.ReactNode;
@@ -176,7 +176,6 @@ class CartContextProvider extends Component<Props, State> {
   }
 }
 
-// then make a consumer which will surface it
 const CartConsumer = CartContext.Consumer;
 
 export default CartContextProvider;

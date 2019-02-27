@@ -24,6 +24,7 @@ export class OrderController {
 
   @OnMessage('fetch_orders')
   async connection(@SocketIO() io: SocketIO.Socket) {
+    console.log('HELL');
     const key = 'orders';
     const ordersJSON = await redisConnection.get(key);
 
