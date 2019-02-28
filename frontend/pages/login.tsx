@@ -13,7 +13,7 @@ const FormItem = Form.Item;
 const Container = styled.div`
   background-color: rgb(245, 245, 245);
   padding: 30px;
-  box-shadow: 0 0 10px 5px #ebebeb;
+  box-shadow: 0 20px 24px -18px rgba(0, 0, 0, 0.31);
   border-radius: 10px;
 
   #info {
