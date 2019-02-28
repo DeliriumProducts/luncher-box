@@ -16,16 +16,19 @@ const StyledCard = styled(Card)`
   box-shadow: 0 2px 2px rgba(0, 0, 0, 0.12);
   flex-basis: 16rem;
   padding-bottom: 0;
+
   .ant-card-body {
     padding-top: 0;
     height: 100%;
   }
+
   & img {
     border-radius: 7px 7px 0 0;
     object-fit: cover;
     width: 100%;
     height: 16rem;
   }
+
   @media (max-width: 768px) {
     border-bottom: 1px solid;
     border-bottom-color: rgb(210, 210, 210);
@@ -33,6 +36,7 @@ const StyledCard = styled(Card)`
     margin: 8px 0 0 0;
     flex-basis: 100%;
   }
+
   .ant-card-actions {
     background-color: #fff;
     border-top-color: rgb(210, 210, 210);

@@ -13,6 +13,10 @@ const FlexContainer = styled.div`
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
+  background-color: #fafafa;
+  padding: 2rem;
+  border-radius: 7px;
+  box-shadow: 0 20px 24px -18px rgba(0, 0, 0, 0.31);
 `;
 
 interface CategoryQuery extends DefaultQuery {
