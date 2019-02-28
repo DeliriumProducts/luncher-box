@@ -18,7 +18,6 @@ const StyledContent = styled(Content)`
     padding: 20px;
     padding-bottom: 50px;
   }
-  background-image: linear-gradient(135deg, #f97794 10%, #623aa2 100%);
 `;
 
 const StyledLayout = styled(Layout)`
