@@ -1,9 +1,9 @@
-import styled from 'styled-components';
-import { Card, Button, Icon, Modal } from 'antd';
-import PriceBadge from './PriceBadge';
+import { Button, Card, Modal } from 'antd';
 import React from 'react';
+import styled from 'styled-components';
 import { CartContext } from '../context';
 import { Product } from '../interfaces';
+import PriceBadge from './PriceBadge';
 
 const { Meta } = Card;
 
@@ -86,6 +86,7 @@ export default class extends React.Component<Props> {
           <strong>{this.props.price} / piece</strong>
         </div>
       ),
+      // tslint:disable-next-line
       onOk() {},
       maskClosable: true
     });

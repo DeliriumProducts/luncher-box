@@ -1,18 +1,18 @@
 import { Card, Icon, Popconfirm } from 'antd';
+import Router from 'next/router';
 import React from 'react';
 import styled from 'styled-components';
+import { Category, Product } from '../interfaces';
+import { EntityInstance, EntityTypes } from '../types';
 import ActionButton from './ActionButton';
 import PriceBadge from './PriceBadge';
-import { Category, Product } from '../interfaces';
-import { EntityTypes, EntityInstance } from '../types';
-import Router from 'next/router';
 
 const { Meta } = Card;
 
 const StyledCard = styled(Card)`
-  border-radius: 10px;
-  margin-top: 8px;
-  box-shadow: 0 2px 2px rgba(0, 0, 0, 0.12);
+  border-radius: 7px;
+  margin-top: 15px;
+  box-shadow: 0 20px 24px -18px rgba(0, 0, 0, 0.31);
   max-width: 100%;
 
   @media (max-width: 480px) {

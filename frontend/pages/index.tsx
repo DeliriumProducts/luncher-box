@@ -1,17 +1,21 @@
-import { Component, ContextType } from 'react';
+import { Empty, message } from 'antd';
+import { Component } from 'react';
+import styled from 'styled-components';
+import { CategoryAPI } from '../api';
 import CategoryCard from '../components/CategoryCard';
+import Spinner from '../components/Spinner';
 import UserLayout from '../components/UserLayout';
 import { AdminContext } from '../context/AdminContext';
-import styled from 'styled-components';
-import { message, Empty } from 'antd';
 import { Category } from '../interfaces';
-import { CategoryAPI } from '../api';
-import Spinner from '../components/Spinner';
 
 const FlexContainer = styled.div`
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
+  background-color: #fafafa;
+  padding: 2rem;
+  border-radius: 7px;
+  box-shadow: 0 20px 24px -18px rgba(0, 0, 0, 0.31);
 `;
 
 interface State {

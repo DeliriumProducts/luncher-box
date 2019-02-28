@@ -1,7 +1,7 @@
 import { Affix, Layout } from 'antd';
 import React, { ReactNode } from 'react';
-import UserMenuBar from './UserMenuBar';
 import styled from 'styled-components';
+import UserMenuBar from './UserMenuBar';
 
 const { Content } = Layout;
 
@@ -18,10 +18,12 @@ const StyledContent = styled(Content)`
     padding: 20px;
     padding-bottom: 50px;
   }
+  background-image: linear-gradient(135deg, #f97794 10%, #623aa2 100%);
 `;
 
 const StyledLayout = styled(Layout)`
   min-height: 100%;
+  background: rgba(0, 0, 0, 0);
 `;
 
 const CustomHeader = styled.div`

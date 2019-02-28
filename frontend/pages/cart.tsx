@@ -1,12 +1,11 @@
-import UserLayout from '../components/UserLayout';
-import ItemCard from '../components/ItemCard';
-import styled from 'styled-components';
-import { CartContext } from '../context';
-import { Empty, Card, Button, InputNumber, Modal, message, Tag } from 'antd';
+import { Button, Card, Empty, Input, message, Modal, Tag } from 'antd';
 import React from 'react';
-import { Product, Order } from '../interfaces';
-import { Input } from 'antd';
+import styled from 'styled-components';
+import ItemCard from '../components/ItemCard';
 import Spinner from '../components/Spinner';
+import UserLayout from '../components/UserLayout';
+import { CartContext } from '../context';
+import { Order, Product } from '../interfaces';
 
 const { TextArea } = Input;
 
@@ -84,6 +83,7 @@ export default class extends React.Component<any, State> {
     Modal.info({
       title: 'Order state:',
       content: data,
+      // tslint:disable-next-line
       onOk: () => {},
       maskClosable: true
     });
@@ -140,6 +140,8 @@ export default class extends React.Component<any, State> {
         },
         maskClosable: true
       });
+    } else {
+      message.error('Please, enter your table! 🤚');
     }
   };
 
@@ -183,6 +185,7 @@ export default class extends React.Component<any, State> {
             <div style={{ width: '100%' }}>
               <StyledCard>
                 <TextArea
+                  // tslint:disable-next-line
                   placeholder="Write comments in case you are allergic to ingredients or want to exclude some. e.g. no onions, no mayo. "
                   onChange={this.handleComment}
                   rows={6}

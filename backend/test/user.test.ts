@@ -75,9 +75,8 @@ describe('POST /auth/register', () => {
 
     expect(body).toEqual({
       errors: [
-        // tslint:disable
+        // tslint:disable-next-line
         'Password must contain at least 1 lowercase alphabetical character, 1 numeric character and be at least 8 characters long'
-        // tslint:enable
       ],
       name: 'NotValidError',
       message: 'User not valid!'
@@ -106,9 +105,8 @@ describe('POST /auth/register', () => {
       errors: [
         'name must be longer than or equal to 1 characters',
         'email must be an email',
-        // tslint:disable
+        // tslint:disable-next-line
         'Password must contain at least 1 lowercase alphabetical character, 1 numeric character and be at least 8 characters long'
-        // tslint:enable
       ],
       name: 'NotValidError',
       message: 'User not valid!'

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Product, Order } from '../interfaces';
+import { Order, Product } from '../interfaces';
 
 interface Values {
   order: Order;

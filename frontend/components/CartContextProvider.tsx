@@ -22,7 +22,7 @@ class CartContextProvider extends Component<Props, State> {
       id: 1,
       products: [],
       comment: '',
-      table: '1'
+      table: ''
     },
     totalAmount: 0
   };

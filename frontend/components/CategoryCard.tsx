@@ -1,6 +1,5 @@
-import styled from 'styled-components';
-import { Card } from 'antd';
 import Link from 'next/link';
+import styled from 'styled-components';
 
 const StyledDiv: any = styled.div`
   display: flex;
@@ -12,7 +11,7 @@ const StyledDiv: any = styled.div`
   color: white;
   border-radius: 7px;
   font-size: 3rem;
-  margin: 8px 4px 0 4px;
+  margin: 4px 4px 4px 4px;
   width: 16rem;
   height: 16rem;
   user-select: none;
@@ -58,7 +57,7 @@ export default (props: Props) => {
         <BlurredDiv className="blurred-div" img={image}>
           <div
             style={{
-              backgroundColor: 'rgba(0,0,0,0.45)',
+              backgroundColor: 'rgba(0,0,0,0.15)',
               width: '100%',
               height: '100%'
             }}

@@ -1,13 +1,13 @@
-import { Component, ContextType } from 'react';
-import UserLayout from '../components/UserLayout';
-import ProductCard from '../components/ProductCard';
-import styled from 'styled-components';
-import { Spin, Icon, message, Empty } from 'antd';
-import withRouter from '../components/withRouter';
+import { Empty, message } from 'antd';
 import Router, { DefaultQuery } from 'next/router';
+import { Component } from 'react';
+import styled from 'styled-components';
 import { CategoryAPI } from '../api';
-import { Product } from '../interfaces';
+import ProductCard from '../components/ProductCard';
 import Spinner from '../components/Spinner';
+import UserLayout from '../components/UserLayout';
+import withRouter from '../components/withRouter';
+import { Product } from '../interfaces';
 
 const FlexContainer = styled.div`
   display: flex;
@@ -69,7 +69,7 @@ class CategoryPage extends Component<Props, State> {
       }
     }
     return (
-      <UserLayout selectedKey="daily">
+      <UserLayout selectedKey="home">
         <FlexContainer>{data}</FlexContainer>
       </UserLayout>
     );
