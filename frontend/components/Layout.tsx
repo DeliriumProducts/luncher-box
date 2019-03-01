@@ -55,7 +55,6 @@ const Layout: React.FunctionComponent<Props> = props => {
     MenuBar = <UserMenuBar selectedKey={props.route} />;
   }
 
-  console.log(props.route);
   return (
     <StyledLayout>
       <CustomHeader>
