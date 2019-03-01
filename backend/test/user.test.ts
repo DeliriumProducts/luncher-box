@@ -19,7 +19,7 @@ beforeAll(async () => {
 describe('POST /auth/register', () => {
   it('adds a valid user to the database when registering', async () => {
     const user: Partial<User> = {
-      email: faker.internet.exampleEmail(),
+      email: 'validuser' + faker.internet.exampleEmail(),
       name: faker.name.findName(),
       password: 'FAKEpassword123VALID-REGISTRATION'
     };
@@ -158,7 +158,7 @@ describe('GET /confirm/:tokenId', () => {
   it('confirms the user in the database', async () => {
     const user: Partial<User> = {
       name: faker.name.findName(),
-      email: faker.internet.exampleEmail(),
+      email: 'CONFIRM' + faker.internet.exampleEmail(),
       password: 'FAKEpassword123CONFIRM-USER'
     };
 
@@ -191,7 +191,7 @@ describe('GET /confirm/:tokenId', () => {
   it('deletes the token from Redis after confirmation', async () => {
     const user: Partial<User> = {
       name: faker.name.findName(),
-      email: faker.internet.exampleEmail(),
+      email: 'DELETE' + faker.internet.exampleEmail(),
       password: 'FAKEpassword123REDIS-DELETE'
     };
 
@@ -213,8 +213,8 @@ describe('GET /confirm/:tokenId', () => {
 describe('POST /auth/login', () => {
   const registeredUser: Partial<User> = {
     name: faker.name.findName(),
-    email: faker.internet.exampleEmail(),
-    password: 'FAKEpassword123INVALID-LOGIN'
+    email: 'REGISTERLOGIN' + faker.internet.exampleEmail(),
+    password: 'FAKEpassword123REGISTERAUTH'
   };
 
   beforeAll(async () => {
@@ -227,7 +227,7 @@ describe('POST /auth/login', () => {
   it('logs a user in after confirming token', async () => {
     const user: Partial<User> = {
       name: faker.name.findName(),
-      email: faker.internet.exampleEmail(),
+      email: 'login1' + faker.internet.exampleEmail(),
       password: 'FAKEpassword123LOGIN-USER'
     };
 
@@ -296,7 +296,7 @@ describe('POST /auth/login', () => {
 describe('GET /auth/logout', () => {
   const registeredUser: Partial<User> = {
     name: faker.name.findName(),
-    email: faker.internet.exampleEmail(),
+    email: 'logout' + faker.internet.exampleEmail(),
     password: 'FAKEpassword123LOGOUT-LOGIN'
   };
   let cookie: string;

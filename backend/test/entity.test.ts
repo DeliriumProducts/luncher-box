@@ -20,7 +20,7 @@ beforeAll(async () => {
 
   const user: Partial<User> = {
     name: faker.name.findName(),
-    email: faker.internet.exampleEmail(),
+    email: 'product' + faker.internet.exampleEmail(),
     password: 'FAKEpassword123'
   };
 

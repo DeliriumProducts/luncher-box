@@ -5,7 +5,6 @@ import styled from 'styled-components';
 import { CategoryAPI } from '../api';
 import ProductCard from '../components/ProductCard';
 import Spinner from '../components/Spinner';
-import UserLayout from '../components/AdminLayout';
 import withRouter from '../components/withRouter';
 import { Product } from '../interfaces';
 
