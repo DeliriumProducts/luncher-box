@@ -8,12 +8,12 @@ const { Content } = Layout;
 interface Props {
   selectedKey: string;
   children?: ReactNode;
-  img?: string;
 }
 
 const StyledContent = styled(Content)`
   min-height: 100%;
   padding: 50px;
+
   @media (max-width: 768px) {
     padding: 20px;
     padding-bottom: 50px;

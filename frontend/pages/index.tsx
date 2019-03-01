@@ -64,11 +64,7 @@ class Home extends Component<any, State> {
       }
     }
 
-    return (
-      <UserLayout selectedKey="home">
-        <FlexContainer>{data}</FlexContainer>
-      </UserLayout>
-    );
+    return <FlexContainer>{data}</FlexContainer>;
   }
 }
 

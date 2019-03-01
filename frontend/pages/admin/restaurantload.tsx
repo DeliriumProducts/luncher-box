@@ -5,11 +5,7 @@ import withAuth from '../../components/withAuth';
 
 class RestaurantLoad extends Component {
   render() {
-    return (
-      <FullHeightContainer>
-        <AdminLayout selectedKey="load">????????</AdminLayout>
-      </FullHeightContainer>
-    );
+    return <FullHeightContainer>???????</FullHeightContainer>;
   }
 }
 

@@ -25,6 +25,7 @@ const StyledContent = styled(Content)`
   padding: 50px;
   margin-bottom: 50px;
   height: auto;
+
   @media (max-width: 480px) {
     padding: 0;
   }

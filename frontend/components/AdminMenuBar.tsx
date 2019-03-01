@@ -90,7 +90,7 @@ class AdminMenuBar extends Component<Props, State> {
           inlineIndent={50}
           className="styled-menu"
         >
-          <Menu.Item key="home">
+          <Menu.Item key="/admin">
             <Link href="/admin">
               <StyledAnchor>
                 <Icon type="home" className="menu-item-icon" />
@@ -98,7 +98,7 @@ class AdminMenuBar extends Component<Props, State> {
               </StyledAnchor>
             </Link>
           </Menu.Item>
-          <Menu.Item key="orders">
+          <Menu.Item key="/admin/orders">
             <Link href="/admin/orders">
               <StyledAnchor>
                 <Icon type="table" className="menu-item-icon" />
@@ -106,7 +106,7 @@ class AdminMenuBar extends Component<Props, State> {
               </StyledAnchor>
             </Link>
           </Menu.Item>
-          <Menu.Item key="chat">
+          <Menu.Item key="/admin/staffchat">
             <Link href="/admin/staffchat">
               <StyledAnchor>
                 <Icon type="message" className="menu-item-icon" />
@@ -114,7 +114,7 @@ class AdminMenuBar extends Component<Props, State> {
               </StyledAnchor>
             </Link>
           </Menu.Item>
-          <Menu.Item key="load" disabled>
+          <Menu.Item key="/admin/restaurantload" disabled>
             <Link href="/admin/restaurantload">
               <StyledAnchor>
                 <Icon type="pie-chart" className="menu-item-icon" />

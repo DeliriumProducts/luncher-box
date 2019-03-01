@@ -55,7 +55,7 @@ class UserMenuBar extends Component<Props, any> {
           inlineIndent={50}
           className="styled-menu"
         >
-          <Menu.Item key="home">
+          <Menu.Item key="/">
             <Link href="/">
               <StyledAnchor>
                 <Icon type="read" className="menu-item-icon" />
@@ -63,7 +63,7 @@ class UserMenuBar extends Component<Props, any> {
               </StyledAnchor>
             </Link>
           </Menu.Item>
-          <Menu.Item key="cart">
+          <Menu.Item key="/cart">
             <Link href="/cart">
               <StyledAnchor>
                 <Badge offset={[10, 0]} count={this.context.totalAmount}>

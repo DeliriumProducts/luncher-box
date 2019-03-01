@@ -213,40 +213,38 @@ class Index extends Component<any, State> {
     const { pageLoading: loading, categories } = this.state;
 
     return (
-      <AdminLayout selectedKey="home">
-        <FlexContainer>
-          <div className="col">
-            <EntityCardContainer
-              title={`Categories (${categories.length})`}
-              entityType="category"
-              loading={loading}
-              handleNewClick={this.handleNewClick}
-            >
-              {categories &&
-                categories.map((category: Category) => (
-                  <EntityCard
-                    key={category.id}
-                    {...category}
-                    hoverable={true}
-                    entityType="category"
-                    handleEditClick={this.handleEditClick}
-                    handleDeleteClick={this.handleDeleteClick}
-                  />
-                ))}
-            </EntityCardContainer>
-            <EntityModal
-              wrappedComponentRef={this.saveModalFormRef}
-              visible={this.state.modalVisible}
-              onCancel={this.handleModalCancel}
-              onCreate={this.handleModalAction}
-              entityType={this.state.entityType}
-              actionType={this.state.actionType}
-              entity={this.state.entity}
-              loading={this.state.modalLoading}
-            />
-          </div>
-        </FlexContainer>
-      </AdminLayout>
+      <FlexContainer>
+        <div className="col">
+          <EntityCardContainer
+            title={`Categories (${categories.length})`}
+            entityType="category"
+            loading={loading}
+            handleNewClick={this.handleNewClick}
+          >
+            {categories &&
+              categories.map((category: Category) => (
+                <EntityCard
+                  key={category.id}
+                  {...category}
+                  hoverable={true}
+                  entityType="category"
+                  handleEditClick={this.handleEditClick}
+                  handleDeleteClick={this.handleDeleteClick}
+                />
+              ))}
+          </EntityCardContainer>
+          <EntityModal
+            wrappedComponentRef={this.saveModalFormRef}
+            visible={this.state.modalVisible}
+            onCancel={this.handleModalCancel}
+            onCreate={this.handleModalAction}
+            entityType={this.state.entityType}
+            actionType={this.state.actionType}
+            entity={this.state.entity}
+            loading={this.state.modalLoading}
+          />
+        </div>
+      </FlexContainer>
     );
   }
 }
