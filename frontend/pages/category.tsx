@@ -5,7 +5,7 @@ import styled from 'styled-components';
 import { CategoryAPI } from '../api';
 import ProductCard from '../components/ProductCard';
 import Spinner from '../components/Spinner';
-import UserLayout from '../components/UserLayout';
+import UserLayout from '../components/AdminLayout';
 import withRouter from '../components/withRouter';
 import { Product } from '../interfaces';
 
@@ -72,11 +72,8 @@ class CategoryPage extends Component<Props, State> {
         data = <Empty description="No entries found" />;
       }
     }
-    return (
-      <UserLayout selectedKey="home">
-        <FlexContainer>{data}</FlexContainer>
-      </UserLayout>
-    );
+
+    return <FlexContainer>{data}</FlexContainer>;
   }
 }
 

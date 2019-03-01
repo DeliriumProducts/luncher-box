@@ -99,11 +99,7 @@ const Orders: React.FunctionComponent<any> = () => {
     }
   }
 
-  return (
-    <FullHeightContainer>
-      <AdminLayout selectedKey="orders">{data}</AdminLayout>
-    </FullHeightContainer>
-  );
+  return <FullHeightContainer>{data}</FullHeightContainer>;
 };
 
 export default withAuth(Orders);

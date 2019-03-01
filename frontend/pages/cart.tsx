@@ -229,10 +229,6 @@ export default class extends React.Component<any, State> {
       }
     }
 
-    return (
-      <UserLayout selectedKey="cart">
-        <FlexContainer>{data}</FlexContainer>
-      </UserLayout>
-    );
+    return <FlexContainer>{data}</FlexContainer>;
   }
 }

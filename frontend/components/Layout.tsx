@@ -1,26 +1,16 @@
-import { Affix, Layout } from 'antd';
+import { Affix, Layout as AntDesignLayout } from 'antd';
 import React, { ReactNode } from 'react';
 import styled from 'styled-components';
-import UserMenuBar from './UserMenuBar';
+import MenuBar from './MenuBar';
 
-const { Content } = Layout;
+const { Content } = AntDesignLayout;
 
 interface Props {
   selectedKey: string;
   children?: ReactNode;
-  img?: string;
 }
 
-const StyledContent = styled(Content)`
-  min-height: 100%;
-  padding: 50px;
-  @media (max-width: 768px) {
-    padding: 20px;
-    padding-bottom: 50px;
-  }
-`;
-
-const StyledLayout = styled(Layout)`
+const StyledLayout = styled(AntDesignLayout)`
   min-height: 100%;
   background: rgba(0, 0, 0, 0);
 `;
@@ -31,27 +21,38 @@ const CustomHeader = styled.div`
   }
 `;
 
+const StyledContent = styled(Content)`
+  padding: 50px;
+  margin-bottom: 50px;
+  height: auto;
+
+  @media (max-width: 480px) {
+    padding: 0;
+  }
+`;
+
 const CustomFooter = styled.div`
   @media (min-width: 768px) {
     display: none;
   }
 `;
 
-const UserLayout: React.FunctionComponent<Props> = props => {
+const Layout: React.FunctionComponent<Props> = props => {
   return (
     <StyledLayout>
       <CustomHeader>
         <Affix offsetTop={0}>
-          <UserMenuBar selectedKey={props.selectedKey} />
+          <MenuBar selectedKey={props.selectedKey} />
         </Affix>
       </CustomHeader>
       <StyledContent>{props.children}</StyledContent>
       <Affix offsetBottom={0}>
         <CustomFooter>
-          <UserMenuBar selectedKey={props.selectedKey} />
+          <MenuBar selectedKey={props.selectedKey} />
         </CustomFooter>
       </Affix>
     </StyledLayout>
   );
 };
-export default UserLayout;
+
+export default Layout;
