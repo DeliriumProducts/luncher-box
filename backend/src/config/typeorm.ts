@@ -1,5 +1,6 @@
 import { ConnectionOptions } from 'typeorm';
 import { DB_HOST, DB_PASS, DB_PORT, DB_USER, ENV, IS_DEV } from './env';
+import { redisConfig } from './redis';
 
 interface DbConfigs {
   development: ConnectionOptions;
@@ -18,7 +19,11 @@ const dbConfigs: DbConfigs = {
     database: 'luncherbox_development',
     synchronize: IS_DEV,
     logging: false,
-    entities: ['src/entities/*.ts']
+    entities: ['src/entities/*.ts'],
+    cache: {
+      type: 'ioredis',
+      options: redisConfig
+    }
   },
   production: {
     type: 'mariadb',
@@ -33,6 +38,10 @@ const dbConfigs: DbConfigs = {
     migrations: ['src/migration/*.ts'],
     cli: {
       migrationsDir: 'src/migration/*.ts'
+    },
+    cache: {
+      type: 'ioredis',
+      options: redisConfig
     }
   },
   test: {

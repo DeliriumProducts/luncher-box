@@ -52,7 +52,8 @@ export class ProductController {
     if (since) {
       const products = await this.productRepository.find({
         where: { id: MoreThan(since) },
-        take: limit
+        take: limit,
+        cache: true
       });
 
       return products;
@@ -61,13 +62,15 @@ export class ProductController {
     if (page) {
       const products = await this.productRepository.find({
         skip: limit * (page - 1),
-        take: limit
+        take: limit,
+        cache: true
       });
 
       return products;
     } else {
       const products = await this.productRepository.find({
-        take: limit
+        take: limit,
+        cache: true
       });
 
       return products;
