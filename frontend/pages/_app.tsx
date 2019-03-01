@@ -4,6 +4,7 @@ import React from 'react';
 import { createGlobalStyle } from 'styled-components';
 import EntityContextProvider from '../components/AdminContextProvider';
 import CartContextProvider from '../components/CartContextProvider';
+import Layout from '../components/Layout';
 
 const GlobalStyle = createGlobalStyle`
   html,
@@ -67,9 +68,11 @@ export default class MyApp extends App {
         <EntityContextProvider>
           <Container>
             <GlobalStyle />
-            <PageTransition timeout={150} classNames="page-transition">
-              <Component key={this.props.router.route} {...pageProps} />
-            </PageTransition>
+            <Layout selectedKey="home" route={this.props.router.route}>
+              <PageTransition timeout={150} classNames="page-transition">
+                <Component key={this.props.router.route} {...pageProps} />
+              </PageTransition>
+            </Layout>
           </Container>
         </EntityContextProvider>
       </CartContextProvider>
