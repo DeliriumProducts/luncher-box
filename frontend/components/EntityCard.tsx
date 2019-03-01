@@ -89,7 +89,7 @@ const EntityCard: React.FunctionComponent<Props> = props => {
 
   const handleCardClick = () => {
     if (entityType === 'category') {
-      Router.replace(
+      Router.push(
         {
           pathname: '/admin/category',
           query: {
