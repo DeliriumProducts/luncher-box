@@ -1,5 +1,5 @@
 import { RedisOptions } from 'ioredis';
-import { REDIS_HOST, REDIS_PORT, ENV } from './env';
+import { ENV, REDIS_HOST, REDIS_PORT } from './env';
 
 const db = (() => {
   switch (ENV) {

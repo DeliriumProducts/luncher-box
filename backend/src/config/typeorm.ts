@@ -55,7 +55,11 @@ const dbConfigs: DbConfigs = {
     synchronize: IS_DEV,
     logging: false,
     entities: ['src/entities/*.ts'],
-    migrations: ['src/migration/*.ts']
+    migrations: ['src/migration/*.ts'],
+    cache: {
+      type: 'ioredis',
+      options: redisConfig
+    }
   }
 };
 
