@@ -1,6 +1,6 @@
 import { transformAndValidate, TransformValidationOptions } from 'class-transformer-validator';
 import deepmerge from 'deepmerge';
-import { ClassType, TransformAndValidateTuple } from '../types';
+import { ClassType, TransformAndValidateTuple, EntityError } from '../types';
 
 /**
  * HOF / Curry func around the transformAndValidate method which can be easily awaited without the need of a try/catch.
@@ -14,7 +14,7 @@ export default <T extends object>(cls: ClassType<T>) => async (
   obj: object | Array<{}>,
   options?: TransformValidationOptions
 ): TransformAndValidateTuple<T> => {
-  const errors: Array<Array<{}> | {}> = [];
+  const errors: EntityError = [];
   let clsObj: T = new cls();
 
   const defaultOptions: TransformValidationOptions = {

@@ -3,7 +3,6 @@ import React from 'react';
 import styled from 'styled-components';
 import ItemCard from '../components/ItemCard';
 import Spinner from '../components/Spinner';
-import UserLayout from '../components/UserLayout';
 import { CartContext } from '../context';
 import { Order, Product } from '../interfaces';
 

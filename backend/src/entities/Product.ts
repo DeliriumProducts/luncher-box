@@ -38,18 +38,12 @@ export class Product {
 
 export class ProductNotFoundError extends EntityNotFoundError<Product> {
   constructor() {
-    super(Product);
+    super('Product');
   }
 }
 
 export class ProductNotValidError extends EntityNotValidError<Product> {
   constructor(errors: EntityError) {
-    super(Product, errors);
-  }
-}
-
-export class DuplicateProductError extends DuplicateEntityError<Product> {
-  constructor() {
-    super(Product);
+    super('Product', errors);
   }
 }
