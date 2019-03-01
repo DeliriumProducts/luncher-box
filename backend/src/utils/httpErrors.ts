@@ -6,10 +6,10 @@ import { ClassType, EntityError } from '../types';
  * Used for when an entity hasn't been found
  */
 export abstract class EntityNotFoundError<T> extends HttpError {
-  constructor(cls: ClassType<T>) {
+  constructor(entityName: string) {
     super(404);
     this.name = 'NotFoundError';
-    this.message = `${cls.name} not found!`;
+    this.message = `${entityName} not found!`;
     delete this.stack;
   }
 }
@@ -21,11 +21,11 @@ export abstract class EntityNotFoundError<T> extends HttpError {
 export abstract class EntityNotValidError<T> extends HttpError {
   errors: EntityError;
 
-  constructor(cls: ClassType<T>, errors: EntityError) {
+  constructor(entityName: string, errors: EntityError) {
     super(400);
     this.errors = errors;
     this.name = 'NotValidError';
-    this.message = `${cls.name} not valid!`;
+    this.message = `${entityName} not valid!`;
     delete this.stack;
   }
 }
@@ -37,10 +37,10 @@ export abstract class EntityNotValidError<T> extends HttpError {
 export abstract class DuplicateEntityError<T> extends HttpError {
   errors: EntityError;
 
-  constructor(cls: ClassType<T>) {
+  constructor(entityName: string) {
     super(422);
     this.name = 'DuplicateError';
-    this.message = `Duplicate ${cls.name} entry!`;
+    this.message = `Duplicate ${entityName} entry!`;
     delete this.stack;
   }
 }

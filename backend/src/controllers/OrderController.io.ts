@@ -2,6 +2,8 @@ import { MessageBody, OnMessage, SocketController, SocketId, SocketIO } from 'so
 import { getRepository, In, Repository } from 'typeorm';
 import { redisConnection } from '../connections';
 import { Product } from '../entities';
+import { Order, OrderNotValidError } from '../interfaces';
+import { EntityError } from 'src/types';
 
 @SocketController()
 export class OrderController {
@@ -35,25 +37,44 @@ export class OrderController {
   async place(
     @SocketIO() io: SocketIO.Socket,
     @SocketId() socketId: string,
-    @MessageBody() order: any
+    @MessageBody() order: Order
   ) {
-    /**
-     * Attach state of the order
-     */
-    order.state = 0;
+    const orderErr: EntityError = [];
+
+    if (!order.products.length || !order.products) {
+      orderErr.push('products not found');
+    }
 
     /**
-     * Sync products from frontned with products from database
+     * TODO
+     *
+     * Implement table validation
+     */
+    if (!order.table || order.table === '') {
+      orderErr.push('table not found');
+    }
+
+    /**
+     * Sync products from frontend with products from database
      */
     const syncedProducts = await this.productRepository.find({
-      where: { id: In(order.products.map(({ id }: Product) => id)) }
+      where: { id: In(order.products.map(({ id }: Partial<Product>) => id)) }
     });
+
+    if (!syncedProducts.length) {
+      orderErr.push('products not found');
+    }
+
+    if (orderErr.length) {
+      throw new OrderNotValidError(orderErr);
+    }
 
     /**
      * Attach quantity to synced products
      */
     for (const syncedProduct of syncedProducts) {
       for (const orderProduct of order.products) {
+        // @ts-ignore
         if (syncedProduct.id === orderProduct.id) {
           // @ts-ignore
           syncedProduct.quantity = orderProduct.quantity;
@@ -62,6 +83,11 @@ export class OrderController {
     }
 
     order.products = syncedProducts;
+
+    /**
+     * Attach state of the order
+     */
+    order.state = 0;
 
     const key = 'orders';
     const ordersJSON = await redisConnection.get(key);

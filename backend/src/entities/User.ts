@@ -47,18 +47,18 @@ export class User {
 
 export class UserNotFoundError extends EntityNotFoundError<User> {
   constructor() {
-    super(User);
+    super('User');
   }
 }
 
 export class UserNotValidError extends EntityNotValidError<User> {
   constructor(errors: EntityError) {
-    super(User, errors);
+    super('User', errors);
   }
 }
 
 export class DuplicateUserError extends DuplicateEntityError<User> {
   constructor() {
-    super(User);
+    super('User');
   }
 }
