@@ -19,7 +19,6 @@ const socket = io(`${BACKEND_URL}`);
 class CartContextProvider extends Component<Props, State> {
   state: State = {
     order: {
-      id: 1,
       products: [],
       comment: '',
       table: ''
