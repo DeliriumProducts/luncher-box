@@ -1,7 +1,7 @@
 import { Affix, Layout } from 'antd';
 import React, { ReactNode } from 'react';
 import styled from 'styled-components';
-import AdminMenuBar from './AdminMenuBar';
+import MenuBar from './MenuBar';
 
 const { Content } = Layout;
 
@@ -42,13 +42,13 @@ const AdminLayout: React.FunctionComponent<Props> = props => {
     <StyledLayout>
       <CustomHeader>
         <Affix offsetTop={0}>
-          <AdminMenuBar selectedKey={props.selectedKey} />
+          <MenuBar selectedKey={props.selectedKey} />
         </Affix>
       </CustomHeader>
       <StyledContent>{props.children}</StyledContent>
       <Affix offsetBottom={0}>
         <CustomFooter>
-          <AdminMenuBar selectedKey={props.selectedKey} />
+          <MenuBar selectedKey={props.selectedKey} />
         </CustomFooter>
       </Affix>
     </StyledLayout>
