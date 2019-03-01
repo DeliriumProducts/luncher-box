@@ -1,6 +1,5 @@
 import { Empty } from 'antd';
 import { useContext, useEffect, useState } from 'react';
-import AdminLayout from '../../components/AdminLayout';
 import FullHeightContainer from '../../components/FullHeightContainer';
 import OrderContainer from '../../components/OrderContainer';
 import Spinner from '../../components/Spinner';
@@ -31,7 +30,7 @@ const useOrders = (initialOrders: Order[]): [Order[], boolean] => {
         context.socket.off('finished_order_admin', setFinishedOrder);
       }
     };
-  }, [orders]);
+  }, [context.socket]);
 
   useEffect(() => {
     if (context.socket) {
@@ -40,41 +39,42 @@ const useOrders = (initialOrders: Order[]): [Order[], boolean] => {
   }, []);
 
   const setAcceptedOrder = ({ id }: any) => {
-    const orderIndex = orders.findIndex((order: Order) => order.id === id);
-
-    if (orderIndex >= 0) {
-      const editedOrders = [...orders];
-      // @ts-ignore
-      const acceptedOrder: Order = { ...editedOrders[orderIndex] };
-      acceptedOrder.state = 1;
-      // @ts-ignore
-      editedOrders[orderIndex] = acceptedOrder;
-      setOrders(editedOrders);
-    }
+    setOrders(prevOrders => {
+      const editedOrders = prevOrders.map(order => {
+        if (order.id === id) {
+          return {
+            ...order,
+            state: 1
+          };
+        }
+        return order;
+      });
+      return editedOrders;
+    });
   };
 
   const setDeclindedOrder = ({ id }: any) => {
-    const orderIndex = orders.findIndex((order: Order) => order.id === id);
-
-    if (orderIndex >= 0) {
-      const editedOrders = [...orders];
-      editedOrders.splice(orderIndex, 1);
-      setOrders(editedOrders);
-    }
+    setOrders(prevOrders => {
+      const editedOrders = prevOrders.filter(order => {
+        return order.id !== id;
+      });
+      return editedOrders;
+    });
   };
 
   const setFinishedOrder = ({ id }: any) => {
-    const orderIndex = orders.findIndex((order: Order) => order.id === id);
-
-    if (orderIndex >= 0) {
-      const editedOrders = [...orders];
-      // @ts-ignore
-      const acceptedOrder: Order = { ...editedOrders[orderIndex] };
-      acceptedOrder.state = 2;
-      // @ts-ignore
-      editedOrders[orderIndex] = acceptedOrder;
-      setOrders(editedOrders);
-    }
+    setOrders(prevOrders => {
+      const editedOrders = prevOrders.map(order => {
+        if (order.id === id) {
+          return {
+            ...order,
+            state: 2
+          };
+        }
+        return order;
+      });
+      return editedOrders;
+    });
   };
 
   const handleOrders = (incomingOrders: Order[]) => {
