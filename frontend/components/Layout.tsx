@@ -7,7 +7,6 @@ const { Content } = AntDesignLayout;
 
 interface Props {
   selectedKey: string;
-  route: string;
   children?: ReactNode;
 }
 
@@ -43,13 +42,13 @@ const Layout: React.FunctionComponent<Props> = props => {
     <StyledLayout>
       <CustomHeader>
         <Affix offsetTop={0}>
-          <MenuBar selectedKey={props.route} />
+          <MenuBar selectedKey={props.selectedKey} />
         </Affix>
       </CustomHeader>
       <StyledContent>{props.children}</StyledContent>
       <Affix offsetBottom={0}>
         <CustomFooter>
-          <MenuBar selectedKey={props.route} />
+          <MenuBar selectedKey={props.selectedKey} />
         </CustomFooter>
       </Affix>
     </StyledLayout>

@@ -68,7 +68,7 @@ export default class MyApp extends App {
         <EntityContextProvider>
           <Container>
             <GlobalStyle />
-            <Layout selectedKey="home" route={this.props.router.route}>
+            <Layout selectedKey={this.props.router.route}>
               <PageTransition timeout={150} classNames="page-transition">
                 <Component key={this.props.router.route} {...pageProps} />
               </PageTransition>
