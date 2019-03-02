@@ -1,7 +1,7 @@
 import 'reflect-metadata';
 import { useExpressServer } from 'routing-controllers';
 import { useSocketServer } from 'socket-controllers';
-import { app, ENV, initPassport, io, PORT, server } from './config';
+import { app, BACKEND_URL, ENV, initPassport, io, PORT, server } from './config';
 import { dbConnection as initDbConnection } from './connections';
 import { authorizationChecker } from './utils';
 
@@ -40,7 +40,7 @@ const initServer = async () => {
 
 const startServer = async () => {
   (await initServer()).listen(PORT, () => {
-    console.log(`🥩 Luncher-box backend running on http://localhost:${PORT} in ${ENV}`);
+    console.log(`🥩 Luncher-box backend running on ${BACKEND_URL} in ${ENV}`);
   });
 };
 

@@ -1,10 +1,11 @@
 import * as dotenv from 'dotenv';
+import path from 'path';
 
 /**
  * Load env variables
  */
 dotenv.config({
-  path: `${__dirname}/../../../.env`
+  path: path.join(__dirname, '../../../.env')
 });
 
 /**
@@ -56,6 +57,11 @@ export const VERIFIER_EMAIL = process.env.VERIFIER_EMAIL || 'example-reciever@ma
  * Frontend url
  */
 export const FRONTEND_URL = process.env.FRONTEND_URL || 'http://localhost:3000';
+
+/**
+ * Backend url
+ */
+export const BACKEND_URL = process.env.BACKEND_URL || 'http://localhost:3000';
 
 export default {
   ENV,

@@ -1,7 +1,13 @@
 const express = require('express');
 const next = require('next');
+const path = require('path');
+
+require('dotenv').config({
+  path: path.join(__dirname, '/../.env')
+});
 
 const PORT = Number(process.env.FRONTEND_PORT) || 3000;
+const FRONTEND_URL = process.env.FRONTEND_URL || 'http://localhost';
 const ENV = process.env.NODE_ENV || 'development';
 
 const dev = ENV !== 'production';
@@ -43,7 +49,7 @@ app
       console.clear();
 
       console.log(
-        `🥩 Luncher-box frontend running on http://localhost:${PORT} in ${ENV}`
+        `🥩 Luncher-box frontend running on ${FRONTEND_URL} in ${ENV}`
       );
     });
   })

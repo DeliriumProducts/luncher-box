@@ -7,7 +7,9 @@ const webpack = require('webpack');
 const fs = require('fs');
 const path = require('path');
 const lessToJS = require('less-vars-to-js');
-const { parsed: localEnv } = require('dotenv').config({ path: '../.env' });
+const { parsed: localEnv } = require('dotenv').config({
+  path: path.join(__dirname, '/../.env')
+});
 
 const themeVariables = lessToJS(
   fs.readFileSync(path.join(__dirname, './assets/antd-custom.less'), 'utf8')
