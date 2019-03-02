@@ -4,7 +4,8 @@
   "scripts": {
     "dev": "node server.js",
     "build": "next build",
-    "start": "cross-env NODE_ENV=production node server.js",
+    "start": "cross-env NODE_ENV=production pm2 start server.js --name luncherbox-frontend",
+    "prod": "npm run build && npm start ",
     "type-check": "tsc"
   },
   "dependencies": {
@@ -23,6 +24,7 @@
     "next": "^8.0.3",
     "next-page-transitions": "^1.0.0-alpha.6",
     "next-size": "^2.0.2",
+    "pm2": "^3.3.1",
     "react": "^16.8.3",
     "react-dom": "^16.8.3",
     "socket.io-client": "^2.2.0",
