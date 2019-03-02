@@ -16,7 +16,7 @@ export const IS_DEV = ENV === 'development';
 /**
  * Server port
  */
-export const PORT = Number(process.env.PORT) || 8000;
+export const PORT = Number(process.env.BACKEND_PORT) || 8000;
 
 /**
  * Database host and port
