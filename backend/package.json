@@ -74,7 +74,7 @@
   },
   "scripts": {
     "dev": "cross-env NODE_ENV=development nodemon --exec ts-node src/index.ts",
-    "prod": "cross-env NODE_ENV=production pm2 start ts-node --name luncherbox-backend -- -T src/index.ts",
+    "prod": "cross-env NODE_ENV=production pm2 start ts-node --name luncherbox-backend --update-env -- -T src/index.ts",
     "debug": "cross-env NODE_ENV=development nodemon --exec ts-node src/index.ts",
     "pretest": "cross-env NODE_ENV=test ts-node test/utils/initTestDbConnection.ts",
     "pretest-debug": "cross-env NODE_ENV=test ts-node test/utils/initTestDbConnection.ts",

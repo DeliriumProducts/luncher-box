@@ -4,7 +4,7 @@
   "scripts": {
     "dev": "node server.js",
     "build": "next build",
-    "start": "cross-env NODE_ENV=production pm2 start server.js --name luncherbox-frontend",
+    "start": "cross-env NODE_ENV=production pm2 start server.js --name luncherbox-frontend --update-env",
     "prod": "npm run build && npm start ",
     "type-check": "tsc"
   },
