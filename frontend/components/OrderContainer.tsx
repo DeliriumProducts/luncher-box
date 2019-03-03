@@ -47,7 +47,7 @@ export const FlexSpan = styled.span`
 
 const OrderContainer: React.FunctionComponent<Props> = ({ orders }) => {
   return (
-    <Collapse bordered={false} style={{ background: '#f0f2f5' }}>
+    <Collapse bordered={false} style={{ background: '#fafafa' }}>
       {orders.length > 0 &&
         orders.map((order: Order) => {
           let totalSum = 0;

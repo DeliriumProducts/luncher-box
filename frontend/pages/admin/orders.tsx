@@ -1,11 +1,18 @@
 import { Empty } from 'antd';
 import { useContext, useEffect, useState } from 'react';
-import FullHeightContainer from '../../components/FullHeightContainer';
+import styled from 'styled-components';
 import OrderContainer from '../../components/OrderContainer';
 import Spinner from '../../components/Spinner';
 import withAuth from '../../components/withAuth';
 import { AdminContext } from '../../context';
 import { Order } from '../../interfaces';
+
+const FlexContainer = styled.div`
+  background-color: #fafafa;
+  padding: 2rem;
+  border-radius: 7px;
+  box-shadow: 0 20px 24px -18px rgba(0, 0, 0, 0.31);
+`;
 
 const useOrders = (initialOrders: Order[]): [Order[], boolean] => {
   const [orders, setOrders] = useState(initialOrders);
@@ -99,7 +106,7 @@ const Orders: React.FunctionComponent<any> = () => {
     }
   }
 
-  return <FullHeightContainer>{data}</FullHeightContainer>;
+  return <FlexContainer>{data}</FlexContainer>;
 };
 
 export default withAuth(Orders);
