@@ -1,17 +1,11 @@
-import {
-  MessageBody,
-  OnMessage,
-  SocketController,
-  SocketId,
-  SocketIO,
-  ConnectedSocket
-} from 'socket-controllers';
+import { MessageBody, OnMessage, SocketId, SocketIO, SocketController } from 'socket-controllers';
 import { getRepository, In, Repository } from 'typeorm';
 import { redisConnection } from '../connections';
 import { Product } from '../entities';
 import { Order, OrderNotValidError } from '../interfaces';
 import { EntityError } from 'src/types';
-import { Authorized, JsonController, Get, Post } from 'routing-controllers';
+import { Authorized, JsonController, Get, Post, Param, Body } from 'routing-controllers';
+import { io } from '../config';
 
 @SocketController()
 @JsonController('/orders')
@@ -48,11 +42,7 @@ export class OrderController {
   }
 
   @OnMessage('place_order')
-  async place(
-    @SocketIO() io: SocketIO.Socket,
-    @SocketId() socketId: string,
-    @MessageBody() order: Order
-  ) {
+  async place(@SocketId() socketId: string, @MessageBody() order: Order) {
     const orderErr: EntityError = [];
 
     /**
@@ -145,8 +135,9 @@ export class OrderController {
     io.emit('placed_order', orders);
   }
 
-  @OnMessage('accept_order')
-  async accept(@SocketIO() io: SocketIO.Socket, @MessageBody() orderId: number) {
+  @Post('/accept/:orderId')
+  @Authorized()
+  async accept(@Param('orderId') orderId: number) {
     const key = 'orders';
     const ordersJSON = await redisConnection.get(key);
 
@@ -172,12 +163,9 @@ export class OrderController {
     io.emit('accepted_order_admin', order);
   }
 
-  @OnMessage('decline_order')
-  async decline(
-    @SocketIO() io: SocketIO.Socket,
-    @SocketId() socketId: any,
-    @MessageBody() orderId: number
-  ) {
+  @Post('/decline/:orderId')
+  @Authorized()
+  async decline(@Param('orderId') orderId: number) {
     const key = 'orders';
     const ordersJSON = await redisConnection.get(key);
 
@@ -211,8 +199,9 @@ export class OrderController {
     io.emit('declined_order_admin', order);
   }
 
-  @OnMessage('finish_order')
-  async finish(@SocketIO() io: SocketIO.Socket, @MessageBody() orderId: number) {
+  @Post('/finish/:orderId')
+  @Authorized()
+  async finish(@Param('orderId') orderId: number) {
     const key = 'orders';
     const ordersJSON = await redisConnection.get(key);
 
