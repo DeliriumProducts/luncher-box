@@ -2,7 +2,7 @@ import axios from 'axios';
 import { Order } from '../interfaces';
 import { BACKEND_URL } from './../config';
 
-export class ProductAPI {
+export class OrderAPI {
   static opts = {
     withCredentials: true
   };
