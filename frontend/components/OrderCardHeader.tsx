@@ -18,6 +18,7 @@ class OrderCardHeader extends React.Component<Props> {
     e.stopPropagation();
     const { orderId } = this.props;
 
+    console.log(this.props);
     await OrderAPI.accept(orderId);
     message.success(`Successfully accepted order ${orderId + 1} 🎉`);
   };
@@ -26,7 +27,7 @@ class OrderCardHeader extends React.Component<Props> {
     e.stopPropagation();
     const { orderId } = this.props;
 
-    OrderAPI.decline(orderId);
+    await OrderAPI.decline(orderId);
     message.success(`Successfully declined order ${orderId + 1} 🎉`);
   };
 
@@ -34,7 +35,7 @@ class OrderCardHeader extends React.Component<Props> {
     e.stopPropagation();
     const { orderId } = this.props;
 
-    OrderAPI.finish(orderId);
+    await OrderAPI.finish(orderId);
     message.success(`Successfully finished order ${orderId + 1} 🎉`);
   };
 

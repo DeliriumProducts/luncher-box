@@ -8,23 +8,28 @@ export class OrderAPI {
   };
 
   static async getAll() {
-    const orders: Order[] = (await axios.get(`${BACKEND_URL}/orders`)).data;
+    const orders: Order[] = (await axios.get(
+      `${BACKEND_URL}/orders`,
+      this.opts
+    )).data;
 
     return orders;
   }
 
   static async accept(orderId: number) {
-    const response = await axios.post(
+    const orders = await axios.put(
       `${BACKEND_URL}/orders/accept/${orderId}`,
+      {},
       this.opts
     );
 
-    return response;
+    return orders;
   }
 
   static async decline(orderId: number) {
-    const response = await axios.post(
+    const response = await axios.put(
       `${BACKEND_URL}/orders/decline/${orderId}`,
+      {},
       this.opts
     );
 
@@ -32,8 +37,9 @@ export class OrderAPI {
   }
 
   static async finish(orderId: number) {
-    const response = await axios.post(
+    const response = await axios.put(
       `${BACKEND_URL}/orders/finish/${orderId}`,
+      {},
       this.opts
     );
 

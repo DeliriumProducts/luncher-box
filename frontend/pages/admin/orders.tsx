@@ -6,6 +6,7 @@ import Spinner from '../../components/Spinner';
 import withAuth from '../../components/withAuth';
 import { AdminContext } from '../../context';
 import { Order } from '../../interfaces';
+import { OrderAPI } from '../../api';
 
 const useOrders = (initialOrders: Order[]): [Order[], boolean] => {
   const [orders, setOrders] = useState(initialOrders);
@@ -14,7 +15,6 @@ const useOrders = (initialOrders: Order[]): [Order[], boolean] => {
 
   useEffect(() => {
     if (context.socket) {
-      context.socket.on('fetched_orders', handleOrders);
       context.socket.on('placed_order', handleOrders);
       context.socket.on('accepted_order_admin', setAcceptedOrder);
       context.socket.on('declined_order_admin', setDeclindedOrder);
@@ -23,7 +23,6 @@ const useOrders = (initialOrders: Order[]): [Order[], boolean] => {
 
     return () => {
       if (context.socket) {
-        context.socket.off('fetched_orders', handleOrders);
         context.socket.off('placed_order', handleOrders);
         context.socket.off('accepted_order_admin', setAcceptedOrder);
         context.socket.off('declined_order_admin', setDeclindedOrder);
@@ -33,9 +32,7 @@ const useOrders = (initialOrders: Order[]): [Order[], boolean] => {
   }, [context.socket]);
 
   useEffect(() => {
-    if (context.socket) {
-      context.socket.emit('fetch_orders');
-    }
+    fetchOrders();
   }, []);
 
   const setAcceptedOrder = ({ id }: any) => {
@@ -76,6 +73,12 @@ const useOrders = (initialOrders: Order[]): [Order[], boolean] => {
       });
       return editedOrders;
     });
+  };
+
+  const fetchOrders = async () => {
+    const incomingOrders = await OrderAPI.getAll();
+    setOrders(incomingOrders);
+    setLoading(false);
   };
 
   const handleOrders = (incomingOrders: Order[]) => {
