@@ -1,5 +1,6 @@
 import { PageTransition } from 'next-page-transitions';
 import App, { Container, NextAppContext } from 'next/app';
+import Head from 'next/head';
 import React from 'react';
 import { createGlobalStyle } from 'styled-components';
 import EntityContextProvider from '../components/AdminContextProvider';
@@ -64,18 +65,23 @@ export default class MyApp extends App {
     const { Component, pageProps } = this.props;
 
     return (
-      <CartContextProvider>
-        <EntityContextProvider>
-          <Container>
-            <GlobalStyle />
-            <Layout selectedKey={this.props.router.route}>
-              <PageTransition timeout={150} classNames="page-transition">
-                <Component key={this.props.router.route} {...pageProps} />
-              </PageTransition>
-            </Layout>
-          </Container>
-        </EntityContextProvider>
-      </CartContextProvider>
+      <>
+        <Head>
+          <title>LuncherBox</title>
+        </Head>
+        <CartContextProvider>
+          <EntityContextProvider>
+            <Container>
+              <GlobalStyle />
+              <Layout selectedKey={this.props.router.route}>
+                <PageTransition timeout={150} classNames="page-transition">
+                  <Component key={this.props.router.route} {...pageProps} />
+                </PageTransition>
+              </Layout>
+            </Container>
+          </EntityContextProvider>
+        </CartContextProvider>
+      </>
     );
   }
 }
