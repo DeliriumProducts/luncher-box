@@ -4,7 +4,7 @@ import { redisConnection } from '../connections';
 import { Product } from '../entities';
 import { Order, OrderNotValidError } from '../interfaces';
 import { EntityError } from 'src/types';
-import { Authorized, JsonController, Get, Post, Param, Body } from 'routing-controllers';
+import { Authorized, JsonController, Get, Put, Param, Body } from 'routing-controllers';
 import { io } from '../config';
 
 @SocketController()
@@ -25,6 +25,7 @@ export class OrderController {
    * Gets all orders
    */
   @Get()
+  @Authorized()
   async getAll() {
     const key = 'orders';
     const ordersJSON = await redisConnection.get(key);
@@ -47,7 +48,7 @@ export class OrderController {
    * Accepts an order based on the query params
    * @param orderId
    */
-  @Post('/accept/:orderId')
+  @Put('/accept/:orderId')
   @Authorized()
   async accept(@Param('orderId') orderId: number) {
     const key = 'orders';
@@ -73,6 +74,8 @@ export class OrderController {
       .to(order.customerId)
       .emit('accepted_order', order);
     io.emit('accepted_order_admin', order);
+
+    return order;
   }
 
   /**
@@ -81,7 +84,7 @@ export class OrderController {
    * Declines an order based on the query params
    * @param orderId
    */
-  @Post('/decline/:orderId')
+  @Put('/decline/:orderId')
   @Authorized()
   async decline(@Param('orderId') orderId: number) {
     const key = 'orders';
@@ -115,6 +118,8 @@ export class OrderController {
       .to(order.customerId)
       .emit('declined_order', order);
     io.emit('declined_order_admin', order);
+
+    return 'Order declined!';
   }
 
   /**
@@ -123,7 +128,7 @@ export class OrderController {
    * Finishes an order based on the query params
    * @param orderId
    */
-  @Post('/finish/:orderId')
+  @Put('/finish/:orderId')
   @Authorized()
   async finish(@Param('orderId') orderId: number) {
     const key = 'orders';
@@ -150,6 +155,8 @@ export class OrderController {
       .to(order.customerId)
       .emit('finished_order', order);
     io.emit('finished_order_admin', order);
+
+    return order;
   }
 
   /**
