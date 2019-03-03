@@ -24,7 +24,7 @@ export class OrderController {
    * Gets all orders
    */
   @Get()
-  async connection(@SocketIO() io: SocketIO.Socket) {
+  async getAll() {
     const key = 'orders';
     const ordersJSON = await redisConnection.get(key);
 
