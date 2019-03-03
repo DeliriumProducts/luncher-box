@@ -62,7 +62,7 @@ app.use(
 );
 app.use(
   lusca({
-    csrf: ENV === 'production',
+    // csrf: ENV === 'production',
     xframe: 'SAMEORIGIN',
     p3p: 'ABCDEF',
     hsts: { maxAge: 31536000, includeSubDomains: true, preload: true },
