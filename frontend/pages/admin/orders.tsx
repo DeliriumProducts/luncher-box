@@ -49,6 +49,7 @@ const useOrders = (initialOrders: Order[]): [Order[], boolean] => {
         }
         return order;
       });
+
       return editedOrders;
     });
   };
