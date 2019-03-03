@@ -1,11 +1,14 @@
-import { MessageBody, OnMessage, SocketController, SocketId, SocketIO } from 'socket-controllers';
+import { MessageBody, OnMessage, SocketId, SocketIO, SocketController } from 'socket-controllers';
 import { getRepository, In, Repository } from 'typeorm';
 import { redisConnection } from '../connections';
 import { Product } from '../entities';
 import { Order, OrderNotValidError } from '../interfaces';
 import { EntityError } from 'src/types';
+import { Authorized, JsonController, Get, Put, Param, Body } from 'routing-controllers';
+import { io } from '../config';
 
 @SocketController()
+@JsonController('/orders')
 export class OrderController {
   private productRepository: Repository<Product>;
 
@@ -16,8 +19,14 @@ export class OrderController {
     this.productRepository = getRepository(Product);
   }
 
-  @OnMessage('fetch_orders')
-  async connection(@SocketIO() io: SocketIO.Socket) {
+  /**
+   * GET /orders
+   *
+   * Gets all orders
+   */
+  @Get()
+  @Authorized()
+  async getAll() {
     const key = 'orders';
     const ordersJSON = await redisConnection.get(key);
 
@@ -30,19 +39,138 @@ export class OrderController {
     /**
      * Emit all of the orders to the client
      */
-    io.emit('fetched_orders', orders);
+    return orders;
   }
 
+  /**
+   * POST /orders/accept/:orderId
+   *
+   * Accepts an order based on the query params
+   * @param orderId
+   */
+  @Put('/accept/:orderId')
+  @Authorized()
+  async accept(@Param('orderId') orderId: number) {
+    const key = 'orders';
+    const ordersJSON = await redisConnection.get(key);
+
+    let orders = [];
+    let order = {};
+
+    if (ordersJSON) {
+      orders = JSON.parse(ordersJSON);
+
+      const orderIndex = orders.findIndex((orderItem: any) => orderItem.id === orderId);
+
+      if (orderIndex >= 0) {
+        orders[orderIndex].state = 1;
+        order = orders[orderIndex];
+      }
+    }
+
+    await redisConnection.set(key, JSON.stringify(orders));
+    io
+      // @ts-ignore
+      .to(order.customerId)
+      .emit('accepted_order', order);
+    io.emit('accepted_order_admin', order);
+
+    return order;
+  }
+
+  /**
+   * POST /orders/decline/:orderId
+   *
+   * Declines an order based on the query params
+   * @param orderId
+   */
+  @Put('/decline/:orderId')
+  @Authorized()
+  async decline(@Param('orderId') orderId: number) {
+    const key = 'orders';
+    const ordersJSON = await redisConnection.get(key);
+
+    let orders = [];
+    let order = {};
+
+    if (ordersJSON) {
+      orders = JSON.parse(ordersJSON);
+
+      const orderIndex = orders.findIndex((orderItem: any) => orderItem.id === orderId);
+
+      if (orderIndex >= 0) {
+        order = orders[orderIndex];
+
+        // @ts-ignore
+        order.state = 3;
+        orders.splice(orderIndex, 1);
+      }
+
+      if (orders.length - 1 > 0) {
+        await redisConnection.set(key, JSON.stringify(orders));
+      } else {
+        await redisConnection.del(key);
+      }
+    }
+
+    io
+      // @ts-ignore
+      .to(order.customerId)
+      .emit('declined_order', order);
+    io.emit('declined_order_admin', order);
+
+    return 'Order declined!';
+  }
+
+  /**
+   * POST /orders/finish/:orderId
+   *
+   * Finishes an order based on the query params
+   * @param orderId
+   */
+  @Put('/finish/:orderId')
+  @Authorized()
+  async finish(@Param('orderId') orderId: number) {
+    const key = 'orders';
+    const ordersJSON = await redisConnection.get(key);
+
+    let orders = [];
+    let order = {};
+
+    if (ordersJSON) {
+      orders = JSON.parse(ordersJSON);
+
+      const orderIndex = orders.findIndex((orderItem: any) => orderItem.id === orderId);
+
+      if (orderIndex >= 0) {
+        orders[orderIndex].state = 2;
+        order = orders[orderIndex];
+      }
+    }
+
+    await redisConnection.set(key, JSON.stringify(orders));
+
+    io
+      // @ts-ignore
+      .to(order.customerId)
+      .emit('finished_order', order);
+    io.emit('finished_order_admin', order);
+
+    return order;
+  }
+
+  /**
+   *  Socket Emit place_order
+   *
+   * Places an order based on the socket's message body
+   * @param order
+   */
   @OnMessage('place_order')
-  async place(
-    @SocketIO() io: SocketIO.Socket,
-    @SocketId() socketId: string,
-    @MessageBody() order: Order
-  ) {
+  async place(@SocketId() socketId: string, @MessageBody() order: Order) {
     const orderErr: EntityError = [];
 
     /**
-     * TODO
+     * TODO:
      *
      * Implement table validation
      */
@@ -102,7 +230,7 @@ export class OrderController {
       /**
        * Attach sender id to order
        */
-      order.senderId = socketId;
+      order.customerId = socketId;
 
       orders.push(order);
     } else {
@@ -115,7 +243,7 @@ export class OrderController {
       /**
        * Attach sender id to order
        */
-      order.senderId = socketId;
+      order.customerId = socketId;
 
       orders = [order];
     }
@@ -126,102 +254,8 @@ export class OrderController {
     await redisConnection.set(key, JSON.stringify(orders));
 
     /**
-     * Emit the new orders back to the client
+     * Emit the new orders back to the clients
      */
     io.emit('placed_order', orders);
-  }
-
-  @OnMessage('accept_order')
-  async accept(@SocketIO() io: SocketIO.Socket, @MessageBody() orderId: number) {
-    const key = 'orders';
-    const ordersJSON = await redisConnection.get(key);
-
-    let orders = [];
-    let order = {};
-
-    if (ordersJSON) {
-      orders = JSON.parse(ordersJSON);
-
-      const orderIndex = orders.findIndex((orderItem: any) => orderItem.id === orderId);
-
-      if (orderIndex >= 0) {
-        orders[orderIndex].state = 1;
-        order = orders[orderIndex];
-      }
-    }
-
-    await redisConnection.set(key, JSON.stringify(orders));
-    io
-      // @ts-ignore
-      .to(order.senderId)
-      .emit('accepted_order', order);
-    io.emit('accepted_order_admin', order);
-  }
-
-  @OnMessage('decline_order')
-  async decline(
-    @SocketIO() io: SocketIO.Socket,
-    @SocketId() senderId: any,
-    @MessageBody() orderId: number
-  ) {
-    const key = 'orders';
-    const ordersJSON = await redisConnection.get(key);
-
-    let orders = [];
-    let order = {};
-
-    if (ordersJSON) {
-      orders = JSON.parse(ordersJSON);
-
-      const orderIndex = orders.findIndex((orderItem: any) => orderItem.id === orderId);
-
-      if (orderIndex >= 0) {
-        order = orders[orderIndex];
-
-        // @ts-ignore
-        order.state = 3;
-        orders.splice(orderIndex, 1);
-      }
-
-      if (orders.length - 1 > 0) {
-        await redisConnection.set(key, JSON.stringify(orders));
-      } else {
-        await redisConnection.del(key);
-      }
-    }
-
-    io
-      // @ts-ignore
-      .to(order.senderId)
-      .emit('declined_order', order);
-    io.emit('declined_order_admin', order);
-  }
-
-  @OnMessage('finish_order')
-  async finish(@SocketIO() io: SocketIO.Socket, @MessageBody() orderId: number) {
-    const key = 'orders';
-    const ordersJSON = await redisConnection.get(key);
-
-    let orders = [];
-    let order = {};
-
-    if (ordersJSON) {
-      orders = JSON.parse(ordersJSON);
-
-      const orderIndex = orders.findIndex((orderItem: any) => orderItem.id === orderId);
-
-      if (orderIndex >= 0) {
-        orders[orderIndex].state = 2;
-        order = orders[orderIndex];
-      }
-    }
-
-    await redisConnection.set(key, JSON.stringify(orders));
-
-    io
-      // @ts-ignore
-      .to(order.senderId)
-      .emit('finished_order', order);
-    io.emit('finished_order_admin', order);
   }
 }

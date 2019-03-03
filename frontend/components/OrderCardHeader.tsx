@@ -2,6 +2,7 @@ import { Button, message } from 'antd';
 import React from 'react';
 import { AdminContext } from '../context';
 import { FlexSpan } from './OrderContainer';
+import { OrderAPI } from '../api';
 
 interface Props {
   orderId: number;
@@ -13,34 +14,29 @@ class OrderCardHeader extends React.Component<Props> {
   static contextType = AdminContext;
   context!: React.ContextType<typeof AdminContext>;
 
-  handleAccept = (e: React.FormEvent<HTMLButtonElement>) => {
+  handleAccept = async (e: React.FormEvent<HTMLButtonElement>) => {
     e.stopPropagation();
     const { orderId } = this.props;
 
-    if (this.context.socket) {
-      this.context.socket.emit('accept_order', orderId);
-      message.success(`Successfully accepted order ${orderId + 1} 🎉`);
-    }
+    console.log(this.props);
+    await OrderAPI.accept(orderId);
+    message.success(`Successfully accepted order ${orderId + 1} 🎉`);
   };
 
-  handleDecline = (e: React.FormEvent<HTMLButtonElement>) => {
+  handleDecline = async (e: React.FormEvent<HTMLButtonElement>) => {
     e.stopPropagation();
     const { orderId } = this.props;
 
-    if (this.context.socket) {
-      this.context.socket.emit('decline_order', orderId);
-      message.success(`Successfully declined order ${orderId + 1} 🎉`);
-    }
+    await OrderAPI.decline(orderId);
+    message.success(`Successfully declined order ${orderId + 1} 🎉`);
   };
 
-  handleFinish = (e: React.FormEvent<HTMLButtonElement>) => {
+  handleFinish = async (e: React.FormEvent<HTMLButtonElement>) => {
     e.stopPropagation();
     const { orderId } = this.props;
 
-    if (this.context.socket) {
-      this.context.socket.emit('finish_order', orderId);
-      message.success(`Successfully finished order ${orderId + 1} 🎉`);
-    }
+    await OrderAPI.finish(orderId);
+    message.success(`Successfully finished order ${orderId + 1} 🎉`);
   };
 
   render() {
