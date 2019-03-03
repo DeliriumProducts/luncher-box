@@ -13,33 +13,27 @@ export class OrderAPI {
     return orders;
   }
 
-  static async accept(order: Order) {
-    const { id } = order;
-
+  static async accept(orderId: number) {
     const response = await axios.post(
-      `${BACKEND_URL}/orders/accept/${id}`,
+      `${BACKEND_URL}/orders/accept/${orderId}`,
       this.opts
     );
 
     return response;
   }
 
-  static async decline(order: Order) {
-    const { id } = order;
-
+  static async decline(orderId: number) {
     const response = await axios.post(
-      `${BACKEND_URL}/orders/decline/${id}`,
+      `${BACKEND_URL}/orders/decline/${orderId}`,
       this.opts
     );
 
     return response;
   }
 
-  static async finish(order: Order) {
-    const { id } = order;
-
+  static async finish(orderId: number) {
     const response = await axios.post(
-      `${BACKEND_URL}/orders/finish/${id}`,
+      `${BACKEND_URL}/orders/finish/${orderId}`,
       this.opts
     );
 
