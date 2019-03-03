@@ -41,6 +41,12 @@ export class OrderController {
     return orders;
   }
 
+  /**
+   * POST /orders/accept/:orderId
+   *
+   * Accepts an order based on the query params
+   * @param orderId
+   */
   @Post('/accept/:orderId')
   @Authorized()
   async accept(@Param('orderId') orderId: number) {
@@ -69,6 +75,12 @@ export class OrderController {
     io.emit('accepted_order_admin', order);
   }
 
+  /**
+   * POST /orders/decline/:orderId
+   *
+   * Declines an order based on the query params
+   * @param orderId
+   */
   @Post('/decline/:orderId')
   @Authorized()
   async decline(@Param('orderId') orderId: number) {
@@ -105,6 +117,12 @@ export class OrderController {
     io.emit('declined_order_admin', order);
   }
 
+  /**
+   * POST /orders/finish/:orderId
+   *
+   * Finishes an order based on the query params
+   * @param orderId
+   */
   @Post('/finish/:orderId')
   @Authorized()
   async finish(@Param('orderId') orderId: number) {
@@ -134,6 +152,12 @@ export class OrderController {
     io.emit('finished_order_admin', order);
   }
 
+  /**
+   *  Socket Emit place_order
+   *
+   * Places an order based on the socket's message body
+   * @param order
+   */
   @OnMessage('place_order')
   async place(@SocketId() socketId: string, @MessageBody() order: Order) {
     const orderErr: EntityError = [];
