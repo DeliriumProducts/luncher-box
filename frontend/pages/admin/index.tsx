@@ -2,7 +2,6 @@ import { message } from 'antd';
 import { Component } from 'react';
 import styled from 'styled-components';
 import { CategoryAPI } from '../../api';
-import AdminLayout from '../../components/AdminLayout';
 import EntityCard from '../../components/EntityCard';
 import EntityCardContainer from '../../components/EntityCardContainer';
 import EntityModal from '../../components/EntityModal';
@@ -27,7 +26,6 @@ const FlexContainer = styled.div`
   @media (max-width: 768px) {
     .col {
       max-width: 100%;
-      margin-top: 3%;
     }
 
     flex-direction: column;

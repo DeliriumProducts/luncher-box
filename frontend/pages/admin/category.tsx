@@ -1,16 +1,15 @@
+import { message } from 'antd';
+import Router, { DefaultQuery } from 'next/router';
 import { Component } from 'react';
 import styled from 'styled-components';
-import { message } from 'antd';
-import withRouter from '../../components/withRouter';
-import Router, { DefaultQuery } from 'next/router';
 import { CategoryAPI, ProductAPI } from '../../api';
-import withAuth from '../../components/withAuth';
-import AdminLayout from '../../components/AdminLayout';
-import EntityCardContainer from '../../components/EntityCardContainer';
 import EntityCard from '../../components/EntityCard';
-import { Product, Category } from '../../interfaces';
-import { EntityTypes, ActionTypes, EntityInstance } from '../../types';
+import EntityCardContainer from '../../components/EntityCardContainer';
 import EntityModal from '../../components/EntityModal';
+import withAuth from '../../components/withAuth';
+import withRouter from '../../components/withRouter';
+import { Category, Product } from '../../interfaces';
+import { ActionTypes, EntityInstance, EntityTypes } from '../../types';
 
 const FlexContainer = styled.div`
   display: flex;
@@ -28,7 +27,6 @@ const FlexContainer = styled.div`
   @media (max-width: 768px) {
     .col {
       max-width: 100%;
-      margin-top: 3%;
     }
 
     flex-direction: column;

@@ -18,6 +18,8 @@ const StyledCard = styled(Card)`
       padding-left: 0px;
       padding-right: 0px;
     }
+
+    border-radius: 0;
   }
 
   .ant-card-head-wrapper {

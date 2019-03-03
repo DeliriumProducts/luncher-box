@@ -13,7 +13,7 @@ const StyledCard = styled(Card)`
   flex-direction: column;
   text-align: center;
   margin: 8px 4px 0 4px;
-  box-shadow: 0 2px 2px rgba(0, 0, 0, 0.12);
+  box-shadow: 0 20px 24px -18px rgba(0, 0, 0, 0.31);
   flex-basis: 16rem;
   padding-bottom: 0;
 
@@ -110,6 +110,7 @@ export default class extends React.Component<Props> {
     return (
       <StyledCard
         bordered={false}
+        hoverable
         cover={
           <div style={{ position: 'relative' }}>
             <div
@@ -133,10 +134,10 @@ export default class extends React.Component<Props> {
             <img alt="example" src={image} />
             <Button
               style={{
-                width: 44,
-                height: 44,
+                width: 54,
+                height: 54,
                 position: 'relative',
-                bottom: 22,
+                bottom: 27,
                 border: 'none',
                 boxShadow: '0 2px 2px rgba(0, 0, 0, 0.12)'
               }}
