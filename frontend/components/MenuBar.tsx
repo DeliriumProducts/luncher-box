@@ -1,4 +1,4 @@
-import { Icon, Menu, Badge } from 'antd';
+import { Badge, Icon, Menu } from 'antd';
 import Link from 'next/link';
 import Router from 'next/router';
 import React, { Component } from 'react';

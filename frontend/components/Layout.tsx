@@ -38,6 +38,10 @@ const CustomFooter = styled.div`
 `;
 
 const Layout: React.FunctionComponent<Props> = props => {
+  if (props.selectedKey === '/login' || props.selectedKey === '/register') {
+    return <>{props.children}</>;
+  }
+
   return (
     <StyledLayout>
       <CustomHeader>
