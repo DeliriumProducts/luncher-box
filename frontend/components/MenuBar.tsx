@@ -74,9 +74,9 @@ class MenuBar extends Component<Props> {
     if (selectedKey.includes('/category')) {
       if (selectedKey.startsWith('/admin')) {
         selectedKeys.push('/admin');
+      } else {
+        selectedKeys.push('/');
       }
-
-      selectedKeys.push('/');
     } else {
       selectedKeys.push(selectedKey);
     }

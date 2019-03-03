@@ -4,9 +4,9 @@ import styled from 'styled-components';
 import { CategoryAPI } from '../api';
 import CategoryCard from '../components/CategoryCard';
 import Spinner from '../components/Spinner';
-import UserLayout from '../components/UserLayout';
 import { AdminContext } from '../context/AdminContext';
 import { Category } from '../interfaces';
+import Head from 'next/head';
 
 const FlexContainer = styled.div`
   display: flex;
@@ -64,7 +64,14 @@ class Home extends Component<any, State> {
       }
     }
 
-    return <FlexContainer>{data}</FlexContainer>;
+    return (
+      <>
+        <Head>
+          <title>Menu | LuncherBox</title>
+        </Head>
+        <FlexContainer>{data}</FlexContainer>
+      </>
+    );
   }
 }
 

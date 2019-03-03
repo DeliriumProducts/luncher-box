@@ -5,6 +5,7 @@ import ItemCard from '../components/ItemCard';
 import Spinner from '../components/Spinner';
 import { CartContext } from '../context';
 import { Order, Product } from '../interfaces';
+import Head from 'next/head';
 
 const { TextArea } = Input;
 
@@ -227,7 +228,21 @@ export default class extends React.Component<any, State> {
         );
       }
     }
-
-    return <FlexContainer>{data}</FlexContainer>;
+    const { totalAmount: productsInCart } = this.context;
+    return (
+      <>
+        <Head>
+          <title>
+            {productsInCart > 0
+              ? `(${productsInCart}) ${
+                  productsInCart === 1 ? 'Item' : 'Items'
+                } in`
+              : ''}{' '}
+            Cart | LuncherBox
+          </title>
+        </Head>
+        <FlexContainer>{data}</FlexContainer>
+      </>
+    );
   }
 }

@@ -10,6 +10,7 @@ import withAuth from '../../components/withAuth';
 import withRouter from '../../components/withRouter';
 import { Category, Product } from '../../interfaces';
 import { ActionTypes, EntityInstance, EntityTypes } from '../../types';
+import Head from 'next/head';
 
 const FlexContainer = styled.div`
   display: flex;
@@ -49,6 +50,7 @@ interface State {
   entity?: EntityInstance;
   entityType: EntityTypes;
   actionType: ActionTypes;
+  categoryName: string;
 }
 
 class CategoryPage extends Component<Props, State> {
@@ -59,7 +61,8 @@ class CategoryPage extends Component<Props, State> {
     products: [],
     entity: undefined,
     entityType: 'product',
-    actionType: 'create'
+    actionType: 'create',
+    categoryName: ''
   };
 
   modalFormRef: any;
@@ -230,12 +233,16 @@ class CategoryPage extends Component<Props, State> {
 
   async componentDidMount() {
     try {
-      const products = (await CategoryAPI.getOne(
+      const { products, name: categoryName } = await CategoryAPI.getOne(
         Number(this.props.query.categoryId)
-      )).products;
+      );
 
       if (products) {
         this.setState({ products });
+      }
+
+      if (categoryName) {
+        this.setState({ categoryName });
       }
     } catch (err) {
       message.error(`${err}, Redirecting you to the home page...`, 3, () =>
@@ -250,37 +257,47 @@ class CategoryPage extends Component<Props, State> {
     const { pageLoading: loading, products } = this.state;
 
     return (
-      <FlexContainer>
-        <div className="col">
-          <EntityCardContainer
-            title={`Products (${products.length})`}
-            entityType="product"
-            loading={loading}
-            handleNewClick={this.handleNewClick}
-          >
-            {products.map(product => (
-              <EntityCard
-                key={product.id}
-                {...product}
-                hoverable={true}
-                entityType="product"
-                handleEditClick={this.handleEditClick}
-                handleDeleteClick={this.handleDeleteClick}
-              />
-            ))}
-          </EntityCardContainer>
-          <EntityModal
-            wrappedComponentRef={this.saveModalFormRef}
-            visible={this.state.modalVisible}
-            onCancel={this.handleModalCancel}
-            onCreate={this.handleModalAction}
-            entityType={this.state.entityType}
-            actionType={this.state.actionType}
-            entity={this.state.entity}
-            loading={this.state.modalLoading}
-          />
-        </div>
-      </FlexContainer>
+      <>
+        <Head>
+          <title>
+            {this.state.categoryName === ''
+              ? 'Category'
+              : this.state.categoryName}{' '}
+            | LuncherBox
+          </title>
+        </Head>
+        <FlexContainer>
+          <div className="col">
+            <EntityCardContainer
+              title={`Products (${products.length})`}
+              entityType="product"
+              loading={loading}
+              handleNewClick={this.handleNewClick}
+            >
+              {products.map(product => (
+                <EntityCard
+                  key={product.id}
+                  {...product}
+                  hoverable={true}
+                  entityType="product"
+                  handleEditClick={this.handleEditClick}
+                  handleDeleteClick={this.handleDeleteClick}
+                />
+              ))}
+            </EntityCardContainer>
+            <EntityModal
+              wrappedComponentRef={this.saveModalFormRef}
+              visible={this.state.modalVisible}
+              onCancel={this.handleModalCancel}
+              onCreate={this.handleModalAction}
+              entityType={this.state.entityType}
+              actionType={this.state.actionType}
+              entity={this.state.entity}
+              loading={this.state.modalLoading}
+            />
+          </div>
+        </FlexContainer>
+      </>
     );
   }
 }

@@ -9,6 +9,7 @@ import withAuth from '../../components/withAuth';
 import { AdminContext } from '../../context';
 import { Category } from '../../interfaces';
 import { ActionTypes, EntityInstance, EntityTypes } from '../../types';
+import Head from 'next/head';
 
 const FlexContainer = styled.div`
   display: flex;
@@ -211,38 +212,43 @@ class Index extends Component<any, State> {
     const { pageLoading: loading, categories } = this.state;
 
     return (
-      <FlexContainer>
-        <div className="col">
-          <EntityCardContainer
-            title={`Categories (${categories.length})`}
-            entityType="category"
-            loading={loading}
-            handleNewClick={this.handleNewClick}
-          >
-            {categories &&
-              categories.map((category: Category) => (
-                <EntityCard
-                  key={category.id}
-                  {...category}
-                  hoverable={true}
-                  entityType="category"
-                  handleEditClick={this.handleEditClick}
-                  handleDeleteClick={this.handleDeleteClick}
-                />
-              ))}
-          </EntityCardContainer>
-          <EntityModal
-            wrappedComponentRef={this.saveModalFormRef}
-            visible={this.state.modalVisible}
-            onCancel={this.handleModalCancel}
-            onCreate={this.handleModalAction}
-            entityType={this.state.entityType}
-            actionType={this.state.actionType}
-            entity={this.state.entity}
-            loading={this.state.modalLoading}
-          />
-        </div>
-      </FlexContainer>
+      <>
+        <Head>
+          <title>Admin Home | LuncherBox</title>
+        </Head>
+        <FlexContainer>
+          <div className="col">
+            <EntityCardContainer
+              title={`Categories (${categories.length})`}
+              entityType="category"
+              loading={loading}
+              handleNewClick={this.handleNewClick}
+            >
+              {categories &&
+                categories.map((category: Category) => (
+                  <EntityCard
+                    key={category.id}
+                    {...category}
+                    hoverable={true}
+                    entityType="category"
+                    handleEditClick={this.handleEditClick}
+                    handleDeleteClick={this.handleDeleteClick}
+                  />
+                ))}
+            </EntityCardContainer>
+            <EntityModal
+              wrappedComponentRef={this.saveModalFormRef}
+              visible={this.state.modalVisible}
+              onCancel={this.handleModalCancel}
+              onCreate={this.handleModalAction}
+              entityType={this.state.entityType}
+              actionType={this.state.actionType}
+              entity={this.state.entity}
+              loading={this.state.modalLoading}
+            />
+          </div>
+        </FlexContainer>
+      </>
     );
   }
 }

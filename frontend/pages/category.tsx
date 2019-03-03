@@ -7,6 +7,7 @@ import ProductCard from '../components/ProductCard';
 import Spinner from '../components/Spinner';
 import withRouter from '../components/withRouter';
 import { Product } from '../interfaces';
+import Head from 'next/head';
 
 const FlexContainer = styled.div`
   display: flex;
@@ -29,22 +30,28 @@ interface Props {
 interface State {
   products: Product[];
   loading: boolean;
+  categoryName: string;
 }
 
 class CategoryPage extends Component<Props, State> {
   state: State = {
     products: [],
-    loading: true
+    loading: true,
+    categoryName: ''
   };
 
   async componentDidMount() {
     try {
-      const products = (await CategoryAPI.getOne(
+      const { products, name: categoryName } = await CategoryAPI.getOne(
         Number(this.props.query.categoryId)
-      )).products;
+      );
 
       if (products) {
         this.setState({ products });
+      }
+
+      if (categoryName) {
+        this.setState({ categoryName });
       }
     } catch (err) {
       message.error(`${err}, Redirecting you to the menu...`, 3, () =>
@@ -72,7 +79,19 @@ class CategoryPage extends Component<Props, State> {
       }
     }
 
-    return <FlexContainer>{data}</FlexContainer>;
+    return (
+      <>
+        <Head>
+          <title>
+            {this.state.categoryName === ''
+              ? 'Category'
+              : this.state.categoryName}{' '}
+            | LuncherBox
+          </title>
+        </Head>
+        <FlexContainer>{data}</FlexContainer>
+      </>
+    );
   }
 }
 

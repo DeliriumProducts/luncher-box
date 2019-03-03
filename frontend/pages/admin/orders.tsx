@@ -7,6 +7,7 @@ import withAuth from '../../components/withAuth';
 import { AdminContext } from '../../context';
 import { Order } from '../../interfaces';
 import { OrderAPI } from '../../api';
+import Head from 'next/head';
 
 const FlexContainer = styled.div`
   background-color: #fafafa;
@@ -110,7 +111,24 @@ const Orders: React.FunctionComponent<any> = () => {
     }
   }
 
-  return <FlexContainer>{data}</FlexContainer>;
+  const newOrders = orders.reduce(
+    (total, current) => total + (current.state === 0 ? 1 : 0),
+    0
+  );
+
+  return (
+    <>
+      <Head>
+        <title>
+          {newOrders > 0
+            ? `(${newOrders}) New ${newOrders === 1 ? 'Order' : 'Orders'}`
+            : 'Orders'}{' '}
+          | LuncherBox
+        </title>
+      </Head>
+      <FlexContainer>{data}</FlexContainer>
+    </>
+  );
 };
 
 export default withAuth(Orders);
