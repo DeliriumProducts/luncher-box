@@ -70,6 +70,17 @@ class MenuBar extends Component<Props> {
   render() {
     const { selectedKey } = this.props;
 
+    const selectedKeys = [];
+    if (selectedKey.includes('/category')) {
+      if (selectedKey.startsWith('/admin')) {
+        selectedKeys.push('/admin');
+      }
+
+      selectedKeys.push('/');
+    } else {
+      selectedKeys.push(selectedKey);
+    }
+
     return (
       <MenuContainer>
         {selectedKey.startsWith('/admin') ? (
@@ -77,7 +88,7 @@ class MenuBar extends Component<Props> {
             <StyledMenu
               onClick={this.handleClick}
               mode="horizontal"
-              defaultSelectedKeys={[selectedKey]}
+              defaultSelectedKeys={selectedKeys}
               inlineIndent={50}
               className="styled-menu"
             >
@@ -139,7 +150,7 @@ class MenuBar extends Component<Props> {
             <StyledMenu
               onClick={this.handleClick}
               mode="horizontal"
-              defaultSelectedKeys={[selectedKey]}
+              defaultSelectedKeys={selectedKeys}
               inlineIndent={50}
               className="styled-menu"
             >
