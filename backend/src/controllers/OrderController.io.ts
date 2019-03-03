@@ -41,10 +41,6 @@ export class OrderController {
   ) {
     const orderErr: EntityError = [];
 
-    if (!order.products.length || !order.products) {
-      orderErr.push('products not found');
-    }
-
     /**
      * TODO
      *
@@ -61,7 +57,7 @@ export class OrderController {
       where: { id: In(order.products.map(({ id }: Partial<Product>) => id)) }
     });
 
-    if (!syncedProducts.length) {
+    if (!syncedProducts.length || !order.products.length || !order.products) {
       orderErr.push('products not found');
     }
 
