@@ -1,10 +1,17 @@
-import { MessageBody, OnMessage, SocketController, SocketId, SocketIO } from 'socket-controllers';
+import {
+  MessageBody,
+  OnMessage,
+  SocketController,
+  SocketId,
+  SocketIO,
+  ConnectedSocket
+} from 'socket-controllers';
 import { getRepository, In, Repository } from 'typeorm';
 import { redisConnection } from '../connections';
 import { Product } from '../entities';
 import { Order, OrderNotValidError } from '../interfaces';
 import { EntityError } from 'src/types';
-import { Authorized, JsonController, Get } from 'routing-controllers';
+import { Authorized, JsonController, Get, Post } from 'routing-controllers';
 
 @SocketController()
 @JsonController('/orders')
@@ -49,7 +56,7 @@ export class OrderController {
     const orderErr: EntityError = [];
 
     /**
-     * TODO
+     * TODO:
      *
      * Implement table validation
      */
@@ -109,7 +116,7 @@ export class OrderController {
       /**
        * Attach sender id to order
        */
-      order.senderId = socketId;
+      order.customerId = socketId;
 
       orders.push(order);
     } else {
@@ -122,7 +129,7 @@ export class OrderController {
       /**
        * Attach sender id to order
        */
-      order.senderId = socketId;
+      order.customerId = socketId;
 
       orders = [order];
     }
@@ -133,7 +140,7 @@ export class OrderController {
     await redisConnection.set(key, JSON.stringify(orders));
 
     /**
-     * Emit the new orders back to the client
+     * Emit the new orders back to the clients
      */
     io.emit('placed_order', orders);
   }
@@ -160,7 +167,7 @@ export class OrderController {
     await redisConnection.set(key, JSON.stringify(orders));
     io
       // @ts-ignore
-      .to(order.senderId)
+      .to(order.customerId)
       .emit('accepted_order', order);
     io.emit('accepted_order_admin', order);
   }
@@ -168,7 +175,7 @@ export class OrderController {
   @OnMessage('decline_order')
   async decline(
     @SocketIO() io: SocketIO.Socket,
-    @SocketId() senderId: any,
+    @SocketId() socketId: any,
     @MessageBody() orderId: number
   ) {
     const key = 'orders';
@@ -199,7 +206,7 @@ export class OrderController {
 
     io
       // @ts-ignore
-      .to(order.senderId)
+      .to(order.customerId)
       .emit('declined_order', order);
     io.emit('declined_order_admin', order);
   }
@@ -227,7 +234,7 @@ export class OrderController {
 
     io
       // @ts-ignore
-      .to(order.senderId)
+      .to(order.customerId)
       .emit('finished_order', order);
     io.emit('finished_order_admin', order);
   }

@@ -8,7 +8,7 @@ export interface Order {
   products: Partial<Product>[];
   table: string;
   state: OrderState;
-  senderId?: string;
+  customerId?: string;
 }
 
 export class OrderNotValidError extends EntityNotValidError<Order> {
