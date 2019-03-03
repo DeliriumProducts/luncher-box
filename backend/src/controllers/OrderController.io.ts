@@ -4,8 +4,10 @@ import { redisConnection } from '../connections';
 import { Product } from '../entities';
 import { Order, OrderNotValidError } from '../interfaces';
 import { EntityError } from 'src/types';
+import { Authorized, JsonController, Get } from 'routing-controllers';
 
 @SocketController()
+@JsonController('/orders')
 export class OrderController {
   private productRepository: Repository<Product>;
 
@@ -16,7 +18,12 @@ export class OrderController {
     this.productRepository = getRepository(Product);
   }
 
-  @OnMessage('fetch_orders')
+  /**
+   * GET /orders
+   *
+   * Gets all orders
+   */
+  @Get()
   async connection(@SocketIO() io: SocketIO.Socket) {
     const key = 'orders';
     const ordersJSON = await redisConnection.get(key);
@@ -30,7 +37,7 @@ export class OrderController {
     /**
      * Emit all of the orders to the client
      */
-    io.emit('fetched_orders', orders);
+    return orders;
   }
 
   @OnMessage('place_order')
