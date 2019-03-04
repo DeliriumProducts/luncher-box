@@ -34,7 +34,7 @@ class CartContextProvider extends Component<Props, State> {
       const totalAmount: number = await localForage.getItem('totalAmount');
       const table: string = await localForage.getItem('table');
 
-      if (table) {
+      if (table && currentOrder) {
         currentOrder.table = table;
       }
 

@@ -8,7 +8,7 @@ interface Values {
   socket: SocketIOClient.Socket | undefined;
   actions: {
     reload: () => Promise<void>;
-    clear: () => Promise<[void, void, void]>;
+    clear: () => Promise<[void, void]>;
     increment: (product: Product) => void;
     decrement: (product: Product) => void;
     comment: (comment: string) => void;
@@ -32,7 +32,7 @@ export const CartContext = React.createContext<Values>({
       return new Promise((resolve, reject) => undefined);
     },
     clear: () => {
-      return Promise.all([undefined, undefined, undefined]);
+      return Promise.all([undefined, undefined]);
     },
     increment: () => {},
     decrement: () => {},
