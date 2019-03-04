@@ -1,6 +1,6 @@
 {
-  "name": "Luncher Box",
-  "short_name": "Luncher Box",
+  "name": "LuncherBox",
+  "short_name": "LuncherBox",
   "icons": [
     {
       "src": "./android-chrome-192x192.png",
