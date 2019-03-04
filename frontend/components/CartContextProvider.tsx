@@ -30,21 +30,22 @@ class CartContextProvider extends Component<Props, State> {
 
   reload = async (): Promise<void> => {
     return new Promise(async (resolve, reject) => {
-      const currentOrder: Order = await localForage.getItem('currentOrder');
-      const totalAmount: number = await localForage.getItem('totalAmount');
-      const table: string = await localForage.getItem('table');
+      const currentOrder: Order = (await localForage.getItem(
+        'currentOrder'
+      )) || {
+        products: [],
+        comment: '',
+        table: ''
+      };
+      const totalAmount: number =
+        (await localForage.getItem('totalAmount')) || 0;
+      const table: string = (await localForage.getItem('table')) || '';
 
-      if (table && currentOrder) {
-        currentOrder.table = table;
-      }
+      currentOrder.table = table;
 
-      if (currentOrder && totalAmount && table) {
-        this.setState({ order: currentOrder, totalAmount, table }, () =>
-          resolve()
-        );
-      } else {
-        resolve();
-      }
+      this.setState({ order: currentOrder, totalAmount, table }, () =>
+        resolve()
+      );
     });
   };
 
