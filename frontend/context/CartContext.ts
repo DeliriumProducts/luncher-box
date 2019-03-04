@@ -4,6 +4,7 @@ import { Order, Product } from '../interfaces';
 interface Values {
   order: Order;
   totalAmount: number;
+  table: string;
   socket: SocketIOClient.Socket | undefined;
   actions: {
     reload: () => Promise<void>;
@@ -22,6 +23,7 @@ export const CartContext = React.createContext<Values>({
     comment: '',
     table: '1'
   },
+  table: '',
   totalAmount: 0,
   socket: undefined,
   actions: {

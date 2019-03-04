@@ -11,6 +11,7 @@ interface Props {
 
 interface State {
   order: Order;
+  table: string;
   totalAmount: number;
 }
 
@@ -23,6 +24,7 @@ class CartContextProvider extends Component<Props, State> {
       comment: '',
       table: ''
     },
+    table: '',
     totalAmount: 0
   };
 
@@ -30,9 +32,16 @@ class CartContextProvider extends Component<Props, State> {
     return new Promise(async (resolve, reject) => {
       const currentOrder: Order = await localForage.getItem('currentOrder');
       const totalAmount: number = await localForage.getItem('totalAmount');
+      const table: string = await localForage.getItem('table');
 
-      if (currentOrder && totalAmount) {
-        this.setState({ order: currentOrder, totalAmount }, () => resolve());
+      if (table) {
+        currentOrder.table = table;
+      }
+
+      if (currentOrder && totalAmount && table) {
+        this.setState({ order: currentOrder, totalAmount, table }, () =>
+          resolve()
+        );
       } else {
         resolve();
       }
@@ -45,13 +54,13 @@ class CartContextProvider extends Component<Props, State> {
         id: 1,
         products: [],
         comment: '',
-        table: '1'
+        table: ''
       },
+      table: '',
       totalAmount: 0
     });
 
     return Promise.all([
-      localForage.removeItem('order'),
       localForage.removeItem('currentOrder'),
       localForage.removeItem('totalAmount')
     ]);
@@ -131,7 +140,7 @@ class CartContextProvider extends Component<Props, State> {
     this.setState(
       prevState => ({ order: { ...prevState.order, comment } }),
       async () => {
-        await localForage.setItem('order', this.state.order);
+        await localForage.setItem('currentOrder', this.state.order);
       }
     );
   };
@@ -140,7 +149,8 @@ class CartContextProvider extends Component<Props, State> {
     this.setState(
       prevState => ({ order: { ...prevState.order, table: id } }),
       async () => {
-        await localForage.setItem('order', this.state.order);
+        await localForage.setItem('currentOrder', this.state.order);
+        await localForage.setItem('table', id);
       }
     );
   };
@@ -152,13 +162,14 @@ class CartContextProvider extends Component<Props, State> {
   };
 
   render() {
-    const { order, totalAmount } = this.state;
+    const { order, table, totalAmount } = this.state;
     return (
       <CartContext.Provider
         value={{
           order,
           totalAmount,
           socket,
+          table,
           actions: {
             reload: this.reload,
             clear: this.clear,

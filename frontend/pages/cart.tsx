@@ -1,11 +1,11 @@
 import { Button, Card, Empty, Input, message, Modal, Tag } from 'antd';
+import Head from 'next/head';
 import React from 'react';
 import styled from 'styled-components';
 import ItemCard from '../components/ItemCard';
 import Spinner from '../components/Spinner';
 import { CartContext } from '../context';
 import { Order, Product } from '../interfaces';
-import Head from 'next/head';
 
 const { TextArea } = Input;
 
@@ -199,7 +199,7 @@ export default class extends React.Component<any, State> {
                 />
                 <div style={{ display: 'flex' }}>
                   <Input
-                    defaultValue={this.context.order.table}
+                    defaultValue={this.context.table}
                     placeholder="Enter table e.g. A1, A2 etc."
                     onChange={this.handleTable}
                     style={{ marignLeft: '1%', marginTop: '2%' }}
@@ -228,7 +228,9 @@ export default class extends React.Component<any, State> {
         );
       }
     }
+
     const { totalAmount: productsInCart } = this.context;
+
     return (
       <>
         <Head>
