@@ -49,10 +49,6 @@ app.use(
     store,
     name: 'luncherbox-api',
     secret: SESSION_SECRET,
-    /**
-     * You need to have HTTPs to use this
-     */
-    // secure: true,
     resave: false,
     saveUninitialized: false,
     cookie: {

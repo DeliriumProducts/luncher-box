@@ -3,15 +3,15 @@ var precacheConfig = [
     ['static/android-chrome-192x192.png', 'f846abda0ace8b57e8132fc83ccb6894'],
     ['static/android-chrome-512x512.png', '51c5436999ad42543b0a5bb2bd5c8eb0'],
     ['static/apple-touch-icon.png', 'e0f779ea9756164fa6c4943ecfae4ac0'],
-    ['static/browserconfig.xml', 'a493ba0aa0b8ec8068d786d7248bb92c'],
+    ['static/browserconfig.xml', 'a96f52d994833d4b3cf822e123018631'],
     ['static/favicon-16x16.png', 'f56d2d2273edbcd43e70ec701930a938'],
     ['static/favicon-32x32.png', 'ab914d3a43a4069942f5635abb0da1e9'],
     ['static/favicon.ico', '5f546d44170bf6e49232a020d7e6cbab'],
-    ['static/manifest.json', 'c026818a1850184740f5bcc3d9b4c833'],
+    ['static/manifest.json', 'db9337d7390113ac11a91e9c253517c6'],
     ['static/mstile-150x150.png', '383d9f27de290a96c7463609b230dcfe'],
     ['static/safari-pinned-tab.svg', 'eeb4817e4b278e2061d6f72b1fb20546'],
-    ['static/site.webmanifest', 'ce13820a6fa8dd3889113083b14ceeab'],
-    ['static/sw.js', 'd2484e1c26f46c6d68547500ceb4028e']
+    ['static/site.webmanifest', '3bfaf29dd014e50895fd834db8c978d8'],
+    ['static/sw.js', '8620baeacc2a77d1d454b79641fb2b20']
   ],
   cacheName =
     'sw-precache-v3-test-lighthouse-' +
