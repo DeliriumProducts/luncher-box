@@ -7,6 +7,7 @@ const webpack = require('webpack');
 const fs = require('fs');
 const path = require('path');
 const lessToJS = require('less-vars-to-js');
+const SWPrecacheWebpackPlugin = require('sw-precache-webpack-plugin');
 const { parsed: localEnv } = require('dotenv').config({
   path: path.join(__dirname, '/../.env')
 });
@@ -26,7 +27,40 @@ module.exports = withSize(
     withSass(
       withTypescript(
         withCss({
-          webpack: config => {
+          webpack: (config, { dev }) => {
+            const oldEntry = config.entry;
+
+            config.entry = () =>
+              oldEntry().then(entry => {
+                if (entry['main.js'] !== undefined) {
+                  entry['main.js'].push(path.resolve('./utils/offline'));
+                }
+
+                return entry;
+              });
+
+            if (!dev) {
+              config.plugins.push(
+                new SWPrecacheWebpackPlugin({
+                  cacheId: 'test-lighthouse',
+                  filepath: path.resolve('./static/sw.js'),
+                  staticFileGlobs: ['static/**/*'],
+                  minify: true,
+                  staticFileGlobsIgnorePatterns: [/\.next\//],
+                  runtimeCaching: [
+                    {
+                      handler: 'fastest',
+                      urlPattern: /[.](png|jpg|css)/
+                    },
+                    {
+                      handler: 'networkFirst',
+                      urlPattern: /^http.*/
+                    }
+                  ]
+                })
+              );
+            }
+
             // Fixes npm packages that depend on `fs` module
             config.node = {
               fs: 'empty'

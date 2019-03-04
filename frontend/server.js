@@ -19,6 +19,10 @@ app
   .then(() => {
     const server = express();
 
+    server.use('/sw.js', (req, res) => {
+      app.serveStatic(req, res, path.resolve('./static/sw.js'));
+    });
+
     server.get('/category/:categoryId', (req, res) => {
       const actualPage = '/category';
       const queryParams = Object.assign({}, req.params, {
