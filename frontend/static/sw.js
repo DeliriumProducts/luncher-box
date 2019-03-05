@@ -7,11 +7,11 @@ var precacheConfig = [
     ['static/favicon-16x16.png', 'f56d2d2273edbcd43e70ec701930a938'],
     ['static/favicon-32x32.png', 'ab914d3a43a4069942f5635abb0da1e9'],
     ['static/favicon.ico', '5f546d44170bf6e49232a020d7e6cbab'],
-    ['static/manifest.json', 'db9337d7390113ac11a91e9c253517c6'],
+    ['static/manifest.json', 'cccc43e15970658f992afb7035444d8c'],
     ['static/mstile-150x150.png', '383d9f27de290a96c7463609b230dcfe'],
     ['static/safari-pinned-tab.svg', 'eeb4817e4b278e2061d6f72b1fb20546'],
-    ['static/site.webmanifest', '3bfaf29dd014e50895fd834db8c978d8'],
-    ['static/sw.js', '8620baeacc2a77d1d454b79641fb2b20']
+    ['static/site.webmanifest', '2c452c84fb22d4031cd878055971ebe6'],
+    ['static/sw.js', '962225b4bb0dd40d3b3af63ee0bd3fc5']
   ],
   cacheName =
     'sw-precache-v3-test-lighthouse-' +
