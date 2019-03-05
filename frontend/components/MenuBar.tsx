@@ -108,7 +108,7 @@ class MenuBar extends Component<Props> {
                   </StyledAnchor>
                 </Link>
               </Menu.Item>
-              <Menu.Item key="/admin/staffchat">
+              <Menu.Item key="/admin/staffchat" disabled>
                 <Link href="/admin/staffchat">
                   <StyledAnchor>
                     <Icon type="message" className="menu-item-icon" />
