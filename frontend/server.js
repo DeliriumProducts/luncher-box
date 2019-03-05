@@ -1,6 +1,7 @@
 const express = require('express');
 const next = require('next');
 const path = require('path');
+const https = require('https');
 
 require('dotenv').config({
   path: path.join(__dirname, '/../.env')
@@ -45,17 +46,14 @@ app
       return handle(req, res);
     });
 
-    server.listen(PORT, err => {
-      if (err) {
-        throw err;
-      }
+    if (ENV === 'production') {
+      https.globalAgent.options.ca = require('ssl-root-cas/latest').create();
+    }
 
-      console.clear();
+    https.createServer(server).listen(PORT);
 
-      console.log(
-        `🥩 Luncher-box frontend running on ${FRONTEND_URL} in ${ENV}`
-      );
-    });
+    console.clear();
+    console.log(`🥩 Luncher-box frontend running on ${FRONTEND_URL} in ${ENV}`);
   })
   .catch(ex => {
     console.error(ex.stack);

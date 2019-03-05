@@ -1,4 +1,4 @@
-import http from 'http';
+import https from 'https';
 import 'reflect-metadata';
 import createSocketIoServer from 'socket.io';
 import { app } from './express';
@@ -6,7 +6,7 @@ import { app } from './express';
 /**
  * Set up server
  */
-const server = http.createServer(app);
+const server = https.createServer(app);
 
 /**
  * Pass the express instance / http server to socket.io
