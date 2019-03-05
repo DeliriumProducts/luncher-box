@@ -11,7 +11,7 @@ var precacheConfig = [
     ['static/mstile-150x150.png', '383d9f27de290a96c7463609b230dcfe'],
     ['static/safari-pinned-tab.svg', 'eeb4817e4b278e2061d6f72b1fb20546'],
     ['static/site.webmanifest', '2c452c84fb22d4031cd878055971ebe6'],
-    ['static/sw.js', '962225b4bb0dd40d3b3af63ee0bd3fc5']
+    ['static/sw.js', '7f682ccdc47c0ee2d43d11ca8588f7ca']
   ],
   cacheName =
     'sw-precache-v3-test-lighthouse-' +
