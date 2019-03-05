@@ -1,9 +1,9 @@
-import styled from 'styled-components';
-import { Card, Button, Icon, Modal } from 'antd';
-import PriceBadge from './PriceBadge';
+import { Button, Card, Modal } from 'antd';
 import React from 'react';
+import styled from 'styled-components';
 import { CartContext } from '../context';
 import { Product } from '../interfaces';
+import PriceBadge from './PriceBadge';
 
 const { Meta } = Card;
 
@@ -13,19 +13,22 @@ const StyledCard = styled(Card)`
   flex-direction: column;
   text-align: center;
   margin: 8px 4px 0 4px;
-  box-shadow: 0 2px 2px rgba(0, 0, 0, 0.12);
+  box-shadow: 0 20px 24px -18px rgba(0, 0, 0, 0.31);
   flex-basis: 16rem;
   padding-bottom: 0;
+
   .ant-card-body {
     padding-top: 0;
     height: 100%;
   }
+
   & img {
     border-radius: 7px 7px 0 0;
     object-fit: cover;
     width: 100%;
     height: 16rem;
   }
+
   @media (max-width: 768px) {
     border-bottom: 1px solid;
     border-bottom-color: rgb(210, 210, 210);
@@ -33,6 +36,7 @@ const StyledCard = styled(Card)`
     margin: 8px 0 0 0;
     flex-basis: 100%;
   }
+
   .ant-card-actions {
     background-color: #fff;
     border-top-color: rgb(210, 210, 210);
@@ -86,6 +90,7 @@ export default class extends React.Component<Props> {
           <strong>{this.props.price} / piece</strong>
         </div>
       ),
+      // tslint:disable-next-line
       onOk() {},
       maskClosable: true
     });
@@ -104,7 +109,9 @@ export default class extends React.Component<Props> {
 
     return (
       <StyledCard
+        onClick={this.addToCart}
         bordered={false}
+        hoverable
         cover={
           <div style={{ position: 'relative' }}>
             <div
@@ -120,6 +127,7 @@ export default class extends React.Component<Props> {
                   marginTop: 10,
                   boxShadow: '0 2px 2px rgba(0, 0, 0, 0.12)'
                 }}
+                className="price-badge"
                 offset={[0, 0]}
                 overflowCount={1000}
                 count={price && `${price} / piece`}
@@ -128,10 +136,10 @@ export default class extends React.Component<Props> {
             <img alt="example" src={image} />
             <Button
               style={{
-                width: 44,
-                height: 44,
+                width: 54,
+                height: 54,
                 position: 'relative',
-                bottom: 22,
+                bottom: 27,
                 border: 'none',
                 boxShadow: '0 2px 2px rgba(0, 0, 0, 0.12)'
               }}

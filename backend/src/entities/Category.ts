@@ -24,12 +24,12 @@ export class Category {
 
 export class CategoryNotFoundError extends EntityNotFoundError<Category> {
   constructor() {
-    super(Category);
+    super('Category');
   }
 }
 
 export class CategoryNotValidError extends EntityNotValidError<Category> {
   constructor(errors: EntityError) {
-    super(Category, errors);
+    super('Category', errors);
   }
 }

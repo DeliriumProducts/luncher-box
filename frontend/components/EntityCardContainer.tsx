@@ -1,23 +1,25 @@
 import { Card, Empty, Input } from 'antd';
 import React, { Component } from 'react';
 import styled from 'styled-components';
-import ActionButton from './ActionButton';
-import { EntityTypes, EntityInstance } from '../types';
 import { AdminContext } from '../context';
+import { EntityInstance, EntityTypes } from '../types';
+import ActionButton from './ActionButton';
 import Spinner from './Spinner';
 
 const { Search } = Input;
 
 const StyledCard = styled(Card)`
   border-radius: 7px;
-  box-shadow: 0 2px 2px rgba(0, 0, 0, 0.12);
-  background-color: rgb(245, 245, 245);
+  box-shadow: 0 20px 24px -18px rgba(0, 0, 0, 0.31);
+  background-color: #fafafa;
 
   @media (max-width: 480px) {
     & .ant-card-body {
       padding-left: 0px;
       padding-right: 0px;
     }
+
+    border-radius: 0;
   }
 
   .ant-card-head-wrapper {

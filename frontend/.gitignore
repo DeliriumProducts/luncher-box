@@ -12,6 +12,8 @@ frontend-old/
 /.next
 /out
 
+static/sw.js
+
 # misc
 .DS_Store
 .env

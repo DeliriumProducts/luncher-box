@@ -1,15 +1,24 @@
-import * as dotenv from 'dotenv';
+interface ThemeVariables {
+  [key: string]: string;
+}
 
 /**
- * Load env variables
+ * Frontend url
  */
-dotenv.config();
+export const FRONTEND_URL = process.env.FRONTEND_URL || 'http://localhost:3000';
 
 /**
  * Backend url
  */
-export const BACKEND_URL = process.env.BACKEND_URL;
+export const BACKEND_URL = process.env.BACKEND_URL || 'http://localhost:8000';
+
+/**
+ * Less theme variables
+ */
+// @ts-ignore
+export const THEME_VARIABLES: ThemeVariables = process.env.THEME_VARIABLES;
 
 export default {
-  BACKEND_URL
+  BACKEND_URL,
+  THEME_VARIABLES
 };

@@ -1,10 +1,10 @@
 import { Form, Icon, Input, Modal, Select } from 'antd';
 import { FormComponentProps } from 'antd/lib/form';
 import React from 'react';
-import { AdminContext } from '../context';
-import { EntityTypes, ActionTypes, EntityInstance } from '../types';
-import { Product, Category } from '../interfaces';
 import { CategoryAPI } from '../api';
+import { AdminContext } from '../context';
+import { Category, Product } from '../interfaces';
+import { ActionTypes, EntityInstance, EntityTypes } from '../types';
 
 interface Props extends FormComponentProps {
   visible: boolean;

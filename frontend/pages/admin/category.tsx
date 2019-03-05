@@ -1,16 +1,16 @@
+import { message } from 'antd';
+import Router, { DefaultQuery } from 'next/router';
 import { Component } from 'react';
 import styled from 'styled-components';
-import { message } from 'antd';
-import withRouter from '../../components/withRouter';
-import Router, { DefaultQuery } from 'next/router';
 import { CategoryAPI, ProductAPI } from '../../api';
-import withAuth from '../../components/withAuth';
-import AdminLayout from '../../components/AdminLayout';
-import EntityCardContainer from '../../components/EntityCardContainer';
 import EntityCard from '../../components/EntityCard';
-import { Product, Category } from '../../interfaces';
-import { EntityTypes, ActionTypes, EntityInstance } from '../../types';
+import EntityCardContainer from '../../components/EntityCardContainer';
 import EntityModal from '../../components/EntityModal';
+import withAuth from '../../components/withAuth';
+import withRouter from '../../components/withRouter';
+import { Category, Product } from '../../interfaces';
+import { ActionTypes, EntityInstance, EntityTypes } from '../../types';
+import Head from 'next/head';
 
 const FlexContainer = styled.div`
   display: flex;
@@ -28,7 +28,6 @@ const FlexContainer = styled.div`
   @media (max-width: 768px) {
     .col {
       max-width: 100%;
-      margin-top: 3%;
     }
 
     flex-direction: column;
@@ -51,6 +50,7 @@ interface State {
   entity?: EntityInstance;
   entityType: EntityTypes;
   actionType: ActionTypes;
+  categoryName: string;
 }
 
 class CategoryPage extends Component<Props, State> {
@@ -61,7 +61,8 @@ class CategoryPage extends Component<Props, State> {
     products: [],
     entity: undefined,
     entityType: 'product',
-    actionType: 'create'
+    actionType: 'create',
+    categoryName: ''
   };
 
   modalFormRef: any;
@@ -150,6 +151,7 @@ class CategoryPage extends Component<Props, State> {
       }
 
       const product = entity;
+
       if (shouldKeepProduct) {
         if (actionType === 'create') {
           this.setState((prevState: State) => ({
@@ -231,16 +233,20 @@ class CategoryPage extends Component<Props, State> {
 
   async componentDidMount() {
     try {
-      const products = (await CategoryAPI.getOne(
+      const { products, name: categoryName } = await CategoryAPI.getOne(
         Number(this.props.query.categoryId)
-      )).products;
+      );
 
       if (products) {
         this.setState({ products });
       }
+
+      if (categoryName) {
+        this.setState({ categoryName });
+      }
     } catch (err) {
       message.error(`${err}, Redirecting you to the home page...`, 3, () =>
-        Router.push('/admin')
+        Router.replace('/admin')
       );
     } finally {
       this.setState({ pageLoading: false });
@@ -251,7 +257,15 @@ class CategoryPage extends Component<Props, State> {
     const { pageLoading: loading, products } = this.state;
 
     return (
-      <AdminLayout selectedKey="home">
+      <>
+        <Head>
+          <title>
+            {this.state.categoryName === ''
+              ? 'Category'
+              : this.state.categoryName}{' '}
+            | LuncherBox
+          </title>
+        </Head>
         <FlexContainer>
           <div className="col">
             <EntityCardContainer
@@ -263,12 +277,7 @@ class CategoryPage extends Component<Props, State> {
               {products.map(product => (
                 <EntityCard
                   key={product.id}
-                  id={product.id}
-                  name={product.name}
-                  image={product.image}
-                  description={product.description}
-                  price={product.price}
-                  categories={product.categories}
+                  {...product}
                   hoverable={true}
                   entityType="product"
                   handleEditClick={this.handleEditClick}
@@ -288,7 +297,7 @@ class CategoryPage extends Component<Props, State> {
             />
           </div>
         </FlexContainer>
-      </AdminLayout>
+      </>
     );
   }
 }

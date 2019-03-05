@@ -7,13 +7,14 @@ import styled from 'styled-components';
 import { AuthAPI } from '../api';
 import CenteredDiv from '../components/CenteredDiv';
 import { HandleLogin } from '../types';
+import Head from 'next/head';
 
 const FormItem = Form.Item;
 
 const Container = styled.div`
   background-color: rgb(245, 245, 245);
   padding: 30px;
-  box-shadow: 0 0 10px 5px #ebebeb;
+  box-shadow: 0 20px 24px -18px rgba(0, 0, 0, 0.31);
   border-radius: 10px;
 
   #info {
@@ -63,7 +64,7 @@ class LoginForm extends Component<Props, State> {
           message.success(
             'You successfully logged in! Redirecting you to dashboard...',
             3,
-            () => Router.push('/admin')
+            () => Router.replace('/admin')
           );
         } catch (err) {
           if (!err.response) {
@@ -89,74 +90,72 @@ class LoginForm extends Component<Props, State> {
     const { getFieldDecorator } = this.props.form;
     const { loading } = this.state;
     return (
-      <CenteredDiv>
-        <Container>
-          <Form onSubmit={this.handleSubmit} className="login-form">
-            <p id="info">Login to Create, Update or Delete products</p>
-            <FormItem>
-              {getFieldDecorator('email', {
-                rules: [
-                  {
-                    type: 'email',
-                    message: 'The input is not valid Email!'
-                  },
-                  {
-                    required: true,
-                    message: 'Please input your Email!'
-                  }
-                ]
-              })(
-                <Input
-                  prefix={
-                    <Icon type="mail" style={{ color: 'rgba(0,0,0,.25)' }} />
-                  }
-                  type="email"
-                  placeholder="Email"
-                />
-              )}
-            </FormItem>
-            <FormItem>
-              {getFieldDecorator('password', {
-                rules: [
-                  {
-                    required: true,
-                    message: 'Please input your password!'
-                  }
-                ]
-              })(
-                <Input
-                  prefix={
-                    <Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />
-                  }
-                  type="password"
-                  placeholder="Password"
-                />
-              )}
-            </FormItem>
-            <FormItem>
-              {getFieldDecorator('remember', {
-                valuePropName: 'checked',
-                initialValue: true
-              })(<Checkbox>Remember me</Checkbox>)}
-              <a className="login-form-forgot" href="">
-                Forgot password
-              </a>
-              <Button
-                type="primary"
-                htmlType="submit"
-                className="login-form-button"
-                loading={loading}
-              >
-                Login
-              </Button>
-              Or{' '}
-              <Link href="/register">
-                <a>register now!</a>
-              </Link>
-            </FormItem>
-          </Form>
-        </Container>
-      </CenteredDiv>
+      <>
+        <Head>
+          <title>Login | LuncherBox</title>
+        </Head>
+        <CenteredDiv>
+          <Container>
+            <Form onSubmit={this.handleSubmit} className="login-form">
+              <p id="info">Login to Create, Update or Delete products</p>
+              <FormItem>
+                {getFieldDecorator('email', {
+                  rules: [
+                    {
+                      type: 'email',
+                      message: 'The input is not valid Email!'
+                    },
+                    {
+                      required: true,
+                      message: 'Please input your Email!'
+                    }
+                  ]
+                })(
+                  <Input
+                    prefix={
+                      <Icon type="mail" style={{ color: 'rgba(0,0,0,.25)' }} />
+                    }
+                    type="email"
+                    placeholder="Email"
+                  />
+                )}
+              </FormItem>
+              <FormItem>
+                {getFieldDecorator('password', {
+                  rules: [
+                    {
+                      required: true,
+                      message: 'Please input your password!'
+                    }
+                  ]
+                })(
+                  <Input
+                    prefix={
+                      <Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />
+                    }
+                    type="password"
+                    placeholder="Password"
+                  />
+                )}
+              </FormItem>
+              <FormItem>
+                <Button
+                  type="primary"
+                  htmlType="submit"
+                  className="login-form-button"
+                  loading={loading}
+                >
+                  Login
+                </Button>
+                Or{' '}
+                <Link href="/register">
+                  <a>register now!</a>
+                </Link>
+              </FormItem>
+            </Form>
+          </Container>
+        </CenteredDiv>
+      </>
     );
   }
 }

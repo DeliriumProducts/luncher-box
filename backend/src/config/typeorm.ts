@@ -1,17 +1,68 @@
 import { ConnectionOptions } from 'typeorm';
-import { DB_HOST, DB_NAME, DB_PASS, DB_PORT, DB_USER, IS_DEV } from './env';
+import { DB_HOST, DB_PASS, DB_PORT, DB_USER, ENV, IS_DEV } from './env';
+import { redisConfig } from './redis';
 
-const dbConfig: ConnectionOptions = {
-  type: 'mariadb',
-  host: DB_HOST,
-  port: DB_PORT,
-  username: DB_USER,
-  password: DB_PASS,
-  database: DB_NAME,
-  charset: 'UTF8_GENERAL_CI',
-  synchronize: IS_DEV,
-  logging: false,
-  entities: ['src/entities/*.ts']
+interface DbConfigs {
+  development: ConnectionOptions;
+  production: ConnectionOptions;
+  test: ConnectionOptions;
+  [key: string]: ConnectionOptions;
+}
+
+const dbConfigs: DbConfigs = {
+  development: {
+    type: 'mariadb',
+    host: DB_HOST,
+    port: DB_PORT,
+    username: DB_USER,
+    password: DB_PASS,
+    database: 'luncherbox_development',
+    synchronize: IS_DEV,
+    logging: false,
+    entities: ['src/entities/*.ts'],
+    cache: {
+      type: 'ioredis',
+      options: redisConfig
+    }
+  },
+  production: {
+    type: 'mariadb',
+    host: DB_HOST,
+    port: DB_PORT,
+    username: DB_USER,
+    password: DB_PASS,
+    database: 'luncherbox_production',
+    synchronize: IS_DEV,
+    logging: false,
+    entities: ['src/entities/*.ts'],
+    migrations: ['src/migration/*.ts'],
+    cli: {
+      migrationsDir: 'src/migration/*.ts'
+    },
+    cache: {
+      type: 'ioredis',
+      options: redisConfig
+    }
+  },
+  test: {
+    type: 'mariadb',
+    host: DB_HOST,
+    port: DB_PORT,
+    username: DB_USER,
+    password: DB_PASS,
+    database: 'luncherbox_test',
+    dropSchema: true,
+    synchronize: IS_DEV,
+    logging: false,
+    entities: ['src/entities/*.ts'],
+    migrations: ['src/migration/*.ts'],
+    cache: {
+      type: 'ioredis',
+      options: redisConfig
+    }
+  }
 };
+
+const dbConfig = dbConfigs[ENV];
 
 export { dbConfig };

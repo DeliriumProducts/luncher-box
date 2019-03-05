@@ -1,18 +1,27 @@
-import { Component, ContextType } from 'react';
-import UserLayout from '../components/UserLayout';
-import ProductCard from '../components/ProductCard';
-import styled from 'styled-components';
-import { Spin, Icon, message, Empty } from 'antd';
-import withRouter from '../components/withRouter';
+import { Empty, message } from 'antd';
+import Head from 'next/head';
 import Router, { DefaultQuery } from 'next/router';
+import { Component } from 'react';
+import styled from 'styled-components';
 import { CategoryAPI } from '../api';
-import { Product } from '../interfaces';
+import ProductCard from '../components/ProductCard';
 import Spinner from '../components/Spinner';
+import withRouter from '../components/withRouter';
+import { Product } from '../interfaces';
 
 const FlexContainer = styled.div`
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
+  background-color: #fafafa;
+  padding: 2rem;
+  border-radius: 7px;
+
+  @media (max-width: 480px) {
+    border-radius: 0;
+  }
+
+  box-shadow: 0 20px 24px -18px rgba(0, 0, 0, 0.31);
 `;
 
 interface CategoryQuery extends DefaultQuery {
@@ -26,26 +35,32 @@ interface Props {
 interface State {
   products: Product[];
   loading: boolean;
+  categoryName: string;
 }
 
 class CategoryPage extends Component<Props, State> {
   state: State = {
     products: [],
-    loading: true
+    loading: true,
+    categoryName: ''
   };
 
   async componentDidMount() {
     try {
-      const products = (await CategoryAPI.getOne(
+      const { products, name: categoryName } = await CategoryAPI.getOne(
         Number(this.props.query.categoryId)
-      )).products;
+      );
 
       if (products) {
         this.setState({ products });
       }
+
+      if (categoryName) {
+        this.setState({ categoryName });
+      }
     } catch (err) {
       message.error(`${err}, Redirecting you to the menu...`, 3, () =>
-        Router.push('/')
+        Router.replace('/')
       );
     } finally {
       this.setState({ loading: false });
@@ -62,23 +77,25 @@ class CategoryPage extends Component<Props, State> {
     } else {
       if (this.state.products.length) {
         data = this.state.products.map(product => (
-          <ProductCard
-            key={product.id}
-            id={product.id}
-            name={product.name}
-            description={product.description}
-            price={product.price}
-            image={product.image}
-          />
+          <ProductCard key={product.id} {...product} />
         ));
       } else {
         data = <Empty description="No entries found" />;
       }
     }
+
     return (
-      <UserLayout selectedKey="daily">
+      <>
+        <Head>
+          <title>
+            {this.state.categoryName === ''
+              ? 'Category'
+              : this.state.categoryName}{' '}
+            | LuncherBox
+          </title>
+        </Head>
         <FlexContainer>{data}</FlexContainer>
-      </UserLayout>
+      </>
     );
   }
 }

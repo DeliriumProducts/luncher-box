@@ -1,12 +1,12 @@
 import bcrypt from 'bcryptjs';
-import { IsEmail, Length, Matches } from 'class-validator';
+import { IsEmail, Length, Matches, IsUrl } from 'class-validator';
 import { BeforeInsert, Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 import { EntityError } from '../types';
 import { DuplicateEntityError, EntityNotFoundError, EntityNotValidError } from '../utils';
 
 @Entity()
 export class User {
-  @PrimaryGeneratedColumn()
+  @PrimaryGeneratedColumn('uuid')
   id: number;
 
   @Column('text')
@@ -47,18 +47,18 @@ export class User {
 
 export class UserNotFoundError extends EntityNotFoundError<User> {
   constructor() {
-    super(User);
+    super('User');
   }
 }
 
 export class UserNotValidError extends EntityNotValidError<User> {
   constructor(errors: EntityError) {
-    super(User, errors);
+    super('User', errors);
   }
 }
 
 export class DuplicateUserError extends DuplicateEntityError<User> {
   constructor() {
-    super(User);
+    super('User');
   }
 }

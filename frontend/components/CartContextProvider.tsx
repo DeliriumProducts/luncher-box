@@ -1,9 +1,9 @@
-import React, { Component } from 'react';
-import { CartContext } from '../context';
-import { Product, Order } from '../interfaces';
 import localForage from 'localforage';
-import { BACKEND_URL } from '../config';
+import React, { Component } from 'react';
 import io from 'socket.io-client';
+import { BACKEND_URL } from '../config';
+import { CartContext } from '../context';
+import { Order, Product } from '../interfaces';
 
 interface Props {
   children: React.ReactNode;
@@ -11,6 +11,7 @@ interface Props {
 
 interface State {
   order: Order;
+  table: string;
   totalAmount: number;
 }
 
@@ -19,24 +20,32 @@ const socket = io(`${BACKEND_URL}`);
 class CartContextProvider extends Component<Props, State> {
   state: State = {
     order: {
-      id: 1,
       products: [],
       comment: '',
-      table: '1'
+      table: ''
     },
+    table: '',
     totalAmount: 0
   };
 
   reload = async (): Promise<void> => {
     return new Promise(async (resolve, reject) => {
-      const currentOrder: Order = await localForage.getItem('currentOrder');
-      const totalAmount: number = await localForage.getItem('totalAmount');
+      const currentOrder: Order = (await localForage.getItem(
+        'currentOrder'
+      )) || {
+        products: [],
+        comment: '',
+        table: ''
+      };
+      const totalAmount: number =
+        (await localForage.getItem('totalAmount')) || 0;
+      const table: string = (await localForage.getItem('table')) || '';
 
-      if (currentOrder && totalAmount) {
-        this.setState({ order: currentOrder, totalAmount }, () => resolve());
-      } else {
-        resolve();
-      }
+      currentOrder.table = table;
+
+      this.setState({ order: currentOrder, totalAmount, table }, () =>
+        resolve()
+      );
     });
   };
 
@@ -46,13 +55,13 @@ class CartContextProvider extends Component<Props, State> {
         id: 1,
         products: [],
         comment: '',
-        table: '1'
+        table: ''
       },
+      table: '',
       totalAmount: 0
     });
 
     return Promise.all([
-      localForage.removeItem('order'),
       localForage.removeItem('currentOrder'),
       localForage.removeItem('totalAmount')
     ]);
@@ -132,7 +141,7 @@ class CartContextProvider extends Component<Props, State> {
     this.setState(
       prevState => ({ order: { ...prevState.order, comment } }),
       async () => {
-        await localForage.setItem('order', this.state.order);
+        await localForage.setItem('currentOrder', this.state.order);
       }
     );
   };
@@ -141,7 +150,8 @@ class CartContextProvider extends Component<Props, State> {
     this.setState(
       prevState => ({ order: { ...prevState.order, table: id } }),
       async () => {
-        await localForage.setItem('order', this.state.order);
+        await localForage.setItem('currentOrder', this.state.order);
+        await localForage.setItem('table', id);
       }
     );
   };
@@ -153,13 +163,14 @@ class CartContextProvider extends Component<Props, State> {
   };
 
   render() {
-    const { order, totalAmount } = this.state;
+    const { order, table, totalAmount } = this.state;
     return (
       <CartContext.Provider
         value={{
           order,
           totalAmount,
           socket,
+          table,
           actions: {
             reload: this.reload,
             clear: this.clear,
@@ -176,7 +187,6 @@ class CartContextProvider extends Component<Props, State> {
   }
 }
 
-// then make a consumer which will surface it
 const CartConsumer = CartContext.Consumer;
 
 export default CartContextProvider;

@@ -1,16 +1,16 @@
 import 'reflect-metadata';
 import { useExpressServer } from 'routing-controllers';
 import { useSocketServer } from 'socket-controllers';
-import { Connection, createConnection } from 'typeorm';
-import { app, dbConfig, ENV, initPassport, io, PORT, server } from './config';
+import { app, BACKEND_URL, ENV, initPassport, io, PORT, server } from './config';
+import { dbConnection as initDbConnection } from './connections';
 import { authorizationChecker } from './utils';
 
-const startServer = async () => {
+const initServer = async () => {
   console.clear();
   /**
    * Establish database connection
    */
-  const connection: Connection = await createConnection(dbConfig);
+  await initDbConnection();
 
   /**
    * Set up routing-controllers
@@ -35,13 +35,21 @@ const startServer = async () => {
    */
   initPassport();
 
-  /**
-   * Start server
-   */
-  server.listen(PORT);
-  console.log(`🥩 Luncher-box backend running on http://localhost:${PORT} in ${ENV}`);
+  return server;
 };
 
-startServer();
+const startServer = async () => {
+  (await initServer()).listen(PORT, () => {
+    console.log(`🥩 Luncher-box backend running on ${BACKEND_URL} in ${ENV}`);
+  });
+};
 
-export default startServer;
+const stopServer = () => {
+  server.close();
+};
+
+if (ENV !== 'test') {
+  startServer();
+}
+
+export { initServer, startServer, stopServer };

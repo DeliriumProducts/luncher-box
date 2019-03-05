@@ -1,131 +1,134 @@
-import { Component } from 'react';
-import io from 'socket.io-client';
-import AdminLayout from '../../components/AdminLayout';
-import FullHeightContainer from '../../components/FullHeightContainer';
-import withAuth from '../../components/withAuth';
-import OrderContainer from '../../components/OrderContainer';
-import { BACKEND_URL } from '../../config';
-import { Order } from '../../interfaces/Order';
-import { AdminContext } from '../../context';
-import Spinner from '../../components/Spinner';
 import { Empty } from 'antd';
+import { useContext, useEffect, useState } from 'react';
+import styled from 'styled-components';
+import OrderContainer from '../../components/OrderContainer';
+import Spinner from '../../components/Spinner';
+import withAuth from '../../components/withAuth';
+import { AdminContext } from '../../context';
+import { Order } from '../../interfaces';
+import { OrderAPI } from '../../api';
+import Head from 'next/head';
 
-interface State {
-  orders: Order[];
-  loading: boolean;
-}
-class Orders extends Component<any, State> {
-  state = {
-    orders: [],
-    loading: true
-  };
+const FlexContainer = styled.div`
+  background-color: #fafafa;
+  padding: 2rem;
+  border-radius: 7px;
+  box-shadow: 0 20px 24px -18px rgba(0, 0, 0, 0.31);
+`;
 
-  static contextType = AdminContext;
-  context!: React.ContextType<typeof AdminContext>;
+const useOrders = (initialOrders: Order[]): [Order[], boolean] => {
+  const [orders, setOrders] = useState(initialOrders);
+  const [loading, setLoading] = useState(true);
+  const context = useContext(AdminContext);
 
-  componentDidMount() {
-    /**
-     * Listen for events
-     */
-    if (this.context.socket) {
-      this.context.socket.emit('fetch_orders');
-      /**
-       * We will the other listeners in the callback to prevent errors.
-       */
-      this.context.socket.on('fetched_orders', this.setOrders);
+  useEffect(() => {
+    if (context.socket) {
+      context.socket.on('placed_order', handleOrders);
+      context.socket.on('accepted_order_admin', setAcceptedOrder);
+      context.socket.on('declined_order_admin', setDeclindedOrder);
+      context.socket.on('finished_order_admin', setFinishedOrder);
     }
-  }
 
-  setOrders = (orders: Order[]) => {
-    this.setState({ orders, loading: false }, () => {
-      if (this.context.socket) {
-        this.context.socket.on('placed_order', this.setOrders);
-        this.context.socket.on('accepted_order_admin', this.setAcceptedOrder);
-        this.context.socket.on('declined_order_admin', this.setDeclindedOrder);
-        this.context.socket.on('finished_order_admin', this.setFinishedOrder);
+    return () => {
+      if (context.socket) {
+        context.socket.off('placed_order', handleOrders);
+        context.socket.off('accepted_order_admin', setAcceptedOrder);
+        context.socket.off('declined_order_admin', setDeclindedOrder);
+        context.socket.off('finished_order_admin', setFinishedOrder);
       }
+    };
+  }, [context.socket]);
+
+  useEffect(() => {
+    fetchOrders();
+  }, []);
+
+  const setAcceptedOrder = ({ id }: any) => {
+    setOrders(prevOrders => {
+      const editedOrders = prevOrders.map(order => {
+        if (order.id === id) {
+          return {
+            ...order,
+            state: 1
+          };
+        }
+        return order;
+      });
+
+      return editedOrders;
     });
   };
 
-  setAcceptedOrder = ({ id }: any) => {
-    const orderIndex = this.state.orders.findIndex(
-      (order: Order) => order.id === id
-    );
-
-    console.log('aa');
-
-    if (orderIndex >= 0) {
-      const orders = [...this.state.orders];
-      // @ts-ignore
-      const acceptedOrder: Order = { ...orders[orderIndex] };
-      acceptedOrder.state = 1;
-      // @ts-ignore
-      orders[orderIndex] = acceptedOrder;
-
-      this.setState({ orders });
-    }
+  const setDeclindedOrder = ({ id }: any) => {
+    setOrders(prevOrders => {
+      const editedOrders = prevOrders.filter(order => {
+        return order.id !== id;
+      });
+      return editedOrders;
+    });
   };
 
-  setDeclindedOrder = ({ id }: any) => {
-    const orderIndex = this.state.orders.findIndex(
-      (order: Order) => order.id === id
-    );
-
-    if (orderIndex >= 0) {
-      const orders = [...this.state.orders];
-      orders.splice(orderIndex, 1);
-      this.setState({ orders });
-    }
+  const setFinishedOrder = ({ id }: any) => {
+    setOrders(prevOrders => {
+      const editedOrders = prevOrders.map(order => {
+        if (order.id === id) {
+          return {
+            ...order,
+            state: 2
+          };
+        }
+        return order;
+      });
+      return editedOrders;
+    });
   };
 
-  setFinishedOrder = ({ id }: any) => {
-    const orderIndex = this.state.orders.findIndex(
-      (order: Order) => order.id === id
-    );
-
-    if (orderIndex >= 0) {
-      const orders = [...this.state.orders];
-      // @ts-ignore
-      const acceptedOrder: Order = { ...orders[orderIndex] };
-      acceptedOrder.state = 2;
-      // @ts-ignore
-      orders[orderIndex] = acceptedOrder;
-
-      this.setState({ orders });
-    }
+  const fetchOrders = async () => {
+    const incomingOrders = await OrderAPI.getAll();
+    setOrders(incomingOrders);
+    setLoading(false);
   };
 
-  componentWillUnmount() {
-    if (this.context.socket) {
-      /**
-       * Prevent memory leak
-       */
-      this.context.socket.off('fetched_orders');
-      this.context.socket.off('placed_order');
-      this.context.socket.off('accepted_order');
-      this.context.socket.off('declined_order');
-      this.context.socket.off('finished_order');
-    }
-  }
+  const handleOrders = (incomingOrders: Order[]) => {
+    setOrders(incomingOrders);
+    setLoading(false);
+  };
 
-  render() {
-    const { orders, loading } = this.state;
-    let data: React.ReactNode | React.ReactNode[];
-    if (loading) {
-      data = <Spinner />;
+  return [orders, loading];
+};
+
+const Orders: React.FunctionComponent<any> = () => {
+  const [orders, loading] = useOrders([]);
+
+  let data: React.ReactNode | React.ReactNode[];
+  if (loading) {
+    data = <Spinner />;
+  } else {
+    if (orders.length) {
+      data = <OrderContainer orders={orders} />;
     } else {
-      if (orders.length) {
-        data = <OrderContainer orders={orders} />;
-      } else {
-        data = <Empty description="No orders placed yet!" />;
-      }
+      data = <Empty description="No orders placed yet!" />;
     }
-    return (
-      <FullHeightContainer>
-        <AdminLayout selectedKey="orders">{data}</AdminLayout>
-      </FullHeightContainer>
-    );
   }
-}
+
+  const newOrders = orders.reduce(
+    (total, current) => total + (current.state === 0 ? 1 : 0),
+    0
+  );
+
+  return (
+    <>
+      <Head>
+        <title>
+          {newOrders > 0
+            ? `(${newOrders}) New ${newOrders === 1 ? 'Order' : 'Orders'}`
+            : 'Orders'}{' '}
+          | LuncherBox
+        </title>
+      </Head>
+      <FlexContainer>{data}</FlexContainer>
+    </>
+  );
+};
 
 export default withAuth(Orders);

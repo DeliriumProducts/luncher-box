@@ -1,12 +1,11 @@
-import UserLayout from '../components/UserLayout';
-import ItemCard from '../components/ItemCard';
-import styled from 'styled-components';
-import { CartContext } from '../context';
-import { Empty, Card, Button, InputNumber, Modal, message, Tag } from 'antd';
+import { Button, Card, Empty, Input, message, Modal, Tag } from 'antd';
+import Head from 'next/head';
 import React from 'react';
-import { Product, Order } from '../interfaces';
-import { Input } from 'antd';
+import styled from 'styled-components';
+import ItemCard from '../components/ItemCard';
 import Spinner from '../components/Spinner';
+import { CartContext } from '../context';
+import { Order, Product } from '../interfaces';
 
 const { TextArea } = Input;
 
@@ -29,6 +28,11 @@ const FlexContainer = styled.div`
   flex-wrap: wrap;
   align-items: center;
   flex-direction: column;
+  padding: 2rem;
+  background-color: #fafafa;
+  border-radius: 7px;
+  box-shadow: 0 20px 24px -18px rgba(0, 0, 0, 0.31);
+
   @media (min-width: 768px) {
     margin: auto;
     width: 70%;
@@ -85,6 +89,7 @@ export default class extends React.Component<any, State> {
       title: 'Order state:',
       centered: true,
       content: data,
+      // tslint:disable-next-line
       onOk: () => {},
       maskClosable: true
     });
@@ -123,12 +128,27 @@ export default class extends React.Component<any, State> {
         ),
         onOk: () => {
           if (this.context.socket) {
+            /**
+             * Instead of sending every product, send only the product id
+             */
+            const productsIdsAndQuantities = order.products.reduce(
+              (accumulator: any, { id, quantity }: Product) => [
+                ...accumulator,
+                { id, quantity }
+              ],
+              []
+            );
+
+            order.products = productsIdsAndQuantities;
+
             this.context.socket.emit('place_order', order);
             this.context.actions.clear();
           }
         },
         maskClosable: true
       });
+    } else {
+      message.error('Please, enter your table! 🤚');
     }
   };
 
@@ -172,6 +192,7 @@ export default class extends React.Component<any, State> {
             <div style={{ width: '100%' }}>
               <StyledCard>
                 <TextArea
+                  // tslint:disable-next-line
                   placeholder="Write comments in case you are allergic to ingredients or want to exclude some. e.g. no onions, no mayo. "
                   onChange={this.handleComment}
                   rows={6}
@@ -180,7 +201,7 @@ export default class extends React.Component<any, State> {
                 />
                 <div style={{ display: 'flex' }}>
                   <Input
-                    defaultValue={this.context.order.table}
+                    defaultValue={this.context.table}
                     placeholder="Enter table e.g. A1, A2 etc."
                     onChange={this.handleTable}
                     style={{ marignLeft: '1%', marginTop: '2%' }}
@@ -210,10 +231,22 @@ export default class extends React.Component<any, State> {
       }
     }
 
+    const { totalAmount: productsInCart } = this.context;
+
     return (
-      <UserLayout selectedKey="cart">
+      <>
+        <Head>
+          <title>
+            {productsInCart > 0
+              ? `(${productsInCart}) ${
+                  productsInCart === 1 ? 'Item' : 'Items'
+                } in`
+              : ''}{' '}
+            Cart | LuncherBox
+          </title>
+        </Head>
         <FlexContainer>{data}</FlexContainer>
-      </UserLayout>
+      </>
     );
   }
 }

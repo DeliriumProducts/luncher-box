@@ -1,7 +1,6 @@
 import { transformAndValidate, TransformValidationOptions } from 'class-transformer-validator';
 import deepmerge from 'deepmerge';
-import { ClassType } from '../interfaces';
-import { TransformAndValidateTuple } from '../types';
+import { ClassType, TransformAndValidateTuple, EntityError } from '../types';
 
 /**
  * HOF / Curry func around the transformAndValidate method which can be easily awaited without the need of a try/catch.
@@ -15,7 +14,7 @@ export default <T extends object>(cls: ClassType<T>) => async (
   obj: object | Array<{}>,
   options?: TransformValidationOptions
 ): TransformAndValidateTuple<T> => {
-  const errors: Array<Array<{}> | {}> = [];
+  const errors: EntityError = [];
   let clsObj: T = new cls();
 
   const defaultOptions: TransformValidationOptions = {
@@ -41,56 +40,11 @@ export default <T extends object>(cls: ClassType<T>) => async (
   try {
     clsObj = await transformAndValidate(cls, obj, modifiedOptions);
   } catch (exception) {
-    /**
-     * If validating an array of objects, there is an array of errors for each object, so it has to be iterated over
-     *
-     * Given the following input: (for class Category)
-     * [
-     *    {
-     *   	  "id":1
-     *      "name": "foo"
-     *    },
-     *    {
-     *       "name": "foobar",
-     *       "image": "barbaz"
-     *    }
-     * ]
-     *
-     * The method wil return:
-     *
-     * [ <- Array for each object in the array
-     *    [ <- an Array of errors
-     *      ValidationError {
-     *        ...
-     *        constraints: [ <- an array of constraints for a single property
-     *         ...
-     *        "name must be longer than 3 characters",
-     *        "image must not be undefined"
-     *        ]
-     *      }
-     *    ],
-     *    [ <- an Array of errors
-     *      ValidationError {
-     *        ...
-     *        constraints: [ <- an array of constraints for a single property
-     *         ...
-     *        "id must not be undefined"
-     *        ]
-     *      }
-     *    ]
-     * ]
-     */
-    if (Array.isArray(obj)) {
-      for (const object of exception) {
-        const tempArr: any[] = [];
-        for (const error of object) {
-          tempArr.push({ [`${cls.name} ${error.property}`]: [error.constraints] });
+    for (const error of exception) {
+      for (const constraint in error.constraints) {
+        if (constraint) {
+          errors.push(error.constraints[constraint]);
         }
-        errors.push(tempArr);
-      }
-    } else {
-      for (const error of exception) {
-        errors.push({ [`${cls.name} ${error.property}`]: [error.constraints] });
       }
     }
   }

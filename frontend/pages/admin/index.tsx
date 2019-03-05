@@ -1,15 +1,15 @@
-import { Component } from 'react';
 import { message } from 'antd';
-import AdminLayout from '../../components/AdminLayout';
+import { Component } from 'react';
+import styled from 'styled-components';
+import { CategoryAPI } from '../../api';
+import EntityCard from '../../components/EntityCard';
+import EntityCardContainer from '../../components/EntityCardContainer';
+import EntityModal from '../../components/EntityModal';
 import withAuth from '../../components/withAuth';
 import { AdminContext } from '../../context';
-import EntityCard from '../../components/EntityCard';
-import styled from 'styled-components';
-import EntityCardContainer from '../../components/EntityCardContainer';
 import { Category } from '../../interfaces';
-import { CategoryAPI } from '../../api';
-import { EntityInstance, EntityTypes, ActionTypes } from '../../types';
-import EntityModal from '../../components/EntityModal';
+import { ActionTypes, EntityInstance, EntityTypes } from '../../types';
+import Head from 'next/head';
 
 const FlexContainer = styled.div`
   display: flex;
@@ -27,7 +27,6 @@ const FlexContainer = styled.div`
   @media (max-width: 768px) {
     .col {
       max-width: 100%;
-      margin-top: 3%;
     }
 
     flex-direction: column;
@@ -213,7 +212,10 @@ class Index extends Component<any, State> {
     const { pageLoading: loading, categories } = this.state;
 
     return (
-      <AdminLayout selectedKey="home">
+      <>
+        <Head>
+          <title>Admin Home | LuncherBox</title>
+        </Head>
         <FlexContainer>
           <div className="col">
             <EntityCardContainer
@@ -226,9 +228,7 @@ class Index extends Component<any, State> {
                 categories.map((category: Category) => (
                   <EntityCard
                     key={category.id}
-                    id={category.id}
-                    name={category.name}
-                    image={category.image}
+                    {...category}
                     hoverable={true}
                     entityType="category"
                     handleEditClick={this.handleEditClick}
@@ -248,7 +248,7 @@ class Index extends Component<any, State> {
             />
           </div>
         </FlexContainer>
-      </AdminLayout>
+      </>
     );
   }
 }

@@ -1,12 +1,15 @@
 import * as dotenv from 'dotenv';
+import path from 'path';
 
 /**
  * Load env variables
  */
-dotenv.config();
+dotenv.config({
+  path: path.join(__dirname, '../../../.env')
+});
 
 /**
- * DEV or PROD enviroment
+ * Development, production or test enviroment
  */
 export const ENV = process.env.NODE_ENV || 'development';
 export const IS_DEV = ENV === 'development';
@@ -14,12 +17,7 @@ export const IS_DEV = ENV === 'development';
 /**
  * Server port
  */
-export const PORT = Number(process.env.PORT) || 8000;
-
-/**
- * Database name
- */
-export const DB_NAME = process.env.DB_NAME || 'luncher-box';
+export const PORT = Number(process.env.BACKEND_PORT) || 8000;
 
 /**
  * Database host and port
@@ -59,6 +57,11 @@ export const VERIFIER_EMAIL = process.env.VERIFIER_EMAIL || 'example-reciever@ma
  * Frontend url
  */
 export const FRONTEND_URL = process.env.FRONTEND_URL || 'http://localhost:3000';
+
+/**
+ * Backend url
+ */
+export const BACKEND_URL = process.env.BACKEND_URL || 'http://localhost:3000';
 
 export default {
   ENV,

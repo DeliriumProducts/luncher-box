@@ -1,14 +1,24 @@
-import React from 'react';
-import App, { Container, NextAppContext } from 'next/app';
-import { createGlobalStyle } from 'styled-components';
 import { PageTransition } from 'next-page-transitions';
+import App, { Container, NextAppContext } from 'next/app';
+import Head from 'next/head';
+import React from 'react';
+import { createGlobalStyle } from 'styled-components';
 import EntityContextProvider from '../components/AdminContextProvider';
 import CartContextProvider from '../components/CartContextProvider';
+import Layout from '../components/Layout';
 
 const GlobalStyle = createGlobalStyle`
   html,
   body {
     margin: 0;
+    height: auto;
+    min-height: 100%;
+  }
+
+  body {
+    min-height: 100%;
+    height: initial;
+    background-image: linear-gradient(135deg, #f97794 10%, #623aa2 100%);
   }
 
   * {
@@ -18,6 +28,7 @@ const GlobalStyle = createGlobalStyle`
   #__next,
   #__next > div {
     height: 100%;
+    min-height: 100%;
   }
 
   .page-transition-enter {
@@ -54,16 +65,23 @@ export default class MyApp extends App {
     const { Component, pageProps } = this.props;
 
     return (
-      <CartContextProvider>
-        <EntityContextProvider>
-          <Container>
-            <GlobalStyle />
-            <PageTransition timeout={150} classNames="page-transition">
-              <Component {...pageProps} />
-            </PageTransition>
-          </Container>
-        </EntityContextProvider>
-      </CartContextProvider>
+      <>
+        <Head>
+          <title>LuncherBox</title>
+        </Head>
+        <CartContextProvider>
+          <EntityContextProvider>
+            <Container>
+              <GlobalStyle />
+              <Layout selectedKey={this.props.router.route}>
+                <PageTransition timeout={150} classNames="page-transition">
+                  <Component key={this.props.router.route} {...pageProps} />
+                </PageTransition>
+              </Layout>
+            </Container>
+          </EntityContextProvider>
+        </CartContextProvider>
+      </>
     );
   }
 }
