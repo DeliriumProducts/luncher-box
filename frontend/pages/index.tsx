@@ -1,4 +1,5 @@
 import { Empty, message } from 'antd';
+import Head from 'next/head';
 import { Component } from 'react';
 import styled from 'styled-components';
 import { CategoryAPI } from '../api';
@@ -6,7 +7,6 @@ import CategoryCard from '../components/CategoryCard';
 import Spinner from '../components/Spinner';
 import { AdminContext } from '../context/AdminContext';
 import { Category } from '../interfaces';
-import Head from 'next/head';
 
 const FlexContainer = styled.div`
   display: flex;
@@ -15,6 +15,11 @@ const FlexContainer = styled.div`
   background-color: #fafafa;
   padding: 2rem;
   border-radius: 7px;
+
+  @media (max-width: 480px) {
+    border-radius: 0;
+  }
+
   box-shadow: 0 20px 24px -18px rgba(0, 0, 0, 0.31);
 `;
 
