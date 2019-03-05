@@ -109,6 +109,7 @@ export default class extends React.Component<Props> {
 
     return (
       <StyledCard
+        onClick={this.addToCart}
         bordered={false}
         hoverable
         cover={
@@ -126,6 +127,7 @@ export default class extends React.Component<Props> {
                   marginTop: 10,
                   boxShadow: '0 2px 2px rgba(0, 0, 0, 0.12)'
                 }}
+                className="price-badge"
                 offset={[0, 0]}
                 overflowCount={1000}
                 count={price && `${price} / piece`}
