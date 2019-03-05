@@ -87,6 +87,7 @@ export default class extends React.Component<any, State> {
 
     Modal.info({
       title: 'Order state:',
+      centered: true,
       content: data,
       // tslint:disable-next-line
       onOk: () => {},
@@ -103,6 +104,7 @@ export default class extends React.Component<any, State> {
       let totalSum = 0;
       Modal.warn({
         title: 'Are you sure you want to place this order?',
+        centered: true,
         content: (
           <div>
             {this.context.order.products.map((product: Product) => {
