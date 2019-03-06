@@ -6,7 +6,7 @@ import MenuBar from './MenuBar';
 const { Content } = AntDesignLayout;
 
 interface Props {
-  selectedKey: string;
+  route: string;
   children?: ReactNode;
 }
 
@@ -38,21 +38,23 @@ const CustomFooter = styled.div`
 `;
 
 const Layout: React.FunctionComponent<Props> = props => {
-  if (props.selectedKey === '/login' || props.selectedKey === '/register') {
+  if (props.route === '/login' || props.route === '/register') {
     return <>{props.children}</>;
   }
+
+  const type = props.route.startsWith('/admin') ? 'admin' : 'customer';
 
   return (
     <StyledLayout>
       <CustomHeader>
         <Affix offsetTop={0}>
-          <MenuBar selectedKey={props.selectedKey} />
+          <MenuBar type={type} selectedKey={props.route} />
         </Affix>
       </CustomHeader>
       <StyledContent>{props.children}</StyledContent>
       <Affix offsetBottom={0}>
         <CustomFooter>
-          <MenuBar selectedKey={props.selectedKey} />
+          <MenuBar type={type} selectedKey={props.route} />
         </CustomFooter>
       </Affix>
     </StyledLayout>

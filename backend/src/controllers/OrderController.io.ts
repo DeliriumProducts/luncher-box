@@ -2,7 +2,7 @@ import { MessageBody, OnMessage, SocketId, SocketIO, SocketController } from 'so
 import { getRepository, In, Repository } from 'typeorm';
 import { redisConnection } from '../connections';
 import { Product } from '../entities';
-import { Order, OrderNotValidError } from '../interfaces';
+import { Order, OrderNotValidError, OrderNotFoundError } from '../interfaces';
 import { EntityError } from 'src/types';
 import { Authorized, JsonController, Get, Put, Param, Body } from 'routing-controllers';
 import { io } from '../config';
@@ -63,7 +63,12 @@ export class OrderController {
       const orderIndex = orders.findIndex((orderItem: any) => orderItem.id === orderId);
 
       if (orderIndex >= 0) {
-        orders[orderIndex].state = 1;
+        if (orders[orderIndex].state !== 1) {
+          orders[orderIndex].state = 1;
+        } else {
+          throw new OrderNotFoundError();
+        }
+
         order = orders[orderIndex];
       }
     }
@@ -99,11 +104,9 @@ export class OrderController {
       const orderIndex = orders.findIndex((orderItem: any) => orderItem.id === orderId);
 
       if (orderIndex >= 0) {
-        order = orders[orderIndex];
-
-        // @ts-ignore
-        order.state = 3;
+        orders[orderIndex].state = 3;
         orders.splice(orderIndex, 1);
+        order = orders[orderIndex];
       }
 
       if (orders.length - 1 > 0) {
@@ -143,7 +146,12 @@ export class OrderController {
       const orderIndex = orders.findIndex((orderItem: any) => orderItem.id === orderId);
 
       if (orderIndex >= 0) {
-        orders[orderIndex].state = 2;
+        if (orders[orderIndex].state !== 2) {
+          orders[orderIndex].state = 2;
+        } else {
+          throw new OrderNotFoundError();
+        }
+
         order = orders[orderIndex];
       }
     }
