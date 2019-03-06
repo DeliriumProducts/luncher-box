@@ -73,7 +73,7 @@ export default class MyApp extends App {
           <AdminContextProvider>
             <Container>
               <GlobalStyle />
-              <Layout selectedKey={this.props.router.route}>
+              <Layout route={this.props.router.route}>
                 <PageTransition timeout={150} classNames="page-transition">
                   <Component key={this.props.router.route} {...pageProps} />
                 </PageTransition>
