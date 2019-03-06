@@ -15,6 +15,7 @@ const withAuth = <T extends object>(C: ComponentType<T>) =>
         if (req.headers.cookie) {
           isAuthenticated = await AuthAPI.isAuthenticated(req.headers.cookie);
         }
+
         if (!isAuthenticated) {
           res.writeHead(302, {
             Location: '/login'
@@ -23,6 +24,7 @@ const withAuth = <T extends object>(C: ComponentType<T>) =>
         }
       } else {
         isAuthenticated = await AuthAPI.isAuthenticated();
+
         if (!isAuthenticated) {
           Router.replace('/login');
         }
