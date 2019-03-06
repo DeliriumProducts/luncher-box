@@ -9,6 +9,7 @@ import { CartContext } from '../context';
 
 interface Props {
   selectedKey: string;
+  type: 'admin' | 'customer';
 }
 
 const MenuContainer = styled.div`
@@ -73,7 +74,7 @@ class MenuBar extends Component<Props> {
   };
 
   render() {
-    const { selectedKey } = this.props;
+    const { selectedKey, type } = this.props;
 
     const selectedKeys = [];
     if (selectedKey.includes('/category')) {
@@ -88,7 +89,7 @@ class MenuBar extends Component<Props> {
 
     return (
       <MenuContainer>
-        {selectedKey.startsWith('/admin') ? (
+        {type === 'admin' ? (
           <>
             <StyledMenu
               onClick={this.handleClick}

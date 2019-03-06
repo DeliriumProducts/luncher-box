@@ -81,7 +81,9 @@ export default class extends React.Component<Props> {
   static contextType = CartContext;
   context!: React.ContextType<typeof CartContext>;
 
-  viewMore = () => {
+  viewMore = (e: React.FormEvent<HTMLElement>) => {
+    e.stopPropagation();
+
     Modal.info({
       title: this.props.name,
       content: (
@@ -96,7 +98,9 @@ export default class extends React.Component<Props> {
     });
   };
 
-  addToCart = () => {
+  addToCart = (e: React.FormEvent<HTMLElement>) => {
+    e.stopPropagation();
+
     const product: Product = this.props;
     this.context.actions.increment(product);
   };

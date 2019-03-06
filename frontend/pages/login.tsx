@@ -8,6 +8,7 @@ import { AuthAPI } from '../api';
 import CenteredDiv from '../components/CenteredDiv';
 import { HandleLogin } from '../types';
 import Head from 'next/head';
+import { NextContext } from 'next';
 
 const FormItem = Form.Item;
 
@@ -43,6 +44,32 @@ interface State {
 }
 
 class LoginForm extends Component<Props, State> {
+  static async getInitialProps({ req, res }: NextContext) {
+    let isAuthenticated = false;
+
+    /**
+     * Check wheter authentication is happening server-side or client-side based on received context
+     */
+    if (req && res) {
+      if (req.headers.cookie) {
+        isAuthenticated = await AuthAPI.isAuthenticated(req.headers.cookie);
+      }
+
+      if (isAuthenticated) {
+        res.writeHead(302, {
+          Location: '/admin'
+        });
+        res.end();
+      }
+    } else {
+      isAuthenticated = await AuthAPI.isAuthenticated();
+
+      if (isAuthenticated) {
+        Router.replace('/admin');
+      }
+    }
+  }
+
   state = {
     loading: false
   };

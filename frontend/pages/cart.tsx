@@ -37,6 +37,10 @@ const FlexContainer = styled.div`
     margin: auto;
     width: 70%;
   }
+
+  @media (max-width: 480px) {
+    border-radius: 0;
+  }
 `;
 
 interface State {
