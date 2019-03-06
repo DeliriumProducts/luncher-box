@@ -34,6 +34,7 @@ const dbConfigs: DbConfigs = {
     database: 'luncherbox_production',
     synchronize: IS_DEV,
     logging: false,
+    dropSchema: false,
     entities: ['src/entities/*.ts'],
     migrations: ['src/migration/*.ts'],
     cli: {
