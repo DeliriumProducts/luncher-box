@@ -79,7 +79,7 @@ export class UserController {
     /**
      * Send verification email
      */
-    const confirmationURL = `http://${BACKEND_URL}/confirm/${token}`;
+    const confirmationURL = `${BACKEND_URL}/confirm/${token}`;
 
     if (ENV === 'test') {
       return `/confirm/${token}`;
