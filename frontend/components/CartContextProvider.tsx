@@ -1,7 +1,7 @@
 import localForage from 'localforage';
 import React, { Component } from 'react';
 import io from 'socket.io-client';
-import { BACKEND_URL } from '../config';
+import { SOCKET_URL } from '../config';
 import { CartContext } from '../context';
 import { Order, Product } from '../interfaces';
 
@@ -15,7 +15,7 @@ interface State {
   totalAmount: number;
 }
 
-const socket = io(`${BACKEND_URL}`);
+const socket = io(`${SOCKET_URL}`);
 
 class CartContextProvider extends Component<Props, State> {
   state: State = {

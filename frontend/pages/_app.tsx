@@ -3,7 +3,7 @@ import App, { Container, NextAppContext } from 'next/app';
 import Head from 'next/head';
 import React from 'react';
 import { createGlobalStyle } from 'styled-components';
-import EntityContextProvider from '../components/AdminContextProvider';
+import AdminContextProvider from '../components/AdminContextProvider';
 import CartContextProvider from '../components/CartContextProvider';
 import Layout from '../components/Layout';
 
@@ -70,7 +70,7 @@ export default class MyApp extends App {
           <title>LuncherBox</title>
         </Head>
         <CartContextProvider>
-          <EntityContextProvider>
+          <AdminContextProvider>
             <Container>
               <GlobalStyle />
               <Layout selectedKey={this.props.router.route}>
@@ -79,7 +79,7 @@ export default class MyApp extends App {
                 </PageTransition>
               </Layout>
             </Container>
-          </EntityContextProvider>
+          </AdminContextProvider>
         </CartContextProvider>
       </>
     );

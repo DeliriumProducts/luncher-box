@@ -1,13 +1,13 @@
 import React from 'react';
 import io from 'socket.io-client';
-import { BACKEND_URL } from '../config';
+import { SOCKET_URL } from '../config';
 import { AdminContext } from '../context';
 
 interface Props {
   children: React.ReactNode;
 }
 
-const socket = io(`${BACKEND_URL}`);
+const socket = io(`${SOCKET_URL}`);
 
 const AdminContextProvider = (props: Props) => {
   return (
