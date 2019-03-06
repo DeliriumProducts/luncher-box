@@ -1,12 +1,20 @@
 import { createConnection, getConnection } from 'typeorm';
 import { dbConfig } from '../config';
 
-export const dbConnection = async (dropAndSync?: boolean) => {
-  if (!dropAndSync) {
-    if (dbConfig.synchronize) {
-      dropAndSync = dbConfig.synchronize;
+export const dbConnection = async (dropSchema?: boolean, synchronize?: boolean) => {
+  if (!dropSchema) {
+    if (dbConfig.dropSchema) {
+      dropSchema = dbConfig.dropSchema;
     } else {
-      dropAndSync = false;
+      dropSchema = false;
+    }
+  }
+
+  if (!synchronize) {
+    if (dbConfig.synchronize) {
+      synchronize = dbConfig.synchronize;
+    } else {
+      synchronize = false;
     }
   }
 
@@ -16,8 +24,8 @@ export const dbConnection = async (dropAndSync?: boolean) => {
     return await createConnection({
       ...dbConfig,
       name: 'default',
-      dropSchema: dropAndSync,
-      synchronize: dropAndSync
+      dropSchema,
+      synchronize
     });
   }
 };

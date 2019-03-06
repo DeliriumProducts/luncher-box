@@ -1,3 +1,3 @@
 import { dbConnection } from '../../src/connections';
 
-dbConnection(true).then(() => process.exit());
+dbConnection(true, true).then(() => process.exit());

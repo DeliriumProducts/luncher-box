@@ -1,25 +1,24 @@
 import { TransformValidationOptions } from 'class-transformer-validator';
 import { Request } from 'express';
-import nodemailer from 'nodemailer';
+import { MailOptions } from 'nodemailer/lib/sendmail-transport';
 import passport from 'passport';
 import {
   Body,
   Get,
+  InternalServerError,
   JsonController,
   Post,
   Req,
-  UseBefore,
-  InternalServerError
+  UseBefore
 } from 'routing-controllers';
 import { getRepository, Repository } from 'typeorm';
-import { OWNER_EMAIL, OWNER_PASS, VERIFIER_EMAIL, ENV } from '../config';
+import { v4 } from 'uuid';
+import { ENV, OWNER_EMAIL, VERIFIER_EMAIL } from '../config';
 import { redisConnection } from '../connections';
 import { DuplicateUserError, User, UserNotFoundError, UserNotValidError } from '../entities';
 import { TransformAndValidateTuple } from '../types';
-import { transformAndValidate } from '../utils';
-import { v4 } from 'uuid';
-import { MailOptions } from 'nodemailer/lib/sendmail-transport';
-import { sendEmail } from '../utils';
+import { sendEmail, transformAndValidate } from '../utils';
+import { BACKEND_URL } from './../config/env';
 
 @JsonController('/auth')
 export class UserController {
@@ -80,7 +79,7 @@ export class UserController {
     /**
      * Send verification email
      */
-    const confirmationURL = `http://${req.headers.host}/confirm/${token}`;
+    const confirmationURL = `http://${BACKEND_URL}/confirm/${token}`;
 
     if (ENV === 'test') {
       return `/confirm/${token}`;
