@@ -38,6 +38,11 @@ const StyledMenu = styled(Menu)`
   align-items: center;
   justify-content: center;
   box-shadow: 0 2px 2px rgba(0, 0, 0, 0.12);
+
+  @media (max-width: 768px) {
+    box-shadow: 0 -2px 2px rgba(0, 0, 0, 0.12);
+  }
+
   background-color: #fafafa;
 `;
 
