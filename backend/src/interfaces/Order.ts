@@ -1,6 +1,6 @@
 import { OrderState, EntityError } from '../types';
 import { Product } from '../entities';
-import { EntityNotValidError } from '../utils';
+import { EntityNotValidError, EntityNotFoundError } from '../utils';
 
 export interface Order {
   id: number;
@@ -9,6 +9,12 @@ export interface Order {
   table: string;
   state: OrderState;
   customerId?: string;
+}
+
+export class OrderNotFoundError extends EntityNotFoundError<Product> {
+  constructor() {
+    super('Order');
+  }
 }
 
 export class OrderNotValidError extends EntityNotValidError<Order> {
