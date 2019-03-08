@@ -19,8 +19,12 @@ app
   .then(() => {
     const server = express();
 
-    server.use('/sw.js', (req, res) => {
-      app.serveStatic(req, res, path.resolve('./static/sw.js'));
+    server.use('/service-worker.js', (req, res) => {
+      app.serveStatic(
+        req,
+        res,
+        path.join(__dirname, '.next', '/service-worker.js')
+      );
     });
 
     server.get('/category/:categoryId', (req, res) => {
