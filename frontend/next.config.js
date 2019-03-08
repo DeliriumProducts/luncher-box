@@ -5,6 +5,8 @@ const withSass = require('@zeit/next-sass');
 const withSize = require('next-size');
 const withOffline = require('next-offline');
 const webpack = require('webpack');
+const TerserPlugin = require('terser-webpack-plugin');
+const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const fs = require('fs');
 const path = require('path');
 const lessToJS = require('less-vars-to-js');
@@ -28,12 +30,28 @@ module.exports = withOffline(
       withSass(
         withTypescript(
           withCss({
-            webpack: config => {
+            webpack(config) {
               // Fixes npm packages that depend on `fs` module
               config.node = {
                 fs: 'empty'
               };
+
               config.plugins.push(new webpack.EnvironmentPlugin(localEnv));
+
+              config.plugins = config.plugins.filter(
+                plugin => plugin.constructor.name !== 'UglifyJsPlugin'
+              );
+
+              config.plugins.push(
+                new TerserPlugin({
+                  parallel: true,
+                  terserOptions: {
+                    ecma: 6
+                  }
+                })
+              );
+
+              config.plugins.push(new OptimizeCSSAssetsPlugin());
 
               return config;
             },

@@ -1,6 +1,7 @@
 const express = require('express');
 const next = require('next');
 const path = require('path');
+const compression = require('compression');
 
 require('dotenv').config({
   path: path.join(__dirname, '/../.env')
@@ -18,6 +19,8 @@ app
   .prepare()
   .then(() => {
     const server = express();
+
+    server.use(compression());
 
     server.use('/service-worker.js', (req, res) => {
       app.serveStatic(
