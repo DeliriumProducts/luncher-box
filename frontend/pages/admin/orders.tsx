@@ -14,6 +14,10 @@ const FlexContainer = styled.div`
   padding: 2rem;
   border-radius: 7px;
   box-shadow: 0 20px 24px -18px rgba(0, 0, 0, 0.31);
+
+  @media (max-width: 480px) {
+    border-radius: 0;
+  }
 `;
 
 const useOrders = (initialOrders: Order[]): [Order[], boolean] => {
