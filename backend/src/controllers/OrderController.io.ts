@@ -105,8 +105,8 @@ export class OrderController {
 
       if (orderIndex >= 0) {
         orders[orderIndex].state = 3;
-        orders.splice(orderIndex, 1);
         order = orders[orderIndex];
+        orders.splice(orderIndex, 1);
       }
 
       if (orders.length - 1 > 0) {
