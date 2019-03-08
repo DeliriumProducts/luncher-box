@@ -32,7 +32,6 @@ const StyledCard = styled(Card)`
   @media (max-width: 768px) {
     border-bottom: 1px solid;
     border-bottom-color: rgb(210, 210, 210);
-    box-shadow: none;
     margin: 8px 0 0 0;
     flex-basis: 100%;
   }

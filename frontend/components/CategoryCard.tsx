@@ -28,7 +28,7 @@ const StyledDiv: any = styled.div`
     }
   }
 
-  box-shadow: 0 2px 2px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 20px 24px -18px rgba(0, 0, 0, 0.31);
 `;
 
 const BlurredDiv: any = styled.div`
