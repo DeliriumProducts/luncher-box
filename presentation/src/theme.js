@@ -5,8 +5,8 @@ export default {
   transitionTimingFunction: "cubic-bezier(1, 0, 0, 1)",
   transitionDuration: ".8s",
   colors: {
-    text: "#fafafa",
+    text: "#D56AA0",
     link: "#0ff",
-    background: "#623aa2"
+    background: "#FCF8ED"
   }
 };

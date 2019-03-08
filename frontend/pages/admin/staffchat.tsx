@@ -15,7 +15,6 @@ import {
 import TextArea from 'antd/lib/input/TextArea';
 import RadioGroup from 'antd/lib/radio/group';
 import { Component } from 'react';
-import AdminLayout from '../../components/AdminLayout';
 import FullHeightContainer from '../../components/FullHeightContainer';
 import withAuth from '../../components/withAuth';
 
@@ -25,7 +24,7 @@ const StaffChat = () => {
     <FullHeightContainer>
       <div
         style={{
-          backgroundColor: '#fefefe',
+          backgroundColor: '#fafafa',
           height: '100%',
           width: '100%',
           borderRadius: '5%',

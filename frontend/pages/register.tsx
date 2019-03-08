@@ -1,18 +1,18 @@
 import { Button, Form, Icon, Input, message } from 'antd';
 import { FormComponentProps } from 'antd/lib/form';
+import Head from 'next/head';
 import Link from 'next/link';
+import Router from 'next/router';
 import React from 'react';
 import styled from 'styled-components';
 import { AuthAPI } from '../api';
 import CenteredDiv from '../components/CenteredDiv';
 import { HandleRegister } from '../types';
-import Router from 'next/router';
-import Head from 'next/head';
 
 const FormItem = Form.Item;
 
 const Container = styled.div`
-  background-color: rgb(245, 245, 245);
+  background-color: #fafafa;
   padding: 30px;
   box-shadow: 0 20px 24px -18px rgba(0, 0, 0, 0.31);
   border-radius: 10px;

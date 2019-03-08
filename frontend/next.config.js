@@ -3,11 +3,13 @@ const withCss = require('@zeit/next-css');
 const withLess = require('@zeit/next-less');
 const withSass = require('@zeit/next-sass');
 const withSize = require('next-size');
+const withOffline = require('next-offline');
 const webpack = require('webpack');
+const TerserPlugin = require('terser-webpack-plugin');
+const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const fs = require('fs');
 const path = require('path');
 const lessToJS = require('less-vars-to-js');
-const SWPrecacheWebpackPlugin = require('sw-precache-webpack-plugin');
 const { parsed: localEnv } = require('dotenv').config({
   path: path.join(__dirname, '/../.env')
 });
@@ -22,61 +24,46 @@ if (typeof require !== 'undefined') {
   require.extensions['.less'] = file => {};
 }
 
-module.exports = withSize(
-  withLess(
-    withSass(
-      withTypescript(
-        withCss({
-          webpack: (config, { dev }) => {
-            const oldEntry = config.entry;
+module.exports = withOffline(
+  withSize(
+    withLess(
+      withSass(
+        withTypescript(
+          withCss({
+            webpack(config) {
+              // Fixes npm packages that depend on `fs` module
+              config.node = {
+                fs: 'empty'
+              };
 
-            config.entry = () =>
-              oldEntry().then(entry => {
-                if (entry['main.js'] !== undefined) {
-                  entry['main.js'].push(path.resolve('./utils/offline'));
-                }
+              config.plugins.push(new webpack.EnvironmentPlugin(localEnv));
 
-                return entry;
-              });
+              config.plugins = config.plugins.filter(
+                plugin => plugin.constructor.name !== 'UglifyJsPlugin'
+              );
 
-            if (!dev) {
               config.plugins.push(
-                new SWPrecacheWebpackPlugin({
-                  cacheId: 'test-lighthouse',
-                  filepath: path.resolve('./static/sw.js'),
-                  staticFileGlobs: ['static/**/*'],
-                  minify: true,
-                  staticFileGlobsIgnorePatterns: [/\.next\//],
-                  runtimeCaching: [
-                    {
-                      handler: 'fastest',
-                      urlPattern: /[.](png|jpg|css)/
-                    },
-                    {
-                      handler: 'networkFirst',
-                      urlPattern: /^http.*/
-                    }
-                  ]
+                new TerserPlugin({
+                  parallel: true,
+                  terserOptions: {
+                    ecma: 6
+                  }
                 })
               );
+
+              config.plugins.push(new OptimizeCSSAssetsPlugin());
+
+              return config;
+            },
+            lessLoaderOptions: {
+              javascriptEnabled: true,
+              modifyVars: themeVariables
+            },
+            env: {
+              THEME_VARIABLES: themeVariables
             }
-
-            // Fixes npm packages that depend on `fs` module
-            config.node = {
-              fs: 'empty'
-            };
-            config.plugins.push(new webpack.EnvironmentPlugin(localEnv));
-
-            return config;
-          },
-          lessLoaderOptions: {
-            javascriptEnabled: true,
-            modifyVars: themeVariables
-          },
-          env: {
-            THEME_VARIABLES: themeVariables
-          }
-        })
+          })
+        )
       )
     )
   )

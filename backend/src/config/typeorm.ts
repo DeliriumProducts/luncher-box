@@ -18,7 +18,6 @@ const dbConfigs: DbConfigs = {
     password: DB_PASS,
     database: 'luncherbox_development',
     synchronize: false,
-    dropSchema: false,
     logging: false,
     entities: ['src/entities/*.ts'],
     cache: {
@@ -35,7 +34,6 @@ const dbConfigs: DbConfigs = {
     database: 'luncherbox_production',
     synchronize: IS_DEV,
     logging: false,
-    dropSchema: false,
     entities: ['src/entities/*.ts'],
     migrations: ['src/migration/*.ts'],
     cli: {
@@ -53,7 +51,7 @@ const dbConfigs: DbConfigs = {
     username: DB_USER,
     password: DB_PASS,
     database: 'luncherbox_test',
-    dropSchema: false,
+    dropSchema: true,
     synchronize: IS_DEV,
     logging: false,
     entities: ['src/entities/*.ts'],

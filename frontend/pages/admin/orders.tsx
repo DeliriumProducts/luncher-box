@@ -1,19 +1,23 @@
 import { Empty } from 'antd';
+import Head from 'next/head';
 import { useContext, useEffect, useState } from 'react';
 import styled from 'styled-components';
+import { OrderAPI } from '../../api';
 import OrderContainer from '../../components/OrderContainer';
 import Spinner from '../../components/Spinner';
 import withAuth from '../../components/withAuth';
 import { AdminContext } from '../../context';
 import { Order } from '../../interfaces';
-import { OrderAPI } from '../../api';
-import Head from 'next/head';
 
 const FlexContainer = styled.div`
   background-color: #fafafa;
   padding: 2rem;
   border-radius: 7px;
   box-shadow: 0 20px 24px -18px rgba(0, 0, 0, 0.31);
+
+  @media (max-width: 480px) {
+    border-radius: 0;
+  }
 `;
 
 const useOrders = (initialOrders: Order[]): [Order[], boolean] => {

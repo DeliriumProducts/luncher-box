@@ -1,5 +1,7 @@
-import { Button, Checkbox, Form, Icon, Input, message } from 'antd';
+import { Button, Form, Icon, Input, message } from 'antd';
 import { FormComponentProps } from 'antd/lib/form';
+import { NextContext } from 'next';
+import Head from 'next/head';
 import Link from 'next/link';
 import Router from 'next/router';
 import React, { Component } from 'react';
@@ -7,13 +9,11 @@ import styled from 'styled-components';
 import { AuthAPI } from '../api';
 import CenteredDiv from '../components/CenteredDiv';
 import { HandleLogin } from '../types';
-import Head from 'next/head';
-import { NextContext } from 'next';
 
 const FormItem = Form.Item;
 
 const Container = styled.div`
-  background-color: rgb(245, 245, 245);
+  background-color: #fafafa;
   padding: 30px;
   box-shadow: 0 20px 24px -18px rgba(0, 0, 0, 0.31);
   border-radius: 10px;

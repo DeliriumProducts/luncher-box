@@ -11,7 +11,7 @@ const StyledDiv: any = styled.div`
   color: white;
   border-radius: 7px;
   font-size: 3rem;
-  margin: 4px 4px 4px 4px;
+  margin: 8px 8px 8px 8px;
   width: 16rem;
   height: 16rem;
   user-select: none;
@@ -28,7 +28,7 @@ const StyledDiv: any = styled.div`
     }
   }
 
-  box-shadow: 0 2px 2px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 20px 24px -18px rgba(0, 0, 0, 0.31);
 `;
 
 const BlurredDiv: any = styled.div`

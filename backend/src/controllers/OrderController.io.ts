@@ -1,11 +1,11 @@
-import { MessageBody, OnMessage, SocketId, SocketIO, SocketController } from 'socket-controllers';
+import { Authorized, Get, JsonController, Param, Put } from 'routing-controllers';
+import { MessageBody, OnMessage, SocketController, SocketId } from 'socket-controllers';
+import { EntityError } from 'src/types';
 import { getRepository, In, Repository } from 'typeorm';
+import { io } from '../config';
 import { redisConnection } from '../connections';
 import { Product } from '../entities';
-import { Order, OrderNotValidError, OrderNotFoundError } from '../interfaces';
-import { EntityError } from 'src/types';
-import { Authorized, JsonController, Get, Put, Param, Body } from 'routing-controllers';
-import { io } from '../config';
+import { Order, OrderNotFoundError, OrderNotValidError } from '../interfaces';
 
 @SocketController()
 @JsonController('/orders')
@@ -43,7 +43,7 @@ export class OrderController {
   }
 
   /**
-   * POST /orders/accept/:orderId
+   * PUT /orders/accept/:orderId
    *
    * Accepts an order based on the query params
    * @param orderId
@@ -54,26 +54,27 @@ export class OrderController {
     const key = 'orders';
     const ordersJSON = await redisConnection.get(key);
 
-    let orders = [];
+    let orders: Order[] = [];
     let order = {};
 
     if (ordersJSON) {
       orders = JSON.parse(ordersJSON);
 
-      const orderIndex = orders.findIndex((orderItem: any) => orderItem.id === orderId);
-
-      if (orderIndex >= 0) {
-        if (orders[orderIndex].state !== 1) {
-          orders[orderIndex].state = 1;
-        } else {
-          throw new OrderNotFoundError();
+      orders = orders.map(o => {
+        if (o.id === orderId) {
+          if (o.state !== 1) {
+            o.state = 1;
+          } else {
+            throw new OrderNotFoundError();
+          }
+          order = o;
         }
-
-        order = orders[orderIndex];
-      }
+        return o;
+      });
     }
 
     await redisConnection.set(key, JSON.stringify(orders));
+
     io
       // @ts-ignore
       .to(order.customerId)
@@ -84,7 +85,7 @@ export class OrderController {
   }
 
   /**
-   * POST /orders/decline/:orderId
+   * PUT /orders/decline/:orderId
    *
    * Declines an order based on the query params
    * @param orderId
@@ -95,26 +96,22 @@ export class OrderController {
     const key = 'orders';
     const ordersJSON = await redisConnection.get(key);
 
-    let orders = [];
+    let orders: Order[] = [];
     let order = {};
 
     if (ordersJSON) {
       orders = JSON.parse(ordersJSON);
 
-      const orderIndex = orders.findIndex((orderItem: any) => orderItem.id === orderId);
+      orders = orders.filter(o => {
+        if (o.id === orderId) {
+          order = o;
+        }
 
-      if (orderIndex >= 0) {
-        orders[orderIndex].state = 3;
-        orders.splice(orderIndex, 1);
-        order = orders[orderIndex];
-      }
-
-      if (orders.length - 1 > 0) {
-        await redisConnection.set(key, JSON.stringify(orders));
-      } else {
-        await redisConnection.del(key);
-      }
+        return o.id !== orderId;
+      });
     }
+
+    await redisConnection.set(key, JSON.stringify(orders));
 
     io
       // @ts-ignore
@@ -126,7 +123,7 @@ export class OrderController {
   }
 
   /**
-   * POST /orders/finish/:orderId
+   * PUT /orders/finish/:orderId
    *
    * Finishes an order based on the query params
    * @param orderId
@@ -137,23 +134,23 @@ export class OrderController {
     const key = 'orders';
     const ordersJSON = await redisConnection.get(key);
 
-    let orders = [];
+    let orders: Order[] = [];
     let order = {};
 
     if (ordersJSON) {
       orders = JSON.parse(ordersJSON);
 
-      const orderIndex = orders.findIndex((orderItem: any) => orderItem.id === orderId);
-
-      if (orderIndex >= 0) {
-        if (orders[orderIndex].state !== 2) {
-          orders[orderIndex].state = 2;
-        } else {
-          throw new OrderNotFoundError();
+      orders = orders.map(o => {
+        if (o.id === orderId) {
+          if (o.state !== 2) {
+            o.state = 2;
+          } else {
+            throw new OrderNotFoundError();
+          }
+          order = o;
         }
-
-        order = orders[orderIndex];
-      }
+        return o;
+      });
     }
 
     await redisConnection.set(key, JSON.stringify(orders));
@@ -168,7 +165,7 @@ export class OrderController {
   }
 
   /**
-   *  Socket Emit place_order
+   * Socket Emit place_order
    *
    * Places an order based on the socket's message body
    * @param order
