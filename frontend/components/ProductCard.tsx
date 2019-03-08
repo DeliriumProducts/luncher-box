@@ -12,7 +12,7 @@ const StyledCard = styled(Card)`
   display: flex;
   flex-direction: column;
   text-align: center;
-  margin: 8px 4px 0 4px;
+  margin: 8px;
   box-shadow: 0 20px 24px -18px rgba(0, 0, 0, 0.31);
   flex-basis: 16rem;
   padding-bottom: 0;
