@@ -11,7 +11,7 @@ const StyledDiv: any = styled.div`
   color: white;
   border-radius: 7px;
   font-size: 3rem;
-  margin: 4px 4px 4px 4px;
+  margin: 8px 8px 8px 8px;
   width: 16rem;
   height: 16rem;
   user-select: none;
