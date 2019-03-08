@@ -22,6 +22,8 @@ import { Head, Image, Appear } from "mdx-deck";
   `}
 >
   <h2>Delirium Products</h2>
+  <a href="https://deliriumproducts.me">deliriumproducts.me</a>
+
 </div>
 
 ---
@@ -30,7 +32,12 @@ export default SplitRight;
 
 ## Проблемът
 
-![](static/problem.jpg)
+<img
+  src="static/problem.jpg"
+  css={`
+    width: 80%;
+  `}
+/>
 
 ---
 
@@ -39,6 +46,30 @@ export default Split;
 ## Решението
 
 ![](static/ipad.png)
+
+---
+
+<div>
+  <h1>Етапи на развитие 👣</h1>
+  <Appear>
+    <li
+      css={`
+        font-size: 1.5rem;
+        text-align: center;
+      `}
+    >
+      Проучване на технлогии и дизайн
+    </li>
+    <li
+      css={`
+        font-size: 1.5rem;
+        text-align: center;
+      `}
+    >
+      Разработване на модерно уеб приложение
+    </li>
+  </Appear>
+</div>
 
 ---
 
@@ -58,7 +89,7 @@ export default Split;
     <li>TypeScript, React.js, Next.js, Ant Design</li>
     <li>Node.js, Express.js, TypeORM, Socket.io</li>
     <li>MariaDB (MySQL), Redis, Nginx</li>
-    <li>Raspberry Pi</li>
+    <li>Raspberry Pi, Docker</li>
   </Appear>
 </div>
 
@@ -74,7 +105,6 @@ export default SplitRight;
     <li>Лесен, красив, бърз и интуитивен интерфейс за всички резолюции</li>
     <li>Административен панел</li>
     <li>Потребителски панел</li>
-    <li>Директен достъп до менюто на ресторанта</li>
     <li>Правене и отказ на поръчка към кухнята без нужда от регистрация</li>
     <li>Статус на поръчката</li>
     <li>Автоматично запазване на продуктите в количката.</li>
@@ -90,17 +120,22 @@ export default SplitRight;
 
 # Демонстрация
 
----
-
-# Конкуренция
+<a href="https://luncherbox.deliriumproducts.me">luncherbox.deliriumproducts.me</a>
 
 ---
 
-export default Split;
+# Конкуренция 👊
 
-# Бъдеще
+---
 
-![](static/clock.png)
+# Заключение и бъдеще
+
+<img
+  src="static/clock.png"
+  css={`
+    width: 30%;
+  `}
+/>
 
 ---
 
