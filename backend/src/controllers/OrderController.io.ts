@@ -223,12 +223,14 @@ export class OrderController {
 
     let orders = [];
 
-    if (ordersJSON) {
+    if (ordersJSON && ordersJSON !== '[]') {
       orders = JSON.parse(ordersJSON);
 
       /**
        * Attach id to order
        */
+
+      console.log(orders, ordersJSON);
       const id = orders[orders.length - 1].id + 1;
       order.id = id;
 
