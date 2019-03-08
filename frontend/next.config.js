@@ -24,8 +24,8 @@ if (typeof require !== 'undefined') {
   require.extensions['.less'] = file => {};
 }
 
-module.exports = withOffline(
-  withSize(
+module.exports = withSize(
+  withOffline(
     withLess(
       withSass(
         withTypescript(
@@ -38,20 +38,22 @@ module.exports = withOffline(
 
               config.plugins.push(new webpack.EnvironmentPlugin(localEnv));
 
-              config.plugins = config.plugins.filter(
-                plugin => plugin.constructor.name !== 'UglifyJsPlugin'
-              );
+              if (process.env.NODE_ENV === 'production') {
+                config.plugins = config.plugins.filter(
+                  plugin => plugin.constructor.name !== 'UglifyJsPlugin'
+                );
 
-              config.plugins.push(
-                new TerserPlugin({
-                  parallel: true,
-                  terserOptions: {
-                    ecma: 6
-                  }
-                })
-              );
+                config.plugins.push(
+                  new TerserPlugin({
+                    parallel: true,
+                    terserOptions: {
+                      ecma: 6
+                    }
+                  })
+                );
 
-              config.plugins.push(new OptimizeCSSAssetsPlugin());
+                config.plugins.push(new OptimizeCSSAssetsPlugin());
+              }
 
               return config;
             },
