@@ -11,7 +11,7 @@ const { Search } = Input;
 const StyledCard = styled(Card)`
   border-radius: 7px;
   box-shadow: 0 20px 24px -18px rgba(0, 0, 0, 0.31);
-  background-color: #fafafa;
+  background: #fafafa;
 
   @media (max-width: 480px) {
     & .ant-card-body {

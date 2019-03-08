@@ -5,6 +5,7 @@ import React, { Component } from 'react';
 import styled from 'styled-components';
 import { Exit } from 'styled-icons/icomoon/Exit';
 import { AuthAPI } from '../api';
+import { THEME_VARIABLES } from '../config';
 import { CartContext } from '../context';
 
 interface Props {
@@ -171,7 +172,13 @@ class MenuBar extends Component<Props> {
               <Menu.Item key="/cart">
                 <Link href="/cart">
                   <StyledAnchor>
-                    <Badge offset={[10, 0]} count={this.context.totalAmount}>
+                    <Badge
+                      offset={[10, 0]}
+                      count={this.context.totalAmount}
+                      style={{
+                        backgroundColor: THEME_VARIABLES['@primary-color']
+                      }}
+                    >
                       <Icon type="shopping-cart" className="menu-item-icon" />
                       <span className="menu-item-title">Cart</span>
                     </Badge>

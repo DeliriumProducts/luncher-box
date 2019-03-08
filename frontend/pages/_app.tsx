@@ -18,7 +18,7 @@ const GlobalStyle = createGlobalStyle`
   body {
     min-height: 100%;
     height: initial;
-    background-image: linear-gradient(135deg, #f97794 10%, #623aa2 100%);
+    background-color: #FCF8ED;
   }
 
   * {
