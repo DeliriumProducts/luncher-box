@@ -229,8 +229,6 @@ export class OrderController {
       /**
        * Attach id to order
        */
-
-      console.log(orders, ordersJSON);
       const id = orders[orders.length - 1].id + 1;
       order.id = id;
 
