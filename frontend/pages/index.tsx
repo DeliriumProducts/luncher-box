@@ -1,4 +1,4 @@
-import { Affix, Button, Icon, Layout, Popover } from 'antd';
+import { Affix, Button, Card, Icon, Layout, Popover } from 'antd';
 import Router from 'next/router';
 import styled from 'styled-components';
 import { THEME_VARIABLES } from '../config';
@@ -118,6 +118,62 @@ const StyledH1 = styled.h1`
   word-wrap: break-word;
 `;
 
+const StyledCard = styled(Card)`
+  border-radius: 7px;
+  margin-top: 50px;
+`;
+
+const TopicHeading = styled.div`
+  border-radius: 7px;
+  background-color: ${THEME_VARIABLES['@primary-color']};
+  width: 25%;
+  height: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  bottom: 25px;
+  padding: 20px;
+  > h1 {
+    color: #fff;
+    margin: 0;
+  }
+  font-family: 'Montserrat';
+  font-size: 1.2rem;
+  text-align: center;
+`;
+
+interface TopicProps {
+  topicName: string;
+}
+
+const Topic: React.FunctionComponent<TopicProps> = ({
+  children,
+  topicName
+}) => {
+  return (
+    <StyledCard
+      cover={
+        <div
+          style={{
+            position: 'relative',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            textAlign: 'center'
+          }}
+        >
+          <TopicHeading>
+            <h1>{topicName}</h1>
+          </TopicHeading>
+        </div>
+      }
+    >
+      {children}
+    </StyledCard>
+  );
+};
+
 export default () => {
   const Items = (
     <>
@@ -173,6 +229,11 @@ export default () => {
           </div>
           <StyledImage src="/static/iphone.png" />
         </Wrapper>
+        <div>
+          <Topic topicName="Features">asdf</Topic>
+          <Topic topicName="About">asdf</Topic>
+          <Topic topicName="Contact">asdf</Topic>
+        </div>
       </StyledContent>
     </StyledLayout>
   );
