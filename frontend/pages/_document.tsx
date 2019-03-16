@@ -24,6 +24,10 @@ export default class MyDocument extends Document {
     return (
       <html lang="en">
         <Head>
+          <link
+            href="https://fonts.googleapis.com/css?family=Montserrat:100,100italic,200,200italic,300,300italic,regular,italic,500,500italic,600,600italic,700,700italic,800,800italic,900,900italic"
+            rel="stylesheet"
+          />
           <meta
             name="description"
             content="Place orders right from your phone now from LuncherBox!"

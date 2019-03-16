@@ -3,11 +3,11 @@ import Head from 'next/head';
 import Router, { DefaultQuery } from 'next/router';
 import { Component } from 'react';
 import styled from 'styled-components';
-import { CategoryAPI } from '../api';
-import ProductCard from '../components/ProductCard';
-import Spinner from '../components/Spinner';
-import withRouter from '../components/withRouter';
-import { Product } from '../interfaces';
+import { CategoryAPI } from '../../api';
+import ProductCard from '../../components/ProductCard';
+import Spinner from '../../components/Spinner';
+import withRouter from '../../components/withRouter';
+import { Product } from '../../interfaces';
 
 const FlexContainer = styled.div`
   display: flex;
@@ -60,7 +60,7 @@ class CategoryPage extends Component<Props, State> {
       }
     } catch (err) {
       message.error(`${err}, Redirecting you to the menu...`, 3, () =>
-        Router.replace('/')
+        Router.replace('/app')
       );
     } finally {
       this.setState({ loading: false });

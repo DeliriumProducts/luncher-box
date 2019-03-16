@@ -82,7 +82,7 @@ class MenuBar extends Component<Props> {
       if (selectedKey.startsWith('/admin')) {
         selectedKeys.push('/admin');
       } else {
-        selectedKeys.push('/');
+        selectedKeys.push('/app');
       }
     } else {
       selectedKeys.push(selectedKey);
@@ -161,16 +161,16 @@ class MenuBar extends Component<Props> {
               inlineIndent={50}
               className="styled-menu"
             >
-              <Menu.Item key="/">
-                <Link href="/">
+              <Menu.Item key="/app">
+                <Link href="/app">
                   <StyledAnchor>
                     <Icon type="read" className="menu-item-icon" />
                     <span className="menu-item-title">Menu</span>
                   </StyledAnchor>
                 </Link>
               </Menu.Item>
-              <Menu.Item key="/cart">
-                <Link href="/cart">
+              <Menu.Item key="/app/cart">
+                <Link href="/app/cart">
                   <StyledAnchor>
                     <Badge
                       offset={[10, 0]}

@@ -19,6 +19,15 @@ const GlobalStyle = createGlobalStyle`
     min-height: 100%;
     height: initial;
     background-color: #FCF8ED;
+    background-image: url('/static/circles-primary.svg'),
+    url('/static/circles-accent.svg');
+    background-repeat: repeat-y;
+    background-size: 85vmax, 65vmax;
+    background-position: bottom -20vmax left -60vmax, top -10vmax right -36vmax;
+    @media screen and (max-width: 920px) {
+      background-position: bottom -10vmax left -60vmax, top -80vmax right -36vmax;
+      background-size: 90vmax, 65vmax;
+    }
   }
 
   * {

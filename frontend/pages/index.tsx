@@ -1,83 +1,179 @@
-import { Empty, message } from 'antd';
-import Head from 'next/head';
-import { Component } from 'react';
+import { Affix, Button, Icon, Layout, Popover } from 'antd';
+import Router from 'next/router';
 import styled from 'styled-components';
-import { CategoryAPI } from '../api';
-import CategoryCard from '../components/CategoryCard';
-import Spinner from '../components/Spinner';
-import { AdminContext } from '../context/AdminContext';
-import { Category } from '../interfaces';
+import { THEME_VARIABLES } from '../config';
 
-const FlexContainer = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  background-color: #fafafa;
-  padding: 2rem;
-  border-radius: 7px;
+const { Header, Content } = Layout;
 
-  @media (max-width: 480px) {
-    border-radius: 0;
-  }
-
-  box-shadow: 0 20px 24px -18px rgba(0, 0, 0, 0.31);
+const StyledLayout = styled(Layout)`
+  min-height: 100%;
+  background: rgba(0, 0, 0, 0);
 `;
 
-interface State {
-  categories: Category[];
-  loading: boolean;
-}
+const StyledContent = styled(Content)`
+  padding: 50px;
+  padding-top: 0;
+  min-height: 500vh;
+`;
 
-class Home extends Component<any, State> {
-  static contextType = AdminContext;
-  context!: React.ContextType<typeof AdminContext>;
+const Wrapper = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  height: 100vh;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-evenly;
 
-  state: State = {
-    categories: [],
-    loading: true
-  };
+  @media screen and (max-width: 920px) {
+    align-items: center;
+  }
+`;
+const StyledImage = styled.img`
+  height: 75%;
+  width: auto;
+`;
 
-  async componentDidMount() {
-    try {
-      const categories = await CategoryAPI.getAll();
+const StyledHeader = styled(Header)`
+  background-color: #fafafa;
+  height: 80px;
+  display: flex;
+  align-items: center;
+  font-size: 1rem;
+  font-family: 'Montserrat';
+  box-shadow: rgba(0, 0, 0, 0.12) 0px 2px 2px;
+  user-select: none;
 
-      if (categories) {
-        this.setState({ categories });
-      }
-    } catch (err) {
-      message.error(`${err}`, 3);
-    } finally {
-      this.setState({ loading: false });
+  .items-desktop {
+    display: flex;
+  }
+
+  .items-mobile {
+    display: none;
+  }
+
+  .logo {
+    flex: 1;
+    margin-left: 45px;
+    color: ${THEME_VARIABLES['@primary-color']};
+    display: flex;
+    font-size: 1.5rem;
+    align-items: center;
+    font-weight: 600;
+
+    img {
+      display: block;
+      margin-right: 20px;
     }
   }
 
-  render() {
-    let data: React.ReactNode[] | React.ReactNode;
-    /**
-     * Check whether data is still being fetched
-     * then inject the showModal func and entity's type to children's props
-     */
-    if (this.state.loading) {
-      data = <Spinner />;
-    } else {
-      if (this.state.categories.length) {
-        data = this.state.categories.map(category => (
-          <CategoryCard key={category.id} {...category} />
-        ));
-      } else {
-        data = <Empty description="No entries found" />;
-      }
+  @media screen and (max-width: 920px) {
+    .items-desktop {
+      display: none;
     }
 
-    return (
-      <>
-        <Head>
-          <title>Menu | LuncherBox</title>
-        </Head>
-        <FlexContainer>{data}</FlexContainer>
-      </>
-    );
-  }
-}
+    .items-mobile {
+      display: flex;
+    }
 
-export default Home;
+    .logo {
+      justify-content: center;
+      align-items: center;
+      margin-left: 0;
+      font-size: 1rem;
+    }
+  }
+
+  @media screen and (max-width: 380px) {
+    .logo {
+      img {
+        display: none;
+      }
+    }
+  }
+`;
+
+const MenuItem = styled.a`
+  text-transform: uppercase;
+  margin-right: 45px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: ${THEME_VARIABLES['@primary-color']}bb;
+  font-weight: 500;
+
+  &:hover {
+    color: ${THEME_VARIABLES['@primary-color']};
+    font-weight: 550;
+  }
+
+  @media screen and (max-width: 920px) {
+    margin-right: 0;
+  }
+`;
+
+const StyledH1 = styled.h1`
+  font-size: 2rem;
+  font-family: 'Montserrat';
+  font-weight: 450;
+  word-wrap: break-word;
+`;
+
+export default () => {
+  const Items = (
+    <>
+      <MenuItem>Home</MenuItem>
+      <MenuItem>Features</MenuItem>
+      <MenuItem>About</MenuItem>
+      <MenuItem>Contact</MenuItem>
+    </>
+  );
+
+  return (
+    <StyledLayout>
+      <Affix offsetTop={0}>
+        <StyledHeader>
+          <div className="logo">
+            <img src="/static/logo.svg" width="32px" />
+            LuncherBox
+          </div>
+          <div className="items-desktop">{Items}</div>
+          <div className="items-mobile">
+            <Popover placement="bottom" content={Items}>
+              <Icon
+                type="bars"
+                style={{
+                  color: THEME_VARIABLES['@primary-color'],
+                  cursor: 'pointer',
+                  fontSize: '1.5rem',
+                  padding: '1rem'
+                }}
+              />
+            </Popover>
+          </div>
+        </StyledHeader>
+      </Affix>
+      <StyledContent>
+        <Wrapper>
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              flexDirection: 'column'
+            }}
+          >
+            <StyledH1>Placing orders has never been faster.</StyledH1>
+            <Button
+              size="large"
+              type="primary"
+              onClick={() => Router.push('/app')}
+            >
+              Start using LuncherBox now!
+            </Button>
+          </div>
+          <StyledImage src="/static/iphone.png" />
+        </Wrapper>
+      </StyledContent>
+    </StyledLayout>
+  );
+};

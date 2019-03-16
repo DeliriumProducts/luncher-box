@@ -2,10 +2,10 @@ import { Button, Card, Empty, Input, message, Modal, Tag } from 'antd';
 import Head from 'next/head';
 import React from 'react';
 import styled from 'styled-components';
-import ItemCard from '../components/ItemCard';
-import Spinner from '../components/Spinner';
-import { CartContext } from '../context';
-import { Order, Product } from '../interfaces';
+import ItemCard from '../../components/ItemCard';
+import Spinner from '../../components/Spinner';
+import { CartContext } from '../../context';
+import { Order, Product } from '../../interfaces';
 
 const { TextArea } = Input;
 

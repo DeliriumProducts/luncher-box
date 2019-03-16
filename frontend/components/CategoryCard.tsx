@@ -52,7 +52,7 @@ export default (props: Props) => {
   const { id, name, image } = props;
 
   return (
-    <Link href={`/category?categoryId=${id}`} as={`/category/${id}`}>
+    <Link href={`/app/category?categoryId=${id}`} as={`/app/category/${id}`}>
       <StyledDiv>
         <BlurredDiv className="blurred-div" img={image}>
           <div

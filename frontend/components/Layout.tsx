@@ -15,7 +15,7 @@ const StyledLayout = styled(AntDesignLayout)`
   background: rgba(0, 0, 0, 0);
 `;
 
-const CustomHeader = styled.div`
+const StyledHeader = styled.div`
   @media (max-width: 768px) {
     display: none;
   }
@@ -31,14 +31,18 @@ const StyledContent = styled(Content)`
   }
 `;
 
-const CustomFooter = styled.div`
+const StyledFooter = styled.div`
   @media (min-width: 768px) {
     display: none;
   }
 `;
 
 const Layout: React.FunctionComponent<Props> = props => {
-  if (props.route === '/login' || props.route === '/register') {
+  if (
+    props.route === '/login' ||
+    props.route === '/register' ||
+    props.route === '/'
+  ) {
     return <>{props.children}</>;
   }
 
@@ -46,16 +50,16 @@ const Layout: React.FunctionComponent<Props> = props => {
 
   return (
     <StyledLayout>
-      <CustomHeader>
+      <StyledHeader>
         <Affix offsetTop={0}>
           <MenuBar type={type} selectedKey={props.route} />
         </Affix>
-      </CustomHeader>
+      </StyledHeader>
       <StyledContent>{props.children}</StyledContent>
       <Affix offsetBottom={0}>
-        <CustomFooter>
+        <StyledFooter>
           <MenuBar type={type} selectedKey={props.route} />
-        </CustomFooter>
+        </StyledFooter>
       </Affix>
     </StyledLayout>
   );

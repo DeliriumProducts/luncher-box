@@ -30,8 +30,8 @@ app
       );
     });
 
-    server.get('/category/:categoryId', (req, res) => {
-      const actualPage = '/category';
+    server.get('/app/category/:categoryId', (req, res) => {
+      const actualPage = '/app/category';
       const queryParams = Object.assign({}, req.params, {
         categoryId: req.params.categoryId
       });
