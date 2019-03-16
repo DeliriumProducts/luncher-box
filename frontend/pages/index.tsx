@@ -1,5 +1,5 @@
 import { Affix, Button, Card, Icon, Layout, Popover } from 'antd';
-import Router from 'next/router';
+import Link from 'next/link';
 import styled from 'styled-components';
 import { THEME_VARIABLES } from '../config';
 
@@ -13,7 +13,14 @@ const StyledLayout = styled(Layout)`
 const StyledContent = styled(Content)`
   padding: 50px;
   padding-top: 0;
-  min-height: 500vh;
+
+  @media screen and (max-width: 768px) {
+    padding-right: 0;
+    padding-left: 0;
+    padding-top: 50px;
+  }
+
+  min-height: 100vh;
 `;
 
 const Wrapper = styled.div`
@@ -24,13 +31,21 @@ const Wrapper = styled.div`
   align-items: center;
   justify-content: space-evenly;
 
-  @media screen and (max-width: 920px) {
+  @media screen and (max-width: 768px) {
     align-items: center;
   }
 `;
-const StyledImage = styled.img`
-  height: 75%;
+
+const HeroImage = styled.img`
+  height: 65%;
   width: auto;
+
+  @media screen and (max-width: 768px) {
+    align-items: center;
+    margin-top: 50px;
+  }
+
+  transform: rotate(8deg);
 `;
 
 const StyledHeader = styled(Header)`
@@ -112,47 +127,59 @@ const MenuItem = styled.a`
 `;
 
 const StyledH1 = styled.h1`
-  font-size: 2rem;
+  font-size: 2.5rem;
   font-family: 'Montserrat';
   font-weight: 450;
   word-wrap: break-word;
+  text-align: center;
 `;
 
-const StyledCard = styled(Card)`
+const TopicCard = styled(Card)`
   border-radius: 7px;
   margin-top: 50px;
+  text-align: center;
+  border: none;
+  width: 75%;
+
+  @media (max-width: 768px) {
+    width: 100%;
+    border-radius: 0;
+  }
+
+  box-shadow: 0 4px 4px rgba(0, 0, 0, 0.12);
 `;
 
 const TopicHeading = styled.div`
   border-radius: 7px;
-  background-color: ${THEME_VARIABLES['@primary-color']};
-  width: 25%;
+  background-color: #fff;
   height: 50px;
+  box-shadow: 0 4px 4px rgba(0, 0, 0, 0.12);
   display: flex;
   justify-content: center;
   align-items: center;
   position: relative;
   bottom: 25px;
   padding: 20px;
+
   > h1 {
-    color: #fff;
+    color: ${THEME_VARIABLES['@primary-color']};
+    text-transform: uppercase;
     margin: 0;
+    font-family: 'Montserrat';
+    font-weight: 500;
+    font-size: 1.2rem;
   }
-  font-family: 'Montserrat';
-  font-size: 1.2rem;
+
   text-align: center;
 `;
 
 interface TopicProps {
-  topicName: string;
+  name: string;
 }
 
-const Topic: React.FunctionComponent<TopicProps> = ({
-  children,
-  topicName
-}) => {
+const Topic: React.FunctionComponent<TopicProps> = ({ children, name }) => {
   return (
-    <StyledCard
+    <TopicCard
       cover={
         <div
           style={{
@@ -164,13 +191,32 @@ const Topic: React.FunctionComponent<TopicProps> = ({
           }}
         >
           <TopicHeading>
-            <h1>{topicName}</h1>
+            <h1>{name}</h1>
           </TopicHeading>
         </div>
       }
     >
       {children}
-    </StyledCard>
+    </TopicCard>
+  );
+};
+
+interface FeatureProps {
+  type: 'left' | 'right';
+}
+
+const Feature: React.FunctionComponent<FeatureProps> = ({ children, type }) => {
+  return (
+    <div
+      style={{
+        display: 'flex',
+        width: '100%',
+        flexDirection: 'row',
+        justifyContent: type === 'right' ? 'flex-end' : 'flex-start'
+      }}
+    >
+      {type === 'right' ? <>{children}</> : <>{children}</>}
+    </div>
   );
 };
 
@@ -181,6 +227,13 @@ export default () => {
       <MenuItem>Features</MenuItem>
       <MenuItem>About</MenuItem>
       <MenuItem>Contact</MenuItem>
+      <MenuItem>
+        <Link href="/app" as="/app">
+          <Button size="large" type="primary">
+            Launch LuncherBox
+          </Button>
+        </Link>
+      </MenuItem>
     </>
   );
 
@@ -218,21 +271,51 @@ export default () => {
               flexDirection: 'column'
             }}
           >
-            <StyledH1>Placing orders has never been faster.</StyledH1>
-            <Button
-              size="large"
-              type="primary"
-              onClick={() => Router.push('/app')}
-            >
-              Start using LuncherBox now!
-            </Button>
+            <StyledH1>
+              Placing orders has <br /> never been faster.
+            </StyledH1>
+            <div>
+              <Link href="/app" as="/app">
+                <Button size="large" type="primary">
+                  Launch LuncherBox
+                </Button>
+              </Link>
+              <Button
+                size="large"
+                type="default"
+                style={{
+                  marginLeft: 10,
+                  color: THEME_VARIABLES['@primary-color'],
+                  borderColor: THEME_VARIABLES['@primary-color']
+                }}
+              >
+                Find out more
+              </Button>
+            </div>
           </div>
-          <StyledImage src="/static/iphone.png" />
+          <HeroImage src="/static/iphonex.png" />
         </Wrapper>
-        <div>
-          <Topic topicName="Features">asdf</Topic>
-          <Topic topicName="About">asdf</Topic>
-          <Topic topicName="Contact">asdf</Topic>
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            flexDirection: 'column',
+            marginTop: 100
+          }}
+        >
+          <Topic name="Features">
+            <Feature type="left">
+              <div>
+                <h1>Menu</h1>
+                <Icon type="book" />
+              </div>
+            </Feature>
+            <Feature type="right">Menu</Feature>
+            <Feature type="left">asdf</Feature>
+          </Topic>
+          <Topic name="About">asdf</Topic>
+          <Topic name="Contact">asdf</Topic>
         </div>
       </StyledContent>
     </StyledLayout>

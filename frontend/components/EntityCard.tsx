@@ -124,7 +124,7 @@ const EntityCard: React.FunctionComponent<Props> = props => {
   return (
     <StyledCard
       bordered={false}
-      hoverable={hoverable}
+      hoverable={entityType === 'category'}
       onClick={handleCardClick}
       actions={[
         <ActionButton
