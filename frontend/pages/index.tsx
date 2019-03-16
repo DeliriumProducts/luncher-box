@@ -201,21 +201,19 @@ const Topic: React.FunctionComponent<TopicProps> = ({ children, name }) => {
   );
 };
 
-interface FeatureProps {
-  type: 'left' | 'right';
-}
-
-const Feature: React.FunctionComponent<FeatureProps> = ({ children, type }) => {
+const Feature: React.FunctionComponent = ({ children }) => {
   return (
     <div
       style={{
         display: 'flex',
         width: '100%',
-        flexDirection: 'row',
-        justifyContent: type === 'right' ? 'flex-end' : 'flex-start'
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center'
+        // justifyContent: type === 'right' ? 'flex-end' : 'flex-start'
       }}
     >
-      {type === 'right' ? <>{children}</> : <>{children}</>}
+      {children}
     </div>
   );
 };
@@ -305,14 +303,24 @@ export default () => {
           }}
         >
           <Topic name="Features">
-            <Feature type="left">
+            <Feature>
               <div>
                 <h1>Menu</h1>
                 <Icon type="book" />
               </div>
             </Feature>
-            <Feature type="right">Menu</Feature>
-            <Feature type="left">asdf</Feature>
+            <Feature>
+              <div>
+                <h1>Menu</h1>
+                <Icon type="book" />
+              </div>
+            </Feature>
+            <Feature>
+              <div>
+                <h1>Menu</h1>
+                <Icon type="book" />
+              </div>
+            </Feature>
           </Topic>
           <Topic name="About">asdf</Topic>
           <Topic name="Contact">asdf</Topic>
