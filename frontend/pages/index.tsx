@@ -126,7 +126,7 @@ const MenuItem = styled.a`
   }
 `;
 
-const StyledH1 = styled.h1`
+const Heading = styled.h1`
   font-size: 2.5rem;
   font-family: 'Montserrat';
   font-weight: 450;
@@ -156,6 +156,7 @@ const TopicHeading = styled.div`
   box-shadow: 0 4px 4px rgba(0, 0, 0, 0.12);
   display: flex;
   justify-content: center;
+
   align-items: center;
   position: relative;
   bottom: 25px;
@@ -201,19 +202,53 @@ const Topic: React.FunctionComponent<TopicProps> = ({ children, name }) => {
   );
 };
 
-const Feature: React.FunctionComponent = ({ children }) => {
+const StyledH1 = styled.h1`
+  color: ${THEME_VARIABLES['@primary-color']};
+  margin: 0;
+  text-align: left;
+`;
+
+const StyledH2 = styled.h2`
+  margin: 0;
+  text-align: left;
+`;
+
+interface FeatureProps {
+  icon: string;
+  name: string;
+}
+
+const Feature: React.FunctionComponent<FeatureProps> = ({
+  children,
+  icon,
+  name
+}) => {
   return (
     <div
       style={{
         display: 'flex',
         width: '100%',
-        flexDirection: 'column',
+        flexDirection: 'row',
         justifyContent: 'center',
-        alignItems: 'center'
-        // justifyContent: type === 'right' ? 'flex-end' : 'flex-start'
+        alignItems: 'center',
+        flexBasis: '25%',
+        margin: 5
       }}
     >
-      {children}
+      <div>
+        <Icon
+          type={icon}
+          style={{
+            margin: 15,
+            fontSize: '3.5rem',
+            color: THEME_VARIABLES['@primary-color']
+          }}
+        />
+      </div>
+      <div style={{ display: 'flex', flexDirection: 'column' }}>
+        <StyledH1>{name}</StyledH1>
+        <StyledH2>{children}</StyledH2>
+      </div>
     </div>
   );
 };
@@ -247,7 +282,7 @@ export default () => {
           <div className="items-mobile">
             <Popover placement="bottom" content={Items}>
               <Icon
-                type="bars"
+                type="menu"
                 style={{
                   color: THEME_VARIABLES['@primary-color'],
                   cursor: 'pointer',
@@ -269,9 +304,9 @@ export default () => {
               flexDirection: 'column'
             }}
           >
-            <StyledH1>
+            <Heading>
               Placing orders has <br /> never been faster.
-            </StyledH1>
+            </Heading>
             <div>
               <Link href="/app" as="/app">
                 <Button size="large" type="primary">
@@ -298,29 +333,41 @@ export default () => {
             display: 'flex',
             justifyContent: 'center',
             alignItems: 'center',
-            flexDirection: 'column',
+            flexDirection: 'row',
+            flexWrap: 'wrap',
             marginTop: 100
           }}
         >
           <Topic name="Features">
-            <Feature>
-              <div>
-                <h1>Menu</h1>
-                <Icon type="book" />
-              </div>
-            </Feature>
-            <Feature>
-              <div>
-                <h1>Menu</h1>
-                <Icon type="book" />
-              </div>
-            </Feature>
-            <Feature>
-              <div>
-                <h1>Menu</h1>
-                <Icon type="book" />
-              </div>
-            </Feature>
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                textAlign: 'center',
+                flexDirection: 'row',
+                flexWrap: 'wrap'
+              }}
+            >
+              <Feature name="Place orders" icon="menu">
+                Lorem ipsum dolor sit amet consectetur adipisicing elit.
+              </Feature>
+              <Feature name="asdf" icon="book">
+                Lorem ipsum dolor sit amet consectetur adipisicing elit.
+              </Feature>
+              <Feature name="Edit menu" icon="edit">
+                Lorem ipsum dolor sit amet consectetur adipisicing elit.
+              </Feature>
+              <Feature name="asdf" icon="dollar">
+                Lorem ipsum dolor sit amet consectetur adipisicing elit.
+              </Feature>
+              <Feature name="asdf" icon="safety-certificate">
+                Lorem ipsum dolor sit amet consectetur adipisicing elit.
+              </Feature>
+              <Feature name="asdf" icon="shopping">
+                Lorem ipsum dolor sit amet consectetur adipisicing elit.
+              </Feature>
+            </div>
           </Topic>
           <Topic name="About">asdf</Topic>
           <Topic name="Contact">asdf</Topic>
