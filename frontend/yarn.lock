@@ -735,7 +735,7 @@
   dependencies:
     regenerator-runtime "^0.12.0"
 
-"@babel/runtime@^7.1.2":
+"@babel/runtime@^7.1.2", "@babel/runtime@^7.3.1":
   version "7.3.4"
   resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.3.4.tgz#73d12ba819e365fcf7fd152aed56d6df97d21c83"
   integrity sha512-IvfvnMdSaLBateu0jfsYIpZTxAc2cKEXEMiezGGN75QcBcecDUKd3PgLAncT0oOgxKy8dd8hrJKj9MfzgfZd6g==
@@ -2746,6 +2746,14 @@ create-react-context@0.2.2:
   version "0.2.2"
   resolved "https://registry.yarnpkg.com/create-react-context/-/create-react-context-0.2.2.tgz#9836542f9aaa22868cd7d4a6f82667df38019dca"
   integrity sha512-KkpaLARMhsTsgp0d2NA/R94F/eDLbhXERdIq3LvX2biCAXcDvHYoOqHfWCHf1+OLj+HKBotLG3KqaOOf+C1C+A==
+  dependencies:
+    fbjs "^0.8.0"
+    gud "^1.0.0"
+
+create-react-context@^0.2.3:
+  version "0.2.3"
+  resolved "https://registry.yarnpkg.com/create-react-context/-/create-react-context-0.2.3.tgz#9ec140a6914a22ef04b8b09b7771de89567cb6f3"
+  integrity sha512-CQBmD0+QGgTaxDL3OX1IDXYqjkp2It4RIbcb99jS6AEg27Ga+a9G3JtK6SIu0HBwPLZlmwt9F7UwWA4Bn92Rag==
   dependencies:
     fbjs "^0.8.0"
     gud "^1.0.0"
@@ -7299,6 +7307,13 @@ react-lifecycles-compat@^3.0.2, react-lifecycles-compat@^3.0.4:
   resolved "https://registry.yarnpkg.com/react-lifecycles-compat/-/react-lifecycles-compat-3.0.4.tgz#4f1a273afdfc8f3488a8c516bfda78f872352362"
   integrity sha512-fBASbA6LnOU9dOU2eW7aQ8xmYBSXUIWr+UmF9b1efZBazGNO+rcXT/icdKnYm2pTwcRylVUYwW7H1PHfLekVzA==
 
+react-scroll-to@^2.0.5:
+  version "2.0.5"
+  resolved "https://registry.yarnpkg.com/react-scroll-to/-/react-scroll-to-2.0.5.tgz#9926a6fdd130e6e57c3a213907dafcaa002c1103"
+  integrity sha512-a7RnktHhrewp9kPl5dSF4pUWiF/Uy7MQEgWpd76RuFhO7OLeib1HdlsZL0YEo5g1Y5RRGdsnRfoYzpYJ53Tj7w==
+  dependencies:
+    create-react-context "^0.2.3"
+
 react-slick@~0.23.2:
   version "0.23.2"
   resolved "https://registry.yarnpkg.com/react-slick/-/react-slick-0.23.2.tgz#8d8bdbc77a6678e8ad36f50c32578c7c0f1c54f6"
@@ -7310,6 +7325,13 @@ react-slick@~0.23.2:
     lodash.debounce "^4.0.8"
     prettier "^1.14.3"
     resize-observer-polyfill "^1.5.0"
+
+react-spring@^8.0.15:
+  version "8.0.15"
+  resolved "https://registry.yarnpkg.com/react-spring/-/react-spring-8.0.15.tgz#050d54edc334582c858bc100182d37bd7ab61d59"
+  integrity sha512-VXeqy7FCaNPiIPe1Yk4R4yfQn+BwJEofJ1Jkib7iAFouJJE7eUMhiReszYWYztCekmCAQvmsCxlOEKGK8J2O1w==
+  dependencies:
+    "@babel/runtime" "^7.3.1"
 
 react-transition-group@^2.3.1:
   version "2.6.1"

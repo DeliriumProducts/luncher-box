@@ -176,9 +176,10 @@ const TopicHeading = styled.div`
 
 interface TopicProps {
   name: string;
+  id: string;
 }
 
-const Topic: React.FunctionComponent<TopicProps> = ({ children, name }) => {
+const Topic: React.FunctionComponent<TopicProps> = ({ children, name, id }) => {
   return (
     <TopicCard
       cover={
@@ -191,7 +192,7 @@ const Topic: React.FunctionComponent<TopicProps> = ({ children, name }) => {
             textAlign: 'center'
           }}
         >
-          <TopicHeading>
+          <TopicHeading id={id}>
             <h1>{name}</h1>
           </TopicHeading>
         </div>
@@ -238,6 +239,7 @@ const FeatureWrapper = styled.div`
 interface FeatureProps {
   icon: string;
   name: string;
+  [key: string]: any;
 }
 
 const Feature: React.FunctionComponent<FeatureProps> = ({
@@ -268,10 +270,26 @@ const Feature: React.FunctionComponent<FeatureProps> = ({
 export default () => {
   const Items = (
     <>
-      <MenuItem>Home</MenuItem>
-      <MenuItem>Features</MenuItem>
-      <MenuItem>About</MenuItem>
-      <MenuItem>Contact</MenuItem>
+      <MenuItem
+        onClick={() => document.getElementById('home')!.scrollIntoView()}
+      >
+        Home
+      </MenuItem>
+      <MenuItem
+        onClick={() => document.getElementById('features')!.scrollIntoView()}
+      >
+        Features
+      </MenuItem>
+      <MenuItem
+        onClick={() => document.getElementById('about')!.scrollIntoView()}
+      >
+        About
+      </MenuItem>
+      <MenuItem
+        onClick={() => document.getElementById('contact')!.scrollIntoView()}
+      >
+        Contact
+      </MenuItem>
       <MenuItem>
         <Link href="/app" as="/app">
           <Button size="large" type="primary">
@@ -306,7 +324,7 @@ export default () => {
           </div>
         </StyledHeader>
       </Affix>
-      <StyledContent>
+      <StyledContent id="home">
         <Wrapper>
           <div
             style={{
@@ -333,6 +351,9 @@ export default () => {
                   color: THEME_VARIABLES['@primary-color'],
                   borderColor: THEME_VARIABLES['@primary-color']
                 }}
+                onClick={() =>
+                  document.getElementById('features')!.scrollIntoView()
+                }
               >
                 Find out more
               </Button>
@@ -350,7 +371,7 @@ export default () => {
             marginTop: 100
           }}
         >
-          <Topic name="Features">
+          <Topic name="Features" id="features">
             <div
               style={{
                 display: 'flex',
@@ -383,7 +404,8 @@ export default () => {
               </Feature>
             </div>
           </Topic>
-          <Topic name="About">
+
+          <Topic name="About" id="about">
             <div
               style={{
                 display: 'flex',
@@ -409,7 +431,7 @@ export default () => {
               </StyledH2>
             </div>
           </Topic>
-          <Topic name="Contact">
+          <Topic name="Contact" id="contact">
             <div
               style={{
                 display: 'flex',

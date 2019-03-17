@@ -13,6 +13,7 @@ const GlobalStyle = createGlobalStyle`
     margin: 0;
     height: auto;
     min-height: 100%;
+    scroll-behavior: smooth;
   }
 
   body {
