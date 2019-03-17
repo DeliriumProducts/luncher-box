@@ -205,12 +205,34 @@ const Topic: React.FunctionComponent<TopicProps> = ({ children, name }) => {
 const StyledH1 = styled.h1`
   color: ${THEME_VARIABLES['@primary-color']};
   margin: 0;
+  font-size: 1.5rem;
   text-align: left;
+`;
+
+const FeatureContent = styled.h2`
+  margin: 0;
+  text-align: left;
+  font-size: 0.9rem;
 `;
 
 const StyledH2 = styled.h2`
   margin: 0;
-  text-align: left;
+  font-size: 0.9rem;
+  text-align: center;
+`;
+
+const FeatureWrapper = styled.div`
+  display: flex;
+  width: 100%;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  flex-basis: 25%;
+  margin: 20px;
+
+  @media (max-width: 768px) {
+    flex-wrap: wrap;
+  }
 `;
 
 interface FeatureProps {
@@ -224,32 +246,22 @@ const Feature: React.FunctionComponent<FeatureProps> = ({
   name
 }) => {
   return (
-    <div
-      style={{
-        display: 'flex',
-        width: '100%',
-        flexDirection: 'row',
-        justifyContent: 'center',
-        alignItems: 'center',
-        flexBasis: '25%',
-        margin: 5
-      }}
-    >
+    <FeatureWrapper>
       <div>
         <Icon
           type={icon}
           style={{
             margin: 15,
-            fontSize: '3.5rem',
+            fontSize: '2rem',
             color: THEME_VARIABLES['@primary-color']
           }}
         />
       </div>
       <div style={{ display: 'flex', flexDirection: 'column' }}>
         <StyledH1>{name}</StyledH1>
-        <StyledH2>{children}</StyledH2>
+        <FeatureContent>{children}</FeatureContent>
       </div>
-    </div>
+    </FeatureWrapper>
   );
 };
 
@@ -349,28 +361,74 @@ export default () => {
                 flexWrap: 'wrap'
               }}
             >
-              <Feature name="Place orders" icon="menu">
-                Lorem ipsum dolor sit amet consectetur adipisicing elit.
+              <Feature name="Happy customers" icon="smile">
+                Cut the wait needed before placing orders!
               </Feature>
-              <Feature name="asdf" icon="book">
-                Lorem ipsum dolor sit amet consectetur adipisicing elit.
+              <Feature name="Cheap" icon="dollar">
+                Easy and low-cost set up and integrate into restaurants.
               </Feature>
-              <Feature name="Edit menu" icon="edit">
-                Lorem ipsum dolor sit amet consectetur adipisicing elit.
+              <Feature name="Realtime menu" icon="edit">
+                Get rid of the paper menu! Create, update and delete products to
+                your heart's content!
               </Feature>
-              <Feature name="asdf" icon="dollar">
-                Lorem ipsum dolor sit amet consectetur adipisicing elit.
+              <Feature name="Make more money" icon="rise">
+                Increase your profit by lowering the amount of required waiters!
               </Feature>
-              <Feature name="asdf" icon="safety-certificate">
-                Lorem ipsum dolor sit amet consectetur adipisicing elit.
+              <Feature name="Secure" icon="safety-certificate">
+                Prevent unauthorized personnel from modifying the menu!
               </Feature>
-              <Feature name="asdf" icon="shopping">
-                Lorem ipsum dolor sit amet consectetur adipisicing elit.
+              <Feature name="Use anywhere" icon="mobile">
+                No need to download anything - access the app right from your
+                browser!
               </Feature>
             </div>
           </Topic>
-          <Topic name="About">asdf</Topic>
-          <Topic name="Contact">asdf</Topic>
+          <Topic name="About">
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                textAlign: 'center',
+                flexDirection: 'row',
+                flexWrap: 'wrap',
+                padding: 20
+              }}
+            >
+              <StyledH2>
+                Luncher Box - Interactive Menu is a web app which aims making
+                placing orders by clients in restaurants a much faster task.
+                Other than the satisfied customers, the restaurant owners will
+                save money by lowering the required amount of waiters to a
+                minimum. The clients of the restaurant will place orders through
+                Luncher Box, which will send the request to the kitchen, where
+                it will be processed through the app.
+                <br />
+                <br />
+                <a href="/static/lpaper.pdf">LuncherBox Paper 2019</a>
+              </StyledH2>
+            </div>
+          </Topic>
+          <Topic name="Contact">
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                textAlign: 'center',
+                flexDirection: 'row',
+                flexWrap: 'wrap',
+                padding: 20
+              }}
+            >
+              <StyledH2>
+                You can contact us at{' '}
+                <a href="mailto:office@deliriumproducts.me">
+                  office@deliriumproducts.me
+                </a>
+              </StyledH2>
+            </div>
+          </Topic>
         </div>
       </StyledContent>
     </StyledLayout>
