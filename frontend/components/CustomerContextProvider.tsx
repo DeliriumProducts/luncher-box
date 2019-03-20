@@ -154,40 +154,6 @@ class CustomerContextProvider extends Component<Props, State> {
         await localForage.setItem('totalAmount', this.state.totalAmount);
       }
     );
-
-    // let { totalAmount } = this.state;
-
-    // const productIndex = this.findProductIndex(product.id);
-
-    // if (productIndex >= 0) {
-    //   if (products[productIndex].quantity) {
-    //     /**
-    //      * Gets the old quantity and remove 1, deletes the product if it's less than or eq. to 0
-    //      */
-    //     const oldQuantity = products[productIndex].quantity;
-    //     if (oldQuantity) {
-    //       if (oldQuantity - 1 > 0) {
-    //         products[productIndex].quantity = oldQuantity - 1;
-    //       } else {
-    //         products.splice(productIndex, 1);
-    //       }
-    //     }
-    //   }
-    // } else {
-    //   return;
-    // }
-
-    // totalAmount--;
-    // this.setState(
-    //   prevState => ({
-    //     order: { ...prevState.order, products },
-    //     totalAmount
-    //   }),
-    //   async () => {
-    //     await localForage.setItem('currentOrder', this.state.order);
-    //     await localForage.setItem('totalAmount', this.state.totalAmount);
-    //   }
-    // );
   };
 
   comment = (comment: string) => {
