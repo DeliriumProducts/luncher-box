@@ -68,6 +68,7 @@ const useOrders = (initialOrders: Order[]): [Order[], boolean] => {
       const editedOrders = prevOrders.filter(order => {
         return order.id !== id;
       });
+
       return editedOrders;
     });
   };
@@ -83,6 +84,7 @@ const useOrders = (initialOrders: Order[]): [Order[], boolean] => {
         }
         return order;
       });
+
       return editedOrders;
     });
   };

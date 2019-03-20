@@ -39,6 +39,7 @@ class CustomerContextProvider extends Component<Props, State> {
         comment: '',
         table: ''
       };
+
       const totalAmount: number =
         (await localForage.getItem('totalAmount')) || 0;
       const table: string = (await localForage.getItem('table')) || '';
@@ -70,31 +71,34 @@ class CustomerContextProvider extends Component<Props, State> {
   };
 
   increment = async (product: Product) => {
-    const products = [...this.state.order.products];
-    let { totalAmount } = this.state;
-    const newProduct = { ...product };
-
-    const productIndex = this.findProductIndex(newProduct.id);
-
-    if (productIndex >= 0) {
-      /**
-       * Gets the old quantity and adds 1
-       */
-      const oldQuantity = products[productIndex].quantity;
-      if (oldQuantity) {
-        products[productIndex].quantity = oldQuantity + 1;
-      }
-    } else {
-      newProduct.quantity = 1;
-      products.push(newProduct);
-    }
-
-    totalAmount++;
     this.setState(
-      prevState => ({
-        order: { ...prevState.order, products },
-        totalAmount
-      }),
+      prevState => {
+        let isNewProduct = true;
+        const editedProducts = prevState.order.products.map(p => {
+          if (p.id === product.id) {
+            isNewProduct = false;
+
+            return {
+              ...p,
+              quantity: p.quantity! + 1
+            };
+          }
+
+          return p;
+        });
+
+        if (isNewProduct) {
+          editedProducts.push({ ...product, quantity: 1 });
+        }
+
+        return {
+          order: {
+            ...prevState.order,
+            products: editedProducts
+          },
+          totalAmount: prevState.totalAmount + 1
+        };
+      },
       async () => {
         await localForage.setItem('currentOrder', this.state.order);
         await localForage.setItem('totalAmount', this.state.totalAmount);
@@ -162,7 +166,7 @@ class CustomerContextProvider extends Component<Props, State> {
     const { orderHisotry } = { ...this.state };
     orderHisotry.push(order);
 
-    this.setState({ orderHisotry }, () => console.log(this.state));
+    this.setState({ orderHisotry });
   };
 
   findProductIndex = (id: number) => {

@@ -58,7 +58,6 @@ export default class extends React.Component<any, State> {
   };
 
   async componentDidMount() {
-    // await this.context.actions.reload();
     this.setState({ loadingFromLocal: false });
     if (this.context.socket) {
       this.context.socket.on('accepted_order', this.handleNewOrderState);
