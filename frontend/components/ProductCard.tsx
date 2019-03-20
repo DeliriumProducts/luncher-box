@@ -1,7 +1,7 @@
 import { Button, Card, Modal } from 'antd';
 import React from 'react';
 import styled from 'styled-components';
-import { CartContext } from '../context';
+import { CustomerContext } from '../context';
 import { Product } from '../interfaces';
 import PriceBadge from './PriceBadge';
 
@@ -77,8 +77,8 @@ const addDots = (str: string, limit: number) => {
 };
 
 export default class extends React.Component<Props> {
-  static contextType = CartContext;
-  context!: React.ContextType<typeof CartContext>;
+  static contextType = CustomerContext;
+  context!: React.ContextType<typeof CustomerContext>;
 
   viewMore = (e: React.FormEvent<HTMLElement>) => {
     e.stopPropagation();

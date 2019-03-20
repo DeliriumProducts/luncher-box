@@ -6,7 +6,7 @@ import styled from 'styled-components';
 import { Exit } from 'styled-icons/icomoon/Exit';
 import { AuthAPI } from '../api';
 import { THEME_VARIABLES } from '../config';
-import { CartContext } from '../context';
+import { CustomerContext } from '../context';
 
 interface Props {
   selectedKey: string;
@@ -58,8 +58,8 @@ const StyledLogout = styled(Exit)`
 `;
 
 class MenuBar extends Component<Props> {
-  static contextType = CartContext;
-  context!: React.ContextType<typeof CartContext>;
+  static contextType = CustomerContext;
+  context!: React.ContextType<typeof CustomerContext>;
 
   handleClick = async (e: any) => {
     const { key } = e;

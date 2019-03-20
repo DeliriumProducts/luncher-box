@@ -1,4 +1,4 @@
-import { CartContext } from '../context';
+import { CustomerContext } from '../context';
 import React from 'react';
 import { Card, Icon, Button, Badge, Avatar } from 'antd';
 import styled from 'styled-components';
@@ -104,8 +104,8 @@ const SyledImage = styled.img`
 `;
 
 export default class extends React.Component<Props> {
-  static contextType = CartContext;
-  context!: React.ContextType<typeof CartContext>;
+  static contextType = CustomerContext;
+  context!: React.ContextType<typeof CustomerContext>;
 
   addToCart = () => {
     const product: Product = this.props;

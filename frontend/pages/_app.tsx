@@ -4,7 +4,7 @@ import Head from 'next/head';
 import React from 'react';
 import { createGlobalStyle } from 'styled-components';
 import AdminContextProvider from '../components/AdminContextProvider';
-import CartContextProvider from '../components/CartContextProvider';
+import CustomerContextProvider from '../components/CustomerCartContext';
 import Layout from '../components/Layout';
 
 const GlobalStyle = createGlobalStyle`
@@ -79,7 +79,7 @@ export default class MyApp extends App {
         <Head>
           <title>LuncherBox | Place orders from your phone!</title>
         </Head>
-        <CartContextProvider>
+        <CustomerContextProvider>
           <AdminContextProvider>
             <Container>
               <GlobalStyle />
@@ -90,7 +90,7 @@ export default class MyApp extends App {
               </Layout>
             </Container>
           </AdminContextProvider>
-        </CartContextProvider>
+        </CustomerContextProvider>
       </>
     );
   }

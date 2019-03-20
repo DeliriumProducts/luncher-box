@@ -16,7 +16,7 @@ interface Values {
   };
 }
 
-export const CartContext = React.createContext<Values>({
+export const CustomerContext = React.createContext<Values>({
   order: {
     id: 1,
     products: [],

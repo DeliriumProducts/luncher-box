@@ -81,7 +81,6 @@ export default class extends React.Component<any, State> {
   handleNewOrderState = (order: Order) => {
     let data: React.ReactNode | React.ReactNode[];
 
-    console.log(order);
     if (order.state === 1) {
       data = <div>You order has been accepted! 🎉</div>;
     } else if (order.state === 2) {
@@ -229,8 +228,8 @@ export default class extends React.Component<any, State> {
         );
       } else {
         data = (
-          <Empty description="No products">
-            No items added to the cart yet. Go and add some!
+          <Empty description="No orders">
+            You haven't ordered anything yet. Go and order something!
           </Empty>
         );
       }

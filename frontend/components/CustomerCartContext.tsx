@@ -2,7 +2,7 @@ import localForage from 'localforage';
 import React, { Component } from 'react';
 import io from 'socket.io-client';
 import { SOCKET_URL } from '../config';
-import { CartContext } from '../context';
+import { CustomerContext } from '../context';
 import { Order, Product } from '../interfaces';
 
 interface Props {
@@ -17,7 +17,7 @@ interface State {
 
 const socket = io(`${SOCKET_URL}`);
 
-class CartContextProvider extends Component<Props, State> {
+class CustomerContextProvider extends Component<Props, State> {
   state: State = {
     order: {
       products: [],
@@ -165,7 +165,7 @@ class CartContextProvider extends Component<Props, State> {
   render() {
     const { order, table, totalAmount } = this.state;
     return (
-      <CartContext.Provider
+      <CustomerContext.Provider
         value={{
           order,
           totalAmount,
@@ -182,12 +182,12 @@ class CartContextProvider extends Component<Props, State> {
         }}
       >
         {this.props.children}
-      </CartContext.Provider>
+      </CustomerContext.Provider>
     );
   }
 }
 
-const CartConsumer = CartContext.Consumer;
+const CartConsumer = CustomerContext.Consumer;
 
-export default CartContextProvider;
+export default CustomerContextProvider;
 export { CartConsumer };
