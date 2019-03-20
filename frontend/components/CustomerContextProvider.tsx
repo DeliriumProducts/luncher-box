@@ -44,6 +44,7 @@ class CustomerContextProvider extends Component<Props, State> {
         (await localForage.getItem('totalAmount')) || 0;
       const table: string = (await localForage.getItem('table')) || '';
 
+      console.log(table);
       currentOrder.table = table;
 
       this.setState({ order: currentOrder, totalAmount, table }, () =>
@@ -53,16 +54,15 @@ class CustomerContextProvider extends Component<Props, State> {
   };
 
   clear = async () => {
-    this.setState({
+    this.setState(prevState => ({
       order: {
+        ...prevState.order,
         id: 1,
         products: [],
-        comment: '',
-        table: ''
+        comment: ''
       },
-      table: '',
       totalAmount: 0
-    });
+    }));
 
     return Promise.all([
       localForage.removeItem('currentOrder'),
@@ -103,9 +103,9 @@ class CustomerContextProvider extends Component<Props, State> {
           totalAmount: prevState.totalAmount + 1
         };
       },
-      async () => {
-        await localForage.setItem('currentOrder', this.state.order);
-        await localForage.setItem('totalAmount', this.state.totalAmount);
+      () => {
+        localForage.setItem('currentOrder', this.state.order);
+        localForage.setItem('totalAmount', this.state.totalAmount);
       }
     );
   };
@@ -149,9 +149,9 @@ class CustomerContextProvider extends Component<Props, State> {
           totalAmount: prevState.totalAmount - 1
         };
       },
-      async () => {
-        await localForage.setItem('currentOrder', this.state.order);
-        await localForage.setItem('totalAmount', this.state.totalAmount);
+      () => {
+        localForage.setItem('currentOrder', this.state.order);
+        localForage.setItem('totalAmount', this.state.totalAmount);
       }
     );
   };
@@ -159,8 +159,8 @@ class CustomerContextProvider extends Component<Props, State> {
   comment = (comment: string) => {
     this.setState(
       prevState => ({ order: { ...prevState.order, comment } }),
-      async () => {
-        await localForage.setItem('currentOrder', this.state.order);
+      () => {
+        localForage.setItem('currentOrder', this.state.order);
       }
     );
   };
@@ -168,18 +168,20 @@ class CustomerContextProvider extends Component<Props, State> {
   setTable = (id: string) => {
     this.setState(
       prevState => ({ order: { ...prevState.order, table: id } }),
-      async () => {
-        await localForage.setItem('currentOrder', this.state.order);
-        await localForage.setItem('table', id);
+      () => {
+        localForage.setItem('currentOrder', this.state.order);
+        localForage.setItem('table', id);
       }
     );
   };
 
-  addToHistory = (order: Order) => {
+  addToHistory = () => {
     const { orderHisotry } = { ...this.state };
-    orderHisotry.push(order);
+    orderHisotry.push(this.state.order);
 
-    this.setState({ orderHisotry });
+    this.setState({ orderHisotry }, async () => {
+      localForage.setItem('orderHistory', this.state.orderHisotry);
+    });
   };
 
   componentDidMount() {

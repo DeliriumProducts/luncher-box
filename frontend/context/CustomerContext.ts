@@ -13,7 +13,7 @@ interface Values {
     decrement: (product: Product) => void;
     comment: (comment: string) => void;
     setTable: (id: string) => void;
-    addToHistory: (order: Order) => void;
+    addToHistory: () => void;
   };
 }
 

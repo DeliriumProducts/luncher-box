@@ -79,7 +79,6 @@ export default class extends React.Component<any, State> {
 
   handleNewOrderState = (order: Order) => {
     let data: React.ReactNode | React.ReactNode[];
-    this.context.actions.addToHistory(order);
 
     if (order.state === 1) {
       data = <div>You order has been accepted! 🎉</div>;
@@ -105,6 +104,7 @@ export default class extends React.Component<any, State> {
        * Remove the actions and the totalAmount before sending to the backend
        */
       const { order } = this.context;
+
       let totalSum = 0;
       Modal.warn({
         title: 'Are you sure you want to place this order?',
@@ -146,6 +146,7 @@ export default class extends React.Component<any, State> {
             order.products = productsIdsAndQuantities;
 
             this.context.socket.emit('place_order', order);
+            this.context.actions.addToHistory();
             this.context.actions.clear();
           }
         },
