@@ -74,17 +74,21 @@ class CustomerContextProvider extends Component<Props, State> {
     this.setState(
       prevState => {
         let isNewProduct = true;
-        const editedProducts = prevState.order.products.map(p => {
+
+        const editedProducts: Product[] = [];
+        prevState.order.products.forEach(p => {
           if (p.id === product.id) {
             isNewProduct = false;
 
-            return {
+            editedProducts.push({
               ...p,
               quantity: p.quantity! + 1
-            };
+            });
+            return;
           }
 
-          return p;
+          editedProducts.push(p);
+          return;
         });
 
         if (isNewProduct) {
@@ -107,40 +111,83 @@ class CustomerContextProvider extends Component<Props, State> {
   };
 
   decrement = async (product: Product) => {
-    const products = [...this.state.order.products];
-    let { totalAmount } = this.state;
-
-    const productIndex = this.findProductIndex(product.id);
-
-    if (productIndex >= 0) {
-      if (products[productIndex].quantity) {
-        /**
-         * Gets the old quantity and remove 1, deletes the product if it's less than or eq. to 0
-         */
-        const oldQuantity = products[productIndex].quantity;
-        if (oldQuantity) {
-          if (oldQuantity - 1 > 0) {
-            products[productIndex].quantity = oldQuantity - 1;
-          } else {
-            products.splice(productIndex, 1);
-          }
-        }
-      }
-    } else {
-      return;
-    }
-
-    totalAmount--;
     this.setState(
-      prevState => ({
-        order: { ...prevState.order, products },
-        totalAmount
-      }),
+      prevState => {
+        let isNewProduct = true;
+
+        const editedProducts: Product[] = [];
+        prevState.order.products.forEach(p => {
+          if (p.id === product.id) {
+            isNewProduct = false;
+
+            if (p.quantity! === 1) {
+              return;
+            }
+
+            editedProducts.push({
+              ...p,
+              quantity: p.quantity! - 1
+            });
+            return;
+          }
+
+          editedProducts.push(p);
+          return;
+        });
+
+        if (isNewProduct) {
+          return {
+            ...prevState
+          };
+        }
+
+        return {
+          order: {
+            ...prevState.order,
+            products: editedProducts
+          },
+          totalAmount: prevState.totalAmount - 1
+        };
+      },
       async () => {
         await localForage.setItem('currentOrder', this.state.order);
         await localForage.setItem('totalAmount', this.state.totalAmount);
       }
     );
+
+    // let { totalAmount } = this.state;
+
+    // const productIndex = this.findProductIndex(product.id);
+
+    // if (productIndex >= 0) {
+    //   if (products[productIndex].quantity) {
+    //     /**
+    //      * Gets the old quantity and remove 1, deletes the product if it's less than or eq. to 0
+    //      */
+    //     const oldQuantity = products[productIndex].quantity;
+    //     if (oldQuantity) {
+    //       if (oldQuantity - 1 > 0) {
+    //         products[productIndex].quantity = oldQuantity - 1;
+    //       } else {
+    //         products.splice(productIndex, 1);
+    //       }
+    //     }
+    //   }
+    // } else {
+    //   return;
+    // }
+
+    // totalAmount--;
+    // this.setState(
+    //   prevState => ({
+    //     order: { ...prevState.order, products },
+    //     totalAmount
+    //   }),
+    //   async () => {
+    //     await localForage.setItem('currentOrder', this.state.order);
+    //     await localForage.setItem('totalAmount', this.state.totalAmount);
+    //   }
+    // );
   };
 
   comment = (comment: string) => {
@@ -167,12 +214,6 @@ class CustomerContextProvider extends Component<Props, State> {
     orderHisotry.push(order);
 
     this.setState({ orderHisotry });
-  };
-
-  findProductIndex = (id: number) => {
-    return this.state.order.products.findIndex(
-      ({ id: productId }: Product) => productId === id
-    );
   };
 
   componentDidMount() {
