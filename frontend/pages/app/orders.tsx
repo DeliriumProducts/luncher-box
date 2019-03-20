@@ -81,6 +81,8 @@ export default class extends React.Component<any, State> {
   handleNewOrderState = (order: Order) => {
     let data: React.ReactNode | React.ReactNode[];
 
+    this.context.actions.addToHistory(order);
+
     if (order.state === 1) {
       data = <div>You order has been accepted! 🎉</div>;
     } else if (order.state === 2) {

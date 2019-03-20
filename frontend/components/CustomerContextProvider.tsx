@@ -13,6 +13,7 @@ interface State {
   order: Order;
   table: string;
   totalAmount: number;
+  orderHisotry: Order[];
 }
 
 const socket = io(`${SOCKET_URL}`);
@@ -25,10 +26,11 @@ class CustomerContextProvider extends Component<Props, State> {
       table: ''
     },
     table: '',
-    totalAmount: 0
+    totalAmount: 0,
+    orderHisotry: []
   };
 
-  reload = async (): Promise<void> => {
+  syncWithLocalForage = async (): Promise<void> => {
     return new Promise(async (resolve, reject) => {
       const currentOrder: Order = (await localForage.getItem(
         'currentOrder'
@@ -156,11 +158,22 @@ class CustomerContextProvider extends Component<Props, State> {
     );
   };
 
+  addToHistory = (order: Order) => {
+    const { orderHisotry } = { ...this.state };
+    orderHisotry.push(order);
+
+    this.setState({ orderHisotry }, () => console.log(this.state));
+  };
+
   findProductIndex = (id: number) => {
     return this.state.order.products.findIndex(
       ({ id: productId }: Product) => productId === id
     );
   };
+
+  componentDidMount() {
+    this.syncWithLocalForage();
+  }
 
   render() {
     const { order, table, totalAmount } = this.state;
@@ -172,12 +185,13 @@ class CustomerContextProvider extends Component<Props, State> {
           socket,
           table,
           actions: {
-            reload: this.reload,
+            reload: this.syncWithLocalForage,
             clear: this.clear,
             increment: this.increment,
             decrement: this.decrement,
             comment: this.comment,
-            setTable: this.setTable
+            setTable: this.setTable,
+            addToHistory: this.addToHistory
           }
         }}
       >

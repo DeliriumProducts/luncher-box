@@ -4,7 +4,7 @@ import Head from 'next/head';
 import React from 'react';
 import { createGlobalStyle } from 'styled-components';
 import AdminContextProvider from '../components/AdminContextProvider';
-import CustomerContextProvider from '../components/CustomerCartContext';
+import CustomerContextProvider from '../components/CustomerContextProvider';
 import Layout from '../components/Layout';
 
 const GlobalStyle = createGlobalStyle`

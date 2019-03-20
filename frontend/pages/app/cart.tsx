@@ -58,7 +58,7 @@ export default class extends React.Component<any, State> {
   };
 
   async componentDidMount() {
-    await this.context.actions.reload();
+    // await this.context.actions.reload();
     this.setState({ loadingFromLocal: false });
     if (this.context.socket) {
       this.context.socket.on('accepted_order', this.handleNewOrderState);
@@ -80,8 +80,8 @@ export default class extends React.Component<any, State> {
 
   handleNewOrderState = (order: Order) => {
     let data: React.ReactNode | React.ReactNode[];
+    this.context.actions.addToHistory(order);
 
-    console.log(order);
     if (order.state === 1) {
       data = <div>You order has been accepted! 🎉</div>;
     } else if (order.state === 2) {
