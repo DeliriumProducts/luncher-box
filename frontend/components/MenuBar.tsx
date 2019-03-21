@@ -20,8 +20,6 @@ const MenuContainer = styled.div`
     font-size: 20px;
   }
   @media (max-width: 768px) {
-    position: fixed;
-    bottom: 0;
     width: 100%;
 
     .styled-menu {

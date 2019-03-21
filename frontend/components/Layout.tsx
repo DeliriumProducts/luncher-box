@@ -15,12 +15,6 @@ const StyledLayout = styled(AntDesignLayout)`
   background: rgba(0, 0, 0, 0);
 `;
 
-const StyledHeader = styled.div`
-  @media (max-width: 768px) {
-    display: none;
-  }
-`;
-
 const StyledContent = styled(Content)`
   padding: 50px;
   margin-bottom: 47px;
@@ -28,12 +22,6 @@ const StyledContent = styled(Content)`
 
   @media (max-width: 480px) {
     padding: 0;
-  }
-`;
-
-const StyledFooter = styled.div`
-  @media (min-width: 768px) {
-    display: none;
   }
 `;
 
@@ -50,17 +38,10 @@ const Layout: React.FunctionComponent<Props> = props => {
 
   return (
     <StyledLayout>
-      <StyledHeader>
-        <Affix offsetTop={0}>
-          <MenuBar type={type} selectedKey={props.route} />
-        </Affix>
-      </StyledHeader>
-      <StyledContent>{props.children}</StyledContent>
-      <Affix offsetBottom={0}>
-        <StyledFooter>
-          <MenuBar type={type} selectedKey={props.route} />
-        </StyledFooter>
+      <Affix offsetTop={0}>
+        <MenuBar type={type} selectedKey={props.route} />
       </Affix>
+      <StyledContent>{props.children}</StyledContent>
     </StyledLayout>
   );
 };

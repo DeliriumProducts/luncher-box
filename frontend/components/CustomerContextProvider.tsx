@@ -44,7 +44,6 @@ class CustomerContextProvider extends Component<Props, State> {
         (await localForage.getItem('totalAmount')) || 0;
       const table: string = (await localForage.getItem('table')) || '';
 
-      console.log(table);
       currentOrder.table = table;
 
       this.setState({ order: currentOrder, totalAmount, table }, () =>
