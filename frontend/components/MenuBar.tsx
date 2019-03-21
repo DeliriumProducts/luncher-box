@@ -15,19 +15,14 @@ interface Props {
 
 const MenuContainer = styled.div`
   z-index: 5000;
+
+  .menu-item-icon {
+    font-size: 20px;
+  }
   @media (max-width: 768px) {
     position: fixed;
     bottom: 0;
     width: 100%;
-
-    .menu-item-title {
-      display: none;
-    }
-
-    .menu-item-icon {
-      font-size: 25px;
-      margin-right: 0;
-    }
 
     .styled-menu {
       justify-content: space-between;
@@ -166,6 +161,14 @@ class MenuBar extends Component<Props> {
                   <StyledAnchor>
                     <Icon type="read" className="menu-item-icon" />
                     <span className="menu-item-title">Menu</span>
+                  </StyledAnchor>
+                </Link>
+              </Menu.Item>
+              <Menu.Item key="/app/orders">
+                <Link href="/app/orders">
+                  <StyledAnchor>
+                    <Icon type="profile" className="menu-item-icon" />
+                    <span className="menu-item-title">My Orders</span>
                   </StyledAnchor>
                 </Link>
               </Menu.Item>
