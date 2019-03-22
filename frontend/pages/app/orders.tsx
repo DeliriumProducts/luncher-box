@@ -38,7 +38,7 @@ export default () => {
     <FlexContainer>
       {orderHistory &&
         orderHistory.map((order, index) => {
-          return <Order order={order} key={`${order.id} + ${index}`} />;
+          return <Order order={order} key={order.id} />;
         })}
     </FlexContainer>
   );

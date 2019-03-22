@@ -47,7 +47,7 @@ const GlobalStyle = createGlobalStyle`
 
   .page-transition-enter-active {
     opacity: 1;
-    transition: opacity 150ms;
+    transition: opacity 100ms;
   }
 
   .page-transition-exit {
@@ -56,7 +56,7 @@ const GlobalStyle = createGlobalStyle`
 
   .page-transition-exit-active {
     opacity: 0;
-    transition: opacity 150ms;
+    transition: opacity 100ms;
   }
 `;
 
