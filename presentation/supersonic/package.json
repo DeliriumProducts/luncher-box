@@ -1,0 +1,20 @@
+{
+  "name": "luncherbox-presentation",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "mdx-deck src/index.mdx",
+    "build": "npm run clean && npm run static && npm run html && npm run pdf",
+    "clean": "rm -rf docs",
+    "static": "mkdir -p docs/static && cp -R src/static docs/",
+    "html": "mdx-deck build src/index.mdx -d docs",
+    "pdf": "mdx-deck-export pdf src/index.mdx --no-sandbox"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@mdx-deck/export": "^2.0.0",
+    "mdx-deck": "^2.0.0"
+  }
+}
