@@ -1,8 +1,8 @@
-import { CustomerContext } from '../context';
-import React from 'react';
-import { Card, Icon, Button, Badge, Avatar } from 'antd';
-import styled from 'styled-components';
+import { Button, Card, Icon } from 'antd';
 import ButtonGroup from 'antd/lib/button/button-group';
+import React from 'react';
+import styled from 'styled-components';
+import { CustomerContext } from '../context';
 import { Product } from '../interfaces';
 
 interface Props {
@@ -67,6 +67,7 @@ const StyledCard: any = styled(Card)`
   .title {
     flex-grow: 1;
     margin-top: 1%;
+    font-size: 1rem;
     margin: auto;
     word-break: break-all;
     text-align: left;
@@ -151,9 +152,7 @@ export default class extends React.Component<Props> {
           </ButtonGroup>
         </div>
         <SyledImage src={image} />
-        <div style={{ fontSize: '1rem' }} className="title">
-          {name}
-        </div>
+        <div className="title">{name}</div>
         <div className="price">
           $ {quantity && price && (price * quantity).toFixed(2)}
         </div>

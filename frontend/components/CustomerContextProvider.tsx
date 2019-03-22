@@ -13,7 +13,7 @@ interface State {
   order: Order;
   table: string;
   totalAmount: number;
-  orderHisotry: Order[];
+  orderHistory: Order[];
 }
 
 const socket = io(`${SOCKET_URL}`);
@@ -27,7 +27,7 @@ class CustomerContextProvider extends Component<Props, State> {
     },
     table: '',
     totalAmount: 0,
-    orderHisotry: []
+    orderHistory: []
   };
 
   syncWithLocalForage = async (): Promise<void> => {
@@ -42,12 +42,17 @@ class CustomerContextProvider extends Component<Props, State> {
 
       const totalAmount: number =
         (await localForage.getItem('totalAmount')) || 0;
+
       const table: string = (await localForage.getItem('table')) || '';
+
+      const orderHistory: Order[] =
+        (await localForage.getItem('orderHistory')) || [];
 
       currentOrder.table = table;
 
-      this.setState({ order: currentOrder, totalAmount, table }, () =>
-        resolve()
+      this.setState(
+        { order: currentOrder, totalAmount, table, orderHistory },
+        () => resolve()
       );
     });
   };
@@ -175,11 +180,13 @@ class CustomerContextProvider extends Component<Props, State> {
   };
 
   addToHistory = () => {
-    const { orderHisotry } = { ...this.state };
-    orderHisotry.push(this.state.order);
+    const { orderHistory } = { ...this.state };
+    orderHistory.push(this.state.order);
+    console.log(this.state.order);
+    console.log(orderHistory);
 
-    this.setState({ orderHisotry }, async () => {
-      localForage.setItem('orderHistory', this.state.orderHisotry);
+    this.setState({ orderHistory }, async () => {
+      localForage.setItem('orderHistory', this.state.orderHistory);
     });
   };
 
@@ -188,7 +195,7 @@ class CustomerContextProvider extends Component<Props, State> {
   }
 
   render() {
-    const { order, table, totalAmount } = this.state;
+    const { order, table, totalAmount, orderHistory } = this.state;
     return (
       <CustomerContext.Provider
         value={{
@@ -196,6 +203,7 @@ class CustomerContextProvider extends Component<Props, State> {
           totalAmount,
           socket,
           table,
+          orderHistory,
           actions: {
             reload: this.syncWithLocalForage,
             clear: this.clear,

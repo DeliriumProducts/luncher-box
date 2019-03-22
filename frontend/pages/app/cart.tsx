@@ -143,9 +143,10 @@ export default class extends React.Component<any, State> {
               []
             );
 
-            order.products = productsIdsAndQuantities;
-
-            this.context.socket.emit('place_order', order);
+            this.context.socket.emit('place_order', {
+              ...order,
+              products: productsIdsAndQuantities
+            });
             this.context.actions.addToHistory();
             this.context.actions.clear();
           }
