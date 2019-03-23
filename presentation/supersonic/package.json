@@ -9,7 +9,7 @@
     "clean": "rm -rf docs",
     "static": "mkdir -p docs/static && cp -R src/static docs/",
     "html": "mdx-deck build src/index.mdx -d docs",
-    "pdf": "mdx-deck-export pdf src/index.mdx --no-sandbox"
+    "pdf": "mdx-deck-export pdf src/index.mdx --no-sandbox -w 1920 -h 1080"
   },
   "author": "",
   "license": "ISC",
