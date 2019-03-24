@@ -51,7 +51,7 @@ const dbConfigs: DbConfigs = {
     username: DB_USER,
     password: DB_PASS,
     database: 'luncherbox_test',
-    dropSchema: true,
+    dropSchema: false,
     synchronize: IS_DEV,
     logging: false,
     entities: ['src/entities/*.ts'],

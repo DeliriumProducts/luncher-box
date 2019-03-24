@@ -645,7 +645,7 @@ describe('DELETE /categories/:id', () => {
   });
 });
 
-describe('POST /products', async () => {
+describe('POST /products', () => {
   const category: Partial<Category> = {
     name: 'Soups',
     image: 'https://image.com/image.com'
@@ -1544,7 +1544,7 @@ describe('DELETE /products/:id', () => {
   });
 });
 
-describe('Authorization', async () => {
+describe('Authorization', () => {
   it('throws an error when creating a category when not logged in', async () => {
     const category: Partial<Category> = {
       name: 'even-badder-examplers',
