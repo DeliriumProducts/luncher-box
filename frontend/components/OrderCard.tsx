@@ -1,8 +1,9 @@
 import { Avatar, Badge, Button, Card, Icon } from 'antd';
 import { FunctionComponent } from 'react';
 import styled from 'styled-components';
-import { Order, Product } from '../interfaces';
 import { THEME_VARIABLES } from '../config';
+import { Order, Product } from '../interfaces';
+import { DeepPartial } from '../types';
 
 const StyledCard = styled(Card)`
   margin-top: 8px;
@@ -35,7 +36,7 @@ const StyledCard = styled(Card)`
     align-items: center;
     padding-left: 0;
     padding-right: 0;
-    justify-content: space-between;
+    justify-content: space-evenly;
   }
 
   .ant-btn-group {
@@ -56,13 +57,18 @@ const StyledCard = styled(Card)`
 
   .product-list {
     display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .description {
   }
 
   padding: 1rem;
 `;
 
 interface ProductListProps {
-  products: Product[];
+  products: Partial<Product>[];
 }
 
 const ProductList: FunctionComponent<ProductListProps> = ({ products }) => {
@@ -98,22 +104,29 @@ const ProductList: FunctionComponent<ProductListProps> = ({ products }) => {
 };
 
 interface OrderProps {
-  order: Order;
+  order: DeepPartial<Order>;
 }
 
 const OrderCard: FunctionComponent<OrderProps> = ({
   order: { products, state }
 }) => {
+  const SIZE = 5;
+  const slicedProducts = products!.slice(0, SIZE);
+
+  if (slicedProducts.length === 5) {
+    slicedProducts.push({ image: '/static/placeholder.png' });
+  }
+
   return (
     <StyledCard>
       <div className="products">
-        <ProductList products={products} />
+        <ProductList products={slicedProducts} />
       </div>
       <div className="description">asdfasdfasdfasdfasdf | asdfasdf</div>
       <div className="info">
         <Button shape="circle">
           <Icon type="info" />
-        </Button>{' '}
+        </Button>
       </div>
     </StyledCard>
   );
