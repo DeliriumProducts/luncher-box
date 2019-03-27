@@ -2,6 +2,7 @@ import { Avatar, Badge, Button, Card, Icon } from 'antd';
 import { FunctionComponent } from 'react';
 import styled from 'styled-components';
 import { Order, Product } from '../interfaces';
+import { THEME_VARIABLES } from '../config';
 
 const StyledCard = styled(Card)`
   margin-top: 8px;
@@ -70,7 +71,14 @@ const ProductList: FunctionComponent<ProductListProps> = ({ products }) => {
       {products.map((product, index) => {
         if (product.quantity! > 1) {
           return (
-            <Badge count={product.quantity} key={index} offset={[-3, 3]}>
+            <Badge
+              count={product.quantity}
+              key={index}
+              offset={[-3, 3]}
+              style={{
+                backgroundColor: THEME_VARIABLES['@primary-color']
+              }}
+            >
               <Avatar src={product.image} size={45} className="avatar" />
             </Badge>
           );
@@ -92,6 +100,7 @@ const ProductList: FunctionComponent<ProductListProps> = ({ products }) => {
 interface OrderProps {
   order: Order;
 }
+
 const OrderCard: FunctionComponent<OrderProps> = ({
   order: { products, state }
 }) => {
