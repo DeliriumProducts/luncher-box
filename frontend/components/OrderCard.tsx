@@ -36,7 +36,7 @@ const StyledCard = styled(Card)`
     align-items: center;
     padding-left: 0;
     padding-right: 0;
-    justify-content: space-evenly;
+    justify-content: center;
   }
 
   .ant-btn-group {
@@ -55,13 +55,18 @@ const StyledCard = styled(Card)`
     box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
   }
 
-  .product-list {
-    display: flex;
-    justify-content: center;
-    align-items: center;
+  .products {
+    flex: 1;
   }
 
   .description {
+    text-align: center;
+    align-self: center;
+    flex: 1;
+  }
+
+  .info {
+    flex: 1;
   }
 
   padding: 1rem;
