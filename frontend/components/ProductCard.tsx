@@ -49,9 +49,14 @@ const StyledMeta = styled(Meta)`
   align-items: center;
   justify-content: center;
   height: 100%;
+
   & * {
     white-space: initial;
     overflow-wrap: normal;
+  }
+
+  .ant-card-meta-title {
+    font-weight: bold;
   }
 `;
 

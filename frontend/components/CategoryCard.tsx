@@ -16,15 +16,30 @@ const StyledDiv: any = styled.div`
   height: 16rem;
   user-select: none;
   cursor: pointer;
+
   @media (max-width: 768px) {
     margin: 12px 0 0 0;
     flex-basis: 100%;
   }
 
+  .title {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 3rem;
+    transition: all 0.25s;
+  }
+
   &:hover {
     .blurred-div {
-      filter: blur(3px);
-      transform: scale(1.025);
+      transform: scale(1.1);
+    }
+
+    .title {
+      transform: scale(1.3);
     }
   }
 
@@ -63,18 +78,7 @@ export default (props: Props) => {
             }}
           />
         </BlurredDiv>
-        <div
-          style={{
-            position: 'absolute',
-            width: '100%',
-            height: '100%',
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center'
-          }}
-        >
-          {name}
-        </div>
+        <div className="title">{name}</div>
       </StyledDiv>
     </Link>
   );
