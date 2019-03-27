@@ -1,4 +1,4 @@
-import { Avatar, Badge, Button, Card, Icon } from 'antd';
+import { Avatar, Badge, Button, Card, Icon, Modal } from 'antd';
 import { FunctionComponent } from 'react';
 import styled from 'styled-components';
 import { THEME_VARIABLES } from '../config';
@@ -60,13 +60,28 @@ const StyledCard = styled(Card)`
   }
 
   .description {
-    text-align: center;
-    align-self: center;
     flex: 1;
+    display: flex;
+
+    justify-content: center;
+    align-items: center;
+
+    h1 {
+      text-align: center;
+      margin: 0;
+      font-weight: bold;
+    }
+  }
+
+  .price {
+    margin: 0;
   }
 
   .info {
     flex: 1;
+
+    button {
+    }
   }
 
   padding: 1rem;
@@ -113,23 +128,37 @@ interface OrderProps {
 }
 
 const OrderCard: FunctionComponent<OrderProps> = ({
-  order: { products, state }
+  order: { products, state, table, comment, id }
 }) => {
   const SIZE = 5;
   const slicedProducts = products!.slice(0, SIZE);
 
+  const price = products!
+    .reduce((acc, pro) => acc + pro.quantity! * pro.price!, 0)
+    .toFixed(2);
+
   if (slicedProducts.length === 5) {
     slicedProducts.push({ image: '/static/placeholder.png' });
   }
+
+  const handleClick = () => {
+    const title = id ? `Order № ${id}` : 'Order';
+    Modal.info({
+      title,
+      content: <>{comment}</>
+    });
+  };
 
   return (
     <StyledCard>
       <div className="products">
         <ProductList products={slicedProducts} />
       </div>
-      <div className="description">asdfasdfasdfasdfasdf | asdfasdf</div>
+      <div className="description">
+        <h1 className="price">$ {price}</h1> {state && <h1>{state}</h1>}
+      </div>
       <div className="info">
-        <Button shape="circle">
+        <Button shape="circle" size="large" onClick={handleClick}>
           <Icon type="info" />
         </Button>
       </div>
