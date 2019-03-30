@@ -3,7 +3,7 @@ import React from 'react';
 import styled from 'styled-components';
 import { OrderAPI } from '../api';
 import { THEME_VARIABLES } from '../config';
-import { Order, Product } from '../interfaces';
+import { Order } from '../interfaces';
 import ItemCard from './ItemCard';
 
 const customPanelStyle = {
@@ -25,6 +25,8 @@ export const FlexSpan = styled.span`
   justify-content: center;
   align-items: center;
   flex-wrap: wrap;
+  padding-top: 8px;
+  padding-bottom: 8px;
 
   .title {
     word-break: break-all;
@@ -86,12 +88,14 @@ const ItemCardHeader: React.FunctionComponent<ItemCardHeaderProps> = ({
             shape="circle"
             type="default"
             icon="check"
+            size="large"
           />
           <Button
             onClick={handleDecline}
             shape="circle"
             type="default"
             icon="close"
+            size="large"
           />
         </span>
       </>
@@ -106,6 +110,7 @@ const ItemCardHeader: React.FunctionComponent<ItemCardHeaderProps> = ({
             onClick={handleFinish}
             type="default"
             icon="flag"
+            size="large"
           />
         </span>
       </>
@@ -142,7 +147,7 @@ const OrderContainer: React.FunctionComponent<OrderContainerProps> = ({
               style={customPanelStyle}
             >
               {orders.length &&
-                order.products.map((product: Product) => {
+                order.products.map(product => {
                   totalSum +=
                     product.price *
                     (product.quantity !== undefined ? product.quantity : 1);

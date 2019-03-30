@@ -1,4 +1,4 @@
-import { Avatar, Badge, Button, Card, Icon, Modal } from 'antd';
+import { Avatar, Badge, Button, Card, Modal } from 'antd';
 import { FunctionComponent } from 'react';
 import styled from 'styled-components';
 import { THEME_VARIABLES } from '../config';
@@ -14,6 +14,7 @@ const StyledCard = styled(Card)`
   display: flex;
   flex-direction: row;
   box-shadow: 0 2px 2px rgba(0, 0, 0, 0.12);
+  padding: 0.5rem;
 
   h1 {
     font-size: 2rem;
@@ -69,7 +70,6 @@ const StyledCard = styled(Card)`
     h1 {
       text-align: center;
       margin: 0;
-      font-weight: bold;
     }
   }
 
@@ -81,10 +81,11 @@ const StyledCard = styled(Card)`
     flex: 1;
 
     button {
+      color: ${THEME_VARIABLES['@primary-color']};
+      border: 0;
+      box-shadow: 0 2px 2px rgba(0, 0, 0, 0.12);
     }
   }
-
-  padding: 1rem;
 `;
 
 interface ProductListProps {
@@ -158,9 +159,7 @@ const OrderCard: FunctionComponent<OrderProps> = ({
         <h1 className="price">$ {price}</h1> {state && <h1>{state}</h1>}
       </div>
       <div className="info">
-        <Button shape="circle" size="large" onClick={handleClick}>
-          <Icon type="info" />
-        </Button>
+        <Button shape="circle" icon="info" size="large" onClick={handleClick} />
       </div>
     </StyledCard>
   );

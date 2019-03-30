@@ -33,6 +33,7 @@ const StyledCard: any = styled(Card)`
     .ant-card-body {
       flex-direction: column;
     }
+
     width: 100%;
     flex-basis: 100%;
   }
