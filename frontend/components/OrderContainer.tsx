@@ -1,13 +1,10 @@
-import { Alert, Collapse, Tag } from 'antd';
+import { Alert, Button, Collapse, message, Tag } from 'antd';
+import React from 'react';
 import styled from 'styled-components';
+import { OrderAPI } from '../api';
 import { THEME_VARIABLES } from '../config';
 import { Order, Product } from '../interfaces';
 import ItemCard from './ItemCard';
-import OrderCardHeader from './OrderCardHeader';
-
-interface Props {
-  orders: Order[];
-}
 
 const customPanelStyle = {
   background: '#fff',
@@ -45,18 +42,99 @@ export const FlexSpan = styled.span`
   }
 `;
 
-const OrderContainer: React.FunctionComponent<Props> = ({ orders }) => {
+interface ItemCardHeaderProps {
+  orderId: number;
+  orderTable: string;
+  orderState?: number;
+}
+
+const ItemCardHeader: React.FunctionComponent<ItemCardHeaderProps> = ({
+  orderId,
+  orderState,
+  orderTable
+}) => {
+  const handleAccept = async (e: React.FormEvent<HTMLButtonElement>) => {
+    e.stopPropagation();
+
+    await OrderAPI.accept(orderId);
+    message.success(`Successfully accepted order ${orderId + 1} 🎉`);
+  };
+
+  const handleDecline = async (e: React.FormEvent<HTMLButtonElement>) => {
+    e.stopPropagation();
+
+    await OrderAPI.decline(orderId);
+    message.success(`Successfully declined order ${orderId + 1} 🎉`);
+  };
+
+  const handleFinish = async (e: React.FormEvent<HTMLButtonElement>) => {
+    e.stopPropagation();
+
+    await OrderAPI.finish(orderId);
+    message.success(`Successfully finished order ${orderId + 1} 🎉`);
+  };
+
+  let data: React.ReactNode;
+
+  if (orderState === 0) {
+    data = (
+      <>
+        <span className="title">Table № {orderTable}</span>
+        <span className="right">
+          <Button
+            onClick={handleAccept}
+            shape="circle"
+            type="default"
+            icon="check"
+          />
+          <Button
+            onClick={handleDecline}
+            shape="circle"
+            type="default"
+            icon="close"
+          />
+        </span>
+      </>
+    );
+  } else if (orderState === 1) {
+    data = (
+      <>
+        <span className="title">Table № {orderTable} </span>
+        <span className="right">
+          <Button
+            shape="circle"
+            onClick={handleFinish}
+            type="default"
+            icon="flag"
+          />
+        </span>
+      </>
+    );
+  } else {
+    data = <span className="title">Order finished!</span>;
+  }
+
+  return <FlexSpan>{data}</FlexSpan>;
+};
+
+interface OrderContainerProps {
+  orders: Order[];
+}
+
+const OrderContainer: React.FunctionComponent<OrderContainerProps> = ({
+  orders
+}) => {
   return (
     <Collapse bordered={false} style={{ background: '#fafafa' }}>
       {orders.length > 0 &&
-        orders.map((order: Order) => {
+        orders.map(order => {
           let totalSum = 0;
           return (
             <Collapse.Panel
-              key={order.id.toString()}
+              key={order.id!.toString()}
               header={
-                <OrderCardHeader
-                  orderId={order.id}
+                <ItemCardHeader
+                  orderId={order.id!}
                   orderTable={order.table}
                   orderState={order.state && order.state}
                 />
