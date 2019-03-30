@@ -45,7 +45,7 @@ export const FlexSpan = styled.span`
 `;
 
 interface ItemCardHeaderProps {
-  orderId: number;
+  orderId: string;
   orderTable: string;
   orderState?: number;
 }
@@ -59,21 +59,21 @@ const ItemCardHeader: React.FunctionComponent<ItemCardHeaderProps> = ({
     e.stopPropagation();
 
     await OrderAPI.accept(orderId);
-    message.success(`Successfully accepted order ${orderId + 1} 🎉`);
+    message.success(`Successfully accepted order on table ${orderTable} 🎉`);
   };
 
   const handleDecline = async (e: React.FormEvent<HTMLButtonElement>) => {
     e.stopPropagation();
 
     await OrderAPI.decline(orderId);
-    message.success(`Successfully declined order ${orderId + 1} 🎉`);
+    message.success(`Successfully declined order on table ${orderTable} 🎉`);
   };
 
   const handleFinish = async (e: React.FormEvent<HTMLButtonElement>) => {
     e.stopPropagation();
 
     await OrderAPI.finish(orderId);
-    message.success(`Successfully finished order ${orderId + 1} 🎉`);
+    message.success(`Successfully finished order on table ${orderTable} 🎉`);
   };
 
   let data: React.ReactNode;

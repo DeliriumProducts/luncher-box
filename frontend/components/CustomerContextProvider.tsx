@@ -179,8 +179,21 @@ class CustomerContextProvider extends Component<Props, State> {
   };
 
   addToHistory = () => {
-    const { orderHistory } = { ...this.state };
+    const { orderHistory: o } = { ...this.state };
+    const orderHistory = [...o];
+
     orderHistory.push(this.state.order);
+
+    this.setState({ orderHistory }, async () => {
+      localForage.setItem('orderHistory', this.state.orderHistory);
+    });
+  };
+
+  updateOrderHistory = (order: Order) => {
+    const { orderHistory: o } = { ...this.state };
+    const orderHistory = [...o];
+
+    orderHistory[orderHistory.length - 1] = order;
 
     this.setState({ orderHistory }, async () => {
       localForage.setItem('orderHistory', this.state.orderHistory);
@@ -208,7 +221,8 @@ class CustomerContextProvider extends Component<Props, State> {
             decrement: this.decrement,
             comment: this.comment,
             setTable: this.setTable,
-            addToHistory: this.addToHistory
+            addToHistory: this.addToHistory,
+            updateOrderHistory: this.updateOrderHistory
           }
         }}
       >

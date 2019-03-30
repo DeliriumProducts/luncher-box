@@ -15,12 +15,12 @@ interface Values {
     comment: (comment: string) => void;
     setTable: (id: string) => void;
     addToHistory: () => void;
+    updateOrderHistory: (order: Order) => void;
   };
 }
 
 export const CustomerContext = React.createContext<Values>({
   order: {
-    id: 1,
     products: [],
     comment: '',
     table: '1'
@@ -41,7 +41,8 @@ export const CustomerContext = React.createContext<Values>({
     decrement: () => {},
     comment: () => {},
     setTable: () => {},
-    addToHistory: () => {}
+    addToHistory: () => {},
+    updateOrderHistory: () => {}
     // tslint:enable
   }
 });

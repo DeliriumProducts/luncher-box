@@ -98,11 +98,15 @@ export default class extends React.Component<any, State> {
       onOk: () => {},
       maskClosable: true
     });
+
+    this.context.actions.updateOrderHistory(order);
   };
 
   handlePlacedOrder = (order: Order) => {
     if (order.state === 0) {
       message.success('You order has been placed! 🍽');
+
+      this.context.actions.updateOrderHistory(order);
     } else {
       message.error('Some error occurred! Your order has not been placed! ❌');
     }
@@ -257,7 +261,7 @@ export default class extends React.Component<any, State> {
               ? `(${productsInCart}) ${
                   productsInCart === 1 ? 'Item' : 'Items'
                 } in`
-              : ''}{' '}
+              : ''}
             Cart | LuncherBox
           </title>
         </Head>

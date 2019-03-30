@@ -1,7 +1,7 @@
 import { Product } from '.';
 
 export interface Order {
-  id?: number;
+  id?: string;
   table: string;
   products: Product[];
   comment: string;
