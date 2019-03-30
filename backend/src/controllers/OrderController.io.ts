@@ -1,4 +1,4 @@
-import { Authorized, Get, JsonController, Param, Put } from 'routing-controllers';
+import { Authorized, Get, JsonController, Param, Put, QueryParam } from 'routing-controllers';
 import { MessageBody, OnMessage, SocketController, SocketId } from 'socket-controllers';
 import { EntityError } from 'src/types';
 import { getRepository, In, Repository } from 'typeorm';
@@ -31,7 +31,7 @@ export class OrderController {
     const key = 'orders';
     const ordersJSON = await redisConnection.get(key);
 
-    let orders = [];
+    let orders: Order[] = [];
 
     if (ordersJSON) {
       orders = JSON.parse(ordersJSON);
@@ -44,6 +44,31 @@ export class OrderController {
   }
 
   /**
+   * GET /orders/specific
+   *
+   * Gets specific orders
+   * @param orderIds
+   */
+  @Get('/specific')
+  async getMany(@QueryParam('id') orderIds: string) {
+    const key = 'orders';
+    const orderJSON = await redisConnection.get(key);
+
+    let orders: Order[] = [];
+
+    if (orderJSON) {
+      orders = JSON.parse(orderJSON);
+
+      orders = orders.filter(o => orderIds.includes(o.id));
+    }
+
+    /**
+     * Emit all of the requested orders to the client
+     */
+    return orders;
+  }
+
+  /**
    * PUT /orders/accept/:orderId
    *
    * Accepts an order based on the query params
@@ -51,7 +76,7 @@ export class OrderController {
    */
   @Put('/accept/:orderId')
   @Authorized()
-  async accept(@Param('orderId') orderId: number) {
+  async accept(@Param('orderId') orderId: string) {
     const key = 'orders';
     const ordersJSON = await redisConnection.get(key);
 
@@ -93,7 +118,7 @@ export class OrderController {
    */
   @Put('/decline/:orderId')
   @Authorized()
-  async decline(@Param('orderId') orderId: number) {
+  async decline(@Param('orderId') orderId: string) {
     const key = 'orders';
     const ordersJSON = await redisConnection.get(key);
 
@@ -131,7 +156,7 @@ export class OrderController {
    */
   @Put('/finish/:orderId')
   @Authorized()
-  async finish(@Param('orderId') orderId: number) {
+  async finish(@Param('orderId') orderId: string) {
     const key = 'orders';
     const ordersJSON = await redisConnection.get(key);
 

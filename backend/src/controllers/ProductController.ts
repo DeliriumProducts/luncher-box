@@ -42,6 +42,9 @@ export class ProductController {
    * GET /products
    *
    * Gets all products
+   * @param page
+   * @param limit
+   * @param since
    */
   @Get()
   async getAll(
