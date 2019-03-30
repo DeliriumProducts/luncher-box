@@ -89,6 +89,7 @@ const StyledCard: any = styled(Card)`
     margin-right: 2.5%;
     margin-top: 2.5%;
     margin-bottom: 2.5%;
+
     @media (max-width: 768px) {
       order: 2;
     }
