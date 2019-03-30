@@ -54,6 +54,7 @@ const StyledCard: any = styled(Card)`
     flex-direction: column;
     align-items: center;
     flex-shrink: 0;
+
     @media (max-width: 768px) {
       order: 3;
       flex-direction: row;
@@ -74,6 +75,7 @@ const StyledCard: any = styled(Card)`
     text-align: left;
     padding-left: 2.5%;
     padding-right: 2.5%;
+
     @media (max-width: 768px) {
       order: 1;
       text-align: center;
