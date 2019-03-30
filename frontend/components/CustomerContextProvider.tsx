@@ -61,7 +61,6 @@ class CustomerContextProvider extends Component<Props, State> {
     this.setState(prevState => ({
       order: {
         ...prevState.order,
-        id: 1,
         products: [],
         comment: ''
       },
