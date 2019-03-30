@@ -57,9 +57,10 @@ export default class extends React.Component<any, State> {
     loadingFromLocal: true
   };
 
-  async componentDidMount() {
+  componentDidMount() {
     this.setState({ loadingFromLocal: false });
     if (this.context.socket) {
+      this.context.socket.on('placed_order', this.handlePlacedOrder);
       this.context.socket.on('accepted_order', this.handleNewOrderState);
       this.context.socket.on('declined_order', this.handleNewOrderState);
       this.context.socket.on('finished_order', this.handleNewOrderState);
@@ -71,6 +72,7 @@ export default class extends React.Component<any, State> {
       /**
        * Prevent memory leak
        */
+      this.context.socket.off('placed_order');
       this.context.socket.off('accepted_order');
       this.context.socket.off('declined_order');
       this.context.socket.off('finished_order');
@@ -96,6 +98,14 @@ export default class extends React.Component<any, State> {
       onOk: () => {},
       maskClosable: true
     });
+  };
+
+  handlePlacedOrder = (order: Order) => {
+    if (order.state === 0) {
+      message.success('You order has been placed! 🍽');
+    } else {
+      message.error('Some error occurred! Your order has not been placed! ❌');
+    }
   };
 
   placeOrder = () => {

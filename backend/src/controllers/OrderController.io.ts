@@ -2,11 +2,11 @@ import { Authorized, Get, JsonController, Param, Put, QueryParam } from 'routing
 import { MessageBody, OnMessage, SocketController, SocketId } from 'socket-controllers';
 import { EntityError } from 'src/types';
 import { getRepository, In, Repository } from 'typeorm';
+import { v4 } from 'uuid';
 import { io } from '../config';
 import { redisConnection } from '../connections';
 import { Product } from '../entities';
 import { Order, OrderNotFoundError, OrderNotValidError } from '../interfaces';
-import { v4 } from 'uuid';
 
 @SocketController()
 @JsonController('/orders')
@@ -285,8 +285,11 @@ export class OrderController {
     await redisConnection.set(key, JSON.stringify(orders));
 
     /**
-     * Emit the new orders back to the clients
+     * TODO: Emit to clients too
+     *
+     * Emit the new orders back to admins
      */
-    io.emit('placed_order', orders);
+    io.emit('placed_order_admin', orders);
+    io.to(order.customerId).emit('placed_order', order);
   }
 }
