@@ -72,7 +72,7 @@ class Home extends Component<any, State> {
     return (
       <>
         <Head>
-          <title>Menu | LuncherBox</title>
+          <title>Menu · LuncherBox</title>
         </Head>
         <FlexContainer>{data}</FlexContainer>
       </>

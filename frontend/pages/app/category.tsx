@@ -91,7 +91,7 @@ class CategoryPage extends Component<Props, State> {
             {this.state.categoryName === ''
               ? 'Category'
               : this.state.categoryName}{' '}
-            | LuncherBox
+            · LuncherBox
           </title>
         </Head>
         <FlexContainer>{data}</FlexContainer>

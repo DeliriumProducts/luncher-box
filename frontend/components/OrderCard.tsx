@@ -63,6 +63,7 @@ const StyledCard = styled(Card)`
   .description {
     flex: 1;
     display: flex;
+    flex-wrap: wrap;
 
     justify-content: center;
     align-items: center;
@@ -70,6 +71,22 @@ const StyledCard = styled(Card)`
     h1 {
       text-align: center;
       margin: 0;
+    }
+
+    .price {
+      margin-right: 2%;
+    }
+
+    .state {
+      margin-left: 2%;
+    }
+
+    .divider {
+      height: 2rem;
+      top: 0;
+      @media (max-width: 768px) {
+        display: none;
+      }
     }
   }
 
@@ -138,7 +155,7 @@ const OrderCard: FunctionComponent<OrderProps> = ({
     .reduce((acc, pro) => acc + pro.quantity! * pro.price!, 0)
     .toFixed(2);
 
-  if (slicedProducts.length === 5) {
+  if (slicedProducts.length === 4) {
     slicedProducts.push({ image: '/static/placeholder.png' });
   }
 
@@ -156,7 +173,8 @@ const OrderCard: FunctionComponent<OrderProps> = ({
         <ProductList products={slicedProducts} />
       </div>
       <div className="description">
-        <h1 className="price">$ {price}</h1> {state && <h1>{state}</h1>}
+        <h1 className="price">$ {price}</h1>
+        <h1 className="state">asdf</h1>
       </div>
       <div className="info">
         <Button shape="circle" icon="info" size="large" onClick={handleClick} />

@@ -1,4 +1,5 @@
 import { message } from 'antd';
+import Head from 'next/head';
 import { Component } from 'react';
 import styled from 'styled-components';
 import { CategoryAPI } from '../../api';
@@ -9,7 +10,6 @@ import withAuth from '../../components/withAuth';
 import { AdminContext } from '../../context';
 import { Category } from '../../interfaces';
 import { ActionTypes, EntityInstance, EntityTypes } from '../../types';
-import Head from 'next/head';
 
 const FlexContainer = styled.div`
   display: flex;
@@ -214,7 +214,7 @@ class Index extends Component<any, State> {
     return (
       <>
         <Head>
-          <title>Admin Home | LuncherBox</title>
+          <title>Admin Home · LuncherBox</title>
         </Head>
         <FlexContainer>
           <div className="col">

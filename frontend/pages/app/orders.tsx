@@ -1,4 +1,5 @@
-import { Input } from 'antd';
+import { Empty, Input } from 'antd';
+import Head from 'next/head';
 import React, { useContext } from 'react';
 import styled from 'styled-components';
 import Order from '../../components/OrderCard';
@@ -33,13 +34,33 @@ interface State {
 
 export default () => {
   const { orderHistory } = useContext(CustomerContext);
+  let data: React.ReactNode[] | React.ReactNode;
+
+  if (orderHistory.length) {
+    data = orderHistory.map((order, index) => {
+      return <Order order={order} key={`${order.id}${index}`} />;
+    });
+  } else {
+    data = (
+      <Empty description="No orders">
+        No orders placed yet. Go and place some!
+      </Empty>
+    );
+  }
 
   return (
-    <FlexContainer>
-      {orderHistory &&
-        orderHistory.map((order, index) => {
-          return <Order order={order} key={`${order.id}${index}`} />;
-        })}
-    </FlexContainer>
+    <>
+      <Head>
+        <title>
+          {orderHistory.length > 0
+            ? `(${orderHistory.length}) ${
+                orderHistory.length === 1 ? 'Order' : 'Orders'
+              }`
+            : ''}{' '}
+          · LuncherBox
+        </title>
+      </Head>
+      <FlexContainer>{data}</FlexContainer>
+    </>
   );
 };

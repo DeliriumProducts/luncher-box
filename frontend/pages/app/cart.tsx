@@ -261,8 +261,8 @@ export default class extends React.Component<any, State> {
               ? `(${productsInCart}) ${
                   productsInCart === 1 ? 'Item' : 'Items'
                 } in`
-              : ''}
-            Cart | LuncherBox
+              : ''}{' '}
+            Cart · LuncherBox
           </title>
         </Head>
         <FlexContainer>{data}</FlexContainer>
