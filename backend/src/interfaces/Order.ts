@@ -3,7 +3,7 @@ import { Product } from '../entities';
 import { EntityNotValidError, EntityNotFoundError } from '../utils';
 
 export interface Order {
-  id: number;
+  id: string;
   comment?: string;
   products: Partial<Product>[];
   table: string;

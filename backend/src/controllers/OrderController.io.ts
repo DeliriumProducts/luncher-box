@@ -6,6 +6,7 @@ import { io } from '../config';
 import { redisConnection } from '../connections';
 import { Product } from '../entities';
 import { Order, OrderNotFoundError, OrderNotValidError } from '../interfaces';
+import { v4 } from 'uuid';
 
 @SocketController()
 @JsonController('/orders')
@@ -229,7 +230,7 @@ export class OrderController {
       /**
        * Attach id to order
        */
-      const id = orders[orders.length - 1].id + 1;
+      const id = v4();
       order.id = id;
 
       /**
@@ -242,7 +243,7 @@ export class OrderController {
       /**
        * Attach id to order
        */
-      const id = 0;
+      const id = v4();
       order.id = id;
 
       /**
