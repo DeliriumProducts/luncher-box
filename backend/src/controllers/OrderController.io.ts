@@ -221,7 +221,7 @@ export class OrderController {
     const key = 'orders';
     const ordersJSON = await redisConnection.get(key);
 
-    let orders = [];
+    let orders: Order[] = [];
 
     if (ordersJSON && ordersJSON !== '[]') {
       orders = JSON.parse(ordersJSON);

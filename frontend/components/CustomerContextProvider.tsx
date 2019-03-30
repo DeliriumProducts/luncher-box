@@ -182,8 +182,6 @@ class CustomerContextProvider extends Component<Props, State> {
   addToHistory = () => {
     const { orderHistory } = { ...this.state };
     orderHistory.push(this.state.order);
-    console.log(this.state.order);
-    console.log(orderHistory);
 
     this.setState({ orderHistory }, async () => {
       localForage.setItem('orderHistory', this.state.orderHistory);
