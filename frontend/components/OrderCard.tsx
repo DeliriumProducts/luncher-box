@@ -100,7 +100,7 @@ const StyledCard: any = styled(Card)`
     flex: 1;
 
     button {
-      color: ${(props: any) => props.state};
+      color: ${THEME_VARIABLES['@primary-color']};
       border: 0;
       box-shadow: 0 2px 2px rgba(0, 0, 0, 0.12);
     }
@@ -174,6 +174,7 @@ const OrderCard: FunctionComponent<OrderProps> = ({
   };
 
   const state: any = {};
+
   if (orderState === 0) {
     state.msg = 'Placed';
     state.color = THEME_VARIABLES['@primary-color'];
@@ -191,7 +192,10 @@ const OrderCard: FunctionComponent<OrderProps> = ({
   return (
     <StyledCard state={state.color}>
       <div className="products">
-        <ProductList products={slicedProducts} badgeColor={state.color} />
+        <ProductList
+          products={slicedProducts}
+          badgeColor={THEME_VARIABLES['@primary-color']}
+        />
       </div>
       <div className="description">
         <h1 className="price">$ {price}</h1>

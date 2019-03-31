@@ -19,6 +19,7 @@ const MenuContainer = styled.div`
   .menu-item-icon {
     font-size: 20px;
   }
+
   @media (max-width: 768px) {
     width: 100%;
 
@@ -36,6 +37,10 @@ const StyledMenu = styled(Menu)`
 
   @media (max-width: 768px) {
     box-shadow: 0 -2px 2px rgba(0, 0, 0, 0.12);
+  }
+
+  .menu-item-title {
+    font-weight: 600;
   }
 
   background-color: #fafafa;
