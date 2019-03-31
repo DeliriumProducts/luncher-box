@@ -1,11 +1,11 @@
-import { Avatar, Badge, Button, Card, Modal } from 'antd';
+import { Avatar, Badge, Button, Card, Divider, Modal } from 'antd';
 import { FunctionComponent } from 'react';
 import styled from 'styled-components';
 import { THEME_VARIABLES } from '../config';
 import { Order, Product } from '../interfaces';
 import { DeepPartial } from '../types';
 
-const StyledCard = styled(Card)`
+const StyledCard: any = styled(Card)`
   margin-top: 8px;
   border-radius: 7px;
   width: 100%;
@@ -71,6 +71,7 @@ const StyledCard = styled(Card)`
     h1 {
       text-align: center;
       margin: 0;
+      color: ${(props: any) => props.state};
     }
 
     .price {
@@ -84,6 +85,7 @@ const StyledCard = styled(Card)`
     .divider {
       height: 2rem;
       top: 0;
+
       @media (max-width: 768px) {
         display: none;
       }
@@ -98,7 +100,7 @@ const StyledCard = styled(Card)`
     flex: 1;
 
     button {
-      color: ${THEME_VARIABLES['@primary-color']};
+      color: ${(props: any) => props.state};
       border: 0;
       box-shadow: 0 2px 2px rgba(0, 0, 0, 0.12);
     }
@@ -107,9 +109,13 @@ const StyledCard = styled(Card)`
 
 interface ProductListProps {
   products: Partial<Product>[];
+  badgeColor: string;
 }
 
-const ProductList: FunctionComponent<ProductListProps> = ({ products }) => {
+const ProductList: FunctionComponent<ProductListProps> = ({
+  products,
+  badgeColor
+}) => {
   return (
     <div className="product-list">
       {products.map((product, index) => {
@@ -120,7 +126,7 @@ const ProductList: FunctionComponent<ProductListProps> = ({ products }) => {
               key={index}
               offset={[-3, 3]}
               style={{
-                backgroundColor: THEME_VARIABLES['@primary-color']
+                backgroundColor: badgeColor
               }}
             >
               <Avatar src={product.image} size={45} className="avatar" />
@@ -146,7 +152,7 @@ interface OrderProps {
 }
 
 const OrderCard: FunctionComponent<OrderProps> = ({
-  order: { products, state, table, comment, id }
+  order: { products, state: orderState, table, comment, id }
 }) => {
   const SIZE = 5;
   const slicedProducts = products!.slice(0, SIZE);
@@ -167,14 +173,33 @@ const OrderCard: FunctionComponent<OrderProps> = ({
     });
   };
 
+  const state: any = {};
+  if (orderState === 0) {
+    state.msg = 'Placed';
+    state.color = THEME_VARIABLES['@primary-color'];
+  } else if (orderState === 1) {
+    state.msg = 'Accepted';
+    state.color = '#00FF99';
+  } else if (orderState === 2) {
+    state.msg = 'Finished';
+    state.color = '#59AFFF';
+  } else {
+    state.msg = 'Declined';
+    state.color = '#FF4747';
+  }
+
   return (
-    <StyledCard>
+    <StyledCard state={state.color}>
       <div className="products">
-        <ProductList products={slicedProducts} />
+        <ProductList products={slicedProducts} badgeColor={state.color} />
       </div>
       <div className="description">
         <h1 className="price">$ {price}</h1>
-        <h1 className="state">asdf</h1>
+        {/*
+        TODO: fix on mobile
+         */}
+        <Divider type="vertical" />
+        <h1 className="state">{state.msg}</h1>
       </div>
       <div className="info">
         <Button shape="circle" icon="info" size="large" onClick={handleClick} />

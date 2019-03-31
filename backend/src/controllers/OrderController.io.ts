@@ -139,6 +139,9 @@ export class OrderController {
 
     await redisConnection.set(key, JSON.stringify(orders));
 
+    // @ts-ignore
+    order.state = 3;
+
     io
       // @ts-ignore
       .to(order.customerId)
