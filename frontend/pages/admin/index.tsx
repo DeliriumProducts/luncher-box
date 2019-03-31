@@ -214,7 +214,7 @@ class Index extends Component<any, State> {
     return (
       <>
         <Head>
-          <title>Admin Home · LuncherBox</title>
+          <title>Admin Home • LuncherBox</title>
         </Head>
         <FlexContainer>
           <div className="col">

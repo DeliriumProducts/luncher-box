@@ -57,7 +57,7 @@ export default () => {
                 orderHistory.length === 1 ? 'Order' : 'Orders'
               }`
             : ''}{' '}
-          · LuncherBox
+          • LuncherBox
         </title>
       </Head>
       <FlexContainer>{data}</FlexContainer>

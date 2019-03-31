@@ -78,7 +78,7 @@ export default class MyApp extends App {
     return (
       <>
         <Head>
-          <title>LuncherBox | Place orders from your phone!</title>
+          <title>LuncherBox • Place orders from your phone!</title>
         </Head>
         <CustomerContextProvider>
           <AdminContextProvider>

@@ -31,15 +31,18 @@ const StyledDiv: any = styled.div`
     align-items: center;
     font-size: 3rem;
     transition: all 0.25s;
+    text-shadow: 0.075em 0.08em 0.1em rgba(0, 0, 0, 0.2);
   }
 
-  &:hover {
-    .blurred-div {
-      transform: scale(1.1);
-    }
+  @media (min-width: 768px) {
+    &:hover {
+      .blurred-div {
+        transform: scale(1.1);
+      }
 
-    .title {
-      transform: scale(1.3);
+      .title {
+        transform: scale(1.2);
+      }
     }
   }
 

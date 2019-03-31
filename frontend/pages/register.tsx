@@ -85,7 +85,7 @@ class RegisterForm extends React.Component<Props, State> {
     return (
       <>
         <Head>
-          <title>Register · LuncherBox</title>
+          <title>Register • LuncherBox</title>
         </Head>
         <CenteredDiv>
           <Container>

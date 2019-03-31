@@ -1,4 +1,4 @@
-import { Avatar, Badge, Button, Card, Divider, Modal } from 'antd';
+import { Avatar, Button, Card, Modal } from 'antd';
 import { FunctionComponent } from 'react';
 import styled from 'styled-components';
 import { THEME_VARIABLES } from '../config';
@@ -66,12 +66,14 @@ const StyledCard: any = styled(Card)`
     flex-wrap: wrap;
 
     justify-content: center;
+    flex-direction: column;
     align-items: center;
 
-    h1 {
+    h2 {
       text-align: center;
       margin: 0;
-      color: ${(props: any) => props.state};
+      color: #000000a6;
+      font-size: 1.5rem;
     }
 
     .price {
@@ -80,15 +82,6 @@ const StyledCard: any = styled(Card)`
 
     .state {
       margin-left: 2%;
-    }
-
-    .divider {
-      height: 2rem;
-      top: 0;
-
-      @media (max-width: 768px) {
-        display: none;
-      }
     }
   }
 
@@ -120,18 +113,7 @@ const ProductList: FunctionComponent<ProductListProps> = ({
     <div className="product-list">
       {products.map((product, index) => {
         if (product.quantity! > 1) {
-          return (
-            <Badge
-              count={product.quantity}
-              key={index}
-              offset={[-3, 3]}
-              style={{
-                backgroundColor: badgeColor
-              }}
-            >
-              <Avatar src={product.image} size={45} className="avatar" />
-            </Badge>
-          );
+          return <Avatar src={product.image} size={45} className="avatar" />;
         }
 
         return (
@@ -173,24 +155,20 @@ const OrderCard: FunctionComponent<OrderProps> = ({
     });
   };
 
-  const state: any = {};
+  let state;
 
   if (orderState === 0) {
-    state.msg = 'Placed';
-    state.color = THEME_VARIABLES['@primary-color'];
+    state = 'Placed';
   } else if (orderState === 1) {
-    state.msg = 'Accepted';
-    state.color = '#00FF99';
+    state = 'Accepted';
   } else if (orderState === 2) {
-    state.msg = 'Finished';
-    state.color = '#59AFFF';
+    state = 'Finished';
   } else {
-    state.msg = 'Declined';
-    state.color = '#FF4747';
+    state = 'Declined';
   }
 
   return (
-    <StyledCard state={state.color}>
+    <StyledCard>
       <div className="products">
         <ProductList
           products={slicedProducts}
@@ -198,12 +176,7 @@ const OrderCard: FunctionComponent<OrderProps> = ({
         />
       </div>
       <div className="description">
-        <h1 className="price">$ {price}</h1>
-        {/*
-        TODO: fix on mobile
-         */}
-        <Divider type="vertical" />
-        <h1 className="state">{state.msg}</h1>
+        <h2 className="state">{state}</h2>
       </div>
       <div className="info">
         <Button shape="circle" icon="info" size="large" onClick={handleClick} />
