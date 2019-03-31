@@ -56,7 +56,7 @@ export default () => {
             ? `(${orderHistory.length}) ${
                 orderHistory.length === 1 ? 'Order' : 'Orders'
               }`
-            : ''}{' '}
+            : 'Orders'}{' '}
           • LuncherBox
         </title>
       </Head>
