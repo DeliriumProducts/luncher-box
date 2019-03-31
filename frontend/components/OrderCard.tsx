@@ -102,20 +102,12 @@ const StyledCard: any = styled(Card)`
 
 interface ProductListProps {
   products: Partial<Product>[];
-  badgeColor: string;
 }
 
-const ProductList: FunctionComponent<ProductListProps> = ({
-  products,
-  badgeColor
-}) => {
+const ProductList: FunctionComponent<ProductListProps> = ({ products }) => {
   return (
     <div className="product-list">
       {products.map((product, index) => {
-        if (product.quantity! > 1) {
-          return <Avatar src={product.image} size={45} className="avatar" />;
-        }
-
         return (
           <Avatar
             src={product.image}
@@ -148,7 +140,7 @@ const OrderCard: FunctionComponent<OrderProps> = ({
   }
 
   const handleClick = () => {
-    const title = id ? `Order № ${id}` : 'Order';
+    const title = 'Order Info';
     Modal.info({
       title,
       content: <>{comment}</>
@@ -170,10 +162,7 @@ const OrderCard: FunctionComponent<OrderProps> = ({
   return (
     <StyledCard>
       <div className="products">
-        <ProductList
-          products={slicedProducts}
-          badgeColor={THEME_VARIABLES['@primary-color']}
-        />
+        <ProductList products={slicedProducts} />
       </div>
       <div className="description">
         <h2 className="state">{state}</h2>
