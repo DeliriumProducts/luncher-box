@@ -5,7 +5,6 @@ interface Values {
   order: Order;
   totalAmount: number;
   table: string;
-  socket: SocketIOClient.Socket | undefined;
   orderHistory: Order[];
   actions: {
     reload: () => Promise<void>;
@@ -28,7 +27,6 @@ export const CustomerContext = React.createContext<Values>({
   orderHistory: [],
   table: '',
   totalAmount: 0,
-  socket: undefined,
   actions: {
     // tslint:disable
     reload: () => {

@@ -1,7 +1,5 @@
 import localForage from 'localforage';
 import React, { Component } from 'react';
-import io from 'socket.io-client';
-import { SOCKET_URL } from '../config';
 import { CustomerContext } from '../context';
 import { Order, Product } from '../interfaces';
 
@@ -15,8 +13,6 @@ interface State {
   totalAmount: number;
   orderHistory: Order[];
 }
-
-const socket = io(`${SOCKET_URL}`);
 
 class CustomerContextProvider extends Component<Props, State> {
   state: State = {
@@ -211,7 +207,6 @@ class CustomerContextProvider extends Component<Props, State> {
         value={{
           order,
           totalAmount,
-          socket,
           table,
           orderHistory,
           actions: {

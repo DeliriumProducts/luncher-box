@@ -129,7 +129,7 @@ const Orders: React.FunctionComponent<any> = () => {
           {newOrders > 0
             ? `(${newOrders}) New ${newOrders === 1 ? 'Order' : 'Orders'}`
             : 'Orders'}{' '}
-          | LuncherBox
+          • LuncherBox
         </title>
       </Head>
       <FlexContainer>{data}</FlexContainer>
