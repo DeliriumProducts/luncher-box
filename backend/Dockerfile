@@ -7,9 +7,7 @@ RUN npm install
 
 COPY . .
 
-RUN npm run build
-COPY .env ./dist/
-WORKDIR /usr/app/dist
+COPY .env ./
 
 EXPOSE 8000
-CMD node index.js
+CMD npm run prod
