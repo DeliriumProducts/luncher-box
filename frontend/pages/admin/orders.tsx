@@ -6,7 +6,7 @@ import { OrderAPI } from '../../api';
 import OrderContainer from '../../components/OrderContainer';
 import Spinner from '../../components/Spinner';
 import withAuth from '../../components/withAuth';
-import { AdminContext } from '../../context';
+import { SocketContext } from '../../context';
 import { Order } from '../../interfaces';
 
 const FlexContainer = styled.div`
@@ -23,7 +23,7 @@ const FlexContainer = styled.div`
 const useOrders = (initialOrders: Order[]): [Order[], boolean] => {
   const [orders, setOrders] = useState(initialOrders);
   const [loading, setLoading] = useState(true);
-  const context = useContext(AdminContext);
+  const context = useContext(SocketContext);
 
   useEffect(() => {
     if (context.socket) {

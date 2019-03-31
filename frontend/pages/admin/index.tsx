@@ -7,7 +7,7 @@ import EntityCard from '../../components/EntityCard';
 import EntityCardContainer from '../../components/EntityCardContainer';
 import EntityModal from '../../components/EntityModal';
 import withAuth from '../../components/withAuth';
-import { AdminContext } from '../../context';
+import { SocketContext } from '../../context';
 import { Category } from '../../interfaces';
 import { ActionTypes, EntityInstance, EntityTypes } from '../../types';
 
@@ -43,8 +43,8 @@ interface State {
 }
 
 class Index extends Component<any, State> {
-  static contextType = AdminContext;
-  context!: React.ContextType<typeof AdminContext>;
+  static contextType = SocketContext;
+  context!: React.ContextType<typeof SocketContext>;
 
   state: State = {
     modalVisible: false,

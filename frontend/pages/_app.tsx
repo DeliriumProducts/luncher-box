@@ -3,9 +3,9 @@ import App, { Container, NextAppContext } from 'next/app';
 import Head from 'next/head';
 import React from 'react';
 import { createGlobalStyle } from 'styled-components';
-import AdminContextProvider from '../components/AdminContextProvider';
 import CustomerContextProvider from '../components/CustomerContextProvider';
 import Layout from '../components/Layout';
+import SocketContextProvider from '../components/SocketContextProvider';
 
 const GlobalStyle = createGlobalStyle`
   html,
@@ -81,7 +81,7 @@ export default class MyApp extends App {
           <title>LuncherBox • Place orders from your phone!</title>
         </Head>
         <CustomerContextProvider>
-          <AdminContextProvider>
+          <SocketContextProvider>
             <Container>
               <GlobalStyle />
               <Layout route={this.props.router.route}>
@@ -90,7 +90,7 @@ export default class MyApp extends App {
                 </PageTransition>
               </Layout>
             </Container>
-          </AdminContextProvider>
+          </SocketContextProvider>
         </CustomerContextProvider>
       </>
     );

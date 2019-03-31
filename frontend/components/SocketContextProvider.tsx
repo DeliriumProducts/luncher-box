@@ -1,7 +1,7 @@
 import React from 'react';
 import io from 'socket.io-client';
 import { SOCKET_URL } from '../config';
-import { AdminContext } from '../context';
+import { SocketContext } from '../context';
 
 interface Props {
   children: React.ReactNode;
@@ -9,19 +9,19 @@ interface Props {
 
 const socket = io(`${SOCKET_URL}`);
 
-const AdminContextProvider = (props: Props) => {
+const SocketContextProvider = (props: Props) => {
   return (
-    <AdminContext.Provider
+    <SocketContext.Provider
       value={{
         socket
       }}
     >
       {props.children}
-    </AdminContext.Provider>
+    </SocketContext.Provider>
   );
 };
 
-const AdminConsumer = AdminContext.Consumer;
+const SocketConsumer = SocketContext.Consumer;
 
-export default AdminContextProvider;
-export { AdminConsumer };
+export default SocketContextProvider;
+export { SocketConsumer };
