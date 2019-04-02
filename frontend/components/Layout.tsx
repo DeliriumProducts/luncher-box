@@ -2,7 +2,7 @@ import { Affix, Layout as AntDesignLayout, message, Modal } from 'antd';
 import React, { ReactNode } from 'react';
 import styled from 'styled-components';
 import { CustomerContext, SocketContext } from '../context';
-import { Order } from '../interfaces';
+import { Order, Product } from '../interfaces';
 import MenuBar from './MenuBar';
 
 const { Content } = AntDesignLayout;
@@ -48,16 +48,60 @@ const Layout: React.FunctionComponent<Props> = props => {
     const handleNewOrderState = (order: Order) => {
       let data: React.ReactNode | React.ReactNode[];
 
+      const ProductList = (
+        <div>
+          {order.products.map((product: Product) => {
+            return (
+              <div
+                key={product.id}
+                style={{ display: 'flex', justifyContent: 'space-between' }}
+              >
+                <p>
+                  {product.quantity} x {product.name}
+                </p>
+              </div>
+            );
+          })}
+        </div>
+      );
+
       if (order.state === 1) {
-        data = <div>You order has been accepted! 🎉</div>;
+        data = (
+          <>
+            {ProductList}
+            <strong>You order has been accepted! 🎉</strong>
+          </>
+        );
       } else if (order.state === 2) {
-        data = <div>Your order is on the way! 🍚</div>;
+        data = (
+          <>
+            {ProductList}
+            <strong>Your order is on the way! 🍚</strong>
+          </>
+        );
       } else {
-        data = <div>Your order has been declined! ❌</div>;
+        data = (
+          <>
+            {ProductList}
+            <strong>Your order has been declined! ❌</strong>
+          </>
+        );
       }
 
       Modal.info({
-        title: 'Order state:',
+        title: (
+          <h2
+            style={{
+              color: '#000000a6',
+              margin: 0,
+              marginBottom: 12,
+              fontSize: '1.2rem',
+              fontWeight: 525
+            }}
+          >
+            Order state:{' '}
+          </h2>
+        ),
         centered: true,
         content: data,
         // tslint:disable-next-line

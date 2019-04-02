@@ -65,7 +65,19 @@ export default () => {
 
       let totalSum = 0;
       Modal.warn({
-        title: 'Are you sure you want to place this order?',
+        title: (
+          <h2
+            style={{
+              color: '#000000a6',
+              margin: 0,
+              marginBottom: 12,
+              fontSize: '1.2rem',
+              fontWeight: 525
+            }}
+          >
+            Are you sure you want to place this order?
+          </h2>
+        ),
         centered: true,
         content: (
           <div>
