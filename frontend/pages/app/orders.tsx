@@ -38,7 +38,7 @@ export default () => {
 
   if (orderHistory.length) {
     data = orderHistory.map((order, index) => {
-      return <Order order={order} key={`${order.id}${index}`} />;
+      return <Order order={order} key={`${order.id}`} />;
     });
   } else {
     data = (
