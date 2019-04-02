@@ -74,24 +74,38 @@ export default class MyApp extends App {
 
   render() {
     const { Component, pageProps } = this.props;
+    let type: 'admin' | 'customer';
+
+    type = this.props.router.route.startsWith('/admin') ? 'admin' : 'customer';
 
     return (
       <>
         <Head>
           <title>LuncherBox • Place orders from your phone!</title>
         </Head>
-        <CustomerContextProvider>
-          <SocketContextProvider>
+        <SocketContextProvider>
+          {type === 'customer' ? (
+            <CustomerContextProvider>
+              <Container>
+                <GlobalStyle />
+                <Layout type="customer" route={this.props.router.route}>
+                  <PageTransition timeout={150} classNames="page-transition">
+                    <Component key={this.props.router.route} {...pageProps} />
+                  </PageTransition>
+                </Layout>
+              </Container>
+            </CustomerContextProvider>
+          ) : (
             <Container>
               <GlobalStyle />
-              <Layout route={this.props.router.route}>
+              <Layout type="admin" route={this.props.router.route}>
                 <PageTransition timeout={150} classNames="page-transition">
                   <Component key={this.props.router.route} {...pageProps} />
                 </PageTransition>
               </Layout>
             </Container>
-          </SocketContextProvider>
-        </CustomerContextProvider>
+          )}
+        </SocketContextProvider>
       </>
     );
   }

@@ -9,6 +9,7 @@ const { Content } = AntDesignLayout;
 
 interface Props {
   route: string;
+  type: 'admin' | 'customer';
   children?: ReactNode;
 }
 
@@ -31,20 +32,13 @@ const Layout: React.FunctionComponent<Props> = props => {
   const socketContext = React.useContext(SocketContext);
   const customerContext = React.useContext(CustomerContext);
 
-  if (
-    props.route === '/login' ||
-    props.route === '/register' ||
-    props.route === '/'
-  ) {
+  const { route, type } = props;
+
+  if (route === '/login' || route === '/register' || route === '/') {
     return <>{props.children}</>;
   }
 
-  let type: 'admin' | 'customer';
-  if (props.route.startsWith('/admin')) {
-    type = 'admin';
-  } else {
-    type = 'customer';
-
+  if (type === 'customer') {
     const handleNewOrderState = (order: Order) => {
       let data: React.ReactNode | React.ReactNode[];
 

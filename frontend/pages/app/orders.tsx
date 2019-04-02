@@ -37,7 +37,7 @@ export default () => {
   let data: React.ReactNode[] | React.ReactNode;
 
   if (orderHistory.length) {
-    data = orderHistory.map((order, index) => {
+    data = orderHistory.map(order => {
       return <Order order={order} key={`${order.id}`} />;
     });
   } else {
