@@ -6,8 +6,9 @@ interface Values {
   totalAmount: number;
   table: string;
   orderHistory: Order[];
+  hasFinishedSyncing: boolean;
   actions: {
-    syncWithLocalForage: () => Promise<void>;
+    syncWithLocalForage: () => void;
     clear: () => Promise<[void, void]>;
     increment: (product: Product) => void;
     decrement: (product: Product) => void;
@@ -27,11 +28,10 @@ export const CustomerContext = React.createContext<Values>({
   orderHistory: [],
   table: '',
   totalAmount: 0,
+  hasFinishedSyncing: false,
   actions: {
     // tslint:disable
-    syncWithLocalForage: () => {
-      return new Promise((resolve, reject) => undefined);
-    },
+    syncWithLocalForage: () => {},
     clear: () => {
       return Promise.all([undefined, undefined]);
     },

@@ -12,6 +12,7 @@ interface State {
   table: string;
   totalAmount: number;
   orderHistory: Order[];
+  hasFinishedSyncing: boolean;
 }
 
 class CustomerContextProvider extends Component<Props, State> {
@@ -23,33 +24,32 @@ class CustomerContextProvider extends Component<Props, State> {
     },
     table: '',
     totalAmount: 0,
-    orderHistory: []
+    orderHistory: [],
+    hasFinishedSyncing: false
   };
 
   syncWithLocalForage = async (): Promise<void> => {
-    return new Promise(async (resolve, reject) => {
-      const currentOrder: Order = (await localForage.getItem(
-        'currentOrder'
-      )) || {
-        products: [],
-        comment: '',
-        table: ''
-      };
+    const currentOrder: Order = (await localForage.getItem('currentOrder')) || {
+      products: [],
+      comment: '',
+      table: ''
+    };
 
-      const totalAmount: number =
-        (await localForage.getItem('totalAmount')) || 0;
+    const totalAmount: number = (await localForage.getItem('totalAmount')) || 0;
 
-      const table: string = (await localForage.getItem('table')) || '';
+    const table: string = (await localForage.getItem('table')) || '';
 
-      const orderHistory: Order[] =
-        (await localForage.getItem('orderHistory')) || [];
+    const orderHistory: Order[] =
+      (await localForage.getItem('orderHistory')) || [];
 
-      currentOrder.table = table;
+    currentOrder.table = table;
 
-      this.setState(
-        { order: currentOrder, totalAmount, table, orderHistory },
-        () => resolve()
-      );
+    this.setState({
+      order: currentOrder,
+      totalAmount,
+      table,
+      orderHistory,
+      hasFinishedSyncing: true
     });
   };
 
@@ -203,9 +203,9 @@ class CustomerContextProvider extends Component<Props, State> {
     });
   };
 
-  componentDidMount() {
+  componentDidMount = () => {
     this.syncWithLocalForage();
-  }
+  };
 
   render() {
     return (
