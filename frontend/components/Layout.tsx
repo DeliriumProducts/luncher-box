@@ -115,6 +115,10 @@ const Layout: React.FunctionComponent<Props> = props => {
     }
   };
 
+  const handleUpdatedOrders = (orders: Order[]) => {
+    customerContext.actions.overwriteOrderHistory(orders);
+  };
+
   React.useEffect(() => {
     if (type === 'customer') {
       if (customerContext.hasFinishedSyncing) {
@@ -124,7 +128,7 @@ const Layout: React.FunctionComponent<Props> = props => {
         );
 
         if (socketContext.socket) {
-          socketContext.socket.emit('update_customer_id', orderIds);
+          socketContext.socket.emit('update_customerId', orderIds);
         }
       }
     }
@@ -140,6 +144,7 @@ const Layout: React.FunctionComponent<Props> = props => {
         socketContext.socket.on('accepted_order', handleNewOrderState);
         socketContext.socket.on('declined_order', handleNewOrderState);
         socketContext.socket.on('finished_order', handleNewOrderState);
+        socketContext.socket.on('updated_customerId', handleUpdatedOrders);
       }
 
       return () => {
@@ -148,6 +153,7 @@ const Layout: React.FunctionComponent<Props> = props => {
           socketContext.socket.off('accepted_order');
           socketContext.socket.off('declined_order');
           socketContext.socket.off('finished_order');
+          socketContext.socket.off('updated_customerId');
         }
       };
     } else {

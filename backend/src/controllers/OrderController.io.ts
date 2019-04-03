@@ -197,6 +197,7 @@ export class OrderController {
    * Socket Emit place_order
    *
    * Places an order based on the socket's message body
+   * @param socketId
    * @param order
    */
   @OnMessage('place_order')
@@ -294,5 +295,41 @@ export class OrderController {
      */
     io.emit('placed_order_admin', orders);
     io.to(order.customerId).emit('placed_order', order);
+  }
+
+  /**
+   * Socket Emit update_customer_id
+   *
+   * Updates the customer id based on the new orders
+   * @param orderIds
+   */
+  @OnMessage('update_customerId')
+  async updateCustomerId(@SocketId() socketId: string, @MessageBody() orderIds: string[]) {
+    const key = 'orders';
+    const ordersJSON = await redisConnection.get(key);
+
+    let orders: Order[] = [];
+    const customerOrders: Order[] = [];
+
+    if (ordersJSON) {
+      orders = JSON.parse(ordersJSON);
+
+      orders = orders.map(o => {
+        if (orderIds.includes(o.id)) {
+          customerOrders.push(o);
+
+          return {
+            ...o,
+            customerId: socketId
+          };
+        }
+
+        return o;
+      });
+    }
+
+    await redisConnection.set(key, JSON.stringify(orders));
+
+    io.to(socketId).emit('updated_customerId', customerOrders);
   }
 }

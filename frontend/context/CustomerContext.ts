@@ -16,6 +16,7 @@ interface Values {
     setTable: (id: string) => void;
     addToHistory: () => void;
     updateOrderHistory: (order: Order) => void;
+    overwriteOrderHistory: (orders: Order[]) => void;
   };
 }
 
@@ -40,7 +41,8 @@ export const CustomerContext = React.createContext<Values>({
     comment: () => {},
     setTable: () => {},
     addToHistory: () => {},
-    updateOrderHistory: () => {}
+    updateOrderHistory: () => {},
+    overwriteOrderHistory: () => {}
     // tslint:enable
   }
 });

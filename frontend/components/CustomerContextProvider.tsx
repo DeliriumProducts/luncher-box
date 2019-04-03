@@ -87,7 +87,6 @@ class CustomerContextProvider extends Component<Props, State> {
           }
 
           editedProducts.push(p);
-          return;
         });
 
         if (isNewProduct) {
@@ -131,7 +130,6 @@ class CustomerContextProvider extends Component<Props, State> {
           }
 
           editedProducts.push(p);
-          return;
         });
 
         if (isNewProduct) {
@@ -192,13 +190,32 @@ class CustomerContextProvider extends Component<Props, State> {
   };
 
   updateOrderHistory = (order: Order) => {
-    const { orderHistory: o } = { ...this.state };
-    const orderHistory = [...o];
+    this.setState(
+      prevState => {
+        const orderHistory: Order[] = [];
 
-    // TODO: Use filter / map
-    orderHistory[orderHistory.length - 1] = order;
+        prevState.orderHistory.forEach(o => {
+          if (o.id === order.id) {
+            orderHistory.push(order);
 
-    this.setState({ orderHistory }, async () => {
+            return;
+          }
+
+          orderHistory.push(o);
+        });
+
+        return {
+          orderHistory
+        };
+      },
+      async () => {
+        localForage.setItem('orderHistory', this.state.orderHistory);
+      }
+    );
+  };
+
+  overwriteOrderHistory = (orders: Order[]) => {
+    this.setState({ orderHistory: orders }, async () => {
       localForage.setItem('orderHistory', this.state.orderHistory);
     });
   };
@@ -220,7 +237,8 @@ class CustomerContextProvider extends Component<Props, State> {
             comment: this.comment,
             setTable: this.setTable,
             addToHistory: this.addToHistory,
-            updateOrderHistory: this.updateOrderHistory
+            updateOrderHistory: this.updateOrderHistory,
+            overwriteOrderHistory: this.overwriteOrderHistory
           }
         }}
       >
