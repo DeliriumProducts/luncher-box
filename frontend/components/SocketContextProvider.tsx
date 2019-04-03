@@ -7,9 +7,9 @@ interface Props {
   children: React.ReactNode;
 }
 
-const socket = io(`${SOCKET_URL}`);
-
 const SocketContextProvider = (props: Props) => {
+  const [socket] = React.useState(io(`${SOCKET_URL}`));
+
   return (
     <SocketContext.Provider
       value={{
