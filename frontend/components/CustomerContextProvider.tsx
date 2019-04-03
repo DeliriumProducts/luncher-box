@@ -166,7 +166,13 @@ class CustomerContextProvider extends Component<Props, State> {
 
   setTable = (id: string) => {
     this.setState(
-      prevState => ({ order: { ...prevState.order, table: id } }),
+      prevState => ({
+        order: {
+          ...prevState.order,
+          table: id
+        },
+        table: id
+      }),
       () => {
         localForage.setItem('currentOrder', this.state.order);
         localForage.setItem('table', id);
@@ -180,7 +186,7 @@ class CustomerContextProvider extends Component<Props, State> {
 
     orderHistory.push(this.state.order);
 
-    this.setState({ orderHistory }, async () => {
+    this.setState({ orderHistory }, () => {
       localForage.setItem('orderHistory', this.state.orderHistory);
     });
   };
@@ -189,6 +195,7 @@ class CustomerContextProvider extends Component<Props, State> {
     const { orderHistory: o } = { ...this.state };
     const orderHistory = [...o];
 
+    // TODO: Use filter / map
     orderHistory[orderHistory.length - 1] = order;
 
     this.setState({ orderHistory }, async () => {
@@ -201,16 +208,12 @@ class CustomerContextProvider extends Component<Props, State> {
   }
 
   render() {
-    const { order, table, totalAmount, orderHistory } = this.state;
     return (
       <CustomerContext.Provider
         value={{
-          order,
-          totalAmount,
-          table,
-          orderHistory,
+          ...this.state,
           actions: {
-            reload: this.syncWithLocalForage,
+            syncWithLocalForage: this.syncWithLocalForage,
             clear: this.clear,
             increment: this.increment,
             decrement: this.decrement,
