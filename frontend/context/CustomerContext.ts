@@ -14,7 +14,6 @@ interface Values {
     decrement: (product: Product) => void;
     comment: (comment: string) => void;
     setTable: (id: string) => void;
-    addToHistory: () => void;
     updateOrderHistory: (order: Order) => void;
     overwriteOrderHistory: (orders: Order[]) => void;
     pushOrderHistory: (order: Order) => void;
@@ -41,7 +40,6 @@ export const CustomerContext = React.createContext<Values>({
     decrement: () => {},
     comment: () => {},
     setTable: () => {},
-    addToHistory: () => {},
     updateOrderHistory: () => {},
     overwriteOrderHistory: () => {},
     pushOrderHistory: () => {}

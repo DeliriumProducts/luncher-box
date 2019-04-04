@@ -115,7 +115,7 @@ const Layout: React.FunctionComponent<Props> = props => {
     }
   };
 
-  const handleUpdatedOrders = (orders: Order[]) => {
+  const handleUpdatedCustomerId = (orders: Order[]) => {
     customerContext.actions.overwriteOrderHistory(orders);
   };
 
@@ -144,7 +144,7 @@ const Layout: React.FunctionComponent<Props> = props => {
         socketContext.socket.on('accepted_order', handleNewOrderState);
         socketContext.socket.on('declined_order', handleNewOrderState);
         socketContext.socket.on('finished_order', handleNewOrderState);
-        socketContext.socket.on('updated_customerId', handleUpdatedOrders);
+        socketContext.socket.on('updated_customerId', handleUpdatedCustomerId);
       }
 
       return () => {

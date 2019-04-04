@@ -178,17 +178,6 @@ class CustomerContextProvider extends Component<Props, State> {
     );
   };
 
-  addToHistory = () => {
-    const { orderHistory: o } = { ...this.state };
-    const orderHistory = [...o];
-
-    orderHistory.push(this.state.order);
-
-    this.setState({ orderHistory }, () => {
-      localForage.setItem('orderHistory', this.state.orderHistory);
-    });
-  };
-
   updateOrderHistory = (order: Order) => {
     this.setState(
       prevState => {
@@ -254,7 +243,6 @@ class CustomerContextProvider extends Component<Props, State> {
             decrement: this.decrement,
             comment: this.comment,
             setTable: this.setTable,
-            addToHistory: this.addToHistory,
             updateOrderHistory: this.updateOrderHistory,
             overwriteOrderHistory: this.overwriteOrderHistory,
             pushOrderHistory: this.pushOrderHistory
