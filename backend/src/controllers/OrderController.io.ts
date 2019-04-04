@@ -301,7 +301,6 @@ export class OrderController {
      * Emit the new orders back to admins
      */
     io.emit('placed_order_admin', orders);
-    console.log(order);
     io.to(order.customerId).emit('placed_order', order);
   }
 
