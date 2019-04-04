@@ -27,7 +27,7 @@ const useOrders = (initialOrders: Order[]): [Order[], boolean] => {
 
   useEffect(() => {
     if (context.socket) {
-      context.socket.on('placed_order_admin', handleOrders);
+      context.socket.on('placed_order_admin', handleIncomingOrders);
       context.socket.on('accepted_order_admin', setAcceptedOrder);
       context.socket.on('declined_order_admin', setDeclindedOrder);
       context.socket.on('finished_order_admin', setFinishedOrder);
@@ -35,7 +35,7 @@ const useOrders = (initialOrders: Order[]): [Order[], boolean] => {
 
     return () => {
       if (context.socket) {
-        context.socket.off('placed_order_admin', handleOrders);
+        context.socket.off('placed_order_admin', handleIncomingOrders);
         context.socket.off('accepted_order_admin', setAcceptedOrder);
         context.socket.off('declined_order_admin', setDeclindedOrder);
         context.socket.off('finished_order_admin', setFinishedOrder);
@@ -48,8 +48,8 @@ const useOrders = (initialOrders: Order[]): [Order[], boolean] => {
   }, []);
 
   const setAcceptedOrder = ({ id }: any) => {
-    setOrders(prevOrders => {
-      const editedOrders = prevOrders.map(
+    setOrders(prevOrders =>
+      prevOrders.map(
         (order): Order => {
           if (order.id === id) {
             return {
@@ -60,15 +60,13 @@ const useOrders = (initialOrders: Order[]): [Order[], boolean] => {
 
           return order;
         }
-      );
-
-      return editedOrders;
-    });
+      )
+    );
   };
 
   const setDeclindedOrder = ({ id }: any) => {
-    setOrders(prevOrders => {
-      const editedOrders = prevOrders.map(
+    setOrders(prevOrders =>
+      prevOrders.map(
         (order): Order => {
           if (order.id === id) {
             return {
@@ -79,15 +77,13 @@ const useOrders = (initialOrders: Order[]): [Order[], boolean] => {
 
           return order;
         }
-      );
-
-      return editedOrders;
-    });
+      )
+    );
   };
 
   const setFinishedOrder = ({ id }: any) => {
-    setOrders(prevOrders => {
-      const editedOrders = prevOrders.map(
+    setOrders(prevOrders =>
+      prevOrders.map(
         (order): Order => {
           if (order.id === id) {
             return {
@@ -98,10 +94,8 @@ const useOrders = (initialOrders: Order[]): [Order[], boolean] => {
 
           return order;
         }
-      );
-
-      return editedOrders;
-    });
+      )
+    );
   };
 
   const fetchOrders = async () => {
@@ -110,7 +104,7 @@ const useOrders = (initialOrders: Order[]): [Order[], boolean] => {
     setLoading(false);
   };
 
-  const handleOrders = (incomingOrders: Order[]) => {
+  const handleIncomingOrders = (incomingOrders: Order[]) => {
     setOrders(incomingOrders);
     setLoading(false);
   };
