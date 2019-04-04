@@ -113,7 +113,7 @@ class MenuBar extends Component<Props> {
                   </StyledAnchor>
                 </Link>
               </Menu.Item>
-              <Menu.Item key="/admin/staffchat">
+              <Menu.Item key="/admin/staffchat" disabled>
                 <Link href="/admin/staffchat">
                   <StyledAnchor>
                     <Icon type="message" className="menu-item-icon" />
@@ -121,7 +121,7 @@ class MenuBar extends Component<Props> {
                   </StyledAnchor>
                 </Link>
               </Menu.Item>
-              <Menu.Item key="/admin/restaurantload">
+              <Menu.Item key="/admin/restaurantload" disabled>
                 <Link href="/admin/restaurantload">
                   <StyledAnchor>
                     <Icon type="pie-chart" className="menu-item-icon" />
