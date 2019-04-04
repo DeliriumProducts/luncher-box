@@ -49,15 +49,18 @@ const useOrders = (initialOrders: Order[]): [Order[], boolean] => {
 
   const setAcceptedOrder = ({ id }: any) => {
     setOrders(prevOrders => {
-      const editedOrders = prevOrders.map(order => {
-        if (order.id === id) {
-          return {
-            ...order,
-            state: 1
-          };
+      const editedOrders = prevOrders.map(
+        (order): Order => {
+          if (order.id === id) {
+            return {
+              ...order,
+              state: 1
+            };
+          }
+
+          return order;
         }
-        return order;
-      });
+      );
 
       return editedOrders;
     });
@@ -65,9 +68,18 @@ const useOrders = (initialOrders: Order[]): [Order[], boolean] => {
 
   const setDeclindedOrder = ({ id }: any) => {
     setOrders(prevOrders => {
-      const editedOrders = prevOrders.filter(order => {
-        return order.id !== id;
-      });
+      const editedOrders = prevOrders.map(
+        (order): Order => {
+          if (order.id === id) {
+            return {
+              ...order,
+              state: 3
+            };
+          }
+
+          return order;
+        }
+      );
 
       return editedOrders;
     });
@@ -75,15 +87,18 @@ const useOrders = (initialOrders: Order[]): [Order[], boolean] => {
 
   const setFinishedOrder = ({ id }: any) => {
     setOrders(prevOrders => {
-      const editedOrders = prevOrders.map(order => {
-        if (order.id === id) {
-          return {
-            ...order,
-            state: 2
-          };
+      const editedOrders = prevOrders.map(
+        (order): Order => {
+          if (order.id === id) {
+            return {
+              ...order,
+              state: 2
+            };
+          }
+
+          return order;
         }
-        return order;
-      });
+      );
 
       return editedOrders;
     });
