@@ -141,9 +141,34 @@ const OrderCard: FunctionComponent<OrderProps> = ({
 
   const handleClick = () => {
     const title = 'Order Info';
+    let totalSum = 0;
     Modal.info({
       title,
-      content: <>{comment}</>
+      content: (
+        <div>
+          {products!.map(product => {
+            totalSum +=
+              product.price! *
+              (product.quantity !== undefined ? product.quantity : 1);
+            return (
+              <div
+                key={product.id}
+                style={{ display: 'flex', justifyContent: 'space-between' }}
+              >
+                <p>{product.name}</p>
+                <p>
+                  {product.price} x {product.quantity}
+                </p>
+              </div>
+            );
+          })}
+          <strong>Total price: $ {totalSum.toFixed(2)}</strong>
+        </div>
+      ),
+      centered: true,
+      // tslint:disable-next-line
+      onOk: () => {},
+      maskClosable: true
     });
   };
 
