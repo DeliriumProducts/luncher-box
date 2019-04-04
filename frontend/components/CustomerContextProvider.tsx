@@ -220,6 +220,24 @@ class CustomerContextProvider extends Component<Props, State> {
     });
   };
 
+  pushOrderHistory = (order: Order) => {
+    this.setState(
+      prevState => {
+        const { orderHistory: o } = { ...prevState };
+        const orderHistory = [...o];
+
+        orderHistory[orderHistory.length - 1] = order;
+
+        return {
+          orderHistory
+        };
+      },
+      async () => {
+        localForage.setItem('orderHistory', this.state.orderHistory);
+      }
+    );
+  };
+
   componentDidMount = () => {
     this.syncWithLocalForage();
   };
@@ -238,7 +256,8 @@ class CustomerContextProvider extends Component<Props, State> {
             setTable: this.setTable,
             addToHistory: this.addToHistory,
             updateOrderHistory: this.updateOrderHistory,
-            overwriteOrderHistory: this.overwriteOrderHistory
+            overwriteOrderHistory: this.overwriteOrderHistory,
+            pushOrderHistory: this.pushOrderHistory
           }
         }}
       >

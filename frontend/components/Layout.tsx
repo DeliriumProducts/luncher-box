@@ -109,7 +109,7 @@ const Layout: React.FunctionComponent<Props> = props => {
     if (order.state === 0) {
       message.success('You order has been placed! 🍽');
 
-      customerContext.actions.updateOrderHistory(order);
+      customerContext.actions.pushOrderHistory(order);
     } else {
       message.error('Some error occurred! Your order has not been placed! ❌');
     }

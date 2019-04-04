@@ -95,6 +95,7 @@ export class OrderController {
           }
           order = o;
         }
+
         return o;
       });
     }
@@ -128,12 +129,17 @@ export class OrderController {
     if (ordersJSON) {
       orders = JSON.parse(ordersJSON);
 
-      orders = orders.filter(o => {
+      orders = orders.map(o => {
         if (o.id === orderId) {
+          if (o.state !== 3) {
+            o.state = 3;
+          } else {
+            throw new OrderNotFoundError();
+          }
           order = o;
         }
 
-        return o.id !== orderId;
+        return o;
       });
     }
 
@@ -178,6 +184,7 @@ export class OrderController {
           }
           order = o;
         }
+
         return o;
       });
     }
@@ -294,6 +301,7 @@ export class OrderController {
      * Emit the new orders back to admins
      */
     io.emit('placed_order_admin', orders);
+    console.log(order);
     io.to(order.customerId).emit('placed_order', order);
   }
 
@@ -316,12 +324,14 @@ export class OrderController {
 
       orders = orders.map(o => {
         if (orderIds.includes(o.id)) {
-          customerOrders.push(o);
-
-          return {
+          const newOrder = {
             ...o,
             customerId: socketId
           };
+
+          customerOrders.push(newOrder);
+
+          return newOrder;
         }
 
         return o;

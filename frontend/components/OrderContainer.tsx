@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import { OrderAPI } from '../api';
 import { THEME_VARIABLES } from '../config';
 import { Order } from '../interfaces';
+import { OrderState } from '../types';
 import ItemCard from './ItemCard';
 
 const customPanelStyle = {
@@ -47,7 +48,7 @@ export const FlexSpan = styled.span`
 interface ItemCardHeaderProps {
   orderId: string;
   orderTable: string;
-  orderState?: number;
+  orderState?: OrderState;
 }
 
 const ItemCardHeader: React.FunctionComponent<ItemCardHeaderProps> = ({
@@ -115,6 +116,8 @@ const ItemCardHeader: React.FunctionComponent<ItemCardHeaderProps> = ({
         </span>
       </>
     );
+  } else if (orderState === 3) {
+    data = <span className="title">Order declined!</span>;
   } else {
     data = <span className="title">Order finished!</span>;
   }
@@ -181,6 +184,21 @@ const OrderContainer: React.FunctionComponent<OrderContainerProps> = ({
                   description={
                     totalSum > 0 && (
                       <Tag color="green">
+                        Total price: $ {totalSum.toFixed(2)}
+                      </Tag>
+                    )
+                  }
+                  style={{ marginTop: '8px' }}
+                />
+              )}
+              {order.state === 3 && (
+                <StyledAlert
+                  message="Declined!"
+                  type="error"
+                  showIcon
+                  description={
+                    totalSum > 0 && (
+                      <Tag color="red">
                         Total price: $ {totalSum.toFixed(2)}
                       </Tag>
                     )
