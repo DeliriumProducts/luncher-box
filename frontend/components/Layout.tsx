@@ -37,8 +37,9 @@ const Layout: React.FunctionComponent<Props> = props => {
 
   const socketContext = React.useContext(SocketContext);
   const customerContext = React.useContext(CustomerContext);
+  const orderHistory = React.useRef(customerContext.orderHistory);
 
-  const handleNewOrderState = (order: Order) => {
+  const showModalOnStateChange = (order: Order) => {
     let data: React.ReactNode | React.ReactNode[];
 
     const ProductList = (
@@ -101,7 +102,10 @@ const Layout: React.FunctionComponent<Props> = props => {
       onOk: () => {},
       maskClosable: true
     });
+  };
 
+  const handleNewOrderState = (order: Order) => {
+    showModalOnStateChange(order);
     customerContext.actions.updateOrderHistory(order);
   };
 
@@ -116,6 +120,13 @@ const Layout: React.FunctionComponent<Props> = props => {
   };
 
   const handleUpdatedCustomerId = (orders: Order[]) => {
+    for (let i = 0; i < orders.length; i++) {
+      if (orders[i].state !== orderHistory.current[i].state) {
+        const order = orders[i];
+        showModalOnStateChange(order);
+      }
+    }
+
     customerContext.actions.overwriteOrderHistory(orders);
   };
 
@@ -130,6 +141,8 @@ const Layout: React.FunctionComponent<Props> = props => {
         if (socketContext.socket) {
           socketContext.socket.emit('update_customerId', orderIds);
         }
+
+        orderHistory.current = customerContext.orderHistory;
       }
     }
   }, [customerContext.hasFinishedSyncing]);
