@@ -117,6 +117,7 @@ export default () => {
               ...order,
               products: productsIdsAndQuantities
             });
+
             cartContext.actions.clear();
           }
         },
