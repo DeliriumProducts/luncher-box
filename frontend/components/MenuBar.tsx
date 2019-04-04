@@ -179,7 +179,7 @@ class MenuBar extends Component<Props> {
                 <Link href="/app/cart">
                   <StyledAnchor>
                     <Badge
-                      offset={[10, 0]}
+                      offset={[12, 2]}
                       count={this.context.totalAmount}
                       style={{
                         backgroundColor: THEME_VARIABLES['@primary-color']
