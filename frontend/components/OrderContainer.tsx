@@ -1,13 +1,11 @@
-import { Alert, Collapse, Tag } from 'antd';
+import { Alert, Button, Collapse, message, Tag } from 'antd';
+import React from 'react';
 import styled from 'styled-components';
+import { OrderAPI } from '../api';
 import { THEME_VARIABLES } from '../config';
-import { Order, Product } from '../interfaces';
+import { Order } from '../interfaces';
+import { OrderState } from '../types';
 import ItemCard from './ItemCard';
-import OrderCardHeader from './OrderCardHeader';
-
-interface Props {
-  orders: Order[];
-}
 
 const customPanelStyle = {
   background: '#fff',
@@ -28,6 +26,8 @@ export const FlexSpan = styled.span`
   justify-content: center;
   align-items: center;
   flex-wrap: wrap;
+  padding-top: 8px;
+  padding-bottom: 8px;
 
   .title {
     word-break: break-all;
@@ -45,18 +45,104 @@ export const FlexSpan = styled.span`
   }
 `;
 
-const OrderContainer: React.FunctionComponent<Props> = ({ orders }) => {
+interface ItemCardHeaderProps {
+  orderId: string;
+  orderTable: string;
+  orderState?: OrderState;
+}
+
+const ItemCardHeader: React.FunctionComponent<ItemCardHeaderProps> = ({
+  orderId,
+  orderState,
+  orderTable
+}) => {
+  const handleAccept = async (e: React.FormEvent<HTMLButtonElement>) => {
+    e.stopPropagation();
+
+    await OrderAPI.accept(orderId);
+    message.success(`Successfully accepted order on table ${orderTable} 🎉`);
+  };
+
+  const handleDecline = async (e: React.FormEvent<HTMLButtonElement>) => {
+    e.stopPropagation();
+
+    await OrderAPI.decline(orderId);
+    message.success(`Successfully declined order on table ${orderTable} 🎉`);
+  };
+
+  const handleFinish = async (e: React.FormEvent<HTMLButtonElement>) => {
+    e.stopPropagation();
+
+    await OrderAPI.finish(orderId);
+    message.success(`Successfully finished order on table ${orderTable} 🎉`);
+  };
+
+  let data: React.ReactNode;
+
+  if (orderState === 0) {
+    data = (
+      <>
+        <span className="title">Table № {orderTable}</span>
+        <span className="right">
+          <Button
+            onClick={handleAccept}
+            shape="circle"
+            type="default"
+            icon="check"
+            size="large"
+          />
+          <Button
+            onClick={handleDecline}
+            shape="circle"
+            type="default"
+            icon="close"
+            size="large"
+          />
+        </span>
+      </>
+    );
+  } else if (orderState === 1) {
+    data = (
+      <>
+        <span className="title">Table № {orderTable} </span>
+        <span className="right">
+          <Button
+            shape="circle"
+            onClick={handleFinish}
+            type="default"
+            icon="flag"
+            size="large"
+          />
+        </span>
+      </>
+    );
+  } else if (orderState === 3) {
+    data = <span className="title">Order declined!</span>;
+  } else {
+    data = <span className="title">Order finished!</span>;
+  }
+
+  return <FlexSpan>{data}</FlexSpan>;
+};
+
+interface OrderContainerProps {
+  orders: Order[];
+}
+
+const OrderContainer: React.FunctionComponent<OrderContainerProps> = ({
+  orders
+}) => {
   return (
     <Collapse bordered={false} style={{ background: '#fafafa' }}>
       {orders.length > 0 &&
-        orders.map((order: Order) => {
+        orders.map(order => {
           let totalSum = 0;
           return (
             <Collapse.Panel
-              key={order.id.toString()}
+              key={order.id!.toString()}
               header={
-                <OrderCardHeader
-                  orderId={order.id}
+                <ItemCardHeader
+                  orderId={order.id!}
                   orderTable={order.table}
                   orderState={order.state && order.state}
                 />
@@ -64,7 +150,7 @@ const OrderContainer: React.FunctionComponent<Props> = ({ orders }) => {
               style={customPanelStyle}
             >
               {orders.length &&
-                order.products.map((product: Product) => {
+                order.products.map(product => {
                   totalSum +=
                     product.price *
                     (product.quantity !== undefined ? product.quantity : 1);
@@ -98,6 +184,21 @@ const OrderContainer: React.FunctionComponent<Props> = ({ orders }) => {
                   description={
                     totalSum > 0 && (
                       <Tag color="green">
+                        Total price: $ {totalSum.toFixed(2)}
+                      </Tag>
+                    )
+                  }
+                  style={{ marginTop: '8px' }}
+                />
+              )}
+              {order.state === 3 && (
+                <StyledAlert
+                  message="Declined!"
+                  type="error"
+                  showIcon
+                  description={
+                    totalSum > 0 && (
+                      <Tag color="red">
                         Total price: $ {totalSum.toFixed(2)}
                       </Tag>
                     )

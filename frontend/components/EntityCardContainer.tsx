@@ -1,7 +1,7 @@
 import { Card, Empty, Input } from 'antd';
 import React, { Component } from 'react';
 import styled from 'styled-components';
-import { AdminContext } from '../context';
+import { SocketContext } from '../context';
 import { EntityInstance, EntityTypes } from '../types';
 import ActionButton from './ActionButton';
 import Spinner from './Spinner';
@@ -73,8 +73,8 @@ interface State {
 }
 
 class EntityCardContainer extends Component<Props, State> {
-  static contextType = AdminContext;
-  context!: React.ContextType<typeof AdminContext>;
+  static contextType = SocketContext;
+  context!: React.ContextType<typeof SocketContext>;
 
   state: State = {
     modalVisible: false,

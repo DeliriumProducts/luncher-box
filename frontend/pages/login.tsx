@@ -119,7 +119,7 @@ class LoginForm extends Component<Props, State> {
     return (
       <>
         <Head>
-          <title>Login | LuncherBox</title>
+          <title>Login • LuncherBox</title>
         </Head>
         <CenteredDiv>
           <Container>

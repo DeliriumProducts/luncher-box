@@ -1,7 +1,8 @@
-import { Authorized, Get, JsonController, Param, Put } from 'routing-controllers';
+import { Authorized, Get, JsonController, Param, Put, QueryParam } from 'routing-controllers';
 import { MessageBody, OnMessage, SocketController, SocketId } from 'socket-controllers';
 import { EntityError } from 'src/types';
 import { getRepository, In, Repository } from 'typeorm';
+import { v4 } from 'uuid';
 import { io } from '../config';
 import { redisConnection } from '../connections';
 import { Product } from '../entities';
@@ -30,7 +31,7 @@ export class OrderController {
     const key = 'orders';
     const ordersJSON = await redisConnection.get(key);
 
-    let orders = [];
+    let orders: Order[] = [];
 
     if (ordersJSON) {
       orders = JSON.parse(ordersJSON);
@@ -43,6 +44,31 @@ export class OrderController {
   }
 
   /**
+   * GET /orders/specific
+   *
+   * Gets specific orders
+   * @param orderIds
+   */
+  @Get('/specific')
+  async getMany(@QueryParam('id') orderIds: string) {
+    const key = 'orders';
+    const orderJSON = await redisConnection.get(key);
+
+    let orders: Order[] = [];
+
+    if (orderJSON) {
+      orders = JSON.parse(orderJSON);
+
+      orders = orders.filter(o => orderIds.includes(o.id));
+    }
+
+    /**
+     * Emit all of the requested orders to the client
+     */
+    return orders;
+  }
+
+  /**
    * PUT /orders/accept/:orderId
    *
    * Accepts an order based on the query params
@@ -50,12 +76,12 @@ export class OrderController {
    */
   @Put('/accept/:orderId')
   @Authorized()
-  async accept(@Param('orderId') orderId: number) {
+  async accept(@Param('orderId') orderId: string) {
     const key = 'orders';
     const ordersJSON = await redisConnection.get(key);
 
     let orders: Order[] = [];
-    let order = {};
+    let order: Partial<Order> = {};
 
     if (ordersJSON) {
       orders = JSON.parse(ordersJSON);
@@ -67,8 +93,11 @@ export class OrderController {
           } else {
             throw new OrderNotFoundError();
           }
+
+          o.accepted = new Date();
           order = o;
         }
+
         return o;
       });
     }
@@ -92,26 +121,36 @@ export class OrderController {
    */
   @Put('/decline/:orderId')
   @Authorized()
-  async decline(@Param('orderId') orderId: number) {
+  async decline(@Param('orderId') orderId: string) {
     const key = 'orders';
     const ordersJSON = await redisConnection.get(key);
 
     let orders: Order[] = [];
-    let order = {};
+    let order: Partial<Order> = {};
 
     if (ordersJSON) {
       orders = JSON.parse(ordersJSON);
 
-      orders = orders.filter(o => {
+      orders = orders.map(o => {
         if (o.id === orderId) {
+          if (o.state !== 3) {
+            o.state = 3;
+          } else {
+            throw new OrderNotFoundError();
+          }
+
+          o.declined = new Date();
           order = o;
         }
 
-        return o.id !== orderId;
+        return o;
       });
     }
 
     await redisConnection.set(key, JSON.stringify(orders));
+
+    // @ts-ignore
+    order.state = 3;
 
     io
       // @ts-ignore
@@ -130,12 +169,12 @@ export class OrderController {
    */
   @Put('/finish/:orderId')
   @Authorized()
-  async finish(@Param('orderId') orderId: number) {
+  async finish(@Param('orderId') orderId: string) {
     const key = 'orders';
     const ordersJSON = await redisConnection.get(key);
 
     let orders: Order[] = [];
-    let order = {};
+    let order: Partial<Order> = {};
 
     if (ordersJSON) {
       orders = JSON.parse(ordersJSON);
@@ -147,8 +186,11 @@ export class OrderController {
           } else {
             throw new OrderNotFoundError();
           }
+
+          o.finished = new Date();
           order = o;
         }
+
         return o;
       });
     }
@@ -168,6 +210,7 @@ export class OrderController {
    * Socket Emit place_order
    *
    * Places an order based on the socket's message body
+   * @param socketId
    * @param order
    */
   @OnMessage('place_order')
@@ -214,42 +257,30 @@ export class OrderController {
     order.products = syncedProducts;
 
     /**
-     * Attach state of the order
+     * Attch state of the order
      */
     order.state = 0;
 
     const key = 'orders';
     const ordersJSON = await redisConnection.get(key);
 
-    let orders = [];
+    let orders: Order[] = [];
+
+    /**
+     * Attach id to order
+     */
+    order.id = v4();
+
+    /**
+     * Attach sender id to order
+     */
+    order.customerId = socketId;
+    order.placed = new Date();
 
     if (ordersJSON && ordersJSON !== '[]') {
       orders = JSON.parse(ordersJSON);
-
-      /**
-       * Attach id to order
-       */
-      const id = orders[orders.length - 1].id + 1;
-      order.id = id;
-
-      /**
-       * Attach sender id to order
-       */
-      order.customerId = socketId;
-
       orders.push(order);
     } else {
-      /**
-       * Attach id to order
-       */
-      const id = 0;
-      order.id = id;
-
-      /**
-       * Attach sender id to order
-       */
-      order.customerId = socketId;
-
       orders = [order];
     }
 
@@ -258,9 +289,45 @@ export class OrderController {
      */
     await redisConnection.set(key, JSON.stringify(orders));
 
-    /**
-     * Emit the new orders back to the clients
-     */
-    io.emit('placed_order', orders);
+    io.emit('placed_order_admin', orders);
+    io.to(order.customerId).emit('placed_order', order);
+  }
+
+  /**
+   * Socket Emit update_customer_id
+   *
+   * Updates the customer id based on the new orders
+   * @param orderIds
+   */
+  @OnMessage('update_customerId')
+  async updateCustomerId(@SocketId() socketId: string, @MessageBody() orderIds: string[]) {
+    const key = 'orders';
+    const ordersJSON = await redisConnection.get(key);
+
+    let orders: Order[] = [];
+    const customerOrders: Order[] = [];
+
+    if (ordersJSON) {
+      orders = JSON.parse(ordersJSON);
+
+      orders = orders.map(o => {
+        if (orderIds.includes(o.id)) {
+          const newOrder = {
+            ...o,
+            customerId: socketId
+          };
+
+          customerOrders.push(newOrder);
+
+          return newOrder;
+        }
+
+        return o;
+      });
+    }
+
+    await redisConnection.set(key, JSON.stringify(orders));
+
+    io.to(socketId).emit('updated_customerId', customerOrders);
   }
 }

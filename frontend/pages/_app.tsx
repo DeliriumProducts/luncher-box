@@ -3,9 +3,9 @@ import App, { Container, NextAppContext } from 'next/app';
 import Head from 'next/head';
 import React from 'react';
 import { createGlobalStyle } from 'styled-components';
-import AdminContextProvider from '../components/AdminContextProvider';
-import CartContextProvider from '../components/CartContextProvider';
+import CustomerContextProvider from '../components/CustomerContextProvider';
 import Layout from '../components/Layout';
+import SocketContextProvider from '../components/SocketContextProvider';
 
 const GlobalStyle = createGlobalStyle`
   html,
@@ -33,6 +33,7 @@ const GlobalStyle = createGlobalStyle`
 
   * {
     box-sizing: border-box;
+    font-family: Montserrat, 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   }
 
   #__next,
@@ -47,7 +48,7 @@ const GlobalStyle = createGlobalStyle`
 
   .page-transition-enter-active {
     opacity: 1;
-    transition: opacity 150ms;
+    transition: opacity 100ms;
   }
 
   .page-transition-exit {
@@ -56,7 +57,7 @@ const GlobalStyle = createGlobalStyle`
 
   .page-transition-exit-active {
     opacity: 0;
-    transition: opacity 150ms;
+    transition: opacity 100ms;
   }
 `;
 
@@ -73,24 +74,38 @@ export default class MyApp extends App {
 
   render() {
     const { Component, pageProps } = this.props;
+    let type: 'admin' | 'customer';
+
+    type = this.props.router.route.startsWith('/admin') ? 'admin' : 'customer';
 
     return (
       <>
         <Head>
-          <title>LuncherBox | Place orders from your phone!</title>
+          <title>LuncherBox • Place orders from your phone!</title>
         </Head>
-        <CartContextProvider>
-          <AdminContextProvider>
+        <SocketContextProvider>
+          {type === 'customer' ? (
+            <CustomerContextProvider>
+              <Container>
+                <GlobalStyle />
+                <Layout type="customer" route={this.props.router.route}>
+                  <PageTransition timeout={150} classNames="page-transition">
+                    <Component key={this.props.router.route} {...pageProps} />
+                  </PageTransition>
+                </Layout>
+              </Container>
+            </CustomerContextProvider>
+          ) : (
             <Container>
               <GlobalStyle />
-              <Layout route={this.props.router.route}>
+              <Layout type="admin" route={this.props.router.route}>
                 <PageTransition timeout={150} classNames="page-transition">
                   <Component key={this.props.router.route} {...pageProps} />
                 </PageTransition>
               </Layout>
             </Container>
-          </AdminContextProvider>
-        </CartContextProvider>
+          )}
+        </SocketContextProvider>
       </>
     );
   }

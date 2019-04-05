@@ -2,7 +2,7 @@ import { Form, Icon, Input, Modal, Select } from 'antd';
 import { FormComponentProps } from 'antd/lib/form';
 import React from 'react';
 import { CategoryAPI } from '../api';
-import { AdminContext } from '../context';
+import { SocketContext } from '../context';
 import { Category, Product } from '../interfaces';
 import { ActionTypes, EntityInstance, EntityTypes } from '../types';
 
@@ -22,8 +22,8 @@ interface State {
 
 const EntityModal = Form.create()(
   class extends React.Component<Props, State> {
-    static contextType = AdminContext;
-    context!: React.ContextType<typeof AdminContext>;
+    static contextType = SocketContext;
+    context!: React.ContextType<typeof SocketContext>;
 
     state = {
       categories: []

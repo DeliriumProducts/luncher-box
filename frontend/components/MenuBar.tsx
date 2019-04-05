@@ -6,7 +6,7 @@ import styled from 'styled-components';
 import { Exit } from 'styled-icons/icomoon/Exit';
 import { AuthAPI } from '../api';
 import { THEME_VARIABLES } from '../config';
-import { CartContext } from '../context';
+import { CustomerContext } from '../context';
 
 interface Props {
   selectedKey: string;
@@ -15,19 +15,13 @@ interface Props {
 
 const MenuContainer = styled.div`
   z-index: 5000;
+
+  .menu-item-icon {
+    font-size: 20px;
+  }
+
   @media (max-width: 768px) {
-    position: fixed;
-    bottom: 0;
     width: 100%;
-
-    .menu-item-title {
-      display: none;
-    }
-
-    .menu-item-icon {
-      font-size: 25px;
-      margin-right: 0;
-    }
 
     .styled-menu {
       justify-content: space-between;
@@ -45,6 +39,10 @@ const StyledMenu = styled(Menu)`
     box-shadow: 0 -2px 2px rgba(0, 0, 0, 0.12);
   }
 
+  .menu-item-title {
+    font-weight: 600;
+  }
+
   background-color: #fafafa;
 `;
 
@@ -58,8 +56,8 @@ const StyledLogout = styled(Exit)`
 `;
 
 class MenuBar extends Component<Props> {
-  static contextType = CartContext;
-  context!: React.ContextType<typeof CartContext>;
+  static contextType = CustomerContext;
+  context!: React.ContextType<typeof CustomerContext>;
 
   handleClick = async (e: any) => {
     const { key } = e;
@@ -169,11 +167,19 @@ class MenuBar extends Component<Props> {
                   </StyledAnchor>
                 </Link>
               </Menu.Item>
+              <Menu.Item key="/app/orders">
+                <Link href="/app/orders">
+                  <StyledAnchor>
+                    <Icon type="profile" className="menu-item-icon" />
+                    <span className="menu-item-title">My Orders</span>
+                  </StyledAnchor>
+                </Link>
+              </Menu.Item>
               <Menu.Item key="/app/cart">
                 <Link href="/app/cart">
                   <StyledAnchor>
                     <Badge
-                      offset={[10, 0]}
+                      offset={[12, 2]}
                       count={this.context.totalAmount}
                       style={{
                         backgroundColor: THEME_VARIABLES['@primary-color']
