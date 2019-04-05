@@ -1,4 +1,4 @@
-import { Affix, Layout as AntDesignLayout, message, Modal } from 'antd';
+import { Affix, Layout as AntDesignLayout, message, notification } from 'antd';
 import React, { ReactNode } from 'react';
 import styled from 'styled-components';
 import { CustomerContext, SocketContext } from '../context';
@@ -98,8 +98,8 @@ const Layout: React.FunctionComponent<Props> = props => {
       modalType = 'error';
     }
 
-    Modal[modalType]({
-      title: (
+    notification[modalType]({
+      message: (
         <h2
           style={{
             color: '#000000a6',
@@ -112,11 +112,7 @@ const Layout: React.FunctionComponent<Props> = props => {
           Order state:{' '}
         </h2>
       ),
-      centered: true,
-      content: data,
-      // tslint:disable-next-line
-      onOk: () => {},
-      maskClosable: true
+      description: data
     });
   };
 
