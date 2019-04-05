@@ -1,9 +1,17 @@
-import { Avatar, Button, Card, Modal } from 'antd';
+import { Alert, Avatar, Button, Card, Modal, Steps } from 'antd';
 import distanceInWords from 'date-fns/distance_in_words';
 import React, { FunctionComponent } from 'react';
 import styled from 'styled-components';
 import { THEME_VARIABLES } from '../config';
 import { Order, Product } from '../interfaces';
+
+const Step = Steps.Step;
+
+const StyledAlert = styled(Alert)`
+  border-radius: 7px;
+  border: 0;
+  box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.12);
+`;
 
 const StyledCard: any = styled(Card)`
   margin-top: 8px;
@@ -123,8 +131,6 @@ interface OrderProps {
 }
 
 const OrderCard: FunctionComponent<OrderProps> = ({ order }) => {
-  const { products } = order;
-
   const [currentDate, setCurrentDate] = React.useState(new Date());
 
   React.useEffect(() => {
@@ -178,11 +184,7 @@ const OrderCard: FunctionComponent<OrderProps> = ({ order }) => {
   }
 
   const SIZE = 5;
-  const slicedProducts = products!.slice(0, SIZE);
-
-  const price = products!
-    .reduce((acc, pro) => acc + pro.quantity! * pro.price!, 0)
-    .toFixed(2);
+  const slicedProducts = order.products!.slice(0, SIZE);
 
   if (slicedProducts.length === 4) {
     // @ts-ignore
@@ -197,7 +199,7 @@ const OrderCard: FunctionComponent<OrderProps> = ({ order }) => {
       title,
       content: (
         <div>
-          {products!.map(product => {
+          {order.products!.map(product => {
             totalSum +=
               product.price! *
               (product.quantity !== undefined ? product.quantity : 1);
@@ -214,6 +216,64 @@ const OrderCard: FunctionComponent<OrderProps> = ({ order }) => {
             );
           })}
           <strong>Total price: $ {totalSum.toFixed(2)}</strong>
+          <div style={{ marginTop: 8 }}>
+            {order.state && order.state < 3 ? (
+              <Steps progressDot current={order.state} direction="vertical">
+                <Step
+                  title="Placed"
+                  description={
+                    order.placed &&
+                    distanceInWords(order.placed, currentDate) + ' ago'
+                  }
+                />
+                <Step
+                  title="Accepted"
+                  description={
+                    order.accepted &&
+                    distanceInWords(order.accepted, currentDate) + ' ago'
+                  }
+                />
+                <Step
+                  title="Finished"
+                  description={
+                    order.finished &&
+                    distanceInWords(order.finished, currentDate) + ' ago'
+                  }
+                />
+              </Steps>
+            ) : (
+              <Steps progressDot current={1} direction="vertical">
+                <Step
+                  title="Placed"
+                  description={
+                    order.placed &&
+                    distanceInWords(order.placed, currentDate) + ' ago'
+                  }
+                />
+                <Step
+                  title="Declined"
+                  description={
+                    order.declined &&
+                    distanceInWords(order.declined, currentDate) + ' ago'
+                  }
+                />
+              </Steps>
+            )}
+            {/* {orderState.msg} on{' '}
+              {orderState.date &&
+                new Date(orderState.date).toLocaleDateString()} */}
+          </div>
+          <div>
+            {order.comment && (
+              <StyledAlert
+                message="Comment"
+                description={order.comment}
+                type={orderState.modalType}
+                showIcon
+                style={{ marginTop: 8 }}
+              />
+            )}
+          </div>
         </div>
       ),
       centered: true,
