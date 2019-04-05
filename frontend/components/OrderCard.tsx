@@ -216,7 +216,10 @@ const OrderCard: FunctionComponent<OrderProps> = ({ order }) => {
               </div>
             );
           })}
-          <strong>Total price: $ {totalSum.toFixed(2)}</strong>
+          <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+            <strong>Total price: $ {totalSum.toFixed(2)}</strong>
+            <strong>Table №: {order.table}</strong>
+          </div>
           <div style={{ marginTop: 8 }}>
             {order.state !== undefined && order.state !== 3 ? (
               <Steps progressDot current={order.state} direction="vertical">
