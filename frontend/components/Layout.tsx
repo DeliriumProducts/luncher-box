@@ -39,7 +39,7 @@ const Layout: React.FunctionComponent<Props> = props => {
   const customerContext = React.useContext(CustomerContext);
   const orderHistory = React.useRef(customerContext.orderHistory);
 
-  const showNotifOnStateChange = (order: Order) => {
+  const showModalOnStateChange = (order: Order) => {
     let data: React.ReactNode | React.ReactNode[];
     let modalType: 'info' | 'error' | 'success' | 'warning';
 
@@ -117,13 +117,13 @@ const Layout: React.FunctionComponent<Props> = props => {
   };
 
   const handleNewOrderState = (order: Order) => {
-    showNotifOnStateChange(order);
+    showModalOnStateChange(order);
     customerContext.actions.updateOrderHistory(order);
   };
 
   const handlePlacedOrder = (order: Order) => {
     if (order.state === 0) {
-      showNotifOnStateChange(order);
+      showModalOnStateChange(order);
 
       customerContext.actions.pushOrderHistory(order);
     } else {
@@ -135,7 +135,7 @@ const Layout: React.FunctionComponent<Props> = props => {
     for (let i = 0; i < orders.length; i++) {
       if (orders[i].state !== orderHistory.current[i].state) {
         const order = orders[i];
-        showNotifOnStateChange(order);
+        showModalOnStateChange(order);
       }
     }
 
@@ -146,8 +146,7 @@ const Layout: React.FunctionComponent<Props> = props => {
     if (type === 'customer') {
       if (customerContext.hasFinishedSyncing) {
         const orderIds = customerContext.orderHistory.reduce(
-          (acc: string[], order) =>
-            order.state! < 2 ? [...acc, order.id!] : acc,
+          (acc: string[], order) => [...acc, order.id!],
           []
         );
 
