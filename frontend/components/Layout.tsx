@@ -77,7 +77,7 @@ const Layout: React.FunctionComponent<Props> = props => {
         </>
       );
 
-      modalType = 'warning';
+      modalType = 'success';
     } else if (order.state === 2) {
       data = (
         <>
