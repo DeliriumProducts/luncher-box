@@ -28,15 +28,6 @@ const StyledCard: any = styled(Card)`
     font-size: 2rem;
   }
 
-  @media (max-width: 768px) {
-    .ant-card-body {
-      flex-direction: column;
-    }
-
-    width: 100%;
-    flex-basis: 100%;
-  }
-
   .ant-card-body {
     width: 100%;
     display: flex;
@@ -81,12 +72,22 @@ const StyledCard: any = styled(Card)`
       text-align: center;
       margin: 0;
       color: #000000a6;
-      font-size: 1.5rem;
+      font-size: 1.3rem;
     }
 
     .date {
       color: #00000088;
-      font-size: 1.25rem;
+      font-size: 1.05rem;
+    }
+
+    @media (max-width: 480px) {
+      h2 {
+        font-size: 1rem;
+      }
+
+      .date {
+        font-size: 0.75rem;
+      }
     }
   }
 
@@ -162,7 +163,7 @@ const OrderCard: FunctionComponent<OrderProps> = ({ order }) => {
     }
   } else if (order.state === 1) {
     orderState.msg = 'Accepted';
-    orderState.modalType = 'warning';
+    orderState.modalType = 'success';
 
     if (order.accepted) {
       orderState.date = order.accepted;
