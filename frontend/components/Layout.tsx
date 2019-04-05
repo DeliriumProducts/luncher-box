@@ -41,6 +41,7 @@ const Layout: React.FunctionComponent<Props> = props => {
 
   const showModalOnStateChange = (order: Order) => {
     let data: React.ReactNode | React.ReactNode[];
+    let modalType: 'info' | 'error' | 'success' | 'warning';
 
     const ProductList = (
       <div>
@@ -59,13 +60,24 @@ const Layout: React.FunctionComponent<Props> = props => {
       </div>
     );
 
-    if (order.state === 1) {
+    if (order.state === 0) {
+      data = (
+        <>
+          {ProductList}
+          <strong>You order has been placed! 🍽</strong>
+        </>
+      );
+
+      modalType = 'info';
+    } else if (order.state === 1) {
       data = (
         <>
           {ProductList}
           <strong>You order has been accepted! 🎉</strong>
         </>
       );
+
+      modalType = 'warning';
     } else if (order.state === 2) {
       data = (
         <>
@@ -73,6 +85,8 @@ const Layout: React.FunctionComponent<Props> = props => {
           <strong>Your order is on the way! 🍚</strong>
         </>
       );
+
+      modalType = 'success';
     } else {
       data = (
         <>
@@ -80,9 +94,11 @@ const Layout: React.FunctionComponent<Props> = props => {
           <strong>Your order has been declined! ❌</strong>
         </>
       );
+
+      modalType = 'error';
     }
 
-    Modal.info({
+    Modal[modalType]({
       title: (
         <h2
           style={{
@@ -111,7 +127,7 @@ const Layout: React.FunctionComponent<Props> = props => {
 
   const handlePlacedOrder = (order: Order) => {
     if (order.state === 0) {
-      message.success('You order has been placed! 🍽');
+      showModalOnStateChange(order);
 
       customerContext.actions.pushOrderHistory(order);
     } else {

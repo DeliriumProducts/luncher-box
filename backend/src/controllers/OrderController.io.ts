@@ -81,7 +81,7 @@ export class OrderController {
     const ordersJSON = await redisConnection.get(key);
 
     let orders: Order[] = [];
-    let order = {};
+    let order: Partial<Order> = {};
 
     if (ordersJSON) {
       orders = JSON.parse(ordersJSON);
@@ -93,6 +93,8 @@ export class OrderController {
           } else {
             throw new OrderNotFoundError();
           }
+
+          o.accepted = new Date();
           order = o;
         }
 
@@ -124,7 +126,7 @@ export class OrderController {
     const ordersJSON = await redisConnection.get(key);
 
     let orders: Order[] = [];
-    let order = {};
+    let order: Partial<Order> = {};
 
     if (ordersJSON) {
       orders = JSON.parse(ordersJSON);
@@ -136,6 +138,8 @@ export class OrderController {
           } else {
             throw new OrderNotFoundError();
           }
+
+          o.declined = new Date();
           order = o;
         }
 
@@ -170,7 +174,7 @@ export class OrderController {
     const ordersJSON = await redisConnection.get(key);
 
     let orders: Order[] = [];
-    let order = {};
+    let order: Partial<Order> = {};
 
     if (ordersJSON) {
       orders = JSON.parse(ordersJSON);
@@ -182,6 +186,8 @@ export class OrderController {
           } else {
             throw new OrderNotFoundError();
           }
+
+          o.finished = new Date();
           order = o;
         }
 
@@ -273,6 +279,7 @@ export class OrderController {
        * Attach sender id to order
        */
       order.customerId = socketId;
+      order.placed = new Date();
 
       orders.push(order);
     } else {
@@ -286,6 +293,7 @@ export class OrderController {
        * Attach sender id to order
        */
       order.customerId = socketId;
+      order.placed = new Date();
 
       orders = [order];
     }

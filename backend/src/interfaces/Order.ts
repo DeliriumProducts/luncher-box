@@ -1,14 +1,18 @@
-import { OrderState, EntityError } from '../types';
 import { Product } from '../entities';
-import { EntityNotValidError, EntityNotFoundError } from '../utils';
+import { EntityError, OrderState } from '../types';
+import { EntityNotFoundError, EntityNotValidError } from '../utils';
 
 export interface Order {
   id: string;
-  comment?: string;
-  products: Partial<Product>[];
+  customerId: string;
   table: string;
-  state: OrderState;
-  customerId?: string;
+  products: Product[];
+  comment: string;
+  state?: OrderState;
+  placed?: Date;
+  accepted?: Date;
+  declined?: Date;
+  finished?: Date;
 }
 
 export class OrderNotFoundError extends EntityNotFoundError<Product> {

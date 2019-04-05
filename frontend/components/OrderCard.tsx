@@ -1,9 +1,9 @@
 import { Avatar, Button, Card, Modal } from 'antd';
-import { FunctionComponent } from 'react';
+import distanceInWords from 'date-fns/distance_in_words';
+import React, { FunctionComponent } from 'react';
 import styled from 'styled-components';
 import { THEME_VARIABLES } from '../config';
 import { Order, Product } from '../interfaces';
-import { DeepPartial } from '../types';
 
 const StyledCard: any = styled(Card)`
   margin-top: 8px;
@@ -76,12 +76,9 @@ const StyledCard: any = styled(Card)`
       font-size: 1.5rem;
     }
 
-    .price {
-      margin-right: 2%;
-    }
-
-    .state {
-      margin-left: 2%;
+    .date {
+      color: #00000088;
+      font-size: 1.25rem;
     }
   }
 
@@ -122,12 +119,64 @@ const ProductList: FunctionComponent<ProductListProps> = ({ products }) => {
 };
 
 interface OrderProps {
-  order: DeepPartial<Order>;
+  order: Order;
 }
 
-const OrderCard: FunctionComponent<OrderProps> = ({
-  order: { products, state: orderState, table, comment, id }
-}) => {
+const OrderCard: FunctionComponent<OrderProps> = ({ order }) => {
+  const { products } = order;
+
+  const [currentDate, setCurrentDate] = React.useState(new Date());
+
+  React.useEffect(() => {
+    const timerID = setInterval(() => {
+      setCurrentDate(new Date());
+    }, 60000);
+
+    return () => {
+      clearInterval(timerID);
+    };
+  });
+
+  const orderState: {
+    msg: string;
+    date: Date;
+    modalType: 'info' | 'error' | 'success' | 'warning';
+  } = {
+    msg: 'Error',
+    date: new Date(),
+    modalType: 'info'
+  };
+
+  if (order.state === 0) {
+    orderState.msg = 'Placed';
+    orderState.modalType = 'info';
+
+    if (order.placed) {
+      orderState.date = order.placed;
+    }
+  } else if (order.state === 1) {
+    orderState.msg = 'Accepted';
+    orderState.modalType = 'warning';
+
+    if (order.accepted) {
+      orderState.date = order.accepted;
+    }
+  } else if (order.state === 2) {
+    orderState.msg = 'Finished';
+    orderState.modalType = 'success';
+
+    if (order.finished) {
+      orderState.date = order.finished;
+    }
+  } else {
+    orderState.msg = 'Declined';
+    orderState.modalType = 'error';
+
+    if (order.declined) {
+      orderState.date = order.declined;
+    }
+  }
+
   const SIZE = 5;
   const slicedProducts = products!.slice(0, SIZE);
 
@@ -136,13 +185,15 @@ const OrderCard: FunctionComponent<OrderProps> = ({
     .toFixed(2);
 
   if (slicedProducts.length === 4) {
+    // @ts-ignore
     slicedProducts.push({ image: '/static/placeholder.png' });
   }
 
   const handleClick = () => {
-    const title = 'Order Info';
+    const title = `Order Info - ${orderState.msg}`;
     let totalSum = 0;
-    Modal.info({
+
+    Modal[orderState.modalType]({
       title,
       content: (
         <div>
@@ -172,25 +223,18 @@ const OrderCard: FunctionComponent<OrderProps> = ({
     });
   };
 
-  let state;
-
-  if (orderState === 0) {
-    state = 'Placed';
-  } else if (orderState === 1) {
-    state = 'Accepted';
-  } else if (orderState === 2) {
-    state = 'Finished';
-  } else {
-    state = 'Declined';
-  }
-
   return (
     <StyledCard>
       <div className="products">
         <ProductList products={slicedProducts} />
       </div>
       <div className="description">
-        <h2 className="state">{state}</h2>
+        <h2 className="state">{orderState.msg}</h2>
+        <h2 className="date">
+          {orderState.date !== undefined &&
+            distanceInWords(orderState.date, currentDate)}{' '}
+          ago
+        </h2>
       </div>
       <div className="info">
         <Button shape="circle" icon="info" size="large" onClick={handleClick} />
