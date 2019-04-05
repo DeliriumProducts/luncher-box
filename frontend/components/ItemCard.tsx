@@ -1,8 +1,8 @@
-import { CartContext } from '../context';
-import React from 'react';
-import { Card, Icon, Button, Badge, Avatar } from 'antd';
-import styled from 'styled-components';
+import { Button, Card, Icon } from 'antd';
 import ButtonGroup from 'antd/lib/button/button-group';
+import React from 'react';
+import styled from 'styled-components';
+import { CustomerContext } from '../context';
 import { Product } from '../interfaces';
 
 interface Props {
@@ -33,6 +33,7 @@ const StyledCard: any = styled(Card)`
     .ant-card-body {
       flex-direction: column;
     }
+
     width: 100%;
     flex-basis: 100%;
   }
@@ -53,6 +54,7 @@ const StyledCard: any = styled(Card)`
     flex-direction: column;
     align-items: center;
     flex-shrink: 0;
+
     @media (max-width: 768px) {
       order: 3;
       flex-direction: row;
@@ -67,11 +69,13 @@ const StyledCard: any = styled(Card)`
   .title {
     flex-grow: 1;
     margin-top: 1%;
+    font-size: 1rem;
     margin: auto;
     word-break: break-all;
     text-align: left;
     padding-left: 2.5%;
     padding-right: 2.5%;
+
     @media (max-width: 768px) {
       order: 1;
       text-align: center;
@@ -85,6 +89,7 @@ const StyledCard: any = styled(Card)`
     margin-right: 2.5%;
     margin-top: 2.5%;
     margin-bottom: 2.5%;
+
     @media (max-width: 768px) {
       order: 2;
     }
@@ -104,8 +109,8 @@ const SyledImage = styled.img`
 `;
 
 export default class extends React.Component<Props> {
-  static contextType = CartContext;
-  context!: React.ContextType<typeof CartContext>;
+  static contextType = CustomerContext;
+  context!: React.ContextType<typeof CustomerContext>;
 
   addToCart = () => {
     const product: Product = this.props;
@@ -151,9 +156,7 @@ export default class extends React.Component<Props> {
           </ButtonGroup>
         </div>
         <SyledImage src={image} />
-        <div style={{ fontSize: '1rem' }} className="title">
-          {name}
-        </div>
+        <div className="title">{name}</div>
         <div className="price">
           $ {quantity && price && (price * quantity).toFixed(2)}
         </div>

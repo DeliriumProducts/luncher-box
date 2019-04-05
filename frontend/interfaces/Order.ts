@@ -1,9 +1,15 @@
 import { Product } from '.';
+import { OrderState } from '../types';
 
 export interface Order {
-  id?: number;
+  id?: string;
+  customerId?: string;
   table: string;
   products: Product[];
   comment: string;
-  state?: number;
+  state?: OrderState;
+  placed?: Date;
+  accepted?: Date;
+  declined?: Date;
+  finished?: Date;
 }

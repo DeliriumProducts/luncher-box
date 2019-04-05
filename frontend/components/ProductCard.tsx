@@ -1,7 +1,7 @@
 import { Button, Card, Modal } from 'antd';
 import React from 'react';
 import styled from 'styled-components';
-import { CartContext } from '../context';
+import { CustomerContext } from '../context';
 import { Product } from '../interfaces';
 import PriceBadge from './PriceBadge';
 
@@ -49,9 +49,14 @@ const StyledMeta = styled(Meta)`
   align-items: center;
   justify-content: center;
   height: 100%;
+
   & * {
     white-space: initial;
     overflow-wrap: normal;
+  }
+
+  .ant-card-meta-title {
+    font-weight: bold;
   }
 `;
 
@@ -77,8 +82,8 @@ const addDots = (str: string, limit: number) => {
 };
 
 export default class extends React.Component<Props> {
-  static contextType = CartContext;
-  context!: React.ContextType<typeof CartContext>;
+  static contextType = CustomerContext;
+  context!: React.ContextType<typeof CustomerContext>;
 
   viewMore = (e: React.FormEvent<HTMLElement>) => {
     e.stopPropagation();

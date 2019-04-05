@@ -5,39 +5,44 @@ interface Values {
   order: Order;
   totalAmount: number;
   table: string;
-  socket: SocketIOClient.Socket | undefined;
+  orderHistory: Order[];
+  hasFinishedSyncing: boolean;
   actions: {
-    reload: () => Promise<void>;
+    syncWithLocalForage: () => void;
     clear: () => Promise<[void, void]>;
     increment: (product: Product) => void;
     decrement: (product: Product) => void;
     comment: (comment: string) => void;
     setTable: (id: string) => void;
+    updateOrderHistory: (order: Order) => void;
+    overwriteOrderHistory: (orders: Order[]) => void;
+    pushOrderHistory: (order: Order) => void;
   };
 }
 
-export const CartContext = React.createContext<Values>({
+export const CustomerContext = React.createContext<Values>({
   order: {
-    id: 1,
     products: [],
     comment: '',
     table: '1'
   },
+  orderHistory: [],
   table: '',
   totalAmount: 0,
-  socket: undefined,
+  hasFinishedSyncing: false,
   actions: {
     // tslint:disable
-    reload: () => {
-      return new Promise((resolve, reject) => undefined);
-    },
+    syncWithLocalForage: () => {},
     clear: () => {
       return Promise.all([undefined, undefined]);
     },
     increment: () => {},
     decrement: () => {},
     comment: () => {},
-    setTable: () => {}
+    setTable: () => {},
+    updateOrderHistory: () => {},
+    overwriteOrderHistory: () => {},
+    pushOrderHistory: () => {}
     // tslint:enable
   }
 });

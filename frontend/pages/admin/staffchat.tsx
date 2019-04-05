@@ -187,9 +187,7 @@ class Autism extends Component {
     this.setState({ targetKeys });
   };
 
-  handleSearch = (dir, value) => {
-    console.log('search:', dir, value);
-  };
+  handleSearch = (dir, value) => {};
 
   render() {
     return (

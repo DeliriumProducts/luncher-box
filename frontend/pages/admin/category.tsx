@@ -1,4 +1,5 @@
 import { message } from 'antd';
+import Head from 'next/head';
 import Router, { DefaultQuery } from 'next/router';
 import { Component } from 'react';
 import styled from 'styled-components';
@@ -10,7 +11,6 @@ import withAuth from '../../components/withAuth';
 import withRouter from '../../components/withRouter';
 import { Category, Product } from '../../interfaces';
 import { ActionTypes, EntityInstance, EntityTypes } from '../../types';
-import Head from 'next/head';
 
 const FlexContainer = styled.div`
   display: flex;
@@ -263,7 +263,7 @@ class CategoryPage extends Component<Props, State> {
             {this.state.categoryName === ''
               ? 'Category'
               : this.state.categoryName}{' '}
-            | LuncherBox
+            • LuncherBox
           </title>
         </Head>
         <FlexContainer>

@@ -5,7 +5,7 @@ import styled from 'styled-components';
 import { CategoryAPI } from '../../api';
 import CategoryCard from '../../components/CategoryCard';
 import Spinner from '../../components/Spinner';
-import { AdminContext } from '../../context/AdminContext';
+import { SocketContext } from '../../context/SocketContext';
 import { Category } from '../../interfaces';
 
 const FlexContainer = styled.div`
@@ -29,8 +29,8 @@ interface State {
 }
 
 class Home extends Component<any, State> {
-  static contextType = AdminContext;
-  context!: React.ContextType<typeof AdminContext>;
+  static contextType = SocketContext;
+  context!: React.ContextType<typeof SocketContext>;
 
   state: State = {
     categories: [],
@@ -72,7 +72,7 @@ class Home extends Component<any, State> {
     return (
       <>
         <Head>
-          <title>Menu | LuncherBox</title>
+          <title>Menu • LuncherBox</title>
         </Head>
         <FlexContainer>{data}</FlexContainer>
       </>

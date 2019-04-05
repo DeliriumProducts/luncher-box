@@ -16,7 +16,7 @@ export class OrderAPI {
     return orders;
   }
 
-  static async accept(orderId: number) {
+  static async accept(orderId: string) {
     const orders = await axios.put(
       `${BACKEND_URL}/orders/accept/${orderId}`,
       {},
@@ -26,7 +26,7 @@ export class OrderAPI {
     return orders;
   }
 
-  static async decline(orderId: number) {
+  static async decline(orderId: string) {
     const response = await axios.put(
       `${BACKEND_URL}/orders/decline/${orderId}`,
       {},
@@ -36,7 +36,7 @@ export class OrderAPI {
     return response;
   }
 
-  static async finish(orderId: number) {
+  static async finish(orderId: string) {
     const response = await axios.put(
       `${BACKEND_URL}/orders/finish/${orderId}`,
       {},

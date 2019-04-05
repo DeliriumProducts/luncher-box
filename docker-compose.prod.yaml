@@ -6,37 +6,21 @@ services:
       NODE_ENV: production
     ports:
       - "8000:8000"
-    restart_policy:
-      condition: on-failure
-      delay: 5s
-      max_attempts: 3
-      window: 120s
+    restart: always
   frontend:
     build: "./frontend"
     environment:
       NODE_ENV: production
     ports:
       - "3000:3000"
-    restart_policy:
-      condition: on-failure
-      delay: 5s
-      max_attempts: 3
-      window: 120s
+    restart: always
   db:
     image: mariadb
-    restart_policy:
-      condition: on-failure
-      delay: 5s
-      max_attempts: 3
-      window: 120s
     environment:
       MYSQL_ROOT_PASSWORD: "${DB_PASS}"
     volumes:
-      - "data:/var/lib/mysql"
+      - "./data:/var/lib/mysql"
+    restart: always
   redis:
     image: redis
-    restart_policy:
-      condition: on-failure
-      delay: 5s
-      max_attempts: 3
-      window: 120s
+    restart: always
