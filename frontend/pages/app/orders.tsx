@@ -48,20 +48,10 @@ export default () => {
     );
   }
 
-  const ongoingOrders = orderHistory.reduce(
-    (acc: number, o) => (o.state! < 2 ? acc + 1 : acc),
-    0
-  );
-
   return (
     <>
       <Head>
-        <title>
-          {ongoingOrders > 0
-            ? `(${ongoingOrders}) ${ongoingOrders === 1 ? 'Order' : 'Orders'}`
-            : 'Orders'}{' '}
-          • LuncherBox
-        </title>
+        <title>Orders • LuncherBox</title>
       </Head>
       <FlexContainer>{data}</FlexContainer>
     </>
