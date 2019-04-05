@@ -257,7 +257,7 @@ export class OrderController {
     order.products = syncedProducts;
 
     /**
-     * Attach state of the order
+     * Attch state of the order
      */
     order.state = 0;
 
@@ -266,35 +266,21 @@ export class OrderController {
 
     let orders: Order[] = [];
 
+    /**
+     * Attach id to order
+     */
+    order.id = v4();
+
+    /**
+     * Attach sender id to order
+     */
+    order.customerId = socketId;
+    order.placed = new Date();
+
     if (ordersJSON && ordersJSON !== '[]') {
       orders = JSON.parse(ordersJSON);
-
-      /**
-       * Attach id to order
-       */
-      const id = v4();
-      order.id = id;
-
-      /**
-       * Attach sender id to order
-       */
-      order.customerId = socketId;
-      order.placed = new Date();
-
       orders.push(order);
     } else {
-      /**
-       * Attach id to order
-       */
-      const id = v4();
-      order.id = id;
-
-      /**
-       * Attach sender id to order
-       */
-      order.customerId = socketId;
-      order.placed = new Date();
-
       orders = [order];
     }
 
@@ -303,11 +289,6 @@ export class OrderController {
      */
     await redisConnection.set(key, JSON.stringify(orders));
 
-    /**
-     * TODO: Emit to clients too
-     *
-     * Emit the new orders back to admins
-     */
     io.emit('placed_order_admin', orders);
     io.to(order.customerId).emit('placed_order', order);
   }
