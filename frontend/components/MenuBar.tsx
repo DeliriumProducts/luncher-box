@@ -124,6 +124,14 @@ class MenuBar extends Component<Props> {
               defaultSelectedKeys={selectedKeys}
               inlineIndent={50}
               className="styled-menu"
+              overflowedIndicator={
+                <Icon
+                  type="menu"
+                  style={{
+                    cursor: 'pointer'
+                  }}
+                />
+              }
             >
               <Menu.Item key="/admin">
                 <Link href="/admin">
