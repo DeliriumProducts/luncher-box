@@ -35,8 +35,16 @@ const StyledMenu = styled(Menu)`
   justify-content: center;
   box-shadow: 0 2px 2px rgba(0, 0, 0, 0.12);
 
-  @media (max-width: 768px) {
-    box-shadow: 0 -2px 2px rgba(0, 0, 0, 0.12);
+  .ant-menu-item {
+    border-bottom: none;
+  }
+
+  .ant-menu-item:hover {
+    border-bottom: none;
+  }
+
+  .ant-menu-submenu-title {
+    border-bottom: none;
   }
 
   .menu-item-title {
@@ -44,6 +52,10 @@ const StyledMenu = styled(Menu)`
   }
 
   background-color: #fafafa;
+
+  @media (max-width: 768px) {
+    box-shadow: 0 -2px 2px rgba(0, 0, 0, 0.12);
+  }
 `;
 
 const StyledAnchor = styled.a`
