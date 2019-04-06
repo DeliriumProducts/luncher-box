@@ -29,21 +29,49 @@ const MenuContainer = styled.div`
   }
 `;
 
-const StyledMenu = styled(Menu)`
+const StyledMenu: any = styled(Menu)`
   display: flex;
   align-items: center;
   justify-content: center;
   box-shadow: 0 2px 2px rgba(0, 0, 0, 0.12);
+  background-color: #fafafa;
 
-  @media (max-width: 768px) {
-    box-shadow: 0 -2px 2px rgba(0, 0, 0, 0.12);
+  .ant-menu-item {
+    border-bottom: none;
+  }
+
+  .ant-menu-item:hover {
+    border-bottom: none;
+  }
+
+  .ant-menu-submenu {
+    border-bottom: none;
+  }
+
+  .ant-menu-submenu:hover {
+    border-bottom: none;
   }
 
   .menu-item-title {
     font-weight: 600;
   }
 
-  background-color: #fafafa;
+  @media (max-width: 360px) {
+    .styled-menu {
+      background: red;
+      li:nth-of-type(6) {
+        & .menu-item-title {
+          font-size: 4px;
+        }
+        padding: 0;
+        background: red;
+      }
+    }
+  }
+
+  @media (max-width: 768px) {
+    box-shadow: 0 -2px 2px rgba(0, 0, 0, 0.12);
+  }
 `;
 
 const StyledAnchor = styled.a`
@@ -158,6 +186,14 @@ class MenuBar extends Component<Props> {
               defaultSelectedKeys={selectedKeys}
               inlineIndent={50}
               className="styled-menu"
+              overflowedIndicator={
+                <Icon
+                  type="menu"
+                  style={{
+                    cursor: 'pointer'
+                  }}
+                />
+              }
             >
               <Menu.Item key="/app">
                 <Link href="/app">
