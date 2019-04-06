@@ -1,11 +1,15 @@
-import { NextContext } from 'next';
+import { NextComponentClass, NextContext, NextFunctionComponent } from 'next';
 import Router from 'next/router';
-import React, { Component, ComponentType } from 'react';
+import React, { Component } from 'react';
 import { AuthAPI } from '../api';
 
-const withAuth = <T extends object>(C: ComponentType<T>) =>
+const withAuth = <T extends object>(
+  C: NextFunctionComponent<T> | NextComponentClass<T>
+) =>
   class extends Component<T> {
-    static async getInitialProps({ req, res }: NextContext) {
+    static async getInitialProps(ctx: NextContext) {
+      const { req, res } = ctx;
+
       let isAuthenticated = false;
 
       /**
@@ -29,6 +33,17 @@ const withAuth = <T extends object>(C: ComponentType<T>) =>
           Router.replace('/login');
         }
       }
+
+      /**
+       * Call the getInitalProps of the wrapped component
+       */
+      const composedInitialProps = C.getInitialProps
+        ? await C.getInitialProps(ctx)
+        : {};
+
+      return {
+        ...composedInitialProps
+      };
     }
     render() {
       return <C {...this.props} />;

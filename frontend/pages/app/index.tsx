@@ -56,18 +56,27 @@ const Home: NextFunctionComponent<Props> = ({ err, categories }) => {
   );
 };
 
-Home.getInitialProps = async ({ req }) => {
+Home.getInitialProps = async () => {
   try {
     const categories = await CategoryAPI.getAll();
 
     if (categories) {
-      return { categories, err: null };
+      return {
+        categories,
+        err: null
+      };
     }
   } catch (err) {
-    return { categories: [], err: `Network Error, Please try again later!` };
+    return {
+      categories: [],
+      err: `Network Error, Please try again later!`
+    };
   }
 
-  return { categories: [], err: null };
+  return {
+    categories: [],
+    err: null
+  };
 };
 
 export default Home;

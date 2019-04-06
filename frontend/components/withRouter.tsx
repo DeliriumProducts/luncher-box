@@ -9,8 +9,18 @@ const withRouter = <T extends object>(
   C: NextFunctionComponent<T> | NextComponentClass<T>
 ) =>
   class extends Component<T> {
-    static async getInitialProps({ query }: NextContext) {
+    static async getInitialProps(ctx: NextContext) {
+      const { query } = ctx;
+
+      /**
+       * Call the getInitalProps of the wrapped component
+       */
+      const composedInitialProps = C.getInitialProps
+        ? await C.getInitialProps(ctx)
+        : {};
+
       return {
+        ...composedInitialProps,
         query
       };
     }
