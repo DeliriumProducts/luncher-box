@@ -326,6 +326,14 @@ export class OrderController {
       });
     }
 
+    customerOrders.sort((o1, o2) => {
+      if (new Date(o1.placed!) > new Date(o2.placed!)) {
+        return -1;
+      } else {
+        return 1;
+      }
+    });
+
     await redisConnection.set(key, JSON.stringify(orders));
 
     io.to(socketId).emit('updated_customerId', customerOrders);

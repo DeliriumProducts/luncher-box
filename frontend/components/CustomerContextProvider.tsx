@@ -240,8 +240,8 @@ class CustomerContextProvider extends Component<Props, State> {
   pushOrderHistory = (order: Order) => {
     this.setState(
       prevState => {
-        const { orderHistory } = { ...prevState };
-        orderHistory.push(order);
+        const { orderHistory: o } = { ...prevState };
+        const orderHistory = [order, ...o];
 
         return {
           orderHistory
@@ -254,7 +254,7 @@ class CustomerContextProvider extends Component<Props, State> {
   };
 
   /**
-   * Sync whenever the component loads
+   * Sync state with localForage whenever the component loads
    */
   componentDidMount = () => {
     this.syncWithLocalForage();
