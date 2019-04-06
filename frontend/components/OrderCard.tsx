@@ -197,7 +197,19 @@ const OrderCard: FunctionComponent<OrderProps> = ({ order }) => {
     let totalSum = 0;
 
     Modal[orderState.modalType]({
-      title,
+      title: (
+        <h2
+          style={{
+            color: '#000000a6',
+            margin: 0,
+            marginBottom: 12,
+            fontSize: '1.2rem',
+            fontWeight: 525
+          }}
+        >
+          {title}
+        </h2>
+      ),
       content: (
         <div>
           {order.products!.map(product => {
