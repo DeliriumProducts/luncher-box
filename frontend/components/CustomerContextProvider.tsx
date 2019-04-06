@@ -240,8 +240,8 @@ class CustomerContextProvider extends Component<Props, State> {
   pushOrderHistory = (order: Order) => {
     this.setState(
       prevState => {
-        const { orderHistory: o } = { ...prevState };
-        const orderHistory = [order, ...o];
+        const { orderHistory } = { ...prevState };
+        orderHistory.unshift(order);
 
         return {
           orderHistory

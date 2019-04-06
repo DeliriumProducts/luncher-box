@@ -279,7 +279,7 @@ export class OrderController {
 
     if (ordersJSON && ordersJSON !== '[]') {
       orders = JSON.parse(ordersJSON);
-      orders.push(order);
+      orders.unshift(order);
     } else {
       orders = [order];
     }
