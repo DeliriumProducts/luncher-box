@@ -54,6 +54,12 @@ const StyledCard = styled(Card)`
         margin-left: 10px;
       }
     }
+
+    @media (max-width: 360px) {
+      .ant-card-head-title {
+        font-size: 14px;
+      }
+    }
   }
 `;
 
