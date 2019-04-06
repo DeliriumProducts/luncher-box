@@ -279,7 +279,7 @@ export class OrderController {
 
     if (ordersJSON && ordersJSON !== '[]') {
       orders = JSON.parse(ordersJSON);
-      orders.push(order);
+      orders.unshift(order);
     } else {
       orders = [order];
     }
@@ -325,6 +325,14 @@ export class OrderController {
         return o;
       });
     }
+
+    customerOrders.sort((o1, o2) => {
+      if (new Date(o1.placed!) > new Date(o2.placed!)) {
+        return -1;
+      } else {
+        return 1;
+      }
+    });
 
     await redisConnection.set(key, JSON.stringify(orders));
 
