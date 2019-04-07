@@ -9,6 +9,7 @@
     "type-check": "tsc"
   },
   "dependencies": {
+    "@types/nprogress": "^0.0.29",
     "@zeit/next-css": "^1.0.1",
     "@zeit/next-less": "^1.0.1",
     "@zeit/next-sass": "^1.0.1",
@@ -27,6 +28,7 @@
     "next-offline": "^3.3.6",
     "next-page-transitions": "^1.0.0-alpha.6",
     "next-size": "^2.0.2",
+    "nprogress": "^0.2.0",
     "pm2": "^3.3.1",
     "react": "^16.8.4",
     "react-dom": "^16.8.4",

@@ -1,11 +1,10 @@
 import { Empty, message } from 'antd';
+import { NextFunctionComponent } from 'next';
 import Head from 'next/head';
-import { Component } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import { CategoryAPI } from '../../api';
 import CategoryCard from '../../components/CategoryCard';
-import Spinner from '../../components/Spinner';
-import { SocketContext } from '../../context/SocketContext';
 import { Category } from '../../interfaces';
 
 const FlexContainer = styled.div`
@@ -23,61 +22,61 @@ const FlexContainer = styled.div`
   box-shadow: 0 20px 24px -18px rgba(0, 0, 0, 0.31);
 `;
 
-interface State {
+interface Props {
   categories: Category[];
-  loading: boolean;
+  err: string | null;
 }
+const Home: NextFunctionComponent<Props> = ({ err, categories }) => {
+  let data: React.ReactNode[] | React.ReactNode;
 
-class Home extends Component<any, State> {
-  static contextType = SocketContext;
-  context!: React.ContextType<typeof SocketContext>;
-
-  state: State = {
-    categories: [],
-    loading: true
-  };
-
-  async componentDidMount() {
-    try {
-      const categories = await CategoryAPI.getAll();
-
-      if (categories) {
-        this.setState({ categories });
-      }
-    } catch (err) {
+  /**
+   * Show only on cDM
+   */
+  React.useEffect(() => {
+    if (err) {
       message.error(`${err}`, 3);
-    } finally {
-      this.setState({ loading: false });
     }
+  }, []);
+
+  if (categories.length && !err) {
+    data = categories.map(category => (
+      <CategoryCard key={category.id} {...category} />
+    ));
+  } else {
+    data = <Empty description="No entries found" />;
   }
 
-  render() {
-    let data: React.ReactNode[] | React.ReactNode;
-    /**
-     * Check whether data is still being fetched
-     * then inject the showModal func and entity's type to children's props
-     */
-    if (this.state.loading) {
-      data = <Spinner />;
-    } else {
-      if (this.state.categories.length) {
-        data = this.state.categories.map(category => (
-          <CategoryCard key={category.id} {...category} />
-        ));
-      } else {
-        data = <Empty description="No entries found" />;
-      }
-    }
+  return (
+    <>
+      <Head>
+        <title>Menu • LuncherBox</title>
+      </Head>
+      <FlexContainer>{data}</FlexContainer>
+    </>
+  );
+};
 
-    return (
-      <>
-        <Head>
-          <title>Menu • LuncherBox</title>
-        </Head>
-        <FlexContainer>{data}</FlexContainer>
-      </>
-    );
+Home.getInitialProps = async () => {
+  try {
+    const categories = await CategoryAPI.getAll();
+
+    if (categories) {
+      return {
+        categories,
+        err: null
+      };
+    }
+  } catch (err) {
+    return {
+      categories: [],
+      err: `Network Error, Please try again later!`
+    };
   }
-}
+
+  return {
+    categories: [],
+    err: null
+  };
+};
 
 export default Home;

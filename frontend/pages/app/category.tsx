@@ -1,12 +1,11 @@
 import { Empty, message } from 'antd';
+import { NextFunctionComponent } from 'next';
 import Head from 'next/head';
-import Router, { DefaultQuery } from 'next/router';
-import { Component } from 'react';
+import Router from 'next/router';
+import React from 'react';
 import styled from 'styled-components';
 import { CategoryAPI } from '../../api';
 import ProductCard from '../../components/ProductCard';
-import Spinner from '../../components/Spinner';
-import withRouter from '../../components/withRouter';
 import { Product } from '../../interfaces';
 
 const FlexContainer = styled.div`
@@ -24,80 +23,77 @@ const FlexContainer = styled.div`
   box-shadow: 0 20px 24px -18px rgba(0, 0, 0, 0.31);
 `;
 
-interface CategoryQuery extends DefaultQuery {
-  categoryId: string;
-}
-
 interface Props {
-  query: CategoryQuery;
-}
-
-interface State {
   products: Product[];
-  loading: boolean;
+  err: string | null;
   categoryName: string;
 }
 
-class CategoryPage extends Component<Props, State> {
-  state: State = {
-    products: [],
-    loading: true,
-    categoryName: ''
-  };
+const CategoryPage: NextFunctionComponent<Props> = ({
+  products,
+  err,
+  categoryName
+}) => {
+  let data: React.ReactNode[] | React.ReactNode;
 
-  async componentDidMount() {
-    try {
-      const { products, name: categoryName } = await CategoryAPI.getOne(
-        Number(this.props.query.categoryId)
-      );
-
-      if (products) {
-        this.setState({ products });
-      }
-
-      if (categoryName) {
-        this.setState({ categoryName });
-      }
-    } catch (err) {
+  React.useEffect(() => {
+    if (err) {
       message.error(`${err}, Redirecting you to the menu...`, 3, () =>
         Router.replace('/app')
       );
-    } finally {
-      this.setState({ loading: false });
     }
+  }, []);
+
+  /**
+   * Check whether data is still being fetched
+   */
+  if (products.length && !err) {
+    data = products.map(product => (
+      <ProductCard key={product.id} {...product} />
+    ));
+  } else {
+    data = <Empty description="No entries found" />;
   }
 
-  render() {
-    let data: React.ReactNode[] | React.ReactNode;
-    /**
-     * Check whether data is still being fetched
-     */
-    if (this.state.loading) {
-      data = <Spinner />;
-    } else {
-      if (this.state.products.length) {
-        data = this.state.products.map(product => (
-          <ProductCard key={product.id} {...product} />
-        ));
-      } else {
-        data = <Empty description="No entries found" />;
-      }
-    }
+  return (
+    <>
+      <Head>
+        <title>
+          {categoryName === '' ? 'Category' : categoryName}
+          LuncherBox
+        </title>
+      </Head>
+      <FlexContainer>{data}</FlexContainer>
+    </>
+  );
+};
 
-    return (
-      <>
-        <Head>
-          <title>
-            {this.state.categoryName === ''
-              ? 'Category'
-              : this.state.categoryName}{' '}
-            • LuncherBox
-          </title>
-        </Head>
-        <FlexContainer>{data}</FlexContainer>
-      </>
+CategoryPage.getInitialProps = async ({ query }) => {
+  try {
+    const { products, name: categoryName } = await CategoryAPI.getOne(
+      Number(query.categoryId)
     );
-  }
-}
 
-export default withRouter(CategoryPage);
+    if (products && categoryName) {
+      return {
+        products,
+        categoryName,
+        err: null
+      };
+    }
+  } catch (err) {
+    return {
+      products: [],
+      categoryName: '',
+      err: `${err}`
+    };
+  }
+
+  return {
+    products: [],
+    categoryName: '',
+    err: null
+  };
+};
+
+export default CategoryPage;
