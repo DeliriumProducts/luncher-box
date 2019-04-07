@@ -1,11 +1,24 @@
 import { PageTransition } from 'next-page-transitions';
 import App, { Container, NextAppContext } from 'next/app';
 import Head from 'next/head';
+import Router from 'next/router';
+import NProgress from 'nprogress';
 import React from 'react';
 import { createGlobalStyle } from 'styled-components';
+import '../assets/nprogress.less';
 import CustomerContextProvider from '../components/CustomerContextProvider';
 import Layout from '../components/Layout';
 import SocketContextProvider from '../components/SocketContextProvider';
+
+/**
+ * https://github.com/zeit/next.js/tree/canary/examples/with-loading
+ */
+
+Router.events.on('routeChangeStart', () => {
+  NProgress.start();
+});
+Router.events.on('routeChangeComplete', () => NProgress.done());
+Router.events.on('routeChangeError', () => NProgress.done());
 
 const GlobalStyle = createGlobalStyle`
   html,
