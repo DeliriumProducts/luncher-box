@@ -1,4 +1,4 @@
-import { Authorized, Get, JsonController, Param, Put, QueryParam } from 'routing-controllers';
+import { Authorized, Get, JsonController, Param, Put } from 'routing-controllers';
 import { MessageBody, OnMessage, SocketController, SocketId } from 'socket-controllers';
 import { EntityError } from 'src/types';
 import { getRepository, In, Repository } from 'typeorm';
@@ -39,31 +39,6 @@ export class OrderController {
 
     /**
      * Emit all of the orders to the client
-     */
-    return orders;
-  }
-
-  /**
-   * GET /orders/specific
-   *
-   * Gets specific orders
-   * @param orderIds
-   */
-  @Get('/specific')
-  async getMany(@QueryParam('id') orderIds: string) {
-    const key = 'orders';
-    const orderJSON = await redisConnection.get(key);
-
-    let orders: Order[] = [];
-
-    if (orderJSON) {
-      orders = JSON.parse(orderJSON);
-
-      orders = orders.filter(o => orderIds.includes(o.id));
-    }
-
-    /**
-     * Emit all of the requested orders to the client
      */
     return orders;
   }
