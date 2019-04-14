@@ -20,6 +20,11 @@ export class OrderController {
     this.productRepository = getRepository(Product);
   }
 
+  @OnMessage('socket_connect')
+  connect(@MessageBody() message: string) {
+    io.emit('socket_connected', message);
+  }
+
   /**
    * GET /orders
    *
