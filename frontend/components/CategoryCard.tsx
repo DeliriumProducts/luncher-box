@@ -35,14 +35,12 @@ const StyledDiv: any = styled.div`
   }
 
   @media (min-width: 768px) {
-
-  &:hover {
-    .blurred-div {
-      transform: scale(1.1);
-      filter: blur(2px);
+    &:hover {
+      .blurred-div {
+        transform: scale(1.1);
+        filter: blur(2px);
+      }
     }
-  }
-
   }
 
   box-shadow: 0 20px 24px -18px rgba(0, 0, 0, 0.31);
