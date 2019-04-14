@@ -76,10 +76,12 @@
     "dev": "cross-env NODE_ENV=development nodemon --exec ts-node src/index.ts",
     "prod": "cross-env NODE_ENV=production pm2 start ts-node --name luncherbox-backend --update-env -- -T src/index.ts",
     "debug": "cross-env NODE_ENV=development nodemon --exec ts-node src/index.ts",
+    "precoverage": "cross-env NODE_ENV=test ts-node test/utils/initTestDbConnection.ts",
     "pretest": "cross-env NODE_ENV=test ts-node test/utils/initTestDbConnection.ts",
     "pretest-debug": "cross-env NODE_ENV=test ts-node test/utils/initTestDbConnection.ts",
-    "test": "cross-env NODE_ENV=test jest --forceExit --detectOpenHandles --verbose=true --coverage",
-    "test-debug": "cross-env NODE_ENV=test jest --forceExit --detectOpenHandles --verbose=false --coverage"
+    "test": "cross-env NODE_ENV=test jest --forceExit --detectOpenHandles --verbose=true",
+    "test-debug": "cross-env NODE_ENV=test jest --forceExit --detectOpenHandles --verbose=false",
+    "coverage": "cross-env NODE_ENV=test jest --forceExit --detectOpenHandles --verbose=true --coverage"
   },
   "husky": {
     "hooks": {
