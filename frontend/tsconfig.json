@@ -13,7 +13,6 @@
     "removeComments": true,
     "strictNullChecks": true,
     "strictFunctionTypes": true,
-    "noImplicitAny": true,
     "esModuleInterop": true,
     "noImplicitThis": true,
     "noUnusedLocals": false,

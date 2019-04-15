@@ -7,6 +7,8 @@ import session, { Store } from 'express-session';
 import expressValidator from 'express-validator';
 import lusca from 'lusca';
 import passport from 'passport';
+import rateLimit from 'express-rate-limit';
+import rateLimitRedisStore from 'rate-limit-redis';
 import { InternalServerError } from 'routing-controllers';
 import { redisConnection } from '../connections';
 import { ENV, FRONTEND_URL, IS_DEV, SESSION_SECRET } from './env';
@@ -15,10 +17,17 @@ import { ENV, FRONTEND_URL, IS_DEV, SESSION_SECRET } from './env';
  * During tests, we use the default MemoryStore
  */
 let store: Store | undefined;
+let rateLimitStore: rateLimit.Store | undefined;
+
 if (ENV !== 'test') {
   const RedisStore = createRedisStore(session);
+
   store = new RedisStore({
     client: redisConnection as any
+  });
+
+  rateLimitStore = new rateLimitRedisStore({
+    client: redisConnection
   });
 }
 
@@ -30,6 +39,13 @@ const app: Application = express();
 /**
  * Configure express app
  */
+app.use(
+  new rateLimit({
+    store: rateLimitStore,
+    windowMs: 60 * 1000,
+    max: 100
+  })
+);
 app.use(
   cors({
     /**
@@ -47,7 +63,7 @@ app.use(expressValidator());
 app.use(
   session({
     store,
-    name: 'luncherbox-api',
+    name: 'luncherbox-backend',
     secret: SESSION_SECRET,
     resave: false,
     saveUninitialized: false,

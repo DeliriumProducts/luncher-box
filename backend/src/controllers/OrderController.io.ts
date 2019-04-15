@@ -1,6 +1,6 @@
 import { Authorized, Get, JsonController, Param, Put } from 'routing-controllers';
 import { MessageBody, OnMessage, SocketController, SocketId } from 'socket-controllers';
-import { EntityError } from 'src/types';
+import { EntityError } from '../types';
 import { getRepository, In, Repository } from 'typeorm';
 import { v4 } from 'uuid';
 import { io } from '../config';
