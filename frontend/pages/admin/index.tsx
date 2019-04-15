@@ -32,6 +32,7 @@ const FlexContainer = styled.div`
     flex-direction: column;
   }
 `;
+
 interface State {
   modalVisible: boolean;
   pageLoading: boolean;
@@ -94,9 +95,9 @@ class Index extends Component<any, State> {
     const modalForm = this.modalFormRef.props.form;
 
     /**
-     * We will need the entity from state when actionType == 'edit'
+     * We will need the entity from state when actionType == 'edit',
      * so we destructure it now and then we have to check
-     * for undefined because entity is undefined on actionType == 'create'
+     * if it's undefined, because it will be when actionType == 'create'
      */
     const { entity: entityToEdit, actionType } = { ...this.state };
     modalForm.validateFields(async (err: any, entity: any) => {
@@ -112,9 +113,9 @@ class Index extends Component<any, State> {
           message.success(`Successfully created category ${entity.name} 🎉`);
         } else {
           /**
-           * First we check for entity because it may be undefined
-           * then inject the id of the entity manually since
-           * our modal does not return it when actionType == 'edit'
+           * First we check wheter we have an entity
+           * Second we inject the id of the entity since,
+           * the modal does not return it back when actionType == 'edit'
            */
           if (entityToEdit) {
             entity.id = entityToEdit.id;
