@@ -1,3 +1,6 @@
+#!/bin/sh
+cd backend
+
 while true; 
 do
     yarn test;
