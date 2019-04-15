@@ -27,18 +27,18 @@ const useOrders = (initialOrders: Order[]): [Order[], boolean] => {
 
   useEffect(() => {
     if (context.socket) {
-      context.socket.on('placed_order_admin', handleIncomingOrders);
-      context.socket.on('accepted_order_admin', setAcceptedOrder);
-      context.socket.on('declined_order_admin', setDeclindedOrder);
-      context.socket.on('finished_order_admin', setFinishedOrder);
+      context.socket.on('placed-order-admin', handleIncomingOrders);
+      context.socket.on('accepted-order-admin', setAcceptedOrder);
+      context.socket.on('declined-order-admin', setDeclindedOrder);
+      context.socket.on('finished-order-admin', setFinishedOrder);
     }
 
     return () => {
       if (context.socket) {
-        context.socket.off('placed_order_admin', handleIncomingOrders);
-        context.socket.off('accepted_order_admin', setAcceptedOrder);
-        context.socket.off('declined_order_admin', setDeclindedOrder);
-        context.socket.off('finished_order_admin', setFinishedOrder);
+        context.socket.off('placed-order-admin', handleIncomingOrders);
+        context.socket.off('accepted-order-admin', setAcceptedOrder);
+        context.socket.off('declined-order-admin', setDeclindedOrder);
+        context.socket.off('finished-order-admin', setFinishedOrder);
       }
     };
   }, [context.socket]);
