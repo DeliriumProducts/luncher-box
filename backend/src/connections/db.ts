@@ -1,4 +1,4 @@
-import { createConnection, getConnection } from 'typeorm';
+import { createConnection } from 'typeorm';
 /**
  * For some reason this import has to be directly to `../config/typeorm` rather than `../config`
  * Otherwise it's undefined
@@ -23,14 +23,24 @@ export const dbConnection = async (dropSchema?: boolean, synchronize?: boolean) 
     }
   }
 
-  try {
-    return getConnection('default');
-  } catch (e) {
-    return await createConnection({
-      ...dbConfig,
-      name: 'default',
-      dropSchema,
-      synchronize
-    });
+  let retries = 5;
+
+  while (retries) {
+    try {
+      return createConnection({
+        ...dbConfig,
+        name: 'default',
+        dropSchema,
+        synchronize
+      });
+    } catch (e) {
+      console.log(e);
+      retries -= 1;
+      console.log(`Retries left: ${retries}`);
+      // wait 5 seconds
+      await new Promise(res => setTimeout(res, 5000));
+    }
   }
+
+  return undefined;
 };

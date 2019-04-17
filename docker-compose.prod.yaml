@@ -4,21 +4,47 @@ services:
     build: ./backend
     environment:
       NODE_ENV: production
+      SESSION_SECRET: ${SESSION_SECRET}
+      DB_PORT: ${DB_PORT}
+      DB_HOST: ${DB_HOST}
+      DB_USER: ${DB_USER}
+      DB_PASS: ${DB_PASS}
+      REDIS_HOST: ${REDIS_HOST}
+      REDIS_PORT: ${REDIS_PORT}
+      OWNER_EMAIL: ${OWNER_EMAIL}
+      OWNER_PASS: ${OWNER_PASS}
+      VERIFIER_EMAIL: ${VERIFIER_EMAIL}
+      FRONTEND_PORT: ${FRONTEND_PORT}
+      BACKEND_PORT: ${BACKEND_PORT}
+      FRONTEND_URL: ${FRONTEND_URL}
+      BACKEND_URL: ${BACKEND_URL}
+      SOCKET_URL: ${SOCKET_URL}
     ports:
       - "8000:8000"
     restart: always
+    depends_on:
+      - db
+      - redis
   frontend:
-    build: "./frontend"
+    build: ./frontend
     environment:
       NODE_ENV: production
+      FRONTEND_PORT: ${FRONTEND_PORT}
+      FRONTEND_URL: ${FRONTEND_URL}
+      BACKEND_URL: ${BACKEND_URL}
+      SOCKET_URL: ${SOCKET_URL}
     ports:
       - "3000:3000"
+    depends_on:
+      - backend
     restart: always
   db:
     image: mariadb
     environment:
-      MYSQL_ROOT_PASSWORD: "${DB_PASS}"
+      MYSQL_ROOT_PASSWORD: ${DB_PASS}
+      MYSQL_DATABASE: luncherbox_production
     volumes:
+      - "./sql:/docker-entrypoint-initdb.d"
       - "./data:/var/lib/mysql"
     restart: always
   redis:

@@ -8,4 +8,5 @@ read db_name
 echo 'Enter schema dump name:'
 read schema_name
 
-mysqldump -u $name -p -B $db_name -d > $schema_name
+mkdir -p ../sql
+mysqldump -u $name -p -B $db_name -d > ../sql/"$schema_name"
