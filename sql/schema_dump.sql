@@ -1,6 +1,6 @@
 -- MySQL dump 10.17  Distrib 10.3.14-MariaDB, for Linux (x86_64)
 --
--- Host: localhost    Database: luncherbox_development
+-- Host: localhost    Database: luncherbox_production
 -- ------------------------------------------------------
 -- Server version	10.3.14-MariaDB
 
@@ -16,12 +16,12 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Current Database: `luncherbox_development`
+-- Current Database: `luncherbox_production`
 --
 
-CREATE DATABASE /*!32312 IF NOT EXISTS*/ `luncherbox_development` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci */;
+CREATE DATABASE /*!32312 IF NOT EXISTS*/ `luncherbox_production` /*!40100 DEFAULT CHARACTER SET utf8 */;
 
-USE `luncherbox_development`;
+USE `luncherbox_production`;
 
 --
 -- Table structure for table `category`
@@ -36,21 +36,6 @@ CREATE TABLE `category` (
   `image` text NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table `migrations`
---
-
-DROP TABLE IF EXISTS `migrations`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `migrations` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `timestamp` bigint(20) NOT NULL,
-  `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -115,4 +100,4 @@ CREATE TABLE `user` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-04-15 23:53:53
+-- Dump completed on 2019-04-17 18:33:49

@@ -10,7 +10,7 @@ const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const fs = require('fs');
 const path = require('path');
 const lessToJS = require('less-vars-to-js');
-const { parsed: localEnv } = require('dotenv').config({
+require('dotenv').config({
   path: path.join(__dirname, '/../.env')
 });
 
@@ -36,7 +36,15 @@ module.exports = withSize(
                 fs: 'empty'
               };
 
-              config.plugins.push(new webpack.EnvironmentPlugin(localEnv));
+              config.plugins.push(
+                new webpack.EnvironmentPlugin({
+                  NODE_ENV: 'development',
+                  FRONTEND_PORT: 3000,
+                  FRONTEND_URL: 'http://localhost:3000',
+                  BACKEND_URL: 'http://localhost:8000',
+                  SOCKET_URL: 'http://localhost:8000'
+                })
+              );
 
               if (process.env.NODE_ENV === 'production') {
                 config.plugins = config.plugins.filter(
