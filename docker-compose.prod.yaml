@@ -45,8 +45,10 @@ services:
       MYSQL_DATABASE: luncherbox_production
     volumes:
       - "./sql:/docker-entrypoint-initdb.d"
-      - "./data:/var/lib/mysql"
+      - "./data-sql:/var/lib/mysql"
     restart: always
   redis:
     image: redis
     restart: always
+    volumes:
+      - "./data-redis:/data"

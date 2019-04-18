@@ -10,9 +10,7 @@ const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const fs = require('fs');
 const path = require('path');
 const lessToJS = require('less-vars-to-js');
-require('dotenv').config({
-  path: path.join(__dirname, '/../.env')
-});
+const Dotenv = require('dotenv-webpack');
 
 const themeVariables = lessToJS(
   fs.readFileSync(path.join(__dirname, './assets/antd-custom.less'), 'utf8')
@@ -37,12 +35,9 @@ module.exports = withSize(
               };
 
               config.plugins.push(
-                new webpack.EnvironmentPlugin({
-                  NODE_ENV: 'development',
-                  FRONTEND_PORT: 3000,
-                  FRONTEND_URL: 'http://localhost:3000',
-                  BACKEND_URL: 'http://localhost:8000',
-                  SOCKET_URL: 'http://localhost:8000'
+                new Dotenv({
+                  path: path.join(__dirname, '/../.env'),
+                  systemvars: true
                 })
               );
 
