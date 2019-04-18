@@ -49,6 +49,7 @@ services:
     restart: always
   redis:
     image: redis
+    command: ["redis-server", "--appendonly", "yes"] 
     restart: always
     volumes:
       - "./data-redis:/data"
