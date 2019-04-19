@@ -1,6 +1,7 @@
+/* istanbul ignore file */
 import { Authorized, Get, JsonController, Param, Put } from 'routing-controllers';
 import { MessageBody, OnMessage, SocketController, SocketId } from 'socket-controllers';
-import { EntityError } from 'src/types';
+import { EntityError } from '../types';
 import { getRepository, In, Repository } from 'typeorm';
 import { v4 } from 'uuid';
 import { io } from '../config';
@@ -18,6 +19,11 @@ export class OrderController {
    */
   constructor() {
     this.productRepository = getRepository(Product);
+  }
+
+  @OnMessage('socket-connect')
+  connect(@MessageBody() message: string) {
+    io.emit('socket-connected', message);
   }
 
   /**
@@ -82,8 +88,8 @@ export class OrderController {
     io
       // @ts-ignore
       .to(order.customerId)
-      .emit('accepted_order', order);
-    io.emit('accepted_order_admin', order);
+      .emit('accepted-order', order);
+    io.emit('accepted-order-admin', order);
 
     return order;
   }
@@ -130,8 +136,8 @@ export class OrderController {
     io
       // @ts-ignore
       .to(order.customerId)
-      .emit('declined_order', order);
-    io.emit('declined_order_admin', order);
+      .emit('declined-order', order);
+    io.emit('declined-order-admin', order);
 
     return 'Order declined!';
   }
@@ -175,20 +181,20 @@ export class OrderController {
     io
       // @ts-ignore
       .to(order.customerId)
-      .emit('finished_order', order);
-    io.emit('finished_order_admin', order);
+      .emit('finished-order', order);
+    io.emit('finished-order-admin', order);
 
     return order;
   }
 
   /**
-   * Socket Emit place_order
+   * Socket Emit place-order
    *
    * Places an order based on the socket's message body
    * @param socketId
    * @param order
    */
-  @OnMessage('place_order')
+  @OnMessage('place-order')
   async place(@SocketId() socketId: string, @MessageBody() order: Order) {
     const orderErr: EntityError = [];
 
@@ -264,17 +270,17 @@ export class OrderController {
      */
     await redisConnection.set(key, JSON.stringify(orders));
 
-    io.emit('placed_order_admin', orders);
-    io.to(order.customerId).emit('placed_order', order);
+    io.emit('placed-order-admin', orders);
+    io.to(order.customerId).emit('placed-order', order);
   }
 
   /**
-   * Socket Emit update_customer_id
+   * Socket Emit update-customer-id
    *
    * Updates the customer id based on the new orders
    * @param orderIds
    */
-  @OnMessage('update_customerId')
+  @OnMessage('update-customerId')
   async updateCustomerId(@SocketId() socketId: string, @MessageBody() orderIds: string[]) {
     const key = 'orders';
     const ordersJSON = await redisConnection.get(key);
@@ -311,6 +317,6 @@ export class OrderController {
 
     await redisConnection.set(key, JSON.stringify(orders));
 
-    io.to(socketId).emit('updated_customerId', customerOrders);
+    io.to(socketId).emit('updated-customerId', customerOrders);
   }
 }

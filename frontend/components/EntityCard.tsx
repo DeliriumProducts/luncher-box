@@ -56,6 +56,10 @@ const StyledMeta = styled(Meta)`
     white-space: initial;
     word-wrap: break-word;
   }
+
+  .ant-card-meta-title {
+    font-weight: bold;
+  }
 `;
 
 interface Props {
@@ -168,7 +172,7 @@ const EntityCard: React.FunctionComponent<Props> = props => {
       <StyledMeta
         avatar={<StyledImg src={props.image} />}
         title={
-          <span>
+          <>
             {props.name}
             <PriceBadge
               overflowCount={1000}
@@ -178,7 +182,7 @@ const EntityCard: React.FunctionComponent<Props> = props => {
                 zIndex: 0
               }}
             />
-          </span>
+          </>
         }
         description={props.description}
       />

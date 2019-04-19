@@ -151,7 +151,7 @@ const Layout: React.FunctionComponent<Props> = props => {
         );
 
         if (socketContext.socket) {
-          socketContext.socket.emit('update_customerId', orderIds);
+          socketContext.socket.emit('update-customerId', orderIds);
         }
 
         orderHistory.current = customerContext.orderHistory;
@@ -165,20 +165,20 @@ const Layout: React.FunctionComponent<Props> = props => {
   React.useEffect(() => {
     if (type === 'customer') {
       if (socketContext.socket) {
-        socketContext.socket.on('placed_order', handlePlacedOrder);
-        socketContext.socket.on('accepted_order', handleNewOrderState);
-        socketContext.socket.on('declined_order', handleNewOrderState);
-        socketContext.socket.on('finished_order', handleNewOrderState);
-        socketContext.socket.on('updated_customerId', handleUpdatedCustomerId);
+        socketContext.socket.on('placed-order', handlePlacedOrder);
+        socketContext.socket.on('accepted-order', handleNewOrderState);
+        socketContext.socket.on('declined-order', handleNewOrderState);
+        socketContext.socket.on('finished-order', handleNewOrderState);
+        socketContext.socket.on('updated-customerId', handleUpdatedCustomerId);
       }
 
       return () => {
         if (socketContext.socket) {
-          socketContext.socket.off('placed_order');
-          socketContext.socket.off('accepted_order');
-          socketContext.socket.off('declined_order');
-          socketContext.socket.off('finished_order');
-          socketContext.socket.off('updated_customerId');
+          socketContext.socket.off('placed-order');
+          socketContext.socket.off('accepted-order');
+          socketContext.socket.off('declined-order');
+          socketContext.socket.off('finished-order');
+          socketContext.socket.off('updated-customerId');
         }
       };
     } else {

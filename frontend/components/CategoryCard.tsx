@@ -2,6 +2,7 @@ import Link from 'next/link';
 import styled from 'styled-components';
 
 const StyledDiv: any = styled.div`
+  overflow: hidden;
   display: flex;
   white-space: normal;
   justify-content: center;
@@ -31,17 +32,13 @@ const StyledDiv: any = styled.div`
     align-items: center;
     font-size: 3rem;
     transition: all 0.25s;
-    text-shadow: 0.075em 0.08em 0.1em rgba(0, 0, 0, 0.2);
   }
 
   @media (min-width: 768px) {
     &:hover {
       .blurred-div {
         transform: scale(1.1);
-      }
-
-      .title {
-        transform: scale(1.2);
+        filter: blur(2px);
       }
     }
   }
@@ -53,7 +50,7 @@ const BlurredDiv: any = styled.div`
   width: 100%;
   height: 100%;
   border-radius: 7px;
-  transition: all 0.25s;
+  transition: all 0.3s;
   height: 100%;
   background: url(${(props: any) => props.img}) no-repeat center;
   background-size: cover;

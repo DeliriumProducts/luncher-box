@@ -2,3 +2,5 @@ frontend-old/
 backend-old/
 node_modules/
 .env
+data-sql/
+data-redis/

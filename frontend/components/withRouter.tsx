@@ -1,14 +1,14 @@
 import { NextComponentClass, NextContext, NextFunctionComponent } from 'next';
-import React, { Component } from 'react';
+import { SingletonRouter } from 'next/router';
+import React, { Component, ComponentType } from 'react';
 
 /**
  * Alternative to the withRouter from next/router, until it gets migrated to the new context API.
- * It is to be used when you don't want / need the getInitalProps function, as this overrides it.
  */
 const withRouter = <T extends object>(
   C: NextFunctionComponent<T> | NextComponentClass<T>
-) =>
-  class extends Component<T> {
+): ComponentType<T & { router: SingletonRouter }> =>
+  class extends Component<T & { router: SingletonRouter }> {
     static async getInitialProps(ctx: NextContext) {
       const { query } = ctx;
 

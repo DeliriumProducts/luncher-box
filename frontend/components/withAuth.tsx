@@ -1,12 +1,12 @@
 import { NextComponentClass, NextContext, NextFunctionComponent } from 'next';
-import Router from 'next/router';
-import React, { Component } from 'react';
+import Router, { SingletonRouter } from 'next/router';
+import React, { Component, ComponentType } from 'react';
 import { AuthAPI } from '../api';
 
 const withAuth = <T extends object>(
   C: NextFunctionComponent<T> | NextComponentClass<T>
-) =>
-  class extends Component<T> {
+): ComponentType<T & { router: SingletonRouter }> =>
+  class extends Component<T & { router: SingletonRouter }> {
     static async getInitialProps(ctx: NextContext) {
       const { req, res } = ctx;
 

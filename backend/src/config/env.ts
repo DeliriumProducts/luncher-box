@@ -61,7 +61,12 @@ export const FRONTEND_URL = process.env.FRONTEND_URL || 'http://localhost:3000';
 /**
  * Backend url
  */
-export const BACKEND_URL = process.env.BACKEND_URL || 'http://localhost:3000';
+export const BACKEND_URL = process.env.BACKEND_URL || 'http://localhost:8000';
+
+/**
+ * Socket url
+ */
+export const SOCKET_URL = process.env.SOCKET_URL || 'http://localhost:8000';
 
 export default {
   ENV,
@@ -77,5 +82,7 @@ export default {
   OWNER_EMAIL,
   OWNER_PASS,
   VERIFIER_EMAIL,
-  FRONTEND_URL
+  FRONTEND_URL,
+  BACKEND_URL,
+  SOCKET_URL
 };

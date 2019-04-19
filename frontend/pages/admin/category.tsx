@@ -302,4 +302,4 @@ class CategoryPage extends Component<Props, State> {
   }
 }
 
-export default withRouter(withAuth(CategoryPage));
+export default withAuth(withRouter(CategoryPage));

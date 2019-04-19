@@ -113,7 +113,7 @@ export default () => {
               []
             );
 
-            socketContext.socket.emit('place_order', {
+            socketContext.socket.emit('place-order', {
               ...order,
               products: productsIdsAndQuantities
             });
