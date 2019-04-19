@@ -1766,5 +1766,5 @@ describe('Authorization', () => {
 });
 
 afterAll(async () => {
-  await dbConnection.close();
+  await dbConnection!.close();
 });

@@ -339,5 +339,5 @@ describe('GET /auth/logout', () => {
 
 afterAll(async () => {
   await redisConnection.quit();
-  await dbConnection.close();
+  await dbConnection!.close();
 });
