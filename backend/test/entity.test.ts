@@ -7,7 +7,7 @@ import { dbConnection as getDbConnection } from '../src/connections';
 import { Category, Product, User } from '../src/entities';
 
 let server: Server;
-let dbConnection: Connection;
+let dbConnection: Connection | undefined;
 let productRepository: Repository<Product>;
 let categoryRepository: Repository<Category>;
 let cookie: string;

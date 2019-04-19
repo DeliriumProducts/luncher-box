@@ -8,7 +8,7 @@ import { User } from '../src/entities';
 
 let server: Server;
 let userRepository: Repository<User>;
-let dbConnection: Connection;
+let dbConnection: Connection | undefined;
 
 beforeAll(async () => {
   server = await initServer();

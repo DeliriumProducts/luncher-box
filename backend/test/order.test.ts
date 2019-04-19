@@ -6,7 +6,7 @@ import { io as ioServer, SOCKET_URL } from '../src/config';
 import { dbConnection as getDbConnection } from '../src/connections';
 
 let server: Server;
-let dbConnection: Connection;
+let dbConnection: Connection | undefined;
 let ioClient: SocketIOClient.Socket;
 
 beforeAll(async done => {
