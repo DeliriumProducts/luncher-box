@@ -1,3 +1,4 @@
+/* istanbul ignore file */
 import nodemailer from 'nodemailer';
 import { MailOptions } from 'nodemailer/lib/sendmail-transport/';
 import { OWNER_EMAIL, OWNER_PASS, ENV } from '../config';

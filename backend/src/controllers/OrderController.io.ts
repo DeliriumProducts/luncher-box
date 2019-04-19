@@ -1,3 +1,4 @@
+/* istanbul ignore file */
 import { Authorized, Get, JsonController, Param, Put } from 'routing-controllers';
 import { MessageBody, OnMessage, SocketController, SocketId } from 'socket-controllers';
 import { EntityError } from '../types';

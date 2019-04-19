@@ -7,9 +7,11 @@ switch (ENV) {
   default:
     db = 0;
     break;
+/* istanbul ignore next */
   case 'development':
     db = 0;
     break;
+/* istanbul ignore next */
   case 'production':
     db = 1;
     break;
