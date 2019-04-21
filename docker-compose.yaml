@@ -1,9 +1,10 @@
-version: 3
+version: "3"
 services:
   backend:
     build: ./backend
+    command: yarn dev
     environment:
-      NODE_ENV: production
+      NODE_ENV: development
       SESSION_SECRET: ${SESSION_SECRET}
       DB_PORT: ${DB_PORT}
       DB_HOST: ${DB_HOST}
@@ -25,10 +26,13 @@ services:
     depends_on:
       - db
       - redis
+    volumes:
+      - ./backend:/usr/app/
   frontend:
     build: ./frontend
+    command: yarn dev
     environment:
-      NODE_ENV: production
+      NODE_ENV: development
       FRONTEND_PORT: ${FRONTEND_PORT}
       FRONTEND_URL: ${FRONTEND_URL}
       BACKEND_URL: ${BACKEND_URL}
@@ -38,11 +42,13 @@ services:
     depends_on:
       - backend
     restart: always
+    volumes:
+      - ./frontend:/usr/app/
   db:
     image: mariadb
     environment:
       MYSQL_ROOT_PASSWORD: ${DB_PASS}
-      MYSQL_DATABASE: luncherbox_production
+      MYSQL_DATABASE: luncherbox_development
     volumes:
       - ./sql:/docker-entrypoint-initdb.d
       - ./data-sql:/var/lib/mysql

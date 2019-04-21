@@ -4,3 +4,4 @@ node_modules/
 .env
 data-sql/
 data-redis/
+sql/db.sql
