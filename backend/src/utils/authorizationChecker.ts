@@ -1,10 +1,11 @@
-import { Request } from 'express';
 import { Action } from 'routing-controllers';
-import { Role } from '../types';
 import { User } from '../entities';
+import { Role } from '../types';
 
-export const authorizationChecker = async (action: Action, r: Role[]) => {
-  const req: Request = action.request;
+/**
+ * Checks if a user is logged in AND checks their role
+ */
+export const authorizationChecker = ({ request: req }: Action, r: Role[]) => {
   const user: User = req.user;
 
   if (!r.length) {
