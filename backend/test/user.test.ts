@@ -1,18 +1,16 @@
 import faker from 'faker';
 import { Server } from 'http';
 import request from 'supertest';
-import { Connection, getRepository, Repository } from 'typeorm';
+import { getRepository, Repository } from 'typeorm';
 import { initServer } from '../src';
-import { dbConnection as getDbConnection, redisConnection } from '../src/connections';
+import { redisConnection } from '../src/connections';
 import { User } from '../src/entities';
 
 let server: Server;
 let userRepository: Repository<User>;
-let dbConnection: Connection | undefined;
 
 beforeAll(async () => {
   server = await initServer();
-  dbConnection = await getDbConnection();
   userRepository = getRepository(User);
 });
 
@@ -339,5 +337,4 @@ describe('GET /auth/logout', () => {
 
 afterAll(async () => {
   await redisConnection.quit();
-  await dbConnection!.close();
 });

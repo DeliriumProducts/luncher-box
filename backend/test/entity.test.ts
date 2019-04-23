@@ -1,20 +1,17 @@
 import faker from 'faker';
 import { Server } from 'http';
 import request from 'supertest';
-import { Connection, getRepository, MoreThan, Repository } from 'typeorm';
+import { getRepository, MoreThan, Repository } from 'typeorm';
 import { initServer } from '../src';
-import { dbConnection as getDbConnection } from '../src/connections';
 import { Category, Product, User } from '../src/entities';
 
 let server: Server;
-let dbConnection: Connection | undefined;
 let productRepository: Repository<Product>;
 let categoryRepository: Repository<Category>;
 let cookie: string;
 
 beforeAll(async () => {
   server = await initServer();
-  dbConnection = await getDbConnection();
   productRepository = getRepository(Product);
   categoryRepository = getRepository(Category);
 
@@ -1763,8 +1760,4 @@ describe('Authorization', () => {
 
     expect(productQuery).toBeDefined();
   });
-});
-
-afterAll(async () => {
-  await dbConnection!.close();
 });
