@@ -1,4 +1,7 @@
-import { authorizationChecker, capitalizeFirstLetter } from '../src/utils';
+import { authorizationChecker, capitalizeFirstLetter, createInitialAdmin } from '../src/utils';
+import { Repository, getRepository } from 'typeorm';
+import { User } from '../src/entities';
+import { dbConnection } from '../src/connections';
 
 describe('Capitalize First Letter', () => {
   const str = 'this is an example sentence';
@@ -111,5 +114,38 @@ describe('Authorization Checker', () => {
     );
 
     expect(isAllowed).toBe(false);
+  });
+});
+
+describe('Create Initial Admin', () => {
+  let userRepository: Repository<User>;
+
+  beforeAll(async () => {
+    await dbConnection();
+    userRepository = getRepository(User);
+  });
+
+  it('creates the first admin', async () => {
+    await createInitialAdmin();
+
+    const user = await userRepository.findOne({
+      where: {
+        email: 'admin@deliriumproducts.me'
+      }
+    });
+
+    expect(user).toBeDefined();
+  });
+
+  it(`doesn't create a new admin after the first one`, async () => {
+    await createInitialAdmin();
+
+    const users = await userRepository.find({
+      where: {
+        email: 'admin@deliriumproducts.me'
+      }
+    });
+
+    expect(users).toHaveLength(1);
   });
 });

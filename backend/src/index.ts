@@ -38,7 +38,9 @@ const initServer = async () => {
   /**
    * Create initial admin if there isn't one already
    */
-  await createInitialAdmin();
+  if (ENV !== 'test') {
+    await createInitialAdmin();
+  }
 
   return server;
 };
