@@ -20,8 +20,8 @@ import { TransformAndValidateTuple } from '../types';
 import { sendEmail, transformAndValidate } from '../utils';
 import { BACKEND_URL } from '../config/env';
 
-@JsonController('/employee')
-export class EmployeeController {
+@JsonController('/staff')
+export class StaffController {
   private userRepository: Repository<User>;
   private transformAndValidateUser: (
     obj: object | Array<{}>,
@@ -37,7 +37,7 @@ export class EmployeeController {
   }
 
   /**
-   * GET /employee/auth
+   * GET /staff/auth
    *
    * Check if the user has been authenticated
    */
@@ -47,7 +47,7 @@ export class EmployeeController {
   }
 
   /**
-   * POST /employee/auth/register
+   * POST /staff/auth/register
    *
    * Register a user based on the request's body
    * @param userJSON
@@ -104,7 +104,7 @@ Please verify ${user.name}'s account (email: ${
   }
 
   /**
-   * POST /employee/auth/login
+   * POST /staff/auth/login
    *
    * Login a user based on the request body
    */
@@ -119,7 +119,7 @@ Please verify ${user.name}'s account (email: ${
   }
 
   /**
-   * GET /employee/auth/logout
+   * GET /staff/auth/logout
    *
    * Logout a user
    */

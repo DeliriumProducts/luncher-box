@@ -5,7 +5,7 @@ import Link from 'next/link';
 import Router from 'next/router';
 import React from 'react';
 import styled from 'styled-components';
-import { EmployeeAPI } from '../api';
+import { StaffAPI } from '../api';
 import CenteredDiv from '../components/CenteredDiv';
 import { HandleRegister } from '../types';
 
@@ -56,7 +56,7 @@ class RegisterForm extends React.Component<Props, State> {
 
         this.setState({ loading: true });
         try {
-          await EmployeeAPI.register(credentials);
+          await StaffAPI.register(credentials);
           message.success(
             'You successfully registered! An confirmation email was sent to the restaurant owner ✉️',
             3,

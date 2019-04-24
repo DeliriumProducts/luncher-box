@@ -4,7 +4,7 @@ import Router from 'next/router';
 import React, { Component } from 'react';
 import styled from 'styled-components';
 import { Exit } from 'styled-icons/icomoon/Exit';
-import { EmployeeAPI } from '../api';
+import { StaffAPI } from '../api';
 import { THEME_VARIABLES } from '../config';
 import { CustomerContext } from '../context';
 
@@ -92,7 +92,7 @@ class MenuBar extends Component<Props> {
 
     switch (key) {
       case 'logout':
-        await EmployeeAPI.logout();
+        await StaffAPI.logout();
         Router.replace('/login');
         break;
       default:

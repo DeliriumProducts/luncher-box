@@ -22,13 +22,13 @@ beforeAll(async () => {
   };
 
   const { body: confirmationURL } = await request(server)
-    .post('/employee/auth/register')
+    .post('/staff/auth/register')
     .send(user);
 
   await request(server).get(confirmationURL);
 
   const { header } = await request(server)
-    .post('/employee/auth/login')
+    .post('/staff/auth/login')
     .send(user);
 
   cookie = header['set-cookie'][0].split(/,(?=\S)/).map((item: string) => item.split(';')[0]);

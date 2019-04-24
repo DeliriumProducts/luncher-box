@@ -2,10 +2,10 @@ import axios from 'axios';
 import { BACKEND_URL } from '../config';
 import { Credentials } from '../interfaces';
 
-export class EmployeeAPI {
+export class StaffAPI {
   static async login(credentials: Credentials) {
     const response = await axios.post(
-      `${BACKEND_URL}/employee/auth/login`,
+      `${BACKEND_URL}/staff/auth/login`,
       credentials,
       {
         withCredentials: true
@@ -17,7 +17,7 @@ export class EmployeeAPI {
 
   static async register(credentials: Credentials) {
     const response = await axios.post(
-      `${BACKEND_URL}/employee/auth/register`,
+      `${BACKEND_URL}/staff/auth/register`,
       credentials
     );
 
@@ -25,7 +25,7 @@ export class EmployeeAPI {
   }
 
   static async logout() {
-    const response = await axios.get(`${BACKEND_URL}/employee/auth/logout`, {
+    const response = await axios.get(`${BACKEND_URL}/staff/auth/logout`, {
       withCredentials: true
     });
 
@@ -40,7 +40,7 @@ export class EmployeeAPI {
     }
 
     const isAuthenticated: boolean = (await axios.get(
-      `${BACKEND_URL}/employee/auth`,
+      `${BACKEND_URL}/staff/auth`,
       {
         withCredentials: true,
         ...opts
