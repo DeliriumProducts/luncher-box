@@ -9,19 +9,21 @@ import {
   JsonController,
   Post,
   Req,
-  UseBefore
+  UseBefore,
+  QueryParam,
+  Authorized
 } from 'routing-controllers';
-import { getRepository, Repository } from 'typeorm';
+import { getRepository, Repository, MoreThan, EntityRepository } from 'typeorm';
 import { v4 } from 'uuid';
 import { ENV, OWNER_EMAIL, VERIFIER_EMAIL } from '../config';
 import { redisConnection } from '../connections';
 import { DuplicateUserError, User, UserNotFoundError, UserNotValidError } from '../entities';
 import { TransformAndValidateTuple } from '../types';
 import { sendEmail, transformAndValidate } from '../utils';
-import { BACKEND_URL } from './../config/env';
+import { BACKEND_URL } from '../config/env';
 
-@JsonController('/auth')
-export class UserController {
+@JsonController('/staff')
+export class StaffController {
   private userRepository: Repository<User>;
   private transformAndValidateUser: (
     obj: object | Array<{}>,
@@ -37,22 +39,60 @@ export class UserController {
   }
 
   /**
-   * GET /auth
+   * GET /staff
+   *
+   * Gets all staff members
+   */
+  @Get()
+  @Authorized('Admin')
+  async getAll(@QueryParam('page') page?: number, @QueryParam('limit') limit: number = 0) {
+    if (page) {
+      const staff = await this.userRepository.find({
+        skip: limit * (page - 1),
+        take: limit,
+        cache: true
+      });
+
+      /**
+       * Return only relevant info
+       */
+      return staff.map((user: User) => {
+        const { password, id, ...s } = user;
+        return s;
+      });
+    } else {
+      const staff = await this.userRepository.find({
+        take: limit,
+        cache: true
+      });
+
+      /**
+       * Return only relevant info
+       */
+      return staff.map((user: User) => {
+        const { password, id, ...s } = user;
+        return s;
+      });
+    }
+  }
+
+  /**
+   * GET /staff/auth
    *
    * Check if the user has been authenticated
    */
-  @Get()
+  @Get('/auth')
   isAuthenticated(@Req() req: Request) {
     return req.isAuthenticated();
   }
 
   /**
-   * POST /auth/register
+   * POST /staff/auth/register
    *
    * Register a user based on the request's body
    * @param userJSON
    */
-  @Post('/register')
+  @Post('/auth/register')
   async register(@Body() userJSON: User, @Req() req: Request) {
     /**
      * Check if there is a user already registered with the given email
@@ -60,6 +100,11 @@ export class UserController {
     if (await this.userRepository.findOne({ where: { email: userJSON.email } })) {
       throw new DuplicateUserError();
     }
+
+    /**
+     * Ensure nobody can make themself an admin or any other role
+     */
+    userJSON.role = 'Waiter';
 
     const [user, err] = await this.transformAndValidateUser(userJSON);
 
@@ -104,11 +149,11 @@ Please verify ${user.name}'s account (email: ${
   }
 
   /**
-   * POST /auth/login
+   * POST /staff/auth/login
    *
    * Login a user based on the request body
    */
-  @Post('/login')
+  @Post('/auth/login')
   @UseBefore(passport.authenticate('local'))
   async login(@Req() req: Request) {
     if (req.user) {
@@ -119,11 +164,11 @@ Please verify ${user.name}'s account (email: ${
   }
 
   /**
-   * GET /auth/logout
+   * GET /staff/auth/logout
    *
    * Logout a user
    */
-  @Get('/logout')
+  @Get('/auth/logout')
   async logout(@Req() req: Request) {
     if (req.user) {
       req.logout();

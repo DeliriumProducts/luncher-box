@@ -1,11 +1,11 @@
 import axios from 'axios';
-import { BACKEND_URL } from './../config';
-import { Credentials } from './../interfaces/';
+import { BACKEND_URL } from '../config';
+import { Credentials } from '../interfaces';
 
-export class AuthAPI {
+export class StaffAPI {
   static async login(credentials: Credentials) {
     const response = await axios.post(
-      `${BACKEND_URL}/auth/login`,
+      `${BACKEND_URL}/staff/auth/login`,
       credentials,
       {
         withCredentials: true
@@ -17,7 +17,7 @@ export class AuthAPI {
 
   static async register(credentials: Credentials) {
     const response = await axios.post(
-      `${BACKEND_URL}/auth/register`,
+      `${BACKEND_URL}/staff/auth/register`,
       credentials
     );
 
@@ -25,7 +25,7 @@ export class AuthAPI {
   }
 
   static async logout() {
-    const response = await axios.get(`${BACKEND_URL}/auth/logout`, {
+    const response = await axios.get(`${BACKEND_URL}/staff/auth/logout`, {
       withCredentials: true
     });
 
@@ -39,10 +39,13 @@ export class AuthAPI {
       opts = { headers: { cookie } };
     }
 
-    const isAuthenticated: boolean = (await axios.get(`${BACKEND_URL}/auth`, {
-      withCredentials: true,
-      ...opts
-    })).data;
+    const isAuthenticated: boolean = (await axios.get(
+      `${BACKEND_URL}/staff/auth`,
+      {
+        withCredentials: true,
+        ...opts
+      }
+    )).data;
 
     return isAuthenticated;
   }

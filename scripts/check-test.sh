@@ -1,5 +1,5 @@
 #!/bin/sh
-cd backend
+cd ../backend
 
 while true; 
 do

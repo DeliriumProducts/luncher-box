@@ -56,7 +56,7 @@ export class OrderController {
    * @param orderId
    */
   @Put('/accept/:orderId')
-  @Authorized()
+  @Authorized('Waiter')
   async accept(@Param('orderId') orderId: string) {
     const key = 'orders';
     const ordersJSON = await redisConnection.get(key);
@@ -101,7 +101,7 @@ export class OrderController {
    * @param orderId
    */
   @Put('/decline/:orderId')
-  @Authorized()
+  @Authorized('Waiter')
   async decline(@Param('orderId') orderId: string) {
     const key = 'orders';
     const ordersJSON = await redisConnection.get(key);
@@ -149,7 +149,7 @@ export class OrderController {
    * @param orderId
    */
   @Put('/finish/:orderId')
-  @Authorized()
+  @Authorized('Cook')
   async finish(@Param('orderId') orderId: string) {
     const key = 'orders';
     const ordersJSON = await redisConnection.get(key);

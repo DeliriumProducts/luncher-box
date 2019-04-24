@@ -38,7 +38,7 @@ export const dbConnection = async (dropSchema?: boolean, synchronize?: boolean) 
       } catch (e) {
         console.log(e);
         retries -= 1;
-        console.log(`Retries left: ${retries}`);
+        console.log(`Retries left: ${retries}/5`);
         // wait 5 seconds
         await new Promise(res => setTimeout(res, 5000));
       }

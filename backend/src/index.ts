@@ -3,7 +3,7 @@ import { useExpressServer } from 'routing-controllers';
 import { useSocketServer } from 'socket-controllers';
 import { app, BACKEND_URL, ENV, initPassport, io, PORT, server } from './config';
 import { dbConnection as initDbConnection } from './connections';
-import { authorizationChecker } from './utils';
+import { authorizationChecker, createInitialAdmin } from './utils';
 
 const initServer = async () => {
   console.clear();
@@ -34,6 +34,13 @@ const initServer = async () => {
    * Initialize passport configuration
    */
   initPassport();
+
+  /**
+   * Create initial admin if there isn't one already
+   */
+  if (ENV !== 'test') {
+    await createInitialAdmin();
+  }
 
   return server;
 };

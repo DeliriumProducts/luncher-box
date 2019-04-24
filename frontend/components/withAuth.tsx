@@ -1,7 +1,7 @@
 import { NextComponentClass, NextContext, NextFunctionComponent } from 'next';
 import Router, { SingletonRouter } from 'next/router';
 import React, { Component, ComponentType } from 'react';
-import { AuthAPI } from '../api';
+import { StaffAPI } from '../api';
 
 const withAuth = <T extends object>(
   C: NextFunctionComponent<T> | NextComponentClass<T>
@@ -17,7 +17,7 @@ const withAuth = <T extends object>(
        */
       if (req && res) {
         if (req.headers.cookie) {
-          isAuthenticated = await AuthAPI.isAuthenticated(req.headers.cookie);
+          isAuthenticated = await StaffAPI.isAuthenticated(req.headers.cookie);
         }
 
         if (!isAuthenticated) {
@@ -27,7 +27,7 @@ const withAuth = <T extends object>(
           res.end();
         }
       } else {
-        isAuthenticated = await AuthAPI.isAuthenticated();
+        isAuthenticated = await StaffAPI.isAuthenticated();
 
         if (!isAuthenticated) {
           Router.replace('/login');
