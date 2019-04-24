@@ -1,10 +1,12 @@
 import faker from 'faker';
 import { Server } from 'http';
 import request from 'supertest';
-import { getRepository, Repository } from 'typeorm';
+import { getRepository, Repository, MoreThan } from 'typeorm';
 import { initServer } from '../src';
 import { redisConnection } from '../src/connections';
 import { User } from '../src/entities';
+import { createInitialAdmin } from '../src/utils';
+import { INITIAL_ADMIN_PASS } from '../src/config';
 
 let server: Server;
 let userRepository: Repository<User>;
@@ -149,6 +151,65 @@ describe('POST /staff/auth/register', () => {
     const userQuery = await userRepository.findOne({ where: { ...userWithoutPassword } });
 
     expect(userQuery).not.toBeDefined();
+  });
+});
+
+describe('GET /staff', () => {
+  let cookie: string;
+
+  beforeAll(async () => {
+    await createInitialAdmin();
+
+    const user: Partial<User> = {
+      email: 'admin@deliriumproducts.me',
+      password: INITIAL_ADMIN_PASS
+    };
+
+    const { header } = await request(server)
+      .post('/staff/auth/login')
+      .send(user);
+
+    cookie = header['set-cookie'][0].split(/,(?=\S)/).map((item: string) => item.split(';')[0]);
+  });
+
+  it('gets all the staff members', async () => {
+    const { body } = await request(server)
+      .get('/staff')
+      .set('Cookie', cookie)
+      .expect(200);
+
+    const staffQuery = await userRepository.find();
+
+    expect(staffQuery).toMatchObject(body);
+  });
+
+  it('gets all the staff members on a given page', async () => {
+    const { body } = await request(server)
+      .get('/staff?page=1')
+      .set('Cookie', cookie)
+      .expect(200);
+
+    const staffQuery = await userRepository.find({
+      skip: 0,
+      take: 0
+    });
+
+    expect(staffQuery).toMatchObject(body);
+  });
+
+  it('gets all the staff members with a limit', async () => {
+    const { body } = await request(server)
+      .get('/staff?limit=1')
+      .set('Cookie', cookie)
+      .expect(200);
+
+    expect(body).toHaveLength(1);
+
+    const staffQuery = await userRepository.find({
+      take: 1
+    });
+
+    expect(staffQuery).toMatchObject(body);
   });
 });
 
