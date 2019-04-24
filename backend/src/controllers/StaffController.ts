@@ -9,9 +9,11 @@ import {
   JsonController,
   Post,
   Req,
-  UseBefore
+  UseBefore,
+  QueryParam,
+  Authorized
 } from 'routing-controllers';
-import { getRepository, Repository } from 'typeorm';
+import { getRepository, Repository, MoreThan, EntityRepository } from 'typeorm';
 import { v4 } from 'uuid';
 import { ENV, OWNER_EMAIL, VERIFIER_EMAIL } from '../config';
 import { redisConnection } from '../connections';
@@ -34,6 +36,64 @@ export class StaffController {
   constructor() {
     this.userRepository = getRepository(User);
     this.transformAndValidateUser = transformAndValidate(User);
+  }
+
+  /**
+   * GET /staff
+   *
+   * Gets all staff members
+   */
+  @Get()
+  @Authorized('Admin')
+  async getAll(
+    @QueryParam('page') page?: number,
+    @QueryParam('limit') limit: number = 0,
+    @QueryParam('since') since?: number
+  ) {
+    if (since) {
+      const staff = await this.userRepository.find({
+        where: { id: MoreThan(since) },
+        take: limit,
+        cache: true
+      });
+
+      /**
+       * Return only relevant info
+       */
+      return staff.map((user: User) => {
+        const { password, id, ...s } = user;
+        return s;
+      });
+    }
+
+    if (page) {
+      const staff = await this.userRepository.find({
+        skip: limit * (page - 1),
+        take: limit,
+        cache: true
+      });
+
+      /**
+       * Return only relevant info
+       */
+      return staff.map((user: User) => {
+        const { password, id, ...s } = user;
+        return s;
+      });
+    } else {
+      const staff = await this.userRepository.find({
+        take: limit,
+        cache: true
+      });
+
+      /**
+       * Return only relevant info
+       */
+      return staff.map((user: User) => {
+        const { password, id, ...s } = user;
+        return s;
+      });
+    }
   }
 
   /**
