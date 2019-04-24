@@ -103,7 +103,7 @@ class MenuBar extends Component<Props> {
   render() {
     const { selectedKey, type } = this.props;
 
-    const selectedKeys = [];
+    const selectedKeys: string[] = [];
     if (selectedKey.includes('/category')) {
       if (selectedKey.startsWith('/admin')) {
         selectedKeys.push('/admin');
@@ -146,6 +146,14 @@ class MenuBar extends Component<Props> {
                   <StyledAnchor>
                     <Icon type="table" className="menu-item-icon" />
                     <span className="menu-item-title">Orders</span>
+                  </StyledAnchor>
+                </Link>
+              </Menu.Item>
+              <Menu.Item key="/admin/staff-members">
+                <Link href="/admin/staff-members">
+                  <StyledAnchor>
+                    <Icon type="idcard" className="menu-item-icon" />
+                    <span className="menu-item-title">Staff Members</span>
                   </StyledAnchor>
                 </Link>
               </Menu.Item>
