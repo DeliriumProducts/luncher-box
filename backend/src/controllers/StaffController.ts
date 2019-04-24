@@ -45,27 +45,7 @@ export class StaffController {
    */
   @Get()
   @Authorized('Admin')
-  async getAll(
-    @QueryParam('page') page?: number,
-    @QueryParam('limit') limit: number = 0,
-    @QueryParam('since') since?: number
-  ) {
-    if (since) {
-      const staff = await this.userRepository.find({
-        where: { id: MoreThan(since) },
-        take: limit,
-        cache: true
-      });
-
-      /**
-       * Return only relevant info
-       */
-      return staff.map((user: User) => {
-        const { password, id, ...s } = user;
-        return s;
-      });
-    }
-
+  async getAll(@QueryParam('page') page?: number, @QueryParam('limit') limit: number = 0) {
     if (page) {
       const staff = await this.userRepository.find({
         skip: limit * (page - 1),
