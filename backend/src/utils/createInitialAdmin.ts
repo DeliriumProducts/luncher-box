@@ -11,21 +11,22 @@ export const createInitialAdmin = async () => {
   /**
    * Get all admins from db
    */
-  const admins = await userRepository.find({
+  const admin = await userRepository.findOne({
     where: {
-      role: 'Admin'
+      role: 'Admin',
+      email: 'admin@deliriumproducts.me'
     }
   });
 
-  const newAdmin = new User();
+  if (!admin) {
+    const newAdmin = new User();
 
-  newAdmin.name = 'LuncherBox Admin User';
-  newAdmin.email = 'admin@deliriumproducts.me';
-  newAdmin.role = 'Admin';
-  newAdmin.isVerified = true;
-  newAdmin.password = INITIAL_ADMIN_PASS;
+    newAdmin.name = 'LuncherBox Admin User';
+    newAdmin.email = 'admin@deliriumproducts.me';
+    newAdmin.role = 'Admin';
+    newAdmin.isVerified = true;
+    newAdmin.password = INITIAL_ADMIN_PASS;
 
-  if (!admins.length) {
     await userRepository.save(newAdmin);
   }
 };
