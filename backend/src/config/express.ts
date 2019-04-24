@@ -42,7 +42,7 @@ const app: Application = express();
 app.use(
   new rateLimit({
     store: rateLimitStore,
-    windowMs: 60 * 1000,
+    windowMs: 60 * 1000, // 60 seconds
     max: 100
   })
 );

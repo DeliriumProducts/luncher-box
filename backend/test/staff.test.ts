@@ -36,6 +36,45 @@ describe('POST /staff/auth/register', () => {
     expect(userQuery).toMatchObject(userWithoutPassword);
   });
 
+  it('sets the default role to waiter, when none is passed', async () => {
+    const user: Partial<User> = {
+      email: 'set-waiter' + faker.internet.exampleEmail(),
+      name: faker.name.findName(),
+      password: 'FAKEpassword123SET-WAITER'
+    };
+
+    await request(server)
+      .post('/staff/auth/register')
+      .send(user)
+      .expect(200);
+
+    const { password, ...userWithoutPassword } = user;
+
+    const userQuery = await userRepository.findOne({ where: { ...userWithoutPassword } });
+
+    expect(userQuery).toMatchObject({ ...userWithoutPassword, role: 'Waiter' });
+  });
+
+  it('sets the default role to waiter, when any is passed', async () => {
+    const user: Partial<User> = {
+      email: 'set-waiter-any' + faker.internet.exampleEmail(),
+      name: faker.name.findName(),
+      role: 'Admin',
+      password: 'FAKEpassword123SET-WAITER-ANY'
+    };
+
+    await request(server)
+      .post('/staff/auth/register')
+      .send(user)
+      .expect(200);
+
+    const { password, role, ...userWithoutPassword } = user;
+
+    const userQuery = await userRepository.findOne({ where: { ...userWithoutPassword } });
+
+    expect(userQuery).toMatchObject({ ...userWithoutPassword, role: 'Waiter' });
+  });
+
   it('throws an error when registering a user with an invalid email', async () => {
     const user: Partial<User> = {
       email: 'this_is-not_an_email123',
