@@ -14,7 +14,7 @@ beforeAll(async () => {
   userRepository = getRepository(User);
 });
 
-describe('POST /auth/register', () => {
+describe('POST /employee/auth/register', () => {
   it('adds a valid user to the database when registering', async () => {
     const user: Partial<User> = {
       email: 'validuser' + faker.internet.exampleEmail(),
@@ -23,7 +23,7 @@ describe('POST /auth/register', () => {
     };
 
     await request(server)
-      .post('/auth/register')
+      .post('/employee/auth/register')
       .send(user)
       .expect(200);
 
@@ -42,7 +42,7 @@ describe('POST /auth/register', () => {
     };
 
     const { body } = await request(server)
-      .post('/auth/register')
+      .post('/employee/auth/register')
       .send(user)
       .expect(400);
 
@@ -67,7 +67,7 @@ describe('POST /auth/register', () => {
     };
 
     const { body } = await request(server)
-      .post('/auth/register')
+      .post('/employee/auth/register')
       .send(user)
       .expect(400);
 
@@ -95,7 +95,7 @@ describe('POST /auth/register', () => {
     };
 
     const { body } = await request(server)
-      .post('/auth/register')
+      .post('/employee/auth/register')
       .send(user)
       .expect(400);
 
@@ -125,7 +125,7 @@ describe('POST /auth/register', () => {
     };
 
     await request(server)
-      .post('/auth/register')
+      .post('/employee/auth/register')
       .send(user)
       .expect(200);
 
@@ -135,7 +135,7 @@ describe('POST /auth/register', () => {
     };
 
     const { body } = await request(server)
-      .post('/auth/register')
+      .post('/employee/auth/register')
       .send(duplicateUser)
       .expect(422);
 
@@ -161,7 +161,7 @@ describe('GET /confirm/:tokenId', () => {
     };
 
     const { body: confirmationURL } = await request(server)
-      .post('/auth/register')
+      .post('/employee/auth/register')
       .send(user)
       .expect(200);
 
@@ -194,7 +194,7 @@ describe('GET /confirm/:tokenId', () => {
     };
 
     const { body: confirmationURL } = await request(server)
-      .post('/auth/register')
+      .post('/employee/auth/register')
       .send(user)
       .expect(200);
 
@@ -208,7 +208,7 @@ describe('GET /confirm/:tokenId', () => {
   });
 });
 
-describe('POST /auth/login', () => {
+describe('POST /employee/auth/login', () => {
   const registeredUser: Partial<User> = {
     name: faker.name.findName(),
     email: 'REGISTERLOGIN' + faker.internet.exampleEmail(),
@@ -217,7 +217,7 @@ describe('POST /auth/login', () => {
 
   beforeAll(async () => {
     await request(server)
-      .post('/auth/register')
+      .post('/employee/auth/register')
       .send(registeredUser)
       .expect(200);
   });
@@ -230,7 +230,7 @@ describe('POST /auth/login', () => {
     };
 
     const { body: confirmationURL } = await request(server)
-      .post('/auth/register')
+      .post('/employee/auth/register')
       .send(user)
       .expect(200);
 
@@ -239,7 +239,7 @@ describe('POST /auth/login', () => {
       .expect(302);
 
     const { body, header } = await request(server)
-      .post('/auth/login')
+      .post('/employee/auth/login')
       .send(user)
       .expect(200);
 
@@ -250,7 +250,7 @@ describe('POST /auth/login', () => {
       .map((item: string) => item.split(';')[0]);
 
     const { body: isLoggedIn } = await request(server)
-      .get('/auth')
+      .get('/employee/auth')
       .set('Cookie', cookie)
       .expect(200);
 
@@ -259,7 +259,7 @@ describe('POST /auth/login', () => {
 
   it('throws an error when logging in with an unconfirmed user', async () => {
     const { text } = await request(server)
-      .post('/auth/login')
+      .post('/employee/auth/login')
       .send(registeredUser)
       .expect(401);
 
@@ -268,7 +268,7 @@ describe('POST /auth/login', () => {
 
   it('throws an error when logging in with an incorrect password', async () => {
     const { text } = await request(server)
-      .post('/auth/login')
+      .post('/employee/auth/login')
       .send({ ...registeredUser, password: 'WRONGpassword123' })
       .expect(401);
 
@@ -283,7 +283,7 @@ describe('POST /auth/login', () => {
     };
 
     const { text } = await request(server)
-      .post('/auth/login')
+      .post('/employee/auth/login')
       .send(user)
       .expect(401);
 
@@ -291,7 +291,7 @@ describe('POST /auth/login', () => {
   });
 });
 
-describe('GET /auth/logout', () => {
+describe('GET /employee/auth/logout', () => {
   const registeredUser: Partial<User> = {
     name: faker.name.findName(),
     email: 'logout' + faker.internet.exampleEmail(),
@@ -301,7 +301,7 @@ describe('GET /auth/logout', () => {
 
   beforeAll(async () => {
     const { body: confirmationURL } = await request(server)
-      .post('/auth/register')
+      .post('/employee/auth/register')
       .send(registeredUser)
       .expect(200);
 
@@ -310,7 +310,7 @@ describe('GET /auth/logout', () => {
       .expect(302);
 
     const { header } = await request(server)
-      .post('/auth/login')
+      .post('/employee/auth/login')
       .send(registeredUser)
       .expect(200);
 
@@ -319,7 +319,7 @@ describe('GET /auth/logout', () => {
 
   it('logs a user out after logging in', async () => {
     const { body } = await request(server)
-      .get('/auth/logout')
+      .get('/employee/auth/logout')
       .set('Cookie', cookie)
       .expect(200);
 
@@ -328,7 +328,7 @@ describe('GET /auth/logout', () => {
 
   it('throws an error when logging out without logging in', async () => {
     const { body } = await request(server)
-      .get('/auth/logout')
+      .get('/employee/auth/logout')
       .expect(200);
 
     expect(body).toEqual('Login to logout!');

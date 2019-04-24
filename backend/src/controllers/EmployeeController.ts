@@ -18,10 +18,10 @@ import { redisConnection } from '../connections';
 import { DuplicateUserError, User, UserNotFoundError, UserNotValidError } from '../entities';
 import { TransformAndValidateTuple } from '../types';
 import { sendEmail, transformAndValidate } from '../utils';
-import { BACKEND_URL } from './../config/env';
+import { BACKEND_URL } from '../config/env';
 
-@JsonController('/auth')
-export class UserController {
+@JsonController('/employee')
+export class EmployeeController {
   private userRepository: Repository<User>;
   private transformAndValidateUser: (
     obj: object | Array<{}>,
@@ -37,22 +37,22 @@ export class UserController {
   }
 
   /**
-   * GET /auth
+   * GET /employee/auth
    *
    * Check if the user has been authenticated
    */
-  @Get()
+  @Get('/auth')
   isAuthenticated(@Req() req: Request) {
     return req.isAuthenticated();
   }
 
   /**
-   * POST /auth/register
+   * POST /employee/auth/register
    *
    * Register a user based on the request's body
    * @param userJSON
    */
-  @Post('/register')
+  @Post('/auth/register')
   async register(@Body() userJSON: User, @Req() req: Request) {
     /**
      * Check if there is a user already registered with the given email
@@ -104,11 +104,11 @@ Please verify ${user.name}'s account (email: ${
   }
 
   /**
-   * POST /auth/login
+   * POST /employee/auth/login
    *
    * Login a user based on the request body
    */
-  @Post('/login')
+  @Post('/auth/login')
   @UseBefore(passport.authenticate('local'))
   async login(@Req() req: Request) {
     if (req.user) {
@@ -119,11 +119,11 @@ Please verify ${user.name}'s account (email: ${
   }
 
   /**
-   * GET /auth/logout
+   * GET /employee/auth/logout
    *
    * Logout a user
    */
-  @Get('/logout')
+  @Get('/auth/logout')
   async logout(@Req() req: Request) {
     if (req.user) {
       req.logout();

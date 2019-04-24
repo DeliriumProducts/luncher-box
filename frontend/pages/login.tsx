@@ -6,7 +6,7 @@ import Link from 'next/link';
 import Router from 'next/router';
 import React, { Component } from 'react';
 import styled from 'styled-components';
-import { AuthAPI } from '../api';
+import { EmployeeAPI } from '../api';
 import CenteredDiv from '../components/CenteredDiv';
 import { HandleLogin } from '../types';
 
@@ -52,7 +52,7 @@ class LoginForm extends Component<Props, State> {
      */
     if (req && res) {
       if (req.headers.cookie) {
-        isAuthenticated = await AuthAPI.isAuthenticated(req.headers.cookie);
+        isAuthenticated = await EmployeeAPI.isAuthenticated(req.headers.cookie);
       }
 
       if (isAuthenticated) {
@@ -62,7 +62,7 @@ class LoginForm extends Component<Props, State> {
         res.end();
       }
     } else {
-      isAuthenticated = await AuthAPI.isAuthenticated();
+      isAuthenticated = await EmployeeAPI.isAuthenticated();
 
       if (isAuthenticated) {
         Router.replace('/admin');
@@ -87,7 +87,7 @@ class LoginForm extends Component<Props, State> {
 
         this.setState({ loading: true });
         try {
-          await AuthAPI.login(credentials);
+          await EmployeeAPI.login(credentials);
           message.success(
             'You successfully logged in! Redirecting you to dashboard...',
             3,
