@@ -101,6 +101,11 @@ export class StaffController {
       throw new DuplicateUserError();
     }
 
+    /**
+     * Ensure nobody can make themself an admin or any other role
+     */
+    userJSON.role = 'Waiter';
+
     const [user, err] = await this.transformAndValidateUser(userJSON);
 
     if (err.length) {
