@@ -32,20 +32,37 @@ export class StaffAPI {
     return response;
   }
 
-  static async getAll(opts: { page?: number; limit?: number } = {}) {
+  static async getAll(
+    opts: { page?: number; limit?: number } = {},
+    cookie?: any
+  ) {
+    let cookieOpts = {};
+
+    if (cookie) {
+      cookieOpts = { headers: { cookie } };
+    }
+
     if (!opts.limit) {
       opts.limit = 0;
     }
 
     if (opts.page) {
       const staff: User[] = (await axios.get(
-        `${BACKEND_URL}/staff?page=${opts.page}&limit=${opts.limit}`
+        `${BACKEND_URL}/staff?page=${opts.page}&limit=${opts.limit}`,
+        {
+          withCredentials: true,
+          ...cookieOpts
+        }
       )).data;
 
       return staff;
     } else {
       const staff: User[] = (await axios.get(
-        `${BACKEND_URL}/staff?limit=${opts.limit}`
+        `${BACKEND_URL}/staff?limit=${opts.limit}`,
+        {
+          withCredentials: true,
+          ...cookieOpts
+        }
       )).data;
 
       return staff;

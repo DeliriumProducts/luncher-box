@@ -69,7 +69,7 @@ const StyledMenu: any = styled(Menu)`
     }
   }
 
-  @media (max-width: 768px) {
+  @media (max-width: 480px) {
     box-shadow: 0 -2px 2px rgba(0, 0, 0, 0.12);
   }
 `;

@@ -57,7 +57,7 @@ export class StaffController {
        * Return only relevant info
        */
       return staff.map((user: User) => {
-        const { password, id, ...s } = user;
+        const { password, ...s } = user;
         return s;
       });
     } else {
@@ -70,7 +70,7 @@ export class StaffController {
        * Return only relevant info
        */
       return staff.map((user: User) => {
-        const { password, id, ...s } = user;
+        const { password, ...s } = user;
         return s;
       });
     }
