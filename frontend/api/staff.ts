@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { BACKEND_URL } from '../config';
-import { Credentials } from '../interfaces';
+import { Credentials, User } from '../interfaces';
 
 export class StaffAPI {
   static async login(credentials: Credentials) {
@@ -30,6 +30,26 @@ export class StaffAPI {
     });
 
     return response;
+  }
+
+  static async getAll(opts: { page?: number; limit?: number } = {}) {
+    if (!opts.limit) {
+      opts.limit = 0;
+    }
+
+    if (opts.page) {
+      const staff: User[] = (await axios.get(
+        `${BACKEND_URL}/staff?page=${opts.page}&limit=${opts.limit}`
+      )).data;
+
+      return staff;
+    } else {
+      const staff: User[] = (await axios.get(
+        `${BACKEND_URL}/staff?limit=${opts.limit}`
+      )).data;
+
+      return staff;
+    }
   }
 
   static async isAuthenticated(cookie?: any) {
