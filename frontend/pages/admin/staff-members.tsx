@@ -23,6 +23,7 @@ const FlexContainer = styled.div`
   border-radius: 7px;
 
   @media (max-width: 768px) {
+    padding: 0;
     width: 100%;
   }
 
@@ -30,6 +31,13 @@ const FlexContainer = styled.div`
 
   .ant-table-wrapper {
     overflow-x: auto;
+  }
+
+  thead > tr > th {
+    background-color: #f5f5f5;
+  }
+  .ant-table-row {
+    background-color: #fff;
   }
 `;
 
