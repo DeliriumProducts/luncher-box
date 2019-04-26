@@ -24,10 +24,13 @@ const FlexContainer = styled.div`
 
   @media (max-width: 768px) {
     width: 100%;
-    flex-direction: column;
   }
 
   box-shadow: 0 20px 24px -18px rgba(0, 0, 0, 0.31);
+
+  .ant-table-wrapper {
+    overflow-x: auto;
+  }
 `;
 
 const columns = [
@@ -70,7 +73,7 @@ const StaffMembers: NextFunctionComponent<Props> = ({ err, staff }) => {
         <title>Staff Members • LuncherBox</title>
       </Head>
       <FlexContainer>
-        <Table dataSource={staff} columns={columns} />
+        <Table pagination={false} dataSource={staff} columns={columns} />
       </FlexContainer>
     </>
   );
@@ -90,8 +93,6 @@ StaffMembers.getInitialProps = async ({ req, res }: NextContext) => {
     } else {
       staff = await StaffAPI.getAll();
     }
-
-    console.log(staff);
 
     staff = staff.map(s => ({
       ...s,
