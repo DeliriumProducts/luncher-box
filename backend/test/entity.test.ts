@@ -3,17 +3,19 @@ import { Server } from 'http';
 import request from 'supertest';
 import { getRepository, MoreThan, Repository } from 'typeorm';
 import { initServer } from '../src';
-import { Category, Product, User } from '../src/entities';
+import { Category, Product, Table, User } from '../src/entities';
 
 let server: Server;
 let productRepository: Repository<Product>;
 let categoryRepository: Repository<Category>;
+let tableRepository: Repository<Table>;
 let cookie: string;
 
 beforeAll(async () => {
   server = await initServer();
   productRepository = getRepository(Product);
   categoryRepository = getRepository(Category);
+  tableRepository = getRepository(Table);
 
   const user: Partial<User> = {
     name: faker.name.findName(),
@@ -1538,6 +1540,106 @@ describe('DELETE /products/:id', () => {
       name: 'NotFoundError',
       message: 'Product not found!'
     });
+  });
+});
+
+describe('POST /tables', () => {
+  it('creates a valid table to the database', async () => {
+    const table: Partial<Table> = {
+      id: 'A1',
+      isTaken: false,
+      orders: []
+    };
+
+    const { body } = await request(server)
+      .post('/tables')
+      .set('Cookie', cookie)
+      .send(table)
+      .expect(200);
+
+    const { orders, ...tableWithoutOrders } = table;
+
+    expect(body).toEqual(tableWithoutOrders);
+
+    const tableQuery = await tableRepository.findOne(body.id);
+
+    expect(tableQuery).toEqual(tableWithoutOrders);
+  });
+
+  it('throws an errors when creating a table with an invalid id', async () => {
+    const table: Partial<Table> = {
+      // @ts-ignore
+      id: 123123123,
+      isTaken: false,
+      orders: []
+    };
+
+    const { body } = await request(server)
+      .post('/tables')
+      .set('Cookie', cookie)
+      .send(table)
+      .expect(400);
+
+    expect(body).toEqual({
+      errors: ['id must be a string'],
+      name: 'NotValidError',
+      message: 'Table not valid!'
+    });
+
+    const tableQuery = await tableRepository.findOne(body.id);
+
+    expect(tableQuery).not.toEqual(table);
+  });
+
+  it('throws an errors when creating a table with an invalid isTaken', async () => {
+    const table: Partial<Table> = {
+      id: 'A2',
+      // @ts-ignore
+      isTaken: 'not-valid',
+      orders: []
+    };
+
+    const { body } = await request(server)
+      .post('/tables')
+      .set('Cookie', cookie)
+      .send(table)
+      .expect(400);
+
+    expect(body).toEqual({
+      errors: ['isTaken must be a boolean value'],
+      name: 'NotValidError',
+      message: 'Table not valid!'
+    });
+
+    const tableQuery = await tableRepository.findOne(body.id);
+
+    expect(tableQuery).not.toEqual(table);
+  });
+
+  it('throws an errors when creating a table with all fields invalid ', async () => {
+    const table: Partial<Table> = {
+      // @ts-ignore
+      id: 234,
+      // @ts-ignore
+      isTaken: 'not-valid',
+      orders: []
+    };
+
+    const { body } = await request(server)
+      .post('/tables')
+      .set('Cookie', cookie)
+      .send(table)
+      .expect(400);
+
+    expect(body).toEqual({
+      errors: ['id must be a string', 'isTaken must be a boolean value'],
+      name: 'NotValidError',
+      message: 'Table not valid!'
+    });
+
+    const tableQuery = await tableRepository.findOne(body.id);
+
+    expect(tableQuery).not.toEqual(table);
   });
 });
 

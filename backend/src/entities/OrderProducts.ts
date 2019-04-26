@@ -10,7 +10,7 @@ export class OrderProducts {
   @PrimaryColumn()
   productId: number;
 
-  @ManyToOne(() => Order)
+  @ManyToOne(() => Order, o => o.products)
   order: Order;
 
   @ManyToOne(() => Product)
