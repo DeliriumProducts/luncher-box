@@ -2171,4 +2171,89 @@ describe('Authorization', () => {
 
     expect(productQuery).toBeDefined();
   });
+
+  it('throws an error when creating a table when not logged in', async () => {
+    const table: Partial<Table> = {
+      name: 'A3',
+      isTaken: false
+    };
+
+    const { body } = await request(server)
+      .post('/tables')
+      .send(table)
+      .expect(401);
+
+    expect(body).toEqual({
+      name: 'AuthorizationRequiredError',
+      message: 'Authorization is required for request on POST /tables'
+    });
+
+    const tableQuery = await tableRepository.findOne({
+      where: { ...table }
+    });
+
+    expect(tableQuery).not.toBeDefined();
+  });
+
+  it('throws an error when editing a table when not logged in', async () => {
+    const table: Partial<Table> = {
+      name: 'B55',
+      isTaken: false
+    };
+
+    const {
+      body: { id }
+    } = await request(server)
+      .post('/tables')
+      .send(table)
+      .set('Cookie', cookie)
+      .expect(200);
+
+    table.id = id;
+
+    const { body } = await request(server)
+      .put(`/tables/${id}`)
+      .send({
+        ...table,
+        name: 'F098'
+      })
+      .expect(401);
+
+    expect(body).toEqual({
+      name: 'AuthorizationRequiredError',
+      message: `Authorization is required for request on PUT /tables/${id}`
+    });
+
+    const tableQuery = await tableRepository.findOne(id);
+
+    expect(tableQuery).toEqual(table);
+  });
+
+  it('throws an error when deleting a table when not logged in', async () => {
+    const table: Partial<Table> = {
+      name: 'f999',
+      isTaken: false
+    };
+
+    const {
+      body: { id }
+    } = await request(server)
+      .post('/tables')
+      .set('Cookie', cookie)
+      .send(table)
+      .expect(200);
+
+    const { body } = await request(server)
+      .delete(`/tables/${id}`)
+      .expect(401);
+
+    expect(body).toEqual({
+      name: 'AuthorizationRequiredError',
+      message: `Authorization is required for request on DELETE /tables/${id}`
+    });
+
+    const tableQuery = await tableRepository.findOne(id);
+
+    expect(tableQuery).toBeDefined();
+  });
 });
