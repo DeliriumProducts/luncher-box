@@ -35,13 +35,19 @@ export class Order {
   @Column('date')
   placed: Date;
 
-  @Column('date')
+  @Column('date', {
+    nullable: true
+  })
   accepted: Date;
 
-  @Column('date')
+  @Column('date', {
+    nullable: true
+  })
   declined: Date;
 
-  @Column('date')
+  @Column('date', {
+    nullable: true
+  })
   finished: Date;
 }
 

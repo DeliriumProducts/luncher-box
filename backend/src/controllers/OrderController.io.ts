@@ -1,10 +1,17 @@
 /* istanbul ignore file */
 import { TransformValidationOptions } from 'class-transformer-validator';
-import { JsonController } from 'routing-controllers';
+import { Authorized, Get, JsonController, Param, Put } from 'routing-controllers';
 import { MessageBody, OnMessage, SocketController, SocketId } from 'socket-controllers';
 import { getRepository, In, Repository } from 'typeorm';
 import { io } from '../config';
-import { Order, OrderNotValidError, OrderProduct, Product, Table } from '../entities';
+import {
+  Order,
+  OrderNotFoundError,
+  OrderNotValidError,
+  OrderProduct,
+  Product,
+  Table
+} from '../entities';
 import { QueryResponse, TransformAndValidateTuple } from '../types';
 import { transformAndValidate } from '../utils';
 
@@ -29,171 +36,101 @@ export class OrderController {
     this.transformAndValidateOrder = transformAndValidate(Order);
   }
 
-  // @OnMessage('socket-connect')
-  // connect(@MessageBody() message: string) {
-  //   io.emit('socket-connected', message);
-  // }
+  @OnMessage('socket-connect')
+  connect(@MessageBody() message: string) {
+    io.emit('socket-connected', message);
+  }
 
-  // /**
-  //  * GET /orders
-  //  *
-  //  * Gets all orders
-  //  */
-  // @Get()
-  // @Authorized()
-  // async getAll() {
-  //   const key = 'orders';
-  //   const ordersJSON = await redisConnection.get(key);
+  /**
+   * GET /orders
+   *
+   * Gets all orders
+   */
+  @Get()
+  @Authorized()
+  async getAll() {
+    return await this.orderRepository.find({
+      relations: ['products', 'products.product', 'table']
+    });
+  }
 
-  //   let orders: Order[] = [];
+  /**
+   * PUT /orders/accept/:orderId
+   *
+   * Accepts an order based on the query params
+   * @param orderId
+   */
+  @Put('/accept/:orderId')
+  @Authorized('Waiter')
+  async accept(@Param('orderId') orderId: string) {
+    const order = await this.orderRepository.findOne(orderId);
+    if (order) {
+      order.state = 1;
+      order.accepted = new Date();
 
-  //   if (ordersJSON) {
-  //     orders = JSON.parse(ordersJSON);
-  //   }
+      await this.orderRepository.save(order);
+    } else {
+      throw new OrderNotFoundError();
+    }
 
-  //   /**
-  //    * Emit all of the orders to the client
-  //    */
-  //   return orders;
-  // }
+    io.to(order.customerId).emit('accepted-order', order);
+    io.emit('accepted-order-admin', order);
 
-  // /**
-  //  * PUT /orders/accept/:orderId
-  //  *
-  //  * Accepts an order based on the query params
-  //  * @param orderId
-  //  */
-  // @Put('/accept/:orderId')
-  // @Authorized('Waiter')
-  // async accept(@Param('orderId') orderId: string) {
-  //   const key = 'orders';
-  //   const ordersJSON = await redisConnection.get(key);
+    return order;
+  }
 
-  //   let orders: Order[] = [];
-  //   let order: Partial<Order> = {};
+  /**
+   * PUT /orders/decline/:orderId
+   *
+   * Declines an order based on the query params
+   * @param orderId
+   */
+  @Put('/decline/:orderId')
+  @Authorized('Waiter')
+  async decline(@Param('orderId') orderId: string) {
+    const order = await this.orderRepository.findOne(orderId);
+    if (order) {
+      order.state = 3;
+      order.declined = new Date();
 
-  //   if (ordersJSON) {
-  //     orders = JSON.parse(ordersJSON);
+      await this.orderRepository.save(order);
+    } else {
+      throw new OrderNotFoundError();
+    }
 
-  //     orders = orders.map(o => {
-  //       if (o.id === orderId) {
-  //         if (o.state !== 1) {
-  //           o.state = 1;
-  //         } else {
-  //           throw new OrderNotFoundError();
-  //         }
+    io
+      // @ts-ignore
+      .to(order.customerId)
+      .emit('declined-order', order);
+    io.emit('declined-order-admin', order);
 
-  //         o.accepted = new Date();
-  //         order = o;
-  //       }
+    return order;
+  }
 
-  //       return o;
-  //     });
-  //   }
+  /**
+   * PUT /orders/finish/:orderId
+   *
+   * Finishes an order based on the query params
+   * @param orderId
+   */
+  @Put('/finish/:orderId')
+  @Authorized('Cook')
+  async finish(@Param('orderId') orderId: string) {
+    const order = await this.orderRepository.findOne(orderId);
+    if (order) {
+      order.state = 2;
+      order.finished = new Date();
 
-  //   await redisConnection.set(key, JSON.stringify(orders));
+      await this.orderRepository.save(order);
+    } else {
+      throw new OrderNotFoundError();
+    }
 
-  //   io
-  //     // @ts-ignore
-  //     .to(order.customerId)
-  //     .emit('accepted-order', order);
-  //   io.emit('accepted-order-admin', order);
+    io.to(order.customerId).emit('finished-order', order);
+    io.emit('finished-order-admin', order);
 
-  //   return order;
-  // }
-
-  // /**
-  //  * PUT /orders/decline/:orderId
-  //  *
-  //  * Declines an order based on the query params
-  //  * @param orderId
-  //  */
-  // @Put('/decline/:orderId')
-  // @Authorized('Waiter')
-  // async decline(@Param('orderId') orderId: string) {
-  //   const key = 'orders';
-  //   const ordersJSON = await redisConnection.get(key);
-
-  //   let orders: Order[] = [];
-  //   let order: Partial<Order> = {};
-
-  //   if (ordersJSON) {
-  //     orders = JSON.parse(ordersJSON);
-
-  //     orders = orders.map(o => {
-  //       if (o.id === orderId) {
-  //         if (o.state !== 3) {
-  //           o.state = 3;
-  //         } else {
-  //           throw new OrderNotFoundError();
-  //         }
-
-  //         o.declined = new Date();
-  //         order = o;
-  //       }
-
-  //       return o;
-  //     });
-  //   }
-
-  //   await redisConnection.set(key, JSON.stringify(orders));
-
-  //   // @ts-ignore
-  //   order.state = 3;
-
-  //   io
-  //     // @ts-ignore
-  //     .to(order.customerId)
-  //     .emit('declined-order', order);
-  //   io.emit('declined-order-admin', order);
-
-  //   return 'Order declined!';
-  // }
-
-  // /**
-  //  * PUT /orders/finish/:orderId
-  //  *
-  //  * Finishes an order based on the query params
-  //  * @param orderId
-  //  */
-  // @Put('/finish/:orderId')
-  // @Authorized('Cook')
-  // async finish(@Param('orderId') orderId: string) {
-  //   const key = 'orders';
-  //   const ordersJSON = await redisConnection.get(key);
-
-  //   let orders: Order[] = [];
-  //   let order: Partial<Order> = {};
-
-  //   if (ordersJSON) {
-  //     orders = JSON.parse(ordersJSON);
-
-  //     orders = orders.map(o => {
-  //       if (o.id === orderId) {
-  //         if (o.state !== 2) {
-  //           o.state = 2;
-  //         } else {
-  //           throw new OrderNotFoundError();
-  //         }
-
-  //         o.finished = new Date();
-  //         order = o;
-  //       }
-
-  //       return o;
-  //     });
-  //   }
-
-  //   await redisConnection.set(key, JSON.stringify(orders));
-
-  //   io
-  //     // @ts-ignore
-  //     .to(order.customerId)
-  //     .emit('finished-order', order);
-  //   io.emit('finished-order-admin', order);
-
-  //   return order;
-  // }
+    return order;
+  }
 
   /**
    * Socket Emit place-order
@@ -204,7 +141,7 @@ export class OrderController {
    */
   @OnMessage('place-order')
   async place(@SocketId() socketId: string, @MessageBody() orderJSON: Order) {
-    const [order, orderErr] = await this.transformAndValidateOrder(orderJSON);
+    let [order, orderErr] = await this.transformAndValidateOrder(orderJSON);
     let syncedProducts: QueryResponse<Product[]> = [];
 
     if (!order.products) {
@@ -269,63 +206,52 @@ export class OrderController {
       }
     }
 
-    order.products = orderProducts;
     order.customerId = socketId;
     order.state = 0;
     order.placed = new Date();
-    order.accepted = new Date(0);
-    order.declined = new Date(0);
-    order.finished = new Date(0);
+    order.products = orderProducts;
 
-    await this.orderRepository.save(order);
+    order = await this.orderRepository.save(order);
 
-    // io.emit('placed-order-admin', orders);
-    io.to(socketId).emit('placed-order', order);
+    /**
+     * Remove circular references
+     */
+    // @ts-ignore
+    order.products = order.products.map(op => {
+      const { order: o, ...opWithOutOrder } = op;
+      return opWithOutOrder;
+    });
+
+    const orders = await this.orderRepository.find({
+      relations: ['products', 'table']
+    });
+
+    io.emit('placed-order-admin', orders);
+    io.to(order.customerId).emit('placed-order', order);
   }
 
-  // /**
-  //  * Socket Emit update-customer-id
-  //  *
-  //  * Updates the customer id based on the new orders
-  //  * @param orderIds
-  //  */
-  // @OnMessage('update-customerId')
-  // async updateCustomerId(@SocketId() socketId: string, @MessageBody() orderIds: string[]) {
-  //   const key = 'orders';
-  //   const ordersJSON = await redisConnection.get(key);
+  /**
+   * Socket Emit update-customer-id
+   *
+   * Updates the customer id based on the new orders
+   * @param orderIds
+   */
+  @OnMessage('update-customerId')
+  async updateCustomerId(@SocketId() customerId: string, @MessageBody() orderIds: string[]) {
+    let orders = await this.orderRepository.find({
+      where: {
+        id: In(orderIds)
+      },
+      relations: ['products', 'table']
+    });
 
-  //   let orders: Order[] = [];
-  //   const customerOrders: Order[] = [];
+    orders = orders.map(o => {
+      o.customerId = customerId;
+      return o;
+    });
 
-  //   if (ordersJSON) {
-  //     orders = JSON.parse(ordersJSON);
+    await this.orderRepository.save(orders);
 
-  //     orders = orders.map(o => {
-  //       if (orderIds.includes(o.id)) {
-  //         const newOrder = {
-  //           ...o,
-  //           customerId: socketId
-  //         };
-
-  //         customerOrders.push(newOrder);
-
-  //         return newOrder;
-  //       }
-
-  //       return o;
-  //     });
-  //   }
-
-  //   customerOrders.sort((o1, o2) => {
-  //     if (new Date(o1.placed!) > new Date(o2.placed!)) {
-  //       return -1;
-  //     } else {
-  //       return 1;
-  //     }
-  //   });
-
-  //   await redisConnection.set(key, JSON.stringify(orders));
-
-  //   io.to(socketId).emit('updated-customerId', customerOrders);
-  // }
+    io.to(customerId).emit('updated-customerId', orders);
+  }
 }
