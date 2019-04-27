@@ -277,14 +277,7 @@ export class OrderController {
     order.declined = new Date(0);
     order.finished = new Date(0);
 
-    console.log(order);
-
-    this.orderRepository
-      .save(order)
-      .then(a => {
-        console.log(a);
-      })
-      .catch(e => console.log(e));
+    await this.orderRepository.save(order);
 
     // io.emit('placed-order-admin', orders);
     io.to(socketId).emit('placed-order', order);
