@@ -29,7 +29,7 @@ export class Order {
   @IsOptional()
   comment: string = '';
 
-  @Column('text')
+  @Column('integer')
   state: OrderState;
 
   @Column('date')

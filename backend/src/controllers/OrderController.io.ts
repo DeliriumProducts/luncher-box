@@ -116,7 +116,10 @@ export class OrderController {
   @Put('/finish/:orderId')
   @Authorized('Cook')
   async finish(@Param('orderId') orderId: string) {
-    const order = await this.orderRepository.findOne(orderId);
+    const order = await this.orderRepository.findOne(orderId, {
+      relations: ['product']
+    });
+
     if (order) {
       order.state = 2;
       order.finished = new Date();
@@ -223,7 +226,7 @@ export class OrderController {
     });
 
     const orders = await this.orderRepository.find({
-      relations: ['products', 'table']
+      relations: ['products', 'products.product', 'table']
     });
 
     io.emit('placed-order-admin', orders);
