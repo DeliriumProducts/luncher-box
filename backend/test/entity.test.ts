@@ -1773,7 +1773,8 @@ describe('Table controller', () => {
 
     it('throws an error when editing a table with an invalid id', async () => {
       const oldTable: Partial<Table> = {
-        id: 'valid-name'
+        id: 'valid-name',
+        isTaken: false
       };
 
       await request(server)
