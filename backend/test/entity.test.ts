@@ -1738,6 +1738,157 @@ describe('Table controller', () => {
       });
     });
   });
+
+  describe('PUT /tables/:id', () => {
+    it('edits a valid table from the database', async () => {
+      const oldTable: Partial<Table> = {
+        id: 'test-ahaha',
+        isTaken: false
+      };
+
+      await request(server)
+        .post('/tables')
+        .set('Cookie', cookie)
+        .send(oldTable)
+        .expect(200);
+
+      const editedTable: Partial<Table> = {
+        ...oldTable,
+        id: 'ahahhahaha',
+        isTaken: true
+      };
+
+      const { body } = await request(server)
+        .put(`/tables/${oldTable.id}`)
+        .set('Cookie', cookie)
+        .send(editedTable)
+        .expect(200);
+
+      expect(body).toEqual(editedTable);
+
+      const oldTableQuery = await tableRepository.findOne({ where: { id: editedTable.id } });
+
+      expect(oldTableQuery).toEqual(editedTable);
+    });
+
+    it('throws an error when editing a table with an invalid id', async () => {
+      const oldTable: Partial<Table> = {
+        id: 'valid-name'
+      };
+
+      await request(server)
+        .post('/tables')
+        .set('Cookie', cookie)
+        .send(oldTable)
+        .expect(200);
+
+      const editedTable: Partial<Table> = {
+        ...oldTable,
+        // @ts-ignore
+        id: 343,
+        isTaken: false
+      };
+
+      const { body } = await request(server)
+        .put(`/tables/${oldTable.id}`)
+        .set('Cookie', cookie)
+        .send(editedTable)
+        .expect(400);
+
+      expect(body).toEqual({
+        errors: ['id must be a string'],
+        message: 'Table not valid!',
+        name: 'NotValidError'
+      });
+
+      const oldTableQuery = await categoryRepository.findOne({ where: { id: oldTable.id } });
+
+      expect(oldTableQuery).not.toEqual(editedTable);
+    });
+
+    it('throws an error when editing a category with an invalid isTaken', async () => {
+      const oldTable: Partial<Table> = {
+        id: 'valid-id-ok',
+        isTaken: false
+      };
+
+      await request(server)
+        .post('/tables')
+        .set('Cookie', cookie)
+        .send(oldTable)
+        .expect(200);
+
+      const editedTable: Partial<Table> = {
+        ...oldTable,
+        // @ts-ignore
+        isTaken: 'invalid-is-Taken'
+      };
+
+      const { body } = await request(server)
+        .put(`/tables/${oldTable.id}`)
+        .set('Cookie', cookie)
+        .send(editedTable)
+        .expect(400);
+
+      expect(body).toEqual({
+        errors: ['isTaken must be a boolean value'],
+        message: 'Table not valid!',
+        name: 'NotValidError'
+      });
+
+      const oldTableQuery = await tableRepository.findOne({ where: { id: oldTable.id } });
+
+      expect(oldTableQuery).not.toEqual(editedTable);
+    });
+
+    it('throws an error when editing a category with a all fields invalid', async () => {
+      const oldTable: Partial<Table> = {
+        id: 'valid-id-ok-again',
+        isTaken: false
+      };
+
+      await request(server)
+        .post('/tables')
+        .set('Cookie', cookie)
+        .send(oldTable)
+        .expect(200);
+
+      const editedTable: Partial<Table> = {
+        ...oldTable,
+        // @ts-ignore
+        id: 23432,
+        // @ts-ignore
+        isTaken: 'asdf'
+      };
+
+      const { body } = await request(server)
+        .put(`/tables/${oldTable.id}`)
+        .set('Cookie', cookie)
+        .send(editedTable)
+        .expect(400);
+
+      expect(body).toEqual({
+        errors: ['id must be a string', 'isTaken must be a boolean value'],
+        name: 'NotValidError',
+        message: 'Table not valid!'
+      });
+      const oldTableQuery = await tableRepository.findOne({ where: { id: oldTable.id } });
+
+      expect(oldTableQuery).not.toEqual(editedTable);
+    });
+
+    it('throws an error when editing a non-existing category', async () => {
+      const { body } = await request(server)
+        .put(`/tables/${-420}`)
+        .set('Cookie', cookie)
+        .expect(404);
+
+      expect(body).toEqual({
+        name: 'NotFoundError',
+        message: 'Table not found!'
+      });
+    });
+  });
 });
 
 describe('Authorization', () => {

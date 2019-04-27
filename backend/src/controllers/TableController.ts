@@ -99,14 +99,17 @@ export class TableController {
   @Post()
   @Authorized()
   async create(@Body() tableJSON: Table) {
+    tableJSON.orders = [];
+
+    if (tableJSON.isTaken === undefined) {
+      tableJSON.isTaken = false;
+    }
+
     const [table, tableErr] = await this.transformAndValidateTable(tableJSON);
 
     if (tableErr.length) {
       throw new TableNotValidError(tableErr);
     }
-
-    delete table.orders;
-    table.isTaken = false;
 
     return await this.tableRepository.save(table);
   }
@@ -121,6 +124,12 @@ export class TableController {
   @Put('/:tableId')
   @Authorized()
   async update(@Param('tableId') id: string, @Body() newTableJSON: Table) {
+    newTableJSON.orders = [];
+
+    if (newTableJSON.isTaken === undefined) {
+      newTableJSON.isTaken = false;
+    }
+
     /**
      * Check if the table exists before updating it
      */
@@ -134,7 +143,6 @@ export class TableController {
       }
 
       delete newTable.orders;
-      newTable.isTaken = false;
 
       return await this.tableRepository.save(newTable);
     }
