@@ -16,7 +16,7 @@ export class Order {
   table: Table;
 
   @OneToMany(() => OrderProduct, op => op.order, {
-    cascade: true
+    cascade: ['insert']
   })
   @Allow()
   products: OrderProduct[];
