@@ -1,14 +1,17 @@
 import { IsBoolean, IsString } from 'class-validator';
-import { Column, Entity, OneToMany, PrimaryColumn } from 'typeorm';
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { Order } from '.';
 import { EntityError } from '../types';
 import { EntityNotFoundError, EntityNotValidError } from '../utils';
 
 @Entity()
 export class Table {
-  @PrimaryColumn()
-  @IsString()
+  @PrimaryGeneratedColumn()
   id: string;
+
+  @Column('text')
+  @IsString()
+  name: string;
 
   @Column()
   @IsBoolean()

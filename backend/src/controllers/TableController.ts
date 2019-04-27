@@ -80,8 +80,8 @@ export class TableController {
    * @param tableId
    */
   @Get('/:tableId')
-  async getOne(@Param('tableId') id: string) {
-    const table = await this.tableRepository.findOne({ where: { id } });
+  async getOne(@Param('tableId') id: number) {
+    const table = await this.tableRepository.findOne(id);
 
     if (table) {
       return table;
@@ -117,11 +117,11 @@ export class TableController {
    */
   @Put('/:tableId')
   @Authorized()
-  async update(@Param('tableId') id: string, @Body() newTableJSON: Table) {
+  async update(@Param('tableId') id: number, @Body() newTableJSON: Table) {
     /**
      * Check if the table exists before updating it
      */
-    const oldTable: QueryResponse<Table> = await this.tableRepository.findOne({ where: { id } });
+    const oldTable: QueryResponse<Table> = await this.tableRepository.findOne(id);
 
     if (oldTable) {
       const [newTable, tableErr] = await this.transformAndValidateTable(newTableJSON);
@@ -131,6 +131,7 @@ export class TableController {
       }
 
       delete newTable.orders;
+      newTable.id = oldTable.id;
 
       return await this.tableRepository.save(newTable);
     }
@@ -146,13 +147,11 @@ export class TableController {
    */
   @Delete('/:tableId')
   @Authorized()
-  async delete(@Param('tableId') id: string) {
+  async delete(@Param('tableId') id: number) {
     /**
      * Check if the table exists before deleting it
      */
-    const tableToBeDeleted: QueryResponse<Table> = await this.tableRepository.findOne({
-      where: { id }
-    });
+    const tableToBeDeleted: QueryResponse<Table> = await this.tableRepository.findOne(id);
 
     if (tableToBeDeleted) {
       await this.tableRepository.delete(id);

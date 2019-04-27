@@ -1557,7 +1557,7 @@ describe('Table controller', () => {
   describe('POST /tables', () => {
     it('creates a valid table to the database', async () => {
       const table: Partial<Table> = {
-        id: 'A1',
+        name: 'A1',
         isTaken: false,
         orders: []
       };
@@ -1568,19 +1568,20 @@ describe('Table controller', () => {
         .send(table)
         .expect(200);
 
+      table.id = body.id;
       const { orders, ...tableWithoutOrders } = table;
 
       expect(body).toEqual(tableWithoutOrders);
 
-      const tableQuery = await tableRepository.findOne({ where: { id: body.id } });
+      const tableQuery = await tableRepository.findOne(body.id);
 
       expect(tableQuery).toEqual(tableWithoutOrders);
     });
 
-    it('throws an errors when creating a table with an invalid id', async () => {
+    it('throws an errors when creating a table with an invalid name', async () => {
       const table: Partial<Table> = {
         // @ts-ignore
-        id: 123123123,
+        name: 123123123,
         isTaken: false,
         orders: []
       };
@@ -1592,19 +1593,19 @@ describe('Table controller', () => {
         .expect(400);
 
       expect(body).toEqual({
-        errors: ['id must be a string'],
+        errors: ['name must be a string'],
         name: 'NotValidError',
         message: 'Table not valid!'
       });
 
-      const tableQuery = await tableRepository.findOne({ where: { id: body.id } });
+      const tableQuery = await tableRepository.findOne(body.id);
 
       expect(tableQuery).not.toEqual(table);
     });
 
     it('throws an errors when creating a table with an invalid isTaken', async () => {
       const table: Partial<Table> = {
-        id: 'A2',
+        name: 'A2',
         // @ts-ignore
         isTaken: 'not-valid',
         orders: []
@@ -1622,7 +1623,7 @@ describe('Table controller', () => {
         message: 'Table not valid!'
       });
 
-      const tableQuery = await tableRepository.findOne({ where: { id: body.id } });
+      const tableQuery = await tableRepository.findOne(body.id);
 
       expect(tableQuery).not.toEqual(table);
     });
@@ -1630,7 +1631,7 @@ describe('Table controller', () => {
     it('throws an errors when creating a table with all fields invalid ', async () => {
       const table: Partial<Table> = {
         // @ts-ignore
-        id: 234,
+        name: 234,
         // @ts-ignore
         isTaken: 'not-valid',
         orders: []
@@ -1643,12 +1644,12 @@ describe('Table controller', () => {
         .expect(400);
 
       expect(body).toEqual({
-        errors: ['id must be a string', 'isTaken must be a boolean value'],
+        errors: ['name must be a string', 'isTaken must be a boolean value'],
         name: 'NotValidError',
         message: 'Table not valid!'
       });
 
-      const tableQuery = await tableRepository.findOne({ where: { id: body.id } });
+      const tableQuery = await tableRepository.findOne(body.id);
 
       expect(tableQuery).not.toEqual(table);
     });
@@ -1709,19 +1710,23 @@ describe('Table controller', () => {
   describe('GET /tables/:id', () => {
     it('gets a specific table', async () => {
       const table: Partial<Table> = {
-        id: 'to-be-requested',
+        name: 'to-be-requested',
         isTaken: false
       };
 
-      await request(server)
+      const {
+        body: { id }
+      } = await request(server)
         .post('/tables')
         .send(table)
         .set('Cookie', cookie)
         .expect(200);
 
       const { body } = await request(server)
-        .get(`/tables/${table.id}`)
+        .get(`/tables/${id}`)
         .expect(200);
+
+      table.id = body.id;
 
       expect(body).toEqual(table);
     });
@@ -1742,11 +1747,13 @@ describe('Table controller', () => {
   describe('PUT /tables/:id', () => {
     it('edits a valid table from the database', async () => {
       const oldTable: Partial<Table> = {
-        id: 'test-ahaha',
+        name: 'test-ahaha',
         isTaken: false
       };
 
-      await request(server)
+      const {
+        body: { id }
+      } = await request(server)
         .post('/tables')
         .set('Cookie', cookie)
         .send(oldTable)
@@ -1754,30 +1761,37 @@ describe('Table controller', () => {
 
       const editedTable: Partial<Table> = {
         ...oldTable,
-        id: 'ahahhahaha',
+        name: 'ahahhahaha',
         isTaken: true
       };
 
       const { body } = await request(server)
-        .put(`/tables/${oldTable.id}`)
+        .put(`/tables/${id}`)
         .set('Cookie', cookie)
         .send(editedTable)
         .expect(200);
 
+      console.log(body);
+
+      editedTable.id = id;
+      console.log(editedTable);
+
       expect(body).toEqual(editedTable);
 
-      const oldTableQuery = await tableRepository.findOne({ where: { id: editedTable.id } });
+      const oldTableQuery = await tableRepository.findOne(id);
 
       expect(oldTableQuery).toEqual(editedTable);
     });
 
-    it('throws an error when editing a table with an invalid id', async () => {
+    it('throws an error when editing a table with an invalid name', async () => {
       const oldTable: Partial<Table> = {
-        id: 'valid-name',
+        name: 'valid-name',
         isTaken: false
       };
 
-      await request(server)
+      const {
+        body: { id }
+      } = await request(server)
         .post('/tables')
         .set('Cookie', cookie)
         .send(oldTable)
@@ -1786,34 +1800,38 @@ describe('Table controller', () => {
       const editedTable: Partial<Table> = {
         ...oldTable,
         // @ts-ignore
-        id: 343,
+        name: 343,
         isTaken: false
       };
 
       const { body } = await request(server)
-        .put(`/tables/${oldTable.id}`)
+        .put(`/tables/${id}`)
         .set('Cookie', cookie)
         .send(editedTable)
         .expect(400);
 
+      editedTable.id = id;
+
       expect(body).toEqual({
-        errors: ['id must be a string'],
+        errors: ['name must be a string'],
         message: 'Table not valid!',
         name: 'NotValidError'
       });
 
-      const oldTableQuery = await categoryRepository.findOne({ where: { id: oldTable.id } });
+      const oldTableQuery = await categoryRepository.findOne(id);
 
       expect(oldTableQuery).not.toEqual(editedTable);
     });
 
     it('throws an error when editing a category with an invalid isTaken', async () => {
       const oldTable: Partial<Table> = {
-        id: 'valid-id-ok',
+        name: 'valid-id-ok',
         isTaken: false
       };
 
-      await request(server)
+      const {
+        body: { id }
+      } = await request(server)
         .post('/tables')
         .set('Cookie', cookie)
         .send(oldTable)
@@ -1826,7 +1844,7 @@ describe('Table controller', () => {
       };
 
       const { body } = await request(server)
-        .put(`/tables/${oldTable.id}`)
+        .put(`/tables/${id}`)
         .set('Cookie', cookie)
         .send(editedTable)
         .expect(400);
@@ -1837,18 +1855,20 @@ describe('Table controller', () => {
         name: 'NotValidError'
       });
 
-      const oldTableQuery = await tableRepository.findOne({ where: { id: oldTable.id } });
+      const oldTableQuery = await tableRepository.findOne(id);
 
       expect(oldTableQuery).not.toEqual(editedTable);
     });
 
     it('throws an error when editing a category with a all fields invalid', async () => {
       const oldTable: Partial<Table> = {
-        id: 'valid-id-ok-again',
+        name: 'valid-id-ok-again',
         isTaken: false
       };
 
-      await request(server)
+      const {
+        body: { id }
+      } = await request(server)
         .post('/tables')
         .set('Cookie', cookie)
         .send(oldTable)
@@ -1857,23 +1877,23 @@ describe('Table controller', () => {
       const editedTable: Partial<Table> = {
         ...oldTable,
         // @ts-ignore
-        id: 23432,
+        name: 23432,
         // @ts-ignore
         isTaken: 'asdf'
       };
 
       const { body } = await request(server)
-        .put(`/tables/${oldTable.id}`)
+        .put(`/tables/${id}`)
         .set('Cookie', cookie)
         .send(editedTable)
         .expect(400);
 
       expect(body).toEqual({
-        errors: ['id must be a string', 'isTaken must be a boolean value'],
+        errors: ['name must be a string', 'isTaken must be a boolean value'],
         name: 'NotValidError',
         message: 'Table not valid!'
       });
-      const oldTableQuery = await tableRepository.findOne({ where: { id: oldTable.id } });
+      const oldTableQuery = await tableRepository.findOne(id);
 
       expect(oldTableQuery).not.toEqual(editedTable);
     });
