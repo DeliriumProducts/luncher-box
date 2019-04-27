@@ -3,7 +3,7 @@ import { Order } from '.';
 import { Product } from './Product';
 
 @Entity()
-export class OrderProducts {
+export class OrderProduct {
   @PrimaryColumn()
   orderId: number;
 
@@ -17,5 +17,5 @@ export class OrderProducts {
   product: Product;
 
   @Column('integer')
-  productAmount: number;
+  quantity: number;
 }
