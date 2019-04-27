@@ -1572,7 +1572,7 @@ describe('Table controller', () => {
 
       expect(body).toEqual(tableWithoutOrders);
 
-      const tableQuery = await tableRepository.findOne(body.id);
+      const tableQuery = await tableRepository.findOne({ where: { id: body.id } });
 
       expect(tableQuery).toEqual(tableWithoutOrders);
     });
@@ -1597,7 +1597,7 @@ describe('Table controller', () => {
         message: 'Table not valid!'
       });
 
-      const tableQuery = await tableRepository.findOne(body.id);
+      const tableQuery = await tableRepository.findOne({ where: { id: body.id } });
 
       expect(tableQuery).not.toEqual(table);
     });
@@ -1622,7 +1622,7 @@ describe('Table controller', () => {
         message: 'Table not valid!'
       });
 
-      const tableQuery = await tableRepository.findOne(body.id);
+      const tableQuery = await tableRepository.findOne({ where: { id: body.id } });
 
       expect(tableQuery).not.toEqual(table);
     });
@@ -1648,7 +1648,7 @@ describe('Table controller', () => {
         message: 'Table not valid!'
       });
 
-      const tableQuery = await tableRepository.findOne(body.id);
+      const tableQuery = await tableRepository.findOne({ where: { id: body.id } });
 
       expect(tableQuery).not.toEqual(table);
     });
@@ -1703,6 +1703,39 @@ describe('Table controller', () => {
       });
 
       expect(tableQuery).toEqual(expect.arrayContaining(body));
+    });
+  });
+
+  describe('GET /tables/:id', () => {
+    it('gets a specific table', async () => {
+      const table: Partial<Table> = {
+        id: 'to-be-requested',
+        isTaken: false
+      };
+
+      await request(server)
+        .post('/tables')
+        .send(table)
+        .set('Cookie', cookie)
+        .expect(200);
+
+      const { body } = await request(server)
+        .get(`/tables/${table.id}`)
+        .expect(200);
+
+      expect(body).toEqual(table);
+    });
+
+    it('throws an error when getting a non-existing table', async () => {
+      const { body } = await request(server)
+        .get(`/tables/${-420}`)
+        .set('Cookie', cookie)
+        .expect(404);
+
+      expect(body).toEqual({
+        name: 'NotFoundError',
+        message: 'Table not found!'
+      });
     });
   });
 });
