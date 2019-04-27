@@ -1910,6 +1910,46 @@ describe('Table controller', () => {
       });
     });
   });
+
+  describe('DELETE /tables/:id', () => {
+    it('deletes an existing table', async () => {
+      const table: Partial<Table> = {
+        name: 'to-be-deleted',
+        isTaken: false
+      };
+
+      const {
+        body: { id }
+      } = await request(server)
+        .post('/tables')
+        .set('Cookie', cookie)
+        .send(table)
+        .expect(200);
+
+      const { body } = await request(server)
+        .delete(`/tables/${id}`)
+        .set('Cookie', cookie)
+        .expect(200);
+
+      expect(body).toEqual('Table deleted!');
+
+      const tableQuery = await tableRepository.findOne(id);
+
+      expect(tableQuery).not.toBeDefined();
+    });
+
+    it('throws an error when trying to delete a non-existing table', async () => {
+      const { body } = await request(server)
+        .delete(`/tables/${-420}`)
+        .set('Cookie', cookie)
+        .expect(404);
+
+      expect(body).toEqual({
+        name: 'NotFoundError',
+        message: 'Table not found!'
+      });
+    });
+  });
 });
 
 describe('Authorization', () => {
