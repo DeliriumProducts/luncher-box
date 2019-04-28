@@ -50,7 +50,10 @@ export class OrderController {
   @Authorized()
   async getAll() {
     return await this.orderRepository.find({
-      relations: ['products', 'products.product', 'table']
+      relations: ['products', 'products.product', 'table'],
+      order: {
+        placed: 'DESC'
+      }
     });
   }
 
@@ -63,12 +66,17 @@ export class OrderController {
   @Put('/accept/:orderId')
   @Authorized('Waiter')
   async accept(@Param('orderId') orderId: string) {
-    const order = await this.orderRepository.findOne(orderId);
+    const order = await this.orderRepository.findOne(orderId, {
+      relations: ['products', 'products.product', 'table']
+    });
+
     if (order) {
       order.state = 1;
       order.accepted = new Date();
 
-      await this.orderRepository.save(order);
+      const { products, table, ...orderWithoutRelations } = order;
+
+      await this.orderRepository.save(orderWithoutRelations);
     } else {
       throw new OrderNotFoundError();
     }
@@ -88,12 +96,17 @@ export class OrderController {
   @Put('/decline/:orderId')
   @Authorized('Waiter')
   async decline(@Param('orderId') orderId: string) {
-    const order = await this.orderRepository.findOne(orderId);
+    const order = await this.orderRepository.findOne(orderId, {
+      relations: ['products', 'products.product', 'table']
+    });
+
     if (order) {
       order.state = 3;
       order.declined = new Date();
 
-      await this.orderRepository.save(order);
+      const { products, table, ...orderWithoutRelations } = order;
+
+      await this.orderRepository.save(orderWithoutRelations);
     } else {
       throw new OrderNotFoundError();
     }
@@ -117,14 +130,16 @@ export class OrderController {
   @Authorized('Cook')
   async finish(@Param('orderId') orderId: string) {
     const order = await this.orderRepository.findOne(orderId, {
-      relations: ['product']
+      relations: ['products', 'products.product', 'table']
     });
 
     if (order) {
       order.state = 2;
       order.finished = new Date();
 
-      await this.orderRepository.save(order);
+      const { products, table, ...orderWithoutRelations } = order;
+
+      await this.orderRepository.save(orderWithoutRelations);
     } else {
       throw new OrderNotFoundError();
     }
@@ -226,7 +241,10 @@ export class OrderController {
     });
 
     const orders = await this.orderRepository.find({
-      relations: ['products', 'products.product', 'table']
+      relations: ['products', 'products.product', 'table'],
+      order: {
+        placed: 'DESC'
+      }
     });
 
     io.emit('placed-order-admin', orders);
@@ -245,15 +263,25 @@ export class OrderController {
       where: {
         id: In(orderIds)
       },
-      relations: ['products', 'table']
+      relations: ['products', 'products.product', 'table'],
+      order: {
+        placed: 'DESC'
+      }
     });
 
-    orders = orders.map(o => {
-      o.customerId = customerId;
-      return o;
-    });
+    orders = orders.map(o => ({
+      ...o,
+      customerId
+    }));
 
-    await this.orderRepository.save(orders);
+    console.log(customerId);
+    console.log(orders);
+
+    try {
+      await this.orderRepository.save(orders);
+    } catch (error) {
+      console.log(error);
+    }
 
     io.to(customerId).emit('updated-customerId', orders);
   }

@@ -2,7 +2,7 @@ import { Affix, Layout as AntDesignLayout, message, notification } from 'antd';
 import React, { ReactNode } from 'react';
 import styled from 'styled-components';
 import { CustomerContext, SocketContext } from '../context';
-import { Order, Product } from '../interfaces';
+import { Order } from '../interfaces';
 import MenuBar from './MenuBar';
 
 const { Content } = AntDesignLayout;
@@ -45,14 +45,14 @@ const Layout: React.FunctionComponent<Props> = props => {
 
     const ProductList = (
       <div>
-        {order.products.map((product: Product) => {
+        {order.products.map(({ product, quantity }) => {
           return (
             <div
               key={product.id}
               style={{ display: 'flex', justifyContent: 'space-between' }}
             >
               <p>
-                {product.quantity} x {product.name}
+                {quantity} x {product.name}
               </p>
             </div>
           );

@@ -9,6 +9,7 @@ import { IS_DEV } from '../config';
 export class ErrorHandler implements ExpressErrorMiddlewareInterface {
   error(error: any, req: Request, res: Response, next: (err?: any) => any) {
     const httpCode = error.httpCode || error.status || error.statusCode || 500;
+    console.log(error);
 
     /**
      * Delete status codes from the body, as they can be accessed from the headers
