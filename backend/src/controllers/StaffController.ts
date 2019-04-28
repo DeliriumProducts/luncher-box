@@ -11,14 +11,16 @@ import {
   Req,
   UseBefore,
   QueryParam,
-  Authorized
+  Authorized,
+  Param,
+  Put
 } from 'routing-controllers';
 import { getRepository, Repository, MoreThan, EntityRepository } from 'typeorm';
 import { v4 } from 'uuid';
 import { ENV, OWNER_EMAIL, VERIFIER_EMAIL } from '../config';
 import { redisConnection } from '../connections';
 import { DuplicateUserError, User, UserNotFoundError, UserNotValidError } from '../entities';
-import { TransformAndValidateTuple } from '../types';
+import { TransformAndValidateTuple, Role, QueryResponse } from '../types';
 import { sendEmail, transformAndValidate } from '../utils';
 import { BACKEND_URL } from '../config/env';
 
@@ -77,6 +79,33 @@ export class StaffController {
   }
 
   /**
+   * PUT /staff/:staffId
+   *
+   * Update staff role
+   */
+  @Put('/:staffId')
+  @Authorized('Admin')
+  async updateRole(@Param('staffId') staffId: string, @Body() { role }: { role: Role }) {
+    const oldStaff: QueryResponse<User> = await this.userRepository.findOne(staffId);
+    console.log(oldStaff);
+
+    if (oldStaff) {
+      const [newStaff, err] = await this.transformAndValidateUser({ ...oldStaff, role });
+
+      if (err.length) {
+        throw new UserNotValidError(err);
+      }
+
+      newStaff.id = oldStaff.id;
+
+      const { password, ...staffWithoutPassword } = await this.userRepository.save(newStaff);
+      return staffWithoutPassword;
+    }
+
+    throw new UserNotFoundError();
+  }
+
+  /**
    * GET /staff/auth
    *
    * Check if the user has been authenticated
@@ -88,10 +117,10 @@ export class StaffController {
         isAuthenticated: req.isAuthenticated()
       };
     } else {
-      const { password, ...userWithoutPassword } = req.user;
+      const { password, ...staffWithoutPassword } = req.user;
 
       return {
-        user: userWithoutPassword,
+        user: staffWithoutPassword,
         isAuthenticated: req.isAuthenticated()
       };
     }
