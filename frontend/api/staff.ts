@@ -76,14 +76,14 @@ export class StaffAPI {
       opts = { headers: { cookie } };
     }
 
-    const isAuthenticated: boolean = (await axios.get(
-      `${BACKEND_URL}/staff/auth`,
-      {
-        withCredentials: true,
-        ...opts
-      }
-    )).data;
+    const auth: {
+      user: User | null;
+      isAuthenticated: boolean;
+    } = (await axios.get(`${BACKEND_URL}/staff/auth`, {
+      withCredentials: true,
+      ...opts
+    })).data;
 
-    return isAuthenticated;
+    return auth;
   }
 }

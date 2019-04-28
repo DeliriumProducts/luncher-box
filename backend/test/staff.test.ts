@@ -354,7 +354,7 @@ describe('POST /staff/auth/login', () => {
       .set('Cookie', cookie)
       .expect(200);
 
-    expect(isLoggedIn).toEqual(true);
+    expect(isLoggedIn.isAuthenticated).toEqual(true);
   });
 
   it('throws an error when logging in with an unconfirmed user', async () => {

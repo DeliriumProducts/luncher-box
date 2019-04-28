@@ -8,32 +8,24 @@ import { User } from '../../interfaces';
 import { StaffAPI } from '../../api';
 import { Role } from '../../types';
 import { THEME_VARIABLES } from '../../config';
-import Highlighter from 'react-highlight-words';
 
 interface Props {
   staff: User[] | [];
   err: string | null;
 }
 
-const FlexContainer = styled.div`
+const FlexContainer = styled.span`
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  background-color: #fafafa;
-  width: 70%;
+  background-color: #ffffff00;
   margin: auto;
-  padding: 2rem;
   border-radius: 7px;
-
-  @media (max-width: 768px) {
-    padding: 0;
-    width: 100%;
-  }
-
-  box-shadow: 0 20px 24px -18px rgba(0, 0, 0, 0.31);
 
   .ant-table-wrapper {
     overflow-x: auto;
+    border-radius: 7px;
+    box-shadow: 0 20px 24px -18px rgba(0, 0, 0, 0.31);
   }
 
   thead > tr > th {
