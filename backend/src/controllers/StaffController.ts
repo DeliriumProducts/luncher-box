@@ -13,7 +13,8 @@ import {
   QueryParam,
   Authorized,
   Param,
-  Put
+  Put,
+  Delete
 } from 'routing-controllers';
 import { getRepository, Repository, MoreThan, EntityRepository } from 'typeorm';
 import { v4 } from 'uuid';
@@ -87,7 +88,6 @@ export class StaffController {
   @Authorized('Admin')
   async updateRole(@Param('staffId') staffId: string, @Body() { role }: { role: Role }) {
     const oldStaff: QueryResponse<User> = await this.userRepository.findOne(staffId);
-    console.log(oldStaff);
 
     if (oldStaff) {
       const [newStaff, err] = await this.transformAndValidateUser({ ...oldStaff, role });
@@ -100,6 +100,27 @@ export class StaffController {
 
       const { password, ...staffWithoutPassword } = await this.userRepository.save(newStaff);
       return staffWithoutPassword;
+    }
+
+    throw new UserNotFoundError();
+  }
+
+  /**
+   * DELETE /staff/:staffId
+   *
+   * Delete a staff member
+   */
+  @Delete('/:staffId')
+  @Authorized('Admin')
+  async deleteStaff(@Param('staffId') staffId: string) {
+    /**
+     * Check if the staff member exists before deleting it
+     */
+    const staffToBeDeleted: QueryResponse<User> = await this.userRepository.findOne(staffId);
+
+    if (staffToBeDeleted) {
+      await this.userRepository.delete(staffId);
+      return 'Staff member deleted!';
     }
 
     throw new UserNotFoundError();
