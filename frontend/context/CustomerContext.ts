@@ -22,9 +22,23 @@ interface Values {
 
 export const CustomerContext = React.createContext<Values>({
   order: {
-    products: [],
+    products: [
+      {
+        product: {
+          name: '',
+          description: '',
+          image: '',
+          price: 1,
+          id: 1
+        },
+        quantity: 0
+      }
+    ],
     comment: '',
-    table: '1'
+    table: {
+      name: 'A1',
+      id: '1'
+    }
   },
   orderHistory: [],
   table: '',

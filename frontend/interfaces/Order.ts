@@ -4,8 +4,16 @@ import { OrderState } from '../types';
 export interface Order {
   id?: string;
   customerId?: string;
-  table: string;
-  products: Product[];
+  table: {
+    id: string;
+    name: string;
+  };
+  products: [
+    {
+      product: Product;
+      quantity: number;
+    }
+  ];
   comment: string;
   state?: OrderState;
   placed?: Date;
