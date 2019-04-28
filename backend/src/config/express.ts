@@ -37,9 +37,6 @@ if (ENV !== 'test') {
 const app: Application = express();
 
 if (ENV !== 'test') {
-  /**
-   * Configure express app
-   */
   app.use(
     new rateLimit({
       store: rateLimitStore,
@@ -49,6 +46,9 @@ if (ENV !== 'test') {
   );
 }
 
+/**
+ * Configure express app
+ */
 app.use(
   cors({
     /**
