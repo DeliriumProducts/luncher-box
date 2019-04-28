@@ -259,7 +259,7 @@ export class OrderController {
    */
   @OnMessage('update-customerId')
   async updateCustomerId(@SocketId() customerId: string, @MessageBody() orderIds: string[]) {
-    let orders = await this.orderRepository.find({
+    const orders = await this.orderRepository.find({
       where: {
         id: In(orderIds)
       },
@@ -269,19 +269,15 @@ export class OrderController {
       }
     });
 
-    orders = orders.map(o => ({
-      ...o,
-      customerId
-    }));
-
-    console.log(customerId);
-    console.log(orders);
-
-    try {
-      await this.orderRepository.save(orders);
-    } catch (error) {
-      console.log(error);
-    }
+    await this.orderRepository.save(
+      orders.map(o => {
+        const { products, table, ...orderWithoutRelations } = o;
+        return {
+          ...orderWithoutRelations,
+          customerId
+        };
+      })
+    );
 
     io.to(customerId).emit('updated-customerId', orders);
   }

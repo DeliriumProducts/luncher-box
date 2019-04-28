@@ -32,20 +32,20 @@ export class Order {
   @Column('integer')
   state: OrderState;
 
-  @Column('date')
+  @Column()
   placed: Date;
 
-  @Column('date', {
+  @Column({
     nullable: true
   })
   accepted: Date;
 
-  @Column('date', {
+  @Column({
     nullable: true
   })
   declined: Date;
 
-  @Column('date', {
+  @Column({
     nullable: true
   })
   finished: Date;
