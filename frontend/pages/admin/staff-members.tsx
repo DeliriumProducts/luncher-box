@@ -211,4 +211,4 @@ StaffMembers.getInitialProps = async ({ req, res }: NextContext) => {
   };
 };
 
-export default withAuth(StaffMembers);
+export default withAuth(StaffMembers, ['Admin']);

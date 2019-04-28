@@ -21,6 +21,8 @@ export class ErrorHandler implements ExpressErrorMiddlewareInterface {
       delete error.stack;
     }
 
+    console.log(error);
+
     res.status(httpCode).send(error);
     next();
   }

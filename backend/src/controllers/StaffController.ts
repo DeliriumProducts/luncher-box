@@ -83,10 +83,18 @@ export class StaffController {
    */
   @Get('/auth')
   isAuthenticated(@Req() req: Request) {
-    return {
-      user: req.user,
-      isAuthenticated: req.isAuthenticated()
-    };
+    if (!req.user) {
+      return {
+        isAuthenticated: req.isAuthenticated()
+      };
+    } else {
+      const { password, ...userWithoutPassword } = req.user;
+
+      return {
+        user: userWithoutPassword,
+        isAuthenticated: req.isAuthenticated()
+      };
+    }
   }
 
   /**

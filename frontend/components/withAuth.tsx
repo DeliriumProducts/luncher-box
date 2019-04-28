@@ -3,9 +3,11 @@ import Router, { SingletonRouter } from 'next/router';
 import React, { Component, ComponentType } from 'react';
 import { StaffAPI } from '../api';
 import { User } from '../interfaces';
+import { Role } from '../types';
 
 const withAuth = <T extends object>(
-  C: NextFunctionComponent<T> | NextComponentClass<T>
+  C: NextFunctionComponent<T> | NextComponentClass<T>,
+  roles: Role[] = []
 ): ComponentType<T & { router: SingletonRouter }> =>
   class extends Component<T & { router: SingletonRouter }> {
     static async getInitialProps(ctx: NextContext) {
@@ -28,6 +30,18 @@ const withAuth = <T extends object>(
           res.writeHead(302, {
             Location: '/login'
           });
+
+          res.end();
+        } else if (
+          roles.length &&
+          auth.user &&
+          auth.user.role !== 'Admin' &&
+          !roles.includes(auth.user.role)
+        ) {
+          res.writeHead(302, {
+            Location: '/admin'
+          });
+
           res.end();
         }
       } else {
@@ -35,6 +49,13 @@ const withAuth = <T extends object>(
 
         if (!auth.isAuthenticated) {
           Router.replace('/login');
+        } else if (
+          roles.length &&
+          auth.user &&
+          auth.user.role !== 'Admin' &&
+          !roles.includes(auth.user.role)
+        ) {
+          Router.replace('/admin');
         }
       }
 
