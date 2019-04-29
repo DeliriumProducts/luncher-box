@@ -161,6 +161,7 @@ export class OrderController {
   async place(@SocketId() socketId: string, @MessageBody() orderJSON: Order) {
     let [order, orderErr] = await this.transformAndValidateOrder(orderJSON);
     let syncedProducts: QueryResponse<Product[]> = [];
+    let table: QueryResponse<Table>;
 
     if (!order.products) {
       orderErr.push('products not found');
@@ -186,7 +187,7 @@ export class OrderController {
       /**
        * Make sure the table exists
        */
-      const table = await this.tableRepository.findOne({
+      table = await this.tableRepository.findOne({
         where: {
           name: order.table
         }
@@ -195,6 +196,7 @@ export class OrderController {
       if (!table) {
         orderErr.push('table not found');
       } else {
+        table.isTaken = true;
         order.table = table;
       }
     }
@@ -230,6 +232,11 @@ export class OrderController {
     order.products = orderProducts;
 
     order = await this.orderRepository.save(order);
+
+    /**
+     * Update the status of the table (isTaken was set to true a few lines above)
+     */
+    await this.tableRepository.save(table!);
 
     /**
      * Remove circular references
