@@ -70,15 +70,19 @@ export class StaffAPI {
     }
   }
 
-  static async updateRole(staffId: Partial<User>, role: Role) {
-    const response = (await axios.put(`${BACKEND_URL}/staff/${staffId}`, {
-      withCredentials: true
-    })).data;
+  static async updateRole(staffId: string, role: Role) {
+    const response = (await axios.put(
+      `${BACKEND_URL}/staff/${staffId}`,
+      { role },
+      {
+        withCredentials: true
+      }
+    )).data;
 
     return response;
   }
 
-  static async delete(staffId: Partial<User>) {
+  static async delete(staffId: string) {
     const response = (await axios.delete(`${BACKEND_URL}/staff/${staffId}`, {
       withCredentials: true
     })).data;

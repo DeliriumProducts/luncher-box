@@ -61,18 +61,14 @@ const FlexContainer = styled.span`
     & > * {
       margin: 5px;
     }
-
-    .maikamu {
-      background: green;
-      font-size: 24px;
-      color: #52c41a;
-    }
   }
 `;
 
 const StaffMembers: NextFunctionComponent<Props> = ({ err, staff, user }) => {
   const [staffList, setStaffList] = React.useState(staff);
-  const [selectedStaffRole, setSelectedStaffRole] = React.useState('Waiter');
+  const [selectedStaffRole, setSelectedStaffRole] = React.useState<Role>(
+    'Waiter'
+  );
   const searchInput = React.useRef<Input | null>();
 
   const getColumnSearchProps = dataIndex => ({
@@ -96,20 +92,19 @@ const StaffMembers: NextFunctionComponent<Props> = ({ err, staff, user }) => {
           style={{ width: 188, marginBottom: 8, display: 'block' }}
         />
         <Button
-          type="primary"
-          onClick={() => handleSearch(confirm)}
-          icon="search"
-          size="small"
-          style={{ width: 90, marginRight: 8 }}
-        >
-          Search
-        </Button>
-        <Button
           onClick={() => handleReset(clearFilters)}
           size="small"
           style={{ width: 90 }}
         >
           Reset
+        </Button>{' '}
+        <Button
+          type="primary"
+          size="small"
+          onClick={() => handleSearch(confirm)}
+          style={{ width: 90, marginLeft: 8 }}
+        >
+          Search
         </Button>
       </div>
     ),
@@ -198,35 +193,41 @@ const StaffMembers: NextFunctionComponent<Props> = ({ err, staff, user }) => {
       title: 'Actions',
       key: 'actions',
       dataIndex: 'id',
-      render: (staffId: Partial<User>) => (
+      render: (staffId: string, staffRecord: User, index: number) => (
         <span className="row-actions">
-          <Popover
-            title="Available roles"
-            trigger="click"
-            content={
-              <RadioGroup
-                style={{ display: 'flex', flexDirection: 'column' }}
-                onChange={handleRoleChange}
-                value={selectedStaffRole}
-              >
-                <Radio value={'Waiter'}>Waiter</Radio>
-                <Radio value={'Cook'}>Cook</Radio>
-                <Radio value={'Admin'}>Admin</Radio>
-              </RadioGroup>
+          <Popconfirm
+            icon={<Icon type="team" style={{ color: 'unset' }} />}
+            placement="bottom"
+            onConfirm={() => handleRoleConfirm(staffId, index)}
+            title={
+              <>
+                <RadioGroup
+                  style={{ display: 'flex', flexDirection: 'column' }}
+                  onChange={handleRoleChange}
+                  value={selectedStaffRole}
+                >
+                  <span style={{ fontWeight: 500, marginBottom: 5 }}>
+                    Available Roles
+                  </span>
+                  <Radio value={'Waiter'}>Waiter</Radio>
+                  <Radio value={'Cook'}>Cook</Radio>
+                  <Radio value={'Admin'}>Admin</Radio>
+                </RadioGroup>
+              </>
             }
           >
             <ActionButton
               icon="edit"
-              onClick={() => handleRoleChangeClick(staffId)}
+              onClick={() => handleRolePopconfirmClick(staffRecord.role)}
               disabled={staffId === user!.id}
             >
               Change role
             </ActionButton>
-          </Popover>
+          </Popconfirm>
           <Popconfirm
             title={`Are you sure?`}
             okText="Yes"
-            onConfirm={() => handleFireClick(staffId)}
+            onConfirm={() => handleFireClick(staffRecord)}
           >
             <ActionButton disabled={staffId === user!.id} icon="fire">
               Fire
@@ -237,19 +238,34 @@ const StaffMembers: NextFunctionComponent<Props> = ({ err, staff, user }) => {
     }
   ];
 
+  const handleRoleConfirm = async (staffId: string, index: number) => {
+    try {
+      const response = await StaffAPI.updateRole(staffId, selectedStaffRole);
+      response.key = response.id;
+
+      setStaffList(prevStaffList => {
+        const stf = [...prevStaffList];
+        stf[index] = response;
+
+        return stf;
+      });
+
+      message.success(`Successfully updated role 🎉`);
+    } catch (error) {
+      message.error(`${error}`, 3);
+    }
+  };
+
   const handleRoleChange = async (e: RadioChangeEvent) => {
     const role = e.target.value;
     setSelectedStaffRole(role);
   };
 
-  const handleRoleChangeClick = async (staffId: Partial<User>) => {
-    const selectedStaffIndex = staffList.findIndex(s => s.id === staffId);
-    const { role } = staffList[selectedStaffIndex];
-
+  const handleRolePopconfirmClick = async (role: Role) => {
     setSelectedStaffRole(role);
   };
 
-  const handleFireClick = async (staffId: Partial<User>) => {
+  const handleFireClick = async ({ id: staffId, name }: User) => {
     try {
       await StaffAPI.delete(staffId);
 
@@ -257,7 +273,7 @@ const StaffMembers: NextFunctionComponent<Props> = ({ err, staff, user }) => {
         prevStaffList.filter(s => s.id !== staffId)
       );
 
-      message.success(`Successfully fired a staff member 🎉`);
+      message.success(`Successfully fired ${name} 🎉`);
     } catch (error) {
       message.error(`${err}`, 3);
     }
