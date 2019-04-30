@@ -67,7 +67,8 @@ const withAuth = <T extends object>(
         : {};
 
       return {
-        ...composedInitialProps
+        ...composedInitialProps,
+        user: auth.user
       };
     }
     render() {

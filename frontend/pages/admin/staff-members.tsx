@@ -9,7 +9,6 @@ import {
   Input,
   Button,
   Icon,
-  Divider,
   Popconfirm,
   Popover,
   Radio
@@ -21,10 +20,12 @@ import { Role } from '../../types';
 import { THEME_VARIABLES } from '../../config';
 import ActionButton from '../../components/ActionButton';
 import RadioGroup from 'antd/lib/radio/group';
+import { RadioChangeEvent } from 'antd/lib/radio';
 
 interface Props {
   staff: User[] | [];
   err: string | null;
+  user?: User | null;
 }
 
 const FlexContainer = styled.span`
@@ -69,9 +70,7 @@ const FlexContainer = styled.span`
   }
 `;
 
-const AvailableRolesList = <></>;
-
-const StaffMembers: NextFunctionComponent<Props> = ({ err, staff }) => {
+const StaffMembers: NextFunctionComponent<Props> = ({ err, staff, user }) => {
   const [staffList, setStaffList] = React.useState(staff);
   const [selectedStaffRole, setSelectedStaffRole] = React.useState('Waiter');
   const searchInput = React.useRef<Input | null>();
@@ -219,6 +218,7 @@ const StaffMembers: NextFunctionComponent<Props> = ({ err, staff }) => {
             <ActionButton
               icon="edit"
               onClick={() => handleRoleChangeClick(staffId)}
+              disabled={staffId === user!.id}
             >
               Change role
             </ActionButton>
@@ -228,14 +228,19 @@ const StaffMembers: NextFunctionComponent<Props> = ({ err, staff }) => {
             okText="Yes"
             onConfirm={() => handleFireClick(staffId)}
           >
-            <ActionButton icon="fire">Fire</ActionButton>
+            <ActionButton disabled={staffId === user!.id} icon="fire">
+              Fire
+            </ActionButton>
           </Popconfirm>
         </span>
       )
     }
   ];
 
-  const handleRoleChange = async () => {};
+  const handleRoleChange = async (e: RadioChangeEvent) => {
+    const role = e.target.value;
+    setSelectedStaffRole(role);
+  };
 
   const handleRoleChangeClick = async (staffId: Partial<User>) => {
     const selectedStaffIndex = staffList.findIndex(s => s.id === staffId);
@@ -252,7 +257,7 @@ const StaffMembers: NextFunctionComponent<Props> = ({ err, staff }) => {
         prevStaffList.filter(s => s.id !== staffId)
       );
 
-      message.success(`Successfully fired a staff 🎉`);
+      message.success(`Successfully fired a staff member 🎉`);
     } catch (error) {
       message.error(`${err}`, 3);
     }
