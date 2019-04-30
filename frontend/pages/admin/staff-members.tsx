@@ -226,6 +226,7 @@ const StaffMembers: NextFunctionComponent<Props> = ({ err, staff, user }) => {
           </Popconfirm>
           <Popconfirm
             title={`Are you sure?`}
+            placement="bottom"
             okText="Yes"
             onConfirm={() => handleFireClick(staffRecord)}
           >
