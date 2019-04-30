@@ -142,7 +142,7 @@ const EntityCard: React.FunctionComponent<Props> = props => {
           Edit
         </ActionButton>,
         <Popconfirm
-          title={`Are you sure you want to delete this ${entityType}?`}
+          title={`Are you sure?`}
           onConfirm={(e: any) => handleDeleteClick(e, entity)}
           onCancel={(e: any) => e.stopPropagation()}
           icon={
