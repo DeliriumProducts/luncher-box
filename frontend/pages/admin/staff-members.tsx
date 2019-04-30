@@ -119,16 +119,16 @@ const StaffMembers: NextFunctionComponent<Props> = ({ err, staff }) => {
       render: (role: Role) => {
         const colors = {
           Waiter: 'green',
-          Cook: THEME_VARIABLES['@primary-color'],
-          Admin: 'volcano'
+          Cook: 'purple',
+          Admin: 'magenta'
         };
 
         return (
-          <span>
+          <>
             <Tag color={colors[role]} key={role}>
               {role.toUpperCase()}
             </Tag>
-          </span>
+          </>
         );
       }
     },
@@ -137,6 +137,11 @@ const StaffMembers: NextFunctionComponent<Props> = ({ err, staff }) => {
       dataIndex: 'isVerified',
       key: 'isVerified',
       render: value => (value ? 'Yes' : 'No')
+    },
+    {
+      title: 'Actions',
+      key: 'actions',
+      render: () => <></>
     }
   ];
 
