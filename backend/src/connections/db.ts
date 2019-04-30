@@ -7,45 +7,45 @@ import { createConnection, getConnectionManager } from 'typeorm';
 import { dbConfig } from '../config/typeorm';
 
 export const dbConnection = async (dropSchema?: boolean, synchronize?: boolean) => {
-  const connectionManager = getConnectionManager();
-  if (!connectionManager.has('default')) {
-    if (!dropSchema) {
-      if (dbConfig.dropSchema) {
-        dropSchema = dbConfig.dropSchema;
-      } else {
-        dropSchema = false;
-      }
-    }
+  let retries = 5;
 
-    if (!synchronize) {
-      if (dbConfig.synchronize) {
-        synchronize = dbConfig.synchronize;
-      } else {
-        synchronize = false;
-      }
-    }
+  while (retries) {
+    try {
+      const connectionManager = getConnectionManager();
+      if (!connectionManager.has('default')) {
+        if (!dropSchema) {
+          if (dbConfig.dropSchema) {
+            dropSchema = dbConfig.dropSchema;
+          } else {
+            dropSchema = false;
+          }
+        }
 
-    let retries = 5;
+        if (!synchronize) {
+          if (dbConfig.synchronize) {
+            synchronize = dbConfig.synchronize;
+          } else {
+            synchronize = false;
+          }
+        }
 
-    while (retries) {
-      try {
         return createConnection({
           ...dbConfig,
           name: 'default',
           dropSchema,
           synchronize
         });
-      } catch (e) {
-        console.log(e);
-        retries -= 1;
-        console.log(`Retries left: ${retries}/5`);
-        // wait 5 seconds
-        await new Promise(res => setTimeout(res, 5000));
+      } else {
+        return connectionManager.get('default');
       }
+    } catch (error) {
+      console.log(error);
+      retries -= 1;
+      console.log(`Retries left: ${retries}/5`);
+      // wait 5 seconds
+      await new Promise(res => setTimeout(res, 5000));
     }
-
-    return undefined;
-  } else {
-    return connectionManager.get('default');
   }
+
+  return undefined;
 };
