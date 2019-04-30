@@ -37,7 +37,6 @@ const FlexContainer = styled.span`
 `;
 
 const StaffMembers: NextFunctionComponent<Props> = ({ err, staff }) => {
-  const [searchText, setSearchText] = React.useState('');
   const searchInput = React.useRef<Input | null>();
 
   const getColumnSearchProps = dataIndex => ({
@@ -57,12 +56,12 @@ const StaffMembers: NextFunctionComponent<Props> = ({ err, staff }) => {
           onChange={e => {
             setSelectedKeys(e.target.value ? [e.target.value] : []);
           }}
-          onPressEnter={e => handleSearch(selectedKeys, confirm)}
+          onPressEnter={e => handleSearch(confirm)}
           style={{ width: 188, marginBottom: 8, display: 'block' }}
         />
         <Button
           type="primary"
-          onClick={() => handleSearch(selectedKeys, confirm)}
+          onClick={() => handleSearch(confirm)}
           icon="search"
           size="small"
           style={{ width: 90, marginRight: 8 }}
@@ -141,14 +140,12 @@ const StaffMembers: NextFunctionComponent<Props> = ({ err, staff }) => {
     }
   ];
 
-  const handleSearch = (selectedKeys, confirm) => {
+  const handleSearch = confirm => {
     confirm();
-    setSearchText(selectedKeys[0]);
   };
 
   const handleReset = clearFilters => {
     clearFilters();
-    setSearchText('');
   };
 
   /**
