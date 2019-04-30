@@ -2,12 +2,25 @@ import React from 'react';
 import Head from 'next/head';
 import withAuth from '../../components/withAuth';
 import styled from 'styled-components';
-import { Table, message, Tag, Input, Button, Icon } from 'antd';
+import {
+  Table,
+  message,
+  Tag,
+  Input,
+  Button,
+  Icon,
+  Divider,
+  Popconfirm,
+  Popover,
+  Radio
+} from 'antd';
 import { NextFunctionComponent, NextContext } from 'next';
 import { User } from '../../interfaces';
 import { StaffAPI } from '../../api';
 import { Role } from '../../types';
 import { THEME_VARIABLES } from '../../config';
+import ActionButton from '../../components/ActionButton';
+import RadioGroup from 'antd/lib/radio/group';
 
 interface Props {
   staff: User[] | [];
@@ -33,10 +46,34 @@ const FlexContainer = styled.span`
   }
   .ant-table-row {
     background-color: #fff;
+    & * {
+      font-weight: 500;
+    }
+  }
+
+  .row-actions {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+
+    & > * {
+      margin: 5px;
+    }
+
+    .maikamu {
+      background: green;
+      font-size: 24px;
+      color: #52c41a;
+    }
   }
 `;
 
+const AvailableRolesList = <></>;
+
 const StaffMembers: NextFunctionComponent<Props> = ({ err, staff }) => {
+  const [staffList, setStaffList] = React.useState(staff);
+  const [selectedStaffRole, setSelectedStaffRole] = React.useState('Waiter');
   const searchInput = React.useRef<Input | null>();
 
   const getColumnSearchProps = dataIndex => ({
@@ -102,18 +139,21 @@ const StaffMembers: NextFunctionComponent<Props> = ({ err, staff }) => {
   const columns = [
     {
       title: 'Name',
+      align: 'center',
       dataIndex: 'name',
       key: 'name',
       ...getColumnSearchProps('name')
     },
     {
       title: 'Email',
+      align: 'center',
       dataIndex: 'email',
       key: 'email',
       ...getColumnSearchProps('email')
     },
     {
       title: 'Role',
+      align: 'center',
       dataIndex: 'role',
       key: 'role',
       render: (role: Role) => {
@@ -134,16 +174,89 @@ const StaffMembers: NextFunctionComponent<Props> = ({ err, staff }) => {
     },
     {
       title: 'Verified',
+      align: 'center',
       dataIndex: 'isVerified',
       key: 'isVerified',
-      render: value => (value ? 'Yes' : 'No')
+      render: value =>
+        value ? (
+          <Icon
+            type="check-circle"
+            theme="twoTone"
+            twoToneColor="#52c41a"
+            style={{ fontSize: 20 }}
+          />
+        ) : (
+          <Icon
+            type="close-circle"
+            theme="twoTone"
+            twoToneColor="#eb2f96"
+            style={{ fontSize: 20 }}
+          />
+        )
     },
     {
+      align: 'center',
       title: 'Actions',
       key: 'actions',
-      render: () => <></>
+      dataIndex: 'id',
+      render: (staffId: Partial<User>) => (
+        <span className="row-actions">
+          <Popover
+            title="Available roles"
+            trigger="click"
+            content={
+              <RadioGroup
+                style={{ display: 'flex', flexDirection: 'column' }}
+                onChange={handleRoleChange}
+                value={selectedStaffRole}
+              >
+                <Radio value={'Waiter'}>Waiter</Radio>
+                <Radio value={'Cook'}>Cook</Radio>
+                <Radio value={'Admin'}>Admin</Radio>
+              </RadioGroup>
+            }
+          >
+            <ActionButton
+              icon="edit"
+              onClick={() => handleRoleChangeClick(staffId)}
+            >
+              Change role
+            </ActionButton>
+          </Popover>
+          <Popconfirm
+            title={`Are you sure?`}
+            okText="Yes"
+            onConfirm={() => handleFireClick(staffId)}
+          >
+            <ActionButton icon="fire">Fire</ActionButton>
+          </Popconfirm>
+        </span>
+      )
     }
   ];
+
+  const handleRoleChange = async () => {};
+
+  const handleRoleChangeClick = async (staffId: Partial<User>) => {
+    const selectedStaffIndex = staffList.findIndex(s => s.id === staffId);
+    const { role } = staffList[selectedStaffIndex];
+
+    setSelectedStaffRole(role);
+  };
+
+  const handleFireClick = async (staffId: Partial<User>) => {
+    try {
+      await StaffAPI.delete(staffId);
+
+      setStaffList(prevStaffList =>
+        prevStaffList.filter(s => s.id !== staffId)
+      );
+
+      message.success(`Successfully fired a staff 🎉`);
+    } catch (error) {
+      message.error(`${err}`, 3);
+    }
+  };
 
   const handleSearch = confirm => {
     confirm();
@@ -168,7 +281,7 @@ const StaffMembers: NextFunctionComponent<Props> = ({ err, staff }) => {
         <title>Staff Members • LuncherBox</title>
       </Head>
       <FlexContainer>
-        <Table pagination={false} dataSource={staff} columns={columns} />
+        <Table pagination={false} dataSource={staffList} columns={columns} />
       </FlexContainer>
     </>
   );

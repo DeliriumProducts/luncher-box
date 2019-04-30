@@ -145,16 +145,7 @@ const EntityCard: React.FunctionComponent<Props> = props => {
           title={`Are you sure?`}
           onConfirm={(e: any) => handleDeleteClick(e, entity)}
           onCancel={(e: any) => e.stopPropagation()}
-          icon={
-            <Icon
-              type="question-circle-o"
-              style={{
-                color: 'red'
-              }}
-            />
-          }
           okText="Yes"
-          cancelText="No"
         >
           <ActionButton
             key="delete"

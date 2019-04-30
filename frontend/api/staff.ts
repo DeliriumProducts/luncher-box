@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { BACKEND_URL } from '../config';
 import { Credentials, User } from '../interfaces';
+import { Role } from '../types';
 
 export class StaffAPI {
   static async login(credentials: Credentials) {
@@ -67,6 +68,22 @@ export class StaffAPI {
 
       return staff;
     }
+  }
+
+  static async updateRole(staffId: Partial<User>, role: Role) {
+    const response = (await axios.put(`${BACKEND_URL}/staff/${staffId}`, {
+      withCredentials: true
+    })).data;
+
+    return response;
+  }
+
+  static async delete(staffId: Partial<User>) {
+    const response = (await axios.delete(`${BACKEND_URL}/staff/${staffId}`, {
+      withCredentials: true
+    })).data;
+
+    return response;
   }
 
   static async isAuthenticated(cookie?: any) {
