@@ -14,7 +14,8 @@ import {
   Authorized,
   Param,
   Put,
-  Delete
+  Delete,
+  BadRequestError
 } from 'routing-controllers';
 import { getRepository, Repository, MoreThan, EntityRepository } from 'typeorm';
 import { v4 } from 'uuid';
@@ -86,7 +87,15 @@ export class StaffController {
    */
   @Put('/:staffId')
   @Authorized('Admin')
-  async updateRole(@Param('staffId') staffId: string, @Body() { role }: { role: Role }) {
+  async updateRole(
+    @Req() req,
+    @Param('staffId') staffId: string,
+    @Body() { role }: { role: Role }
+  ) {
+    if (req.user.id === staffId) {
+      throw new UserNotValidError(['cannot edit own role']);
+    }
+
     const oldStaff: QueryResponse<User> = await this.userRepository.findOne(staffId);
 
     if (oldStaff) {
@@ -96,7 +105,11 @@ export class StaffController {
         throw new UserNotValidError(err);
       }
 
+      /**
+       * Re-attach id and isVerified fields to the staff entity because they were stripped off
+       */
       newStaff.id = oldStaff.id;
+      newStaff.isVerified = oldStaff.isVerified;
 
       const { password, ...staffWithoutPassword } = await this.userRepository.save(newStaff);
       return staffWithoutPassword;
