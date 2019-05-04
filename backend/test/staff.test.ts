@@ -1,12 +1,12 @@
 import faker from 'faker';
 import { Server } from 'http';
 import request from 'supertest';
-import { getRepository, Repository, MoreThan } from 'typeorm';
+import { getRepository, Repository } from 'typeorm';
 import { initServer } from '../src';
+import { INITIAL_ADMIN_PASS } from '../src/config';
 import { redisConnection } from '../src/connections';
 import { User } from '../src/entities';
 import { createInitialAdmin } from '../src/utils';
-import { INITIAL_ADMIN_PASS } from '../src/config';
 
 let server: Server;
 let userRepository: Repository<User>;
@@ -284,27 +284,6 @@ describe('GET /confirm/:tokenId', () => {
       ...userWithoutPassword,
       isVerified: true
     });
-  });
-
-  it('deletes the token from Redis after confirmation', async () => {
-    const user: Partial<User> = {
-      name: faker.name.findName(),
-      email: 'DELETE' + faker.internet.exampleEmail(),
-      password: 'FAKEpassword123REDIS-DELETE'
-    };
-
-    const { body: confirmationURL } = await request(server)
-      .post('/staff/auth/register')
-      .send(user)
-      .expect(200);
-
-    await request(server)
-      .get(confirmationURL)
-      .expect(302);
-
-    const token = confirmationURL.split('/')[2];
-
-    expect(await redisConnection.get(token)).toEqual(null);
   });
 });
 

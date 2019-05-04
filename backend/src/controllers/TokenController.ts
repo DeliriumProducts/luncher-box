@@ -1,10 +1,10 @@
-import { UserNotFoundError } from './../entities/User';
-import { QueryResponse } from './../types/QueryResponse';
-import { Get, JsonController, Param, Redirect, NotFoundError } from 'routing-controllers';
+import { Get, JsonController, Param, Redirect } from 'routing-controllers';
 import { getRepository, Repository } from 'typeorm';
+import { redisConnection } from '../connections';
 import { User } from '../entities';
 import { FRONTEND_URL } from './../config/env';
-import { redisConnection } from '../connections';
+import { UserNotFoundError } from './../entities/User';
+import { QueryResponse } from './../types/QueryResponse';
 
 @JsonController()
 export class TokenController {
@@ -24,9 +24,8 @@ export class TokenController {
      * Verify user
      */
     const user: QueryResponse<User> = await this.userRepository.findOne(id);
-    console.log(user);
 
-    if (user) {
+    if (user && !user.isVerified) {
       user.isVerified = true;
       await this.userRepository.save(user);
     } else {
