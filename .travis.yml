@@ -2,9 +2,6 @@ services: docker
 language: node_js
 
 install:
-  - ls
-  - docker-compose -v
-  - cat docker-compose.travis.yml
   - docker-compose -f docker-compose.travis.yaml up -d
 script:
   - docker-compose exec backend sh -c "yarn test"
