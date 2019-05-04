@@ -1,4 +1,5 @@
 services: docker
+language: node_js
 
 script:
   - docker-compose up -d
