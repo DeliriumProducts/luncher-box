@@ -17,22 +17,14 @@ export class TokenController {
     this.userRepository = getRepository(User);
   }
 
-  @Get('/confirm/:tokenId')
+  @Get('/confirm/:userId')
   @Redirect(`${FRONTEND_URL}/login`)
-  async verify(@Param('tokenId') id: string) {
-    /**
-     * Get the userId which matches to the corresponding token
-     */
-    const userId = await redisConnection.get(id);
-
-    if (!userId) {
-      throw new NotFoundError('Token not found!');
-    }
-
+  async verify(@Param('userId') id: string) {
     /**
      * Verify user
      */
-    const user: QueryResponse<User> = await this.userRepository.findOne({ where: { id: userId } });
+    const user: QueryResponse<User> = await this.userRepository.findOne(id);
+    console.log(user);
 
     if (user) {
       user.isVerified = true;

@@ -180,19 +180,21 @@ export class StaffController {
      */
     userJSON.role = 'Waiter';
 
-    const [user, err] = await this.transformAndValidateUser(userJSON);
+    // @ts-ignore
+    // tslint:disable-next-line
+    let [user, err] = await this.transformAndValidateUser(userJSON);
 
     if (err.length) {
       throw new UserNotValidError(err);
     }
 
     user.isVerified = false;
-    await this.userRepository.save(user);
+    user = await this.userRepository.save(user);
 
     /**
      * Generate verification token and save it in redis
      */
-    const token = v4();
+    const token = user.id;
     await redisConnection.set(token, user.id);
 
     /**

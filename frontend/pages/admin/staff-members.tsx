@@ -216,13 +216,17 @@ const StaffMembers: NextFunctionComponent<Props> = ({ err, staff, user }) => {
               </>
             }
           >
-            <ActionButton
-              icon="edit"
-              onClick={() => handleRolePopconfirmClick(staffRecord.role)}
-              disabled={staffId === user!.id}
-            >
-              Change role
-            </ActionButton>
+            {staffRecord.isVerified ? (
+              <ActionButton
+                icon="edit"
+                onClick={() => handleRolePopconfirmClick(staffRecord.role)}
+                disabled={staffId === user!.id}
+              >
+                Change role
+              </ActionButton>
+            ) : (
+              <ActionButton icon="edit">Verify</ActionButton>
+            )}
           </Popconfirm>
           <Popconfirm
             title={`Are you sure?`}
