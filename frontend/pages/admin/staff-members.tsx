@@ -231,7 +231,7 @@ const StaffMembers: NextFunctionComponent<Props> = ({ err, staff, user }) => {
             onConfirm={() => handleFireClick(staffRecord)}
           >
             <ActionButton disabled={staffId === user!.id} icon="fire">
-              Fire
+              {staffRecord.isVerified ? 'Fire' : 'Decline'}
             </ActionButton>
           </Popconfirm>
         </span>
