@@ -1771,10 +1771,7 @@ describe('Table controller', () => {
         .send(editedTable)
         .expect(200);
 
-      console.log(body);
-
       editedTable.id = id;
-      console.log(editedTable);
 
       expect(body).toEqual(editedTable);
 
