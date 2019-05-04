@@ -193,7 +193,7 @@ export class StaffController {
      * Generate verification token and save it in redis
      */
     const token = v4();
-    await redisConnection.set(token, user.id, 'ex', 60 * 60 * 24); // 1 day
+    await redisConnection.set(token, user.id);
 
     /**
      * Send verification email
