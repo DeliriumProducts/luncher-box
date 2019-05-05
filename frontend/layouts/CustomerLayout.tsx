@@ -163,5 +163,5 @@ const useCustomerOrders = () => {
 export const CustomerLayout: React.FunctionComponent<Props> = props => {
   useCustomerOrders();
 
-  return <Layout {...props}>{props.children}</Layout>;
+  return <Layout {...props} />;
 };

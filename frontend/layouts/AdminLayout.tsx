@@ -9,6 +9,7 @@ interface Props {
   type: 'admin' | 'customer';
   children?: ReactNode;
 }
+
 const useAdminOrders = () => {
   const adminContext = React.useContext(AdminContext);
   const socketContext = React.useContext(SocketContext);
@@ -76,5 +77,5 @@ const useAdminOrders = () => {
 export const AdminLayout: React.FunctionComponent<Props> = props => {
   useAdminOrders();
 
-  return <Layout {...props}>{props.children}</Layout>;
+  return <Layout {...props} />;
 };
