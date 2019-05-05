@@ -59,8 +59,7 @@ const CategoryPage: NextFunctionComponent<Props> = ({
     <>
       <Head>
         <title>
-          {categoryName === '' ? 'Category' : categoryName}{' '}
-           • LuncherBox
+          {categoryName === '' ? 'Category' : categoryName} • LuncherBox
         </title>
       </Head>
       <FlexContainer>{data}</FlexContainer>

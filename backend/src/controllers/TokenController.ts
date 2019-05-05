@@ -1,10 +1,8 @@
-import { UserNotFoundError } from './../entities/User';
-import { QueryResponse } from './../types/QueryResponse';
-import { Get, JsonController, Param, Redirect, NotFoundError } from 'routing-controllers';
+import { Authorized, BadRequestError, Get, JsonController, Param } from 'routing-controllers';
 import { getRepository, Repository } from 'typeorm';
 import { User } from '../entities';
-import { FRONTEND_URL } from './../config/env';
-import { redisConnection } from '../connections';
+import { UserNotFoundError } from './../entities/User';
+import { QueryResponse } from './../types/QueryResponse';
 
 @JsonController()
 export class TokenController {
@@ -17,30 +15,21 @@ export class TokenController {
     this.userRepository = getRepository(User);
   }
 
-  @Get('/confirm/:tokenId')
-  @Redirect(`${FRONTEND_URL}/login`)
-  async verify(@Param('tokenId') id: string) {
-    /**
-     * Get the userId which matches to the corresponding token
-     */
-    const userId = await redisConnection.get(id);
-
-    if (!userId) {
-      throw new NotFoundError('Token not found!');
-    }
-
+  @Get('/confirm/:userId')
+  @Authorized('Admin')
+  async verify(@Param('userId') id: string) {
     /**
      * Verify user
      */
-    const user: QueryResponse<User> = await this.userRepository.findOne({ where: { id: userId } });
+    const user: QueryResponse<User> = await this.userRepository.findOne(id);
 
-    if (user) {
-      user.isVerified = true;
-      await this.userRepository.save(user);
-    } else {
+    if (!user) {
       throw new UserNotFoundError();
+    } else if (!user.isVerified) {
+      user.isVerified = true;
+      return await this.userRepository.save(user);
+    } else {
+      throw new BadRequestError('User already verified');
     }
-
-    await redisConnection.del(id);
   }
 }

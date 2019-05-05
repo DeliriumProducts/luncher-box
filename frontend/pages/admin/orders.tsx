@@ -112,7 +112,7 @@ const useOrders = (initialOrders: Order[]): [Order[], boolean] => {
   return [orders, loading];
 };
 
-const Orders: React.FunctionComponent<any> = () => {
+const Orders: React.FunctionComponent = () => {
   const [orders, loading] = useOrders([]);
 
   let data: React.ReactNode | React.ReactNode[];

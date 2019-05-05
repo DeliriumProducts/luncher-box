@@ -3,24 +3,25 @@ import { Request } from 'express';
 import { MailOptions } from 'nodemailer/lib/sendmail-transport';
 import passport from 'passport';
 import {
+  Authorized,
   Body,
+  Delete,
   Get,
   InternalServerError,
   JsonController,
+  Param,
   Post,
-  Req,
-  UseBefore,
+  Put,
   QueryParam,
-  Authorized
+  Req,
+  UseBefore
 } from 'routing-controllers';
-import { getRepository, Repository, MoreThan, EntityRepository } from 'typeorm';
-import { v4 } from 'uuid';
+import { getRepository, Repository } from 'typeorm';
 import { ENV, OWNER_EMAIL, VERIFIER_EMAIL } from '../config';
-import { redisConnection } from '../connections';
-import { DuplicateUserError, User, UserNotFoundError, UserNotValidError } from '../entities';
-import { TransformAndValidateTuple } from '../types';
-import { sendEmail, transformAndValidate } from '../utils';
 import { BACKEND_URL } from '../config/env';
+import { DuplicateUserError, User, UserNotFoundError, UserNotValidError } from '../entities';
+import { QueryResponse, Role, TransformAndValidateTuple } from '../types';
+import { sendEmail, transformAndValidate } from '../utils';
 
 @JsonController('/staff')
 export class StaffController {
@@ -57,7 +58,7 @@ export class StaffController {
        * Return only relevant info
        */
       return staff.map((user: User) => {
-        const { password, id, ...s } = user;
+        const { password, ...s } = user;
         return s;
       });
     } else {
@@ -70,10 +71,69 @@ export class StaffController {
        * Return only relevant info
        */
       return staff.map((user: User) => {
-        const { password, id, ...s } = user;
+        const { password, ...s } = user;
         return s;
       });
     }
+  }
+
+  /**
+   * PUT /staff/:staffId
+   *
+   * Update staff role
+   */
+  @Put('/:staffId')
+  @Authorized('Admin')
+  async updateRole(
+    @Req() req,
+    @Param('staffId') staffId: string,
+    @Body() { role }: { role: Role }
+  ) {
+    if (req.user.id === staffId) {
+      throw new UserNotValidError(['cannot edit own role']);
+    }
+
+    const oldStaff: QueryResponse<User> = await this.userRepository.findOne(staffId);
+
+    if (oldStaff) {
+      const [newStaff, err] = await this.transformAndValidateUser({ ...oldStaff, role });
+
+      if (err.length) {
+        throw new UserNotValidError(err);
+      }
+
+      /**
+       * Re-attach id and isVerified fields to the staff entity because they were stripped off
+       */
+      newStaff.id = oldStaff.id;
+      newStaff.isVerified = oldStaff.isVerified;
+
+      const { password, ...staffWithoutPassword } = await this.userRepository.save(newStaff);
+      return staffWithoutPassword;
+    }
+
+    throw new UserNotFoundError();
+  }
+
+  /**
+   * DELETE /staff/:staffId
+   *
+   * Delete a staff member
+   */
+  @Delete('/:staffId')
+  @Authorized('Admin')
+  async deleteStaff(@Param('staffId') staffId: string) {
+    /**
+     * Check if the staff member exists before deleting it
+     */
+    const staffToBeDeleted: QueryResponse<User> = await this.userRepository.findOne(staffId);
+
+    if (staffToBeDeleted) {
+      await this.userRepository.delete(staffId);
+      return 'Staff member deleted!';
+    }
+
+    throw new UserNotFoundError();
   }
 
   /**
@@ -83,7 +143,18 @@ export class StaffController {
    */
   @Get('/auth')
   isAuthenticated(@Req() req: Request) {
-    return req.isAuthenticated();
+    if (!req.user) {
+      return {
+        isAuthenticated: req.isAuthenticated()
+      };
+    } else {
+      const { password, ...staffWithoutPassword } = req.user;
+
+      return {
+        user: staffWithoutPassword,
+        isAuthenticated: req.isAuthenticated()
+      };
+    }
   }
 
   /**
@@ -106,28 +177,24 @@ export class StaffController {
      */
     userJSON.role = 'Waiter';
 
-    const [user, err] = await this.transformAndValidateUser(userJSON);
+    // @ts-ignore
+    // tslint:disable-next-line
+    let [user, err] = await this.transformAndValidateUser(userJSON);
 
     if (err.length) {
       throw new UserNotValidError(err);
     }
 
     user.isVerified = false;
-    await this.userRepository.save(user);
-
-    /**
-     * Generate verification token and save it in redis
-     */
-    const token = v4();
-    await redisConnection.set(token, user.id, 'ex', 60 * 60 * 24); // 1 day
+    user = await this.userRepository.save(user);
 
     /**
      * Send verification email
      */
-    const confirmationURL = `${BACKEND_URL}/confirm/${token}`;
+    const confirmationURL = `${BACKEND_URL}/confirm/${user.id}`;
 
     if (ENV === 'test') {
-      return `/confirm/${token}`;
+      return `/confirm/${user.id}`;
     }
 
     const mailOptions: MailOptions = {

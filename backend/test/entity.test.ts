@@ -1,8 +1,9 @@
-import faker from 'faker';
 import { Server } from 'http';
 import request from 'supertest';
 import { getRepository, MoreThan, Repository } from 'typeorm';
 import { initServer } from '../src';
+import { INITIAL_ADMIN_PASS } from '../src/config';
+import { createInitialAdmin } from '../src/utils';
 import { Category, Product, Table, User } from '../src/entities';
 
 let server: Server;
@@ -17,17 +18,12 @@ beforeAll(async () => {
   categoryRepository = getRepository(Category);
   tableRepository = getRepository(Table);
 
+  await createInitialAdmin();
+
   const user: Partial<User> = {
-    name: faker.name.findName(),
-    email: 'product' + faker.internet.exampleEmail(),
-    password: 'FAKEpassword123'
+    email: 'admin@deliriumproducts.me',
+    password: INITIAL_ADMIN_PASS
   };
-
-  const { body: confirmationURL } = await request(server)
-    .post('/staff/auth/register')
-    .send(user);
-
-  await request(server).get(confirmationURL);
 
   const { header } = await request(server)
     .post('/staff/auth/login')
