@@ -253,6 +253,23 @@ describe('GET /staff', () => {
 });
 
 describe('GET /confirm/:tokenId', () => {
+  let cookie: string;
+
+  beforeAll(async () => {
+    await createInitialAdmin();
+
+    const user: Partial<User> = {
+      email: 'admin@deliriumproducts.me',
+      password: INITIAL_ADMIN_PASS
+    };
+
+    const { header } = await request(server)
+      .post('/staff/auth/login')
+      .send(user);
+
+    cookie = header['set-cookie'][0].split(/,(?=\S)/).map((item: string) => item.split(';')[0]);
+  });
+
   it('confirms the user in the database', async () => {
     const user: Partial<User> = {
       name: faker.name.findName(),
@@ -276,7 +293,8 @@ describe('GET /confirm/:tokenId', () => {
 
     await request(server)
       .get(confirmationURL)
-      .expect(302);
+      .set('Cookie', cookie)
+      .expect(200);
 
     const userQuery1 = await userRepository.findOne({ where: { ...userWithoutPassword } });
 
@@ -293,12 +311,28 @@ describe('POST /staff/auth/login', () => {
     email: 'REGISTERLOGIN' + faker.internet.exampleEmail(),
     password: 'FAKEpassword123REGISTERAUTH'
   };
+  let adminCookie: string;
 
   beforeAll(async () => {
     await request(server)
       .post('/staff/auth/register')
       .send(registeredUser)
       .expect(200);
+
+    await createInitialAdmin();
+
+    const user: Partial<User> = {
+      email: 'admin@deliriumproducts.me',
+      password: INITIAL_ADMIN_PASS
+    };
+
+    const { header } = await request(server)
+      .post('/staff/auth/login')
+      .send(user);
+
+    adminCookie = header['set-cookie'][0]
+      .split(/,(?=\S)/)
+      .map((item: string) => item.split(';')[0]);
   });
 
   it('logs a user in after confirming token', async () => {
@@ -315,7 +349,8 @@ describe('POST /staff/auth/login', () => {
 
     await request(server)
       .get(confirmationURL)
-      .expect(302);
+      .set('Cookie', adminCookie)
+      .expect(200);
 
     const { body, header } = await request(server)
       .post('/staff/auth/login')
@@ -376,6 +411,7 @@ describe('GET /staff/auth/logout', () => {
     email: 'logout' + faker.internet.exampleEmail(),
     password: 'FAKEpassword123LOGOUT-LOGIN'
   };
+
   let cookie: string;
 
   beforeAll(async () => {
@@ -384,9 +420,25 @@ describe('GET /staff/auth/logout', () => {
       .send(registeredUser)
       .expect(200);
 
+    await createInitialAdmin();
+
+    const user: Partial<User> = {
+      email: 'admin@deliriumproducts.me',
+      password: INITIAL_ADMIN_PASS
+    };
+
+    const { header: adminHeader } = await request(server)
+      .post('/staff/auth/login')
+      .send(user);
+
+    const adminCookie = adminHeader['set-cookie'][0]
+      .split(/,(?=\S)/)
+      .map((item: string) => item.split(';')[0]);
+
     await request(server)
       .get(confirmationURL)
-      .expect(302);
+      .set('Cookie', adminCookie)
+      .expect(200);
 
     const { header } = await request(server)
       .post('/staff/auth/login')
