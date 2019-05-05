@@ -6,9 +6,8 @@ import NProgress from 'nprogress';
 import React from 'react';
 import { createGlobalStyle } from 'styled-components';
 import '../assets/nprogress.less';
-import CustomerContextProvider from '../components/CustomerContextProvider';
 import Layout from '../components/Layout';
-import SocketContextProvider from '../components/SocketContextProvider';
+import { CustomerContextProvider, SocketContextProvider } from '../context';
 
 /**
  * https://github.com/zeit/next.js/tree/canary/examples/with-loading

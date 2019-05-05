@@ -1,7 +1,7 @@
 import localForage from 'localforage';
 import React, { Component } from 'react';
-import { CustomerContext } from '../context';
-import { Order, Product } from '../interfaces';
+import { CustomerContext } from '..';
+import { Order, OrderProduct, Product, Table } from '../../interfaces';
 
 interface Props {
   children: React.ReactNode;
@@ -9,7 +9,6 @@ interface Props {
 
 interface State {
   order: Order;
-  table: string;
   totalAmount: number;
   orderHistory: Order[];
   hasFinishedSyncing: boolean;
@@ -20,9 +19,11 @@ class CustomerContextProvider extends Component<Props, State> {
     order: {
       products: [],
       comment: '',
-      table: ''
+      table: {
+        id: '',
+        name: ''
+      }
     },
-    table: '',
     totalAmount: 0,
     orderHistory: [],
     hasFinishedSyncing: false
@@ -35,12 +36,18 @@ class CustomerContextProvider extends Component<Props, State> {
     const order: Order = (await localForage.getItem('order')) || {
       products: [],
       comment: '',
-      table: ''
+      table: {
+        id: '',
+        name: ''
+      }
     };
 
     const totalAmount: number = (await localForage.getItem('totalAmount')) || 0;
 
-    const table: string = (await localForage.getItem('table')) || '';
+    const table: Table = (await localForage.getItem('table')) || {
+      id: '',
+      name: ''
+    };
 
     const orderHistory: Order[] =
       (await localForage.getItem('orderHistory')) || [];
@@ -50,7 +57,6 @@ class CustomerContextProvider extends Component<Props, State> {
     this.setState({
       order,
       totalAmount,
-      table,
       orderHistory,
       hasFinishedSyncing: true
     });
@@ -83,10 +89,10 @@ class CustomerContextProvider extends Component<Props, State> {
       prevState => {
         let isNewProduct = true;
 
-        const editedProducts: Product[] = [];
+        const editedProducts: OrderProduct[] = [];
 
         prevState.order.products.forEach(p => {
-          if (p.id === product.id) {
+          if (p.product.id === product.id) {
             isNewProduct = false;
 
             editedProducts.push({
@@ -100,7 +106,7 @@ class CustomerContextProvider extends Component<Props, State> {
         });
 
         if (isNewProduct) {
-          editedProducts.push({ ...product, quantity: 1 });
+          editedProducts.push({ product, quantity: 1 });
         }
 
         return {
@@ -126,9 +132,9 @@ class CustomerContextProvider extends Component<Props, State> {
       prevState => {
         let isNewProduct = true;
 
-        const editedProducts: Product[] = [];
-        prevState.order.products.forEach(p => {
-          if (p.id === product.id) {
+        const editedProducts: OrderProduct[] = [];
+        prevState.order.products!.forEach(p => {
+          if (p.product.id === product.id) {
             isNewProduct = false;
 
             if (p.quantity! === 1) {
@@ -181,18 +187,17 @@ class CustomerContextProvider extends Component<Props, State> {
   /**
    * Sets the table of the current order and in localForage
    */
-  setTable = (id: string) => {
+  setTable = (table: Table) => {
     this.setState(
       prevState => ({
         order: {
           ...prevState.order,
-          table: id
-        },
-        table: id
+          table
+        }
       }),
       () => {
         localForage.setItem('order', this.state.order);
-        localForage.setItem('table', id);
+        localForage.setItem('table', table);
       }
     );
   };
@@ -284,7 +289,4 @@ class CustomerContextProvider extends Component<Props, State> {
   }
 }
 
-const CartConsumer = CustomerContext.Consumer;
-
-export default CustomerContextProvider;
-export { CartConsumer };
+export { CustomerContextProvider };

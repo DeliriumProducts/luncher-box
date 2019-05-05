@@ -3,7 +3,7 @@ import distanceInWords from 'date-fns/distance_in_words';
 import React, { FunctionComponent } from 'react';
 import styled from 'styled-components';
 import { THEME_VARIABLES } from '../config';
-import { Order, Product } from '../interfaces';
+import { Order, OrderProduct } from '../interfaces';
 
 const Step = Steps.Step;
 
@@ -107,10 +107,7 @@ const StyledCard: any = styled(Card)`
 `;
 
 interface ProductListProps {
-  products: {
-    quantity: number;
-    product: Product;
-  }[];
+  products: OrderProduct[];
 }
 
 const ProductList: FunctionComponent<ProductListProps> = ({ products }) => {

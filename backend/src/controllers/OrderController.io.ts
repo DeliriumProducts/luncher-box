@@ -189,7 +189,7 @@ export class OrderController {
        */
       table = await this.tableRepository.findOne({
         where: {
-          name: order.table
+          name: order.table.name
         }
       });
 

@@ -1,19 +1,11 @@
-import { Product } from '.';
+import { OrderProduct, Table } from '.';
 import { OrderState } from '../types';
 
 export interface Order {
   id?: string;
   customerId?: string;
-  table: {
-    id: string;
-    name: string;
-  };
-  products: [
-    {
-      product: Product;
-      quantity: number;
-    }
-  ];
+  table: Table;
+  products: OrderProduct[];
   comment: string;
   state?: OrderState;
   placed?: Date;
