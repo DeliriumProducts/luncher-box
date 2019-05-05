@@ -47,6 +47,12 @@ const handlers = {
       })
     };
   },
+  pushOrder(state, order: Order) {
+    return {
+      ...state,
+      orders: [order, ...state.orders]
+    };
+  },
   setOrders(state, orders: Order[]) {
     return {
       ...state,

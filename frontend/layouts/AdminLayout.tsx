@@ -1,3 +1,5 @@
+import { notification } from 'antd';
+import Router from 'next/router';
 import React, { ReactNode } from 'react';
 import { OrderAPI } from '../api';
 import { AdminContext, SocketContext } from '../context';
@@ -26,14 +28,14 @@ const useAdminOrders = () => {
    */
   React.useEffect(() => {
     if (socketContext.socket) {
-      socketContext.socket.on('placed-order-admin', handleIncomingOrders);
+      socketContext.socket.on('placed-order-admin', handlePlacedOrder);
       socketContext.socket.on('accepted-order-admin', setAcceptedOrder);
       socketContext.socket.on('declined-order-admin', setDeclindedOrder);
       socketContext.socket.on('finished-order-admin', setFinishedOrder);
     }
     return () => {
       if (socketContext.socket) {
-        socketContext.socket.off('placed-order-admin', handleIncomingOrders);
+        socketContext.socket.off('placed-order-admin', handlePlacedOrder);
         socketContext.socket.off('accepted-order-admin', setAcceptedOrder);
         socketContext.socket.off('declined-order-admin', setDeclindedOrder);
         socketContext.socket.off('finished-order-admin', setFinishedOrder);
@@ -47,8 +49,9 @@ const useAdminOrders = () => {
     adminContext.dispatch({ type: 'setLoading', payload: false });
   };
 
-  const handleIncomingOrders = (incomingOrders: Order[]) => {
-    adminContext.dispatch({ type: 'setOrders', payload: incomingOrders });
+  const handlePlacedOrder = (order: Order) => {
+    adminContext.dispatch({ type: 'pushOrder', payload: order });
+    showNotifOnPlacedOrder(order);
   };
 
   const setAcceptedOrder = ({ id }) => {
@@ -69,6 +72,50 @@ const useAdminOrders = () => {
     adminContext.dispatch({
       type: 'setOrderState',
       payload: { id, orderState: 3 }
+    });
+  };
+
+  const showNotifOnPlacedOrder = (order: Order) => {
+    const ProductList = (
+      <div>
+        {order.products.map(({ product, quantity }) => {
+          return (
+            <div
+              key={product.id}
+              style={{ display: 'flex', justifyContent: 'space-between' }}
+            >
+              <p>
+                {quantity} x {product.name}
+              </p>
+            </div>
+          );
+        })}
+      </div>
+    );
+
+    notification.info({
+      message: (
+        <h2
+          style={{
+            color: '#000000a6',
+            margin: 0,
+            marginBottom: 12,
+            fontSize: '1.2rem',
+            fontWeight: 525
+          }}
+        >
+          New order has been placed on table {order.table.name}
+        </h2>
+      ),
+      onClick() {
+        Router.push('/admin/orders');
+      },
+      description: (
+        <>
+          {ProductList}
+          <strong>Click here to go to the orders page now!</strong>
+        </>
+      )
     });
   };
 };

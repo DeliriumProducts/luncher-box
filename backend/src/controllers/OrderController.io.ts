@@ -247,14 +247,7 @@ export class OrderController {
       return opWithOutOrder;
     });
 
-    const orders = await this.orderRepository.find({
-      relations: ['products', 'products.product', 'table'],
-      order: {
-        placed: 'DESC'
-      }
-    });
-
-    io.emit('placed-order-admin', orders);
+    io.emit('placed-order-admin', order);
     io.to(order.customerId).emit('placed-order', order);
   }
 
