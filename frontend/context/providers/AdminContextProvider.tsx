@@ -7,11 +7,14 @@ interface Props {
 }
 
 interface State {
-  user: User | null;
+  user: Partial<User>;
 }
 
 const initalState: State = {
-  user: null
+  user: {
+    name: '',
+    role: 'Waiter'
+  }
 };
 
 const handlers = {

@@ -3,7 +3,7 @@ import { User } from '../interfaces';
 
 interface Values {
   state: {
-    user: Partial<User> | null;
+    user: Partial<User>;
   };
   dispatch: React.Dispatch<{
     type: any;
@@ -14,7 +14,7 @@ interface Values {
 export const AdminContext = React.createContext<Values>({
   state: {
     user: {
-      name: 'Loading...',
+      name: '',
       role: 'Waiter'
     }
   },
