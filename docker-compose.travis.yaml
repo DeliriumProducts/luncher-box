@@ -2,7 +2,7 @@ version: "3"
 services:
   backend:
     build: ./backend
-    command: "Backend container successfully built!"
+    command: "echo Backend container successfully built!"
     environment:
       NODE_ENV: test
       SESSION_SECRET:
