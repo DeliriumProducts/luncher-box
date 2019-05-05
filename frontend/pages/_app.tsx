@@ -7,7 +7,11 @@ import React from 'react';
 import { createGlobalStyle } from 'styled-components';
 import '../assets/nprogress.less';
 import Layout from '../components/Layout';
-import { CustomerContextProvider, SocketContextProvider } from '../context';
+import {
+  AdminContextProvider,
+  CustomerContextProvider,
+  SocketContextProvider
+} from '../context';
 
 /**
  * https://github.com/zeit/next.js/tree/canary/examples/with-loading
@@ -108,14 +112,16 @@ export default class MyApp extends App {
               </Container>
             </CustomerContextProvider>
           ) : (
-            <Container>
-              <GlobalStyle />
-              <Layout type="admin" route={this.props.router.route}>
-                <PageTransition timeout={150} classNames="page-transition">
-                  <Component key={this.props.router.route} {...pageProps} />
-                </PageTransition>
-              </Layout>
-            </Container>
+            <AdminContextProvider>
+              <Container>
+                <GlobalStyle />
+                <Layout type="admin" route={this.props.router.route}>
+                  <PageTransition timeout={150} classNames="page-transition">
+                    <Component key={this.props.router.route} {...pageProps} />
+                  </PageTransition>
+                </Layout>
+              </Container>
+            </AdminContextProvider>
           )}
         </SocketContextProvider>
       </>
