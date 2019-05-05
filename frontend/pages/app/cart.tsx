@@ -47,8 +47,6 @@ export default () => {
   const socketContext = React.useContext(SocketContext);
   const cartContext = React.useContext(CustomerContext);
 
-  console.log(cartContext);
-
   const handleComment = (e: React.FormEvent<HTMLTextAreaElement>) => {
     cartContext.actions.comment(e.currentTarget.value);
   };
@@ -115,11 +113,6 @@ export default () => {
               ],
               []
             );
-
-            console.log({
-              ...order,
-              products: productsIdsAndQuantities
-            });
 
             socketContext.socket.emit('place-order', {
               ...order,

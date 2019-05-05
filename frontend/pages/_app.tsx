@@ -6,12 +6,13 @@ import NProgress from 'nprogress';
 import React from 'react';
 import { createGlobalStyle } from 'styled-components';
 import '../assets/nprogress.less';
-import Layout from '../components/Layout';
 import {
   AdminContextProvider,
   CustomerContextProvider,
   SocketContextProvider
 } from '../context';
+import { AdminLayout } from '../layouts';
+import { CustomerLayout } from '../layouts/';
 
 /**
  * https://github.com/zeit/next.js/tree/canary/examples/with-loading
@@ -104,22 +105,22 @@ export default class MyApp extends App {
             <CustomerContextProvider>
               <Container>
                 <GlobalStyle />
-                <Layout type="customer" route={this.props.router.route}>
+                <CustomerLayout type="customer" route={this.props.router.route}>
                   <PageTransition timeout={150} classNames="page-transition">
                     <Component key={this.props.router.route} {...pageProps} />
                   </PageTransition>
-                </Layout>
+                </CustomerLayout>
               </Container>
             </CustomerContextProvider>
           ) : (
             <AdminContextProvider>
               <Container>
                 <GlobalStyle />
-                <Layout type="admin" route={this.props.router.route}>
+                <AdminLayout type="admin" route={this.props.router.route}>
                   <PageTransition timeout={150} classNames="page-transition">
                     <Component key={this.props.router.route} {...pageProps} />
                   </PageTransition>
-                </Layout>
+                </AdminLayout>
               </Container>
             </AdminContextProvider>
           )}

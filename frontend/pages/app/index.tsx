@@ -67,7 +67,6 @@ Home.getInitialProps = async () => {
       };
     }
   } catch (err) {
-    console.log(err);
     return {
       categories: [],
       err: `Network Error, Please try again later!`

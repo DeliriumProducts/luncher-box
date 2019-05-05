@@ -1,11 +1,8 @@
-import { Affix, Layout as AntDesignLayout, message, notification } from 'antd';
+import { message, notification } from 'antd';
 import React, { ReactNode } from 'react';
-import styled from 'styled-components';
 import { CustomerContext, SocketContext } from '../context';
 import { Order } from '../interfaces';
-import MenuBar from './MenuBar';
-
-const { Content } = AntDesignLayout;
+import Layout from './_layout';
 
 interface Props {
   route: string;
@@ -13,31 +10,51 @@ interface Props {
   children?: ReactNode;
 }
 
-const StyledLayout = styled(AntDesignLayout)`
-  min-height: 100%;
-  background: rgba(0, 0, 0, 0);
-`;
-
-const StyledContent = styled(Content)`
-  padding: 50px;
-  margin-bottom: 47px;
-  height: auto;
-
-  @media (max-width: 480px) {
-    padding: 0;
-  }
-`;
-
-const Layout: React.FunctionComponent<Props> = props => {
-  const { route, type } = props;
-
-  if (route === '/login' || route === '/register' || route === '/') {
-    return <>{props.children}</>;
-  }
-
-  const socketContext = React.useContext(SocketContext);
+const useCustomerOrders = () => {
   const customerContext = React.useContext(CustomerContext);
   const orderHistory = React.useRef(customerContext.orderHistory);
+  const socketContext = React.useContext(SocketContext);
+
+  /**
+   * Send the newest customerId to the backend to update the orders
+   */
+  React.useEffect(() => {
+    if (customerContext.hasFinishedSyncing) {
+      const orderIds = customerContext.orderHistory.reduce(
+        (acc: string[], order) => [...acc, order.id!],
+        []
+      );
+
+      if (socketContext.socket) {
+        socketContext.socket.emit('update-customerId', orderIds);
+      }
+
+      orderHistory.current = customerContext.orderHistory;
+    }
+  }, [customerContext.hasFinishedSyncing]);
+
+  /**
+   * Subscribe to different socket messages
+   */
+  React.useEffect(() => {
+    if (socketContext.socket) {
+      socketContext.socket.on('placed-order', handlePlacedOrder);
+      socketContext.socket.on('accepted-order', handleNewOrderState);
+      socketContext.socket.on('declined-order', handleNewOrderState);
+      socketContext.socket.on('finished-order', handleNewOrderState);
+      socketContext.socket.on('updated-customerId', handleUpdatedCustomerId);
+    }
+
+    return () => {
+      if (socketContext.socket) {
+        socketContext.socket.off('placed-order');
+        socketContext.socket.off('accepted-order');
+        socketContext.socket.off('declined-order');
+        socketContext.socket.off('finished-order');
+        socketContext.socket.off('updated-customerId');
+      }
+    };
+  }, [socketContext.socket]);
 
   const showNotifOnStateChange = (order: Order) => {
     let data: React.ReactNode | React.ReactNode[];
@@ -141,59 +158,10 @@ const Layout: React.FunctionComponent<Props> = props => {
 
     customerContext.actions.overwriteOrderHistory(orders);
   };
-
-  React.useEffect(() => {
-    if (type === 'customer') {
-      if (customerContext.hasFinishedSyncing) {
-        const orderIds = customerContext.orderHistory.reduce(
-          (acc: string[], order) => [...acc, order.id!],
-          []
-        );
-
-        if (socketContext.socket) {
-          socketContext.socket.emit('update-customerId', orderIds);
-        }
-
-        orderHistory.current = customerContext.orderHistory;
-      }
-    }
-  }, [customerContext.hasFinishedSyncing]);
-
-  /**
-   * Subscribe to different socket messages
-   */
-  React.useEffect(() => {
-    if (type === 'customer') {
-      if (socketContext.socket) {
-        socketContext.socket.on('placed-order', handlePlacedOrder);
-        socketContext.socket.on('accepted-order', handleNewOrderState);
-        socketContext.socket.on('declined-order', handleNewOrderState);
-        socketContext.socket.on('finished-order', handleNewOrderState);
-        socketContext.socket.on('updated-customerId', handleUpdatedCustomerId);
-      }
-
-      return () => {
-        if (socketContext.socket) {
-          socketContext.socket.off('placed-order');
-          socketContext.socket.off('accepted-order');
-          socketContext.socket.off('declined-order');
-          socketContext.socket.off('finished-order');
-          socketContext.socket.off('updated-customerId');
-        }
-      };
-    } else {
-      return () => {};
-    }
-  }, [socketContext.socket]);
-
-  return (
-    <StyledLayout>
-      <Affix offsetTop={0}>
-        <MenuBar type={type} selectedKey={props.route} />
-      </Affix>
-      <StyledContent>{props.children}</StyledContent>
-    </StyledLayout>
-  );
 };
 
-export default Layout;
+export const CustomerLayout: React.FunctionComponent<Props> = props => {
+  useCustomerOrders();
+
+  return <Layout {...props}>{props.children}</Layout>;
+};

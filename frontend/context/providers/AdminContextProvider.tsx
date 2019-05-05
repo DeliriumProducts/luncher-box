@@ -1,6 +1,7 @@
 import React from 'react';
 import { AdminContext } from '..';
-import { User } from '../../interfaces';
+import { Order, User } from '../../interfaces';
+import { OrderState } from '../../types';
 
 interface Props {
   children: React.ReactNode;
@@ -8,20 +9,54 @@ interface Props {
 
 interface State {
   user: Partial<User>;
+  orders: Order[];
+  loading: boolean;
 }
 
 const initalState: State = {
   user: {
     name: '',
     role: 'Waiter'
-  }
+  },
+  orders: [],
+  loading: true
 };
 
 const handlers = {
-  setUser(state, payload: User): State {
+  setUser(state, user: User): State {
     return {
       ...state,
-      user: payload
+      user
+    };
+  },
+  setOrderState(
+    state,
+    { id, orderState }: { id: string; orderState: OrderState }
+  ) {
+    return {
+      ...state,
+      orders: state.orders.map(order => {
+        if (order.id === id) {
+          return {
+            ...order,
+            state: orderState
+          };
+        }
+
+        return order;
+      })
+    };
+  },
+  setOrders(state, orders: Order[]) {
+    return {
+      ...state,
+      orders
+    };
+  },
+  setLoading(state, loading: boolean) {
+    return {
+      ...state,
+      loading
     };
   }
 };
