@@ -7,10 +7,27 @@ import { authorizationChecker, createInitialAdmin } from './utils';
 
 const initServer = async () => {
   console.clear();
+
   /**
    * Establish database connection
    */
-  await initDbConnection();
+  let retries = 5;
+
+  while (retries) {
+    try {
+      await initDbConnection();
+
+      /**
+       * Break the loop if a connection has been initialized
+       */
+      break;
+    } catch (error) {
+      console.log(error);
+      retries -= 1;
+      console.log(`Retries left: ${retries}/5`);
+      await new Promise(res => setTimeout(res, 5000));
+    }
+  }
 
   /**
    * Set up routing-controllers
