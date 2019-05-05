@@ -2,14 +2,17 @@ import { NextComponentClass, NextContext, NextFunctionComponent } from 'next';
 import Router, { SingletonRouter } from 'next/router';
 import React, { Component, ComponentType } from 'react';
 import { StaffAPI } from '../api';
+import { AdminContext } from '../context';
 import { User } from '../interfaces';
 import { Role } from '../types';
 
 const withAuth = <T extends object>(
   C: NextFunctionComponent<T> | NextComponentClass<T>,
   roles: Role[] = []
-): ComponentType<T & { router: SingletonRouter }> =>
-  class extends Component<T & { router: SingletonRouter }> {
+): ComponentType<T & { router: SingletonRouter; user: User }> =>
+  class extends Component<T & { router: SingletonRouter; user: User }> {
+    static contextType = AdminContext;
+
     static async getInitialProps(ctx: NextContext) {
       const { req, res } = ctx;
 
@@ -71,6 +74,13 @@ const withAuth = <T extends object>(
         user: auth.user
       };
     }
+
+    context!: React.ContextType<typeof AdminContext>;
+
+    componentDidMount() {
+      this.context.dispatch({ type: 'setUser', payload: this.props.user });
+    }
+
     render() {
       return <C {...this.props} />;
     }
