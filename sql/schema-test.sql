@@ -1,6 +1,6 @@
 -- MySQL dump 10.17  Distrib 10.3.14-MariaDB, for Linux (x86_64)
 --
--- Host: localhost    Database: luncherbox_development
+-- Host: localhost    Database: luncherbox_test
 -- ------------------------------------------------------
 -- Server version	10.3.14-MariaDB
 
@@ -16,12 +16,12 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Current Database: `luncherbox_development`
+-- Current Database: `luncherbox_test`
 --
 
-CREATE DATABASE /*!32312 IF NOT EXISTS*/ `luncherbox_development` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci */;
+CREATE DATABASE /*!32312 IF NOT EXISTS*/ `luncherbox_test` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci */;
 
-USE `luncherbox_development`;
+USE `luncherbox_test`;
 
 --
 -- Table structure for table `category`
@@ -30,11 +30,14 @@ USE `luncherbox_development`;
 DROP TABLE IF EXISTS `category`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `category` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `category`
+(
+  `id` int
+(11) NOT NULL AUTO_INCREMENT,
   `name` text NOT NULL,
   `image` text NOT NULL,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY
+(`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -45,13 +48,17 @@ CREATE TABLE `category` (
 DROP TABLE IF EXISTS `product`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `product` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(255) NOT NULL,
+CREATE TABLE `product`
+(
+  `id` int
+(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar
+(255) NOT NULL,
   `description` text NOT NULL,
   `image` text NOT NULL,
   `price` double NOT NULL,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY
+(`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=27 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -62,15 +69,30 @@ CREATE TABLE `product` (
 DROP TABLE IF EXISTS `product_categories_category`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `product_categories_category` (
-  `productId` int(11) NOT NULL,
-  `categoryId` int(11) NOT NULL,
-  PRIMARY KEY (`productId`,`categoryId`),
-  KEY `IDX_342d06dd0583aafc156e076379` (`productId`),
-  KEY `IDX_15520e638eb4c46c4fb2c61c4b` (`categoryId`),
-  CONSTRAINT `FK_15520e638eb4c46c4fb2c61c4b4` FOREIGN KEY (`categoryId`) REFERENCES `category` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION,
-  CONSTRAINT `FK_342d06dd0583aafc156e0763790` FOREIGN KEY (`productId`) REFERENCES `product` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+CREATE TABLE `product_categories_category`
+(
+  `productId` int
+(11) NOT NULL,
+  `categoryId` int
+(11) NOT NULL,
+  PRIMARY KEY
+(`productId`,`categoryId`),
+  KEY `IDX_342d06dd0583aafc156e076379`
+(`productId`),
+  KEY `IDX_15520e638eb4c46c4fb2c61c4b`
+(`categoryId`),
+  CONSTRAINT `FK_15520e638eb4c46c4fb2c61c4b4` FOREIGN KEY
+(`categoryId`) REFERENCES `category`
+(`id`) ON
+DELETE CASCADE ON
+UPDATE NO ACTION,
+  CONSTRAINT `FK_342d06dd0583aafc156e0763790` FOREIGN KEY
+(`productId`) REFERENCES `product`
+(`id`) ON
+DELETE CASCADE ON
+UPDATE NO ACTION
+) ENGINE=InnoDB
+DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -80,14 +102,21 @@ CREATE TABLE `product_categories_category` (
 DROP TABLE IF EXISTS `user`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `user` (
-  `id` varchar(36) NOT NULL,
+CREATE TABLE `user`
+(
+  `id` varchar
+(36) NOT NULL,
   `name` text NOT NULL,
-  `email` varchar(255) NOT NULL,
-  `password` varchar(255) NOT NULL,
-  `isVerified` tinyint(4) NOT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `IDX_e12875dfb3b1d92d7d7c5377e2` (`email`)
+  `email` varchar
+(255) NOT NULL,
+  `password` varchar
+(255) NOT NULL,
+  `isVerified` tinyint
+(4) NOT NULL,
+  PRIMARY KEY
+(`id`),
+  UNIQUE KEY `IDX_e12875dfb3b1d92d7d7c5377e2`
+(`email`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;

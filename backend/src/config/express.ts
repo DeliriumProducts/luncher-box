@@ -3,11 +3,11 @@ import compression from 'compression';
 import createRedisStore from 'connect-redis';
 import cors from 'cors';
 import express, { Application } from 'express';
+import rateLimit from 'express-rate-limit';
 import session, { Store } from 'express-session';
 import expressValidator from 'express-validator';
 import lusca from 'lusca';
 import passport from 'passport';
-import rateLimit from 'express-rate-limit';
 import rateLimitRedisStore from 'rate-limit-redis';
 import { InternalServerError } from 'routing-controllers';
 import { redisConnection } from '../connections';
@@ -36,16 +36,19 @@ if (ENV !== 'test') {
  */
 const app: Application = express();
 
+if (ENV !== 'test') {
+  app.use(
+    new rateLimit({
+      store: rateLimitStore,
+      windowMs: 60 * 1000, // 60 seconds
+      max: 100
+    })
+  );
+}
+
 /**
  * Configure express app
  */
-app.use(
-  new rateLimit({
-    store: rateLimitStore,
-    windowMs: 60 * 1000, // 60 seconds
-    max: 100
-  })
-);
 app.use(
   cors({
     /**

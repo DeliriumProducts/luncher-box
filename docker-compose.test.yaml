@@ -2,8 +2,9 @@ version: "3"
 services:
   backend:
     build: ./backend
+    command: yarn test
     environment:
-      NODE_ENV: production
+      NODE_ENV: test
       SESSION_SECRET: ${SESSION_SECRET}
       DB_PORT: ${DB_PORT}
       DB_HOST: ${DB_HOST}
@@ -25,24 +26,11 @@ services:
     depends_on:
       - db
       - redis
-  frontend:
-    build: ./frontend
-    environment:
-      NODE_ENV: production
-      FRONTEND_PORT: ${FRONTEND_PORT}
-      FRONTEND_URL: ${FRONTEND_URL}
-      BACKEND_URL: ${BACKEND_URL}
-      SOCKET_URL: ${SOCKET_URL}
-    ports:
-      - 3000:3000
-    depends_on:
-      - backend
-    restart: always
   db:
     image: mariadb
     environment:
       MYSQL_ROOT_PASSWORD: ${DB_PASS}
-      MYSQL_DATABASE: luncherbox_production
+      MYSQL_DATABASE: luncherbox_test
     volumes:
       - ./sql:/docker-entrypoint-initdb.d
       - ./data-sql:/var/lib/mysql
@@ -53,14 +41,3 @@ services:
     restart: always
     volumes:
       - ./data-redis:/data
-  proxy:
-    image: nginx
-    volumes:
-      - "./nginx.conf:/etc/nginx/nginx.conf"
-    ports:
-      - 80:80
-      - 443:443
-    depends_on:
-      - backend
-      - frontend
-    restart: always

@@ -143,17 +143,16 @@ const OrderContainer: React.FunctionComponent<OrderContainerProps> = ({
               header={
                 <ItemCardHeader
                   orderId={order.id!}
-                  orderTable={order.table}
+                  orderTable={order.table.name}
                   orderState={order.state && order.state}
                 />
               }
               style={customPanelStyle}
             >
               {orders.length &&
-                order.products.map(product => {
+                order.products.map(({ product, quantity }) => {
                   totalSum +=
-                    product.price *
-                    (product.quantity !== undefined ? product.quantity : 1);
+                    product.price * (quantity !== undefined ? quantity : 1);
                   return (
                     <ItemCard
                       key={product.id}
@@ -162,7 +161,7 @@ const OrderContainer: React.FunctionComponent<OrderContainerProps> = ({
                       description={product.description}
                       image={product.image}
                       price={product.price}
-                      quantity={product.quantity}
+                      quantity={quantity}
                       interactive={false}
                     />
                   );
