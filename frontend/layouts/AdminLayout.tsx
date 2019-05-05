@@ -49,7 +49,6 @@ const useAdminOrders = () => {
 
   const handleIncomingOrders = (incomingOrders: Order[]) => {
     adminContext.dispatch({ type: 'setOrders', payload: incomingOrders });
-    adminContext.dispatch({ type: 'loading', payload: false });
   };
 
   const setAcceptedOrder = ({ id }) => {

@@ -176,7 +176,10 @@ const MenuBar: React.FunctionComponent<Props> = ({ selectedKey, type }) => {
               title={
                 <span>
                   <Icon type="user" className="menu-item-icon" />
-                  <span className="menu-item-title">My profile</span>
+                  <span className="menu-item-title">
+                    {adminContext.state.user.name &&
+                      `Hello, ${adminContext.state.user.name}!`}
+                  </span>
                 </span>
               }
             >
