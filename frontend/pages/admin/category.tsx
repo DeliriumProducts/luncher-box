@@ -7,8 +7,7 @@ import { CategoryAPI, ProductAPI } from '../../api';
 import EntityCard from '../../components/EntityCard';
 import EntityCardContainer from '../../components/EntityCardContainer';
 import EntityModal from '../../components/EntityModal';
-import withAuth from '../../components/withAuth';
-import withRouter from '../../components/withRouter';
+import { withAuth, withRouter } from '../../hocs/';
 import { Category, Product } from '../../interfaces';
 import { ActionTypes, EntityInstance, EntityTypes } from '../../types';
 

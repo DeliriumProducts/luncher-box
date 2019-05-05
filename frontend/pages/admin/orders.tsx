@@ -4,8 +4,8 @@ import React from 'react';
 import styled from 'styled-components';
 import OrderContainer from '../../components/OrderContainer';
 import Spinner from '../../components/Spinner';
-import withAuth from '../../components/withAuth';
 import { AdminContext } from '../../context';
+import { withAuth } from '../../hocs';
 
 const FlexContainer = styled.div`
   background-color: #fafafa;

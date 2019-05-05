@@ -16,8 +16,8 @@ import React from 'react';
 import styled from 'styled-components';
 import { StaffAPI } from '../../api';
 import ActionButton from '../../components/ActionButton';
-import withAuth from '../../components/withAuth';
 import { THEME_VARIABLES } from '../../config';
+import { withAuth } from '../../hocs';
 import { User } from '../../interfaces';
 import { Role } from '../../types';
 

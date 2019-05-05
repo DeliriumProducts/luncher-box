@@ -16,7 +16,7 @@ import TextArea from 'antd/lib/input/TextArea';
 import RadioGroup from 'antd/lib/radio/group';
 import { Component } from 'react';
 import FullHeightContainer from '../../components/FullHeightContainer';
-import withAuth from '../../components/withAuth';
+import { withAuth } from '../../hocs';
 
 const StaffChat = () => {
   const size = 'large';

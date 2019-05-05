@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import FullHeightContainer from '../../components/FullHeightContainer';
-import withAuth from '../../components/withAuth';
 import styled from 'styled-components';
+import FullHeightContainer from '../../components/FullHeightContainer';
+import { withAuth } from '../../hocs';
 
 const FlexContainer = styled.div`
   display: flex;

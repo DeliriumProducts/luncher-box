@@ -6,8 +6,8 @@ import { CategoryAPI } from '../../api';
 import EntityCard from '../../components/EntityCard';
 import EntityCardContainer from '../../components/EntityCardContainer';
 import EntityModal from '../../components/EntityModal';
-import withAuth from '../../components/withAuth';
 import { SocketContext } from '../../context';
+import { withAuth } from '../../hocs/';
 import { Category } from '../../interfaces';
 import { ActionTypes, EntityInstance, EntityTypes } from '../../types';
 

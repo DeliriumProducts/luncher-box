@@ -6,7 +6,7 @@ import { AdminContext } from '../context';
 import { User } from '../interfaces';
 import { Role } from '../types';
 
-const withAuth = <T extends object>(
+export const withAuth = <T extends object>(
   C: NextFunctionComponent<T> | NextComponentClass<T>,
   roles: Role[] = []
 ): ComponentType<T & { router: SingletonRouter; user: User }> =>
@@ -85,5 +85,3 @@ const withAuth = <T extends object>(
       return <C {...this.props} />;
     }
   };
-
-export default withAuth;
