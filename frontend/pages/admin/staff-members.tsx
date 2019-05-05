@@ -1,26 +1,25 @@
-import React from 'react';
-import Head from 'next/head';
-import withAuth from '../../components/withAuth';
-import styled from 'styled-components';
 import {
-  Table,
-  message,
-  Tag,
-  Input,
   Button,
   Icon,
+  Input,
+  message,
   Popconfirm,
-  Popover,
-  Radio
+  Radio,
+  Table,
+  Tag
 } from 'antd';
-import { NextFunctionComponent, NextContext } from 'next';
-import { User } from '../../interfaces';
-import { StaffAPI } from '../../api';
-import { Role } from '../../types';
-import { THEME_VARIABLES } from '../../config';
-import ActionButton from '../../components/ActionButton';
-import RadioGroup from 'antd/lib/radio/group';
 import { RadioChangeEvent } from 'antd/lib/radio';
+import RadioGroup from 'antd/lib/radio/group';
+import { NextContext, NextFunctionComponent } from 'next';
+import Head from 'next/head';
+import React from 'react';
+import styled from 'styled-components';
+import { StaffAPI } from '../../api';
+import ActionButton from '../../components/ActionButton';
+import withAuth from '../../components/withAuth';
+import { THEME_VARIABLES } from '../../config';
+import { User } from '../../interfaces';
+import { Role } from '../../types';
 
 interface Props {
   staff: User[] | [];
@@ -150,20 +149,24 @@ const StaffMembers: NextFunctionComponent<Props> = ({ err, staff, user }) => {
       align: 'center',
       dataIndex: 'role',
       key: 'role',
-      render: (role: Role) => {
+      render: (role: Role, staffRecord: User) => {
         const colors = {
           Waiter: 'green',
           Cook: 'purple',
           Admin: 'magenta'
         };
 
-        return (
-          <>
-            <Tag color={colors[role]} key={role}>
-              {role.toUpperCase()}
-            </Tag>
-          </>
-        );
+        if (staffRecord.isVerified) {
+          return (
+            <>
+              <Tag color={colors[role]} key={role}>
+                {role.toUpperCase()}
+              </Tag>
+            </>
+          );
+        } else {
+          return null;
+        }
       }
     },
     {
@@ -195,28 +198,37 @@ const StaffMembers: NextFunctionComponent<Props> = ({ err, staff, user }) => {
       dataIndex: 'id',
       render: (staffId: string, staffRecord: User, index: number) => (
         <span className="row-actions">
-          <Popconfirm
-            icon={<Icon type="team" style={{ color: 'unset' }} />}
-            placement="bottom"
-            onConfirm={() => handleRoleConfirm(staffId, index)}
-            title={
-              <>
-                <RadioGroup
-                  style={{ display: 'flex', flexDirection: 'column' }}
-                  onChange={handleRoleChange}
-                  value={selectedStaffRole}
-                >
-                  <span style={{ fontWeight: 500, marginBottom: 5 }}>
-                    Available Roles
-                  </span>
-                  <Radio value={'Waiter'}>Waiter</Radio>
-                  <Radio value={'Cook'}>Cook</Radio>
-                  <Radio value={'Admin'}>Admin</Radio>
-                </RadioGroup>
-              </>
-            }
-          >
-            {staffRecord.isVerified ? (
+          {!staffRecord.isVerified ? (
+            <Popconfirm
+              onConfirm={() => handleVerifyClick(staffRecord, index)}
+              title={`Are you sure?`}
+              placement="bottom"
+              okText="Yes"
+            >
+              <ActionButton icon="check">Verify</ActionButton>
+            </Popconfirm>
+          ) : (
+            <Popconfirm
+              icon={<Icon type="team" style={{ color: 'unset' }} />}
+              placement="bottom"
+              onConfirm={() => handleRoleConfirm(staffId, index)}
+              title={
+                <>
+                  <RadioGroup
+                    style={{ display: 'flex', flexDirection: 'column' }}
+                    onChange={handleRoleChange}
+                    value={selectedStaffRole}
+                  >
+                    <span style={{ fontWeight: 500, marginBottom: 5 }}>
+                      Available Roles
+                    </span>
+                    <Radio value={'Waiter'}>Waiter</Radio>
+                    <Radio value={'Cook'}>Cook</Radio>
+                    <Radio value={'Admin'}>Admin</Radio>
+                  </RadioGroup>
+                </>
+              }
+            >
               <ActionButton
                 icon="edit"
                 onClick={() => handleRolePopconfirmClick(staffRecord.role)}
@@ -224,24 +236,46 @@ const StaffMembers: NextFunctionComponent<Props> = ({ err, staff, user }) => {
               >
                 Change role
               </ActionButton>
-            ) : (
-              <ActionButton icon="edit">Verify</ActionButton>
-            )}
-          </Popconfirm>
+            </Popconfirm>
+          )}
           <Popconfirm
             title={`Are you sure?`}
             placement="bottom"
             okText="Yes"
             onConfirm={() => handleFireClick(staffRecord)}
           >
-            <ActionButton disabled={staffId === user!.id} icon="fire">
-              {staffRecord.isVerified ? 'Fire' : 'Decline'}
-            </ActionButton>
+            {staffRecord.isVerified ? (
+              <ActionButton disabled={staffId === user!.id} icon="fire">
+                Fire
+              </ActionButton>
+            ) : (
+              <ActionButton disabled={staffId === user!.id} icon="close">
+                Decline
+              </ActionButton>
+            )}
           </Popconfirm>
         </span>
       )
     }
   ];
+
+  const handleVerifyClick = async ({ id, name }: User, index: number) => {
+    try {
+      const response = await StaffAPI.verify(id);
+      response.key = response.id;
+
+      setStaffList(prevStaffList => {
+        const stf = [...prevStaffList];
+        stf[index] = response;
+
+        return stf;
+      });
+
+      message.success(`Successfully verified ${name}🎉`);
+    } catch (error) {
+      message.error(`${error}`, 3);
+    }
+  };
 
   const handleRoleConfirm = async (staffId: string, index: number) => {
     try {

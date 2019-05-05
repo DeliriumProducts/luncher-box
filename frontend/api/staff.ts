@@ -90,6 +90,14 @@ export class StaffAPI {
     return response;
   }
 
+  static async verify(staffId: string) {
+    const response = (await axios.get(`${BACKEND_URL}/confirm/${staffId}`, {
+      withCredentials: true
+    })).data;
+
+    return response;
+  }
+
   static async isAuthenticated(cookie?: any) {
     let opts = {};
 
