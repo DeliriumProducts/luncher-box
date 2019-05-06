@@ -11,6 +11,7 @@ import {
 import Head from 'next/head';
 import React from 'react';
 import styled from 'styled-components';
+import FlexContainer from '../../components/FlexContainer';
 import ItemCard from '../../components/ItemCard';
 import { CustomerContext, SocketContext } from '../../context';
 
