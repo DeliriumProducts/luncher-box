@@ -12,7 +12,7 @@ interface Props extends FormComponentProps {
   actionType: ActionTypes;
   loading: boolean;
   onCancel: (e: React.FormEvent<HTMLElement>) => void;
-  onCreate: (e: React.FormEvent<HTMLElement>) => void;
+  onConfirm: (e: React.FormEvent<HTMLElement>) => void;
 }
 
 interface State {
@@ -34,13 +34,11 @@ const EntityModal = Form.create()(
       this.setState({ categories });
     }
 
-    handleSearch = val => {};
-
     render() {
       const {
         visible,
         onCancel,
-        onCreate,
+        onConfirm,
         form,
         entityType,
         loading,
@@ -60,7 +58,7 @@ const EntityModal = Form.create()(
           okText={`${actionType}`}
           okButtonProps={{ loading }}
           onCancel={onCancel}
-          onOk={onCreate}
+          onOk={onConfirm}
           centered
           destroyOnClose
         >
@@ -137,7 +135,7 @@ const EntityModal = Form.create()(
                       message: 'Image field cannot be empty'
                     }
                   ],
-                  initialValue: entity && entity.image
+                  initialValue: entity && (entity as Product | Category).image
                 })(
                   <Input
                     prefix={
@@ -202,7 +200,6 @@ const EntityModal = Form.create()(
                   <Select
                     mode="multiple"
                     style={{ width: '100%' }}
-                    onSearch={this.handleSearch}
                     placeholder="Please select a category"
                   >
                     {categories &&

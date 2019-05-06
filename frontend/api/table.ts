@@ -73,7 +73,7 @@ export class TableAPI {
     return response;
   }
 
-  static async delete(id: number) {
+  static async delete(id: string) {
     const response = await axios.delete(
       `${BACKEND_URL}/tables/${id}`,
       this.opts

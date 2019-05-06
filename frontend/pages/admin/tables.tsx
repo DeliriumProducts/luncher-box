@@ -11,6 +11,7 @@ import TableCard from '../../components/TableCard';
 import { AdminContext } from '../../context';
 import { withAuth } from '../../hocs';
 import { Table } from '../../interfaces';
+import { ActionTypes } from '../../types';
 
 const TableContainer = styled.div`
   display: flex;
@@ -38,12 +39,100 @@ interface Props {
 
 const Tables: NextFunctionComponent<Props> = ({ err, tables: t }) => {
   const [tables, setTables] = React.useState(t);
+  const [currentTable, setCurrentTable] = React.useState<Table | null>(null);
   const [modalVisible, setModalVisible] = React.useState(false);
   const [isEdting, setIsEditing] = React.useState(false);
+  const [actionType, setActionType] = React.useState('create');
+
   const adminContext = React.useContext(AdminContext);
   let data: React.ReactNode[] | React.ReactNode;
 
-  let modalFormRef: any;
+  const modalFormRef: any = React.useRef(null);
+
+  const handleEditToggle = val => {
+    setIsEditing(val);
+  };
+
+  const showModal = (a: ActionTypes, table?: Table) => {
+    modalFormRef.current.props.form.resetFields();
+
+    setActionType(a);
+    setModalVisible(true);
+    setCurrentTable(table || null);
+  };
+
+  const saveFormRef = formRef => {
+    modalFormRef.current = formRef;
+  };
+
+  const handleModalConfirm = () => {
+    const modalForm = modalFormRef.current.props.form;
+
+    modalForm.validateFields(async (errors: any, table: Table) => {
+      if (errors) {
+        return;
+      }
+
+      try {
+        if (actionType === 'create') {
+          const response = (await TableAPI.create(table)).data;
+
+          setTables(prevTables => [...prevTables, response]);
+
+          message.success(`Successfully created table ${table.name}🎉`);
+        } else {
+          const response = (await TableAPI.edit(table)).data;
+
+          setTables(prevTables =>
+            prevTables.map(pt => {
+              if (pt.id === response.id) {
+                return response;
+              } else {
+                return pt;
+              }
+            })
+          );
+
+          message.success(`Successfully edited table ${table.name}🎉`);
+        }
+      } catch (error) {
+        message.error(`Error: ${error}`, 3);
+      }
+
+      setModalVisible(false);
+    });
+  };
+
+  const handleModalCancel = () => {
+    setModalVisible(false);
+  };
+
+  const handleCreateClick = (e: React.FormEvent<HTMLButtonElement>) => {
+    e.stopPropagation();
+    showModal('create');
+  };
+
+  const handleEditClick = (e: React.FormEvent<HTMLButtonElement>, table) => {
+    e.stopPropagation();
+    showModal('edit', table);
+  };
+
+  const handleDeleteClick = async (
+    e: React.FormEvent<HTMLButtonElement>,
+    table: Table
+  ) => {
+    e.stopPropagation();
+
+    await TableAPI.delete(table.id!);
+
+    setTables(prevTables =>
+      prevTables.filter(pt => {
+        return pt.id !== table.id;
+      })
+    );
+
+    message.success(`Successfully deleted table ${name} 🎉`);
+  };
 
   if (tables.length && !err) {
     const ordersAndTablesMap: {
@@ -64,30 +153,31 @@ const Tables: NextFunctionComponent<Props> = ({ err, tables: t }) => {
       }
     });
 
-    data = tables.map(table => (
-      <TableCard
-        editable={isEdting}
-        key={table.id}
-        name={table.name}
-        isTaken={
-          ordersAndTablesMap[table.name]
-            ? ordersAndTablesMap[table.name].isTaken
-            : table.isTaken!
-        }
-        currentOrdersAmount={
-          ordersAndTablesMap[table.name]
-            ? ordersAndTablesMap[table.name].amount
-            : 0
-        }
-      />
-    ));
+    data = tables.map(table => {
+      return (
+        <TableCard
+          editable={isEdting}
+          key={table.id}
+          id={table.id!}
+          name={table.name}
+          handleDeleteClick={handleDeleteClick}
+          handleEditClick={handleEditClick}
+          isTaken={
+            ordersAndTablesMap[table.name]
+              ? ordersAndTablesMap[table.name].isTaken
+              : table.isTaken!
+          }
+          currentOrdersAmount={
+            ordersAndTablesMap[table.name]
+              ? ordersAndTablesMap[table.name].amount
+              : 0
+          }
+        />
+      );
+    });
   } else {
     data = <Empty description="No entries found" />;
   }
-
-  const handleEditClick = val => {
-    setIsEditing(val);
-  };
 
   /**
    * Show only on cDM
@@ -97,34 +187,6 @@ const Tables: NextFunctionComponent<Props> = ({ err, tables: t }) => {
       message.error(`${err}`, 3);
     }
   }, []);
-
-  const saveFormRef = formRef => {
-    modalFormRef = formRef;
-  };
-
-  const handleCreateTable = () => {
-    const modalForm = modalFormRef.props.form;
-
-    modalForm.validateFields(async (errors: any, table: Table) => {
-      if (errors) {
-        return;
-      }
-
-      try {
-        const response = (await TableAPI.create(table)).data;
-
-        setTables(prevTables => [...prevTables, response]);
-
-        message.success(
-          `Successfully create a table with name ${table.name}🎉`
-        );
-      } catch (error) {
-        message.error(`Error: ${error}`, 3);
-      }
-
-      setModalVisible(false);
-    });
-  };
 
   return (
     <>
@@ -139,14 +201,13 @@ const Tables: NextFunctionComponent<Props> = ({ err, tables: t }) => {
             </h1>
           }
           extra={[
-            <>
-              <Switch
-                onClick={handleEditClick}
-                checked={isEdting}
-                checkedChildren={<Icon type="edit" />}
-                unCheckedChildren={<Icon type="inbox" />}
-              />
-            </>
+            <Switch
+              onClick={handleEditToggle}
+              checked={isEdting}
+              checkedChildren={<Icon type="edit" />}
+              key="1"
+              unCheckedChildren={<Icon type="inbox" />}
+            />
           ]}
           subTitle={
             <h3>
@@ -157,10 +218,7 @@ const Tables: NextFunctionComponent<Props> = ({ err, tables: t }) => {
           <TableContainer>
             {data}
             {isEdting && (
-              <CreateTableButton
-                type="ghost"
-                onClick={() => setModalVisible(true)}
-              >
+              <CreateTableButton type="ghost" onClick={handleCreateClick}>
                 +
               </CreateTableButton>
             )}
@@ -170,10 +228,10 @@ const Tables: NextFunctionComponent<Props> = ({ err, tables: t }) => {
       <EntityModal
         wrappedComponentRef={saveFormRef}
         visible={modalVisible}
-        onCreate={handleCreateTable}
-        onCancel={() => setModalVisible(false)}
+        onConfirm={handleModalConfirm}
+        onCancel={handleModalCancel}
         entityType="table"
-        actionType="create"
+        actionType={actionType}
       />
     </>
   );

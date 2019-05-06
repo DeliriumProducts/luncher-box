@@ -1,3 +1,3 @@
-import { Product, Category } from '../interfaces';
+import { Category, Product, Table } from '../interfaces';
 
-export type EntityInstance = Product | Category;
+export type EntityInstance = Product | Category | Table;

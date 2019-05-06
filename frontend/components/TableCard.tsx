@@ -1,5 +1,6 @@
 import { Popconfirm } from 'antd';
 import styled from 'styled-components';
+import { Table } from '../interfaces';
 import ActionButton from './ActionButton';
 
 const Card: any = styled.div`
@@ -53,18 +54,37 @@ const Card: any = styled.div`
 `;
 
 interface Props {
+  id: string;
   name: string;
   currentOrdersAmount: number;
   isTaken: boolean;
   editable: boolean;
+
+  handleEditClick: (
+    e: React.FormEvent<HTMLButtonElement>,
+    table: Table
+  ) => void;
+
+  handleDeleteClick: (
+    e: React.FormEvent<HTMLButtonElement>,
+    table: Table
+  ) => void;
 }
 
 const TableCard: React.FunctionComponent<Props> = ({
+  id,
   name,
   currentOrdersAmount,
   isTaken,
-  editable
+  editable,
+  handleDeleteClick,
+  handleEditClick
 }) => {
+  const table: Table = {
+    id,
+    name
+  };
+
   return (
     <Card isTaken={isTaken} editable={editable}>
       <div className="table-name-and-status">
@@ -91,12 +111,17 @@ const TableCard: React.FunctionComponent<Props> = ({
               alignItems: 'center'
             }}
           >
-            <ActionButton size="small" icon="edit">
+            <ActionButton
+              size="small"
+              icon="edit"
+              title={`Are you sure?`}
+              onClick={(e: any) => handleEditClick(e, table)}
+            >
               Edit
             </ActionButton>
             <Popconfirm
               title={`Are you sure?`}
-              // onConfirm={}
+              onConfirm={(e: any) => handleDeleteClick(e, table)}
               okText="Yes"
               placement="bottom"
             >
