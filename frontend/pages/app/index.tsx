@@ -9,8 +9,8 @@ import { Category } from '../../interfaces';
 
 const StyledPageHeader = styled(PageHeader)`
   background-color: #fafafa;
-  flex: 1;
   border-radius: 7px;
+  flex: 1;
 
   @media (max-width: 480px) {
     border-radius: 0;
@@ -21,7 +21,6 @@ const StyledPageHeader = styled(PageHeader)`
 const FlexContainer = styled.div`
   display: flex;
   flex-wrap: wrap;
-  align-items: center;
   justify-content: center;
   background-color: #fafafa;
   border-radius: 7px;
@@ -65,7 +64,30 @@ const Home: NextFunctionComponent<Props> = ({ err, categories }) => {
       <Head>
         <title>Menu • LuncherBox</title>
       </Head>
-      <FlexContainer>{data}</FlexContainer>
+      <FlexContainer>
+        <StyledPageHeader
+          title={
+            <h1>
+              <strong>Categories</strong>
+            </h1>
+          }
+          subTitle={
+            <h3>
+              <strong>({categories.length})</strong>
+            </h3>
+          }
+        >
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'center',
+              flexWrap: 'wrap'
+            }}
+          >
+            {data}
+          </div>
+        </StyledPageHeader>
+      </FlexContainer>
     </>
   );
 };

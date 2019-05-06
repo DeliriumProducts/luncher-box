@@ -38,7 +38,6 @@ const StyledPageHeader = styled(PageHeader)`
 const FlexContainer = styled.div`
   display: flex;
   flex-wrap: wrap;
-  align-items: center;
   justify-content: center;
   background-color: #fafafa;
   border-radius: 7px;

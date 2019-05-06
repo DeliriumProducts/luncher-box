@@ -22,7 +22,6 @@ const StyledPageHeader = styled(PageHeader)`
 const FlexContainer = styled.div`
   display: flex;
   flex-wrap: wrap;
-  align-items: center;
   justify-content: center;
   background-color: #fafafa;
   border-radius: 7px;
@@ -76,7 +75,33 @@ const CategoryPage: NextFunctionComponent<Props> = ({
           {categoryName === '' ? 'Category' : categoryName} • LuncherBox
         </title>
       </Head>
-      <FlexContainer>{data}</FlexContainer>
+      <FlexContainer>
+        <StyledPageHeader
+          title={
+            <h1>
+              <strong>{categoryName}</strong>
+            </h1>
+          }
+          subTitle={
+            <h3>
+              <strong>({products.length})</strong>
+            </h3>
+          }
+          onBack={() => {
+            Router.back();
+          }}
+        >
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'center',
+              flexWrap: 'wrap'
+            }}
+          >
+            {data}
+          </div>
+        </StyledPageHeader>
+      </FlexContainer>
     </>
   );
 };
