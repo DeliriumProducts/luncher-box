@@ -10,7 +10,10 @@ export class OrderProduct {
   @PrimaryColumn()
   productId: number;
 
-  @ManyToOne(() => Order, o => o.products)
+  @ManyToOne(() => Order, o => o.products, {
+    cascade: ['remove'],
+    onDelete: 'CASCADE'
+  })
   @JoinColumn({ name: 'orderId' })
   order: Order;
 

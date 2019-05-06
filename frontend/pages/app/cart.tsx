@@ -169,7 +169,14 @@ const Cart: NextFunctionComponent<Props> = ({ tables, err }) => {
               <Select
                 style={{ marginTop: '2%', width: '100%' }}
                 placeholder="Please select your table"
-                defaultValue={cartContext.order.table.name || []}
+                defaultValue={
+                  /**
+                   * Check if the remembered table still exists
+                   */
+                  tables.filter(t => {
+                    return t.name === cartContext.order.table.name;
+                  })[0].name
+                }
                 onChange={handleTable}
               >
                 {tables.map(t => (

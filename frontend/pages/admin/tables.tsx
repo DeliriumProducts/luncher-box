@@ -131,15 +131,19 @@ const Tables: NextFunctionComponent<Props> = ({ err, tables: t }) => {
   ) => {
     e.stopPropagation();
 
-    await TableAPI.delete(table.id!);
+    try {
+      await TableAPI.delete(table.id!);
 
-    setTables(prevTables =>
-      prevTables.filter(pt => {
-        return pt.id !== table.id;
-      })
-    );
+      setTables(prevTables =>
+        prevTables.filter(pt => {
+          return pt.id !== table.id;
+        })
+      );
 
-    message.success(`Successfully deleted table ${name} 🎉`);
+      message.success(`Successfully deleted table ${table.name} 🎉`);
+    } catch (error) {
+      message.error(`Error: ${error}`, 3);
+    }
   };
 
   if (tables.length && !err) {
@@ -183,8 +187,10 @@ const Tables: NextFunctionComponent<Props> = ({ err, tables: t }) => {
         />
       );
     });
-  } else {
+  } else if (!isEdting) {
     data = <Empty description="No entries found" />;
+  } else {
+    data = null;
   }
 
   /**

@@ -10,7 +10,10 @@ export class Order {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @ManyToOne(() => Table, t => t.orders)
+  @ManyToOne(() => Table, t => t.orders, {
+    cascade: ['remove'],
+    onDelete: 'CASCADE'
+  })
   @JoinColumn()
   @Allow()
   table: Table;
