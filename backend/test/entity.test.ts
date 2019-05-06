@@ -3,8 +3,8 @@ import request from 'supertest';
 import { getRepository, MoreThan, Repository } from 'typeorm';
 import { initServer } from '../src';
 import { INITIAL_ADMIN_PASS } from '../src/config';
-import { createInitialAdmin } from '../src/utils';
 import { Category, Product, Table, User } from '../src/entities';
+import { createInitialAdmin } from '../src/utils';
 
 let server: Server;
 let productRepository: Repository<Product>;
@@ -1589,7 +1589,10 @@ describe('Table controller', () => {
         .expect(400);
 
       expect(body).toEqual({
-        errors: ['name must be a string'],
+        errors: [
+          'name must be longer than or equal to 2 and shorter than or equal to undefined characters',
+          'name must be a string'
+        ],
         name: 'NotValidError',
         message: 'Table not valid!'
       });
@@ -1640,7 +1643,11 @@ describe('Table controller', () => {
         .expect(400);
 
       expect(body).toEqual({
-        errors: ['name must be a string', 'isTaken must be a boolean value'],
+        errors: [
+          'name must be longer than or equal to 2 and shorter than or equal to undefined characters',
+          'name must be a string',
+          'isTaken must be a boolean value'
+        ],
         name: 'NotValidError',
         message: 'Table not valid!'
       });
@@ -1806,7 +1813,10 @@ describe('Table controller', () => {
       editedTable.id = id;
 
       expect(body).toEqual({
-        errors: ['name must be a string'],
+        errors: [
+          'name must be longer than or equal to 2 and shorter than or equal to undefined characters',
+          'name must be a string'
+        ],
         message: 'Table not valid!',
         name: 'NotValidError'
       });
@@ -1882,7 +1892,11 @@ describe('Table controller', () => {
         .expect(400);
 
       expect(body).toEqual({
-        errors: ['name must be a string', 'isTaken must be a boolean value'],
+        errors: [
+          'name must be longer than or equal to 2 and shorter than or equal to undefined characters',
+          'name must be a string',
+          'isTaken must be a boolean value'
+        ],
         name: 'NotValidError',
         message: 'Table not valid!'
       });
