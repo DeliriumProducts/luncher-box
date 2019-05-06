@@ -1,4 +1,13 @@
-import { Button, Card, Empty, Input, message, Modal, Tag } from 'antd';
+import {
+  Button,
+  Card,
+  Empty,
+  Input,
+  message,
+  Modal,
+  PageHeader,
+  Tag
+} from 'antd';
 import Head from 'next/head';
 import React from 'react';
 import styled from 'styled-components';
@@ -23,12 +32,22 @@ const StyledCard = styled(Card)`
   box-shadow: 0 2px 2px rgba(0, 0, 0, 0.12);
 `;
 
+const StyledPageHeader = styled(PageHeader)`
+  background-color: #fafafa;
+  border-radius: 7px;
+  flex: 1;
+
+  @media (max-width: 480px) {
+    border-radius: 0;
+    margin: 0;
+  }
+`;
+
 const FlexContainer = styled.div`
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   justify-content: center;
-  padding: 2rem;
   background-color: #fafafa;
   border-radius: 7px;
   box-shadow: 0 20px 24px -18px rgba(0, 0, 0, 0.31);
@@ -41,7 +60,6 @@ const FlexContainer = styled.div`
     margin: 0;
   }
 `;
-
 export default () => {
   const socketContext = React.useContext(SocketContext);
   const cartContext = React.useContext(CustomerContext);
@@ -208,7 +226,22 @@ export default () => {
           Cart • LuncherBox
         </title>
       </Head>
-      <FlexContainer>{data}</FlexContainer>
+      <FlexContainer>
+        <StyledPageHeader
+          title={
+            <h1>
+              <strong>Cart</strong>
+            </h1>
+          }
+          subTitle={
+            <h3>
+              <strong>({productsInCart})</strong>
+            </h3>
+          }
+        >
+          {data}
+        </StyledPageHeader>
+      </FlexContainer>
     </>
   );
 };
