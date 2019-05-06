@@ -1,10 +1,12 @@
+import { Popconfirm } from 'antd';
 import styled from 'styled-components';
+import ActionButton from './ActionButton';
 
 const Card: any = styled.div`
   background: #fff;
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
   width: 12rem;
   height: 8rem;
   flex-direction: column;
@@ -20,12 +22,14 @@ const Card: any = styled.div`
   .table-name-and-status {
     width: 100%;
     display: flex;
-    justify-content: space-between;
+    justify-content: ${(props: any) =>
+      props.editable ? 'center' : 'space-between'};
+    align-items: ${(props: any) => props.editable && 'center'};
 
     .table-name {
       font-weight: 600;
       margin-top: 3px;
-      margin-left: 15px;
+      margin-left: ${(props: any) => (props.editable ? '0' : '15px')};
       font-size: 1.3rem;
       color: #000;
     }
@@ -52,21 +56,62 @@ interface Props {
   name: string;
   currentOrdersAmount: number;
   isTaken: boolean;
+  editable: boolean;
 }
 
 const TableCard: React.FunctionComponent<Props> = ({
   name,
   currentOrdersAmount,
-  isTaken
+  isTaken,
+  editable
 }) => {
   return (
-    <Card isTaken={isTaken}>
+    <Card isTaken={isTaken} editable={editable}>
       <div className="table-name-and-status">
         <div className="table-name">{name}</div>
-        <div className="table-status" />
+        {!editable && <div className="table-status" />}
       </div>
-      <div className="table-current-order-amount">{currentOrdersAmount}</div>
-      <div>{currentOrdersAmount === 1 ? 'order' : 'orders'} in progress</div>
+      {!editable && (
+        <>
+          <div className="table-current-order-amount">
+            {currentOrdersAmount}
+          </div>
+          <div>
+            {currentOrdersAmount === 1 ? 'order' : 'orders'} in progress
+          </div>
+        </>
+      )}
+      {editable && (
+        <>
+          <div
+            style={{
+              display: 'flex',
+              width: '100%',
+              justifyContent: 'space-evenly',
+              alignItems: 'center'
+            }}
+          >
+            <ActionButton size="small" icon="edit">
+              Edit
+            </ActionButton>
+            <Popconfirm
+              title={`Are you sure?`}
+              // onConfirm={}
+              okText="Yes"
+              placement="bottom"
+            >
+              <ActionButton
+                size="small"
+                key="delete"
+                type="default"
+                icon="delete"
+              >
+                Delete
+              </ActionButton>
+            </Popconfirm>
+          </div>
+        </>
+      )}
     </Card>
   );
 };

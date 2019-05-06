@@ -1,4 +1,4 @@
-import { Button, Empty, message, Switch } from 'antd';
+import { Button, Empty, Icon, message, Switch } from 'antd';
 import { NextFunctionComponent } from 'next';
 import Head from 'next/head';
 import React from 'react';
@@ -66,6 +66,7 @@ const Tables: NextFunctionComponent<Props> = ({ err, tables: t }) => {
 
     data = tables.map(table => (
       <TableCard
+        editable={isEdting}
         key={table.id}
         name={table.name}
         isTaken={
@@ -84,7 +85,7 @@ const Tables: NextFunctionComponent<Props> = ({ err, tables: t }) => {
     data = <Empty description="No entries found" />;
   }
 
-  const handleSwitchChange = val => {
+  const handleEditClick = val => {
     setIsEditing(val);
   };
 
@@ -137,21 +138,32 @@ const Tables: NextFunctionComponent<Props> = ({ err, tables: t }) => {
               <strong>Tables</strong>
             </h1>
           }
+          extra={[
+            <>
+              <Switch
+                onClick={handleEditClick}
+                checked={isEdting}
+                checkedChildren={<Icon type="edit" />}
+                unCheckedChildren={<Icon type="inbox" />}
+              />
+            </>
+          ]}
           subTitle={
             <h3>
               <strong>({tables.length})</strong>
             </h3>
           }
         >
-          <Switch checked={isEdting} onChange={handleSwitchChange} />
           <TableContainer>
             {data}
-            <CreateTableButton
-              type="ghost"
-              onClick={() => setModalVisible(true)}
-            >
-              +
-            </CreateTableButton>
+            {isEdting && (
+              <CreateTableButton
+                type="ghost"
+                onClick={() => setModalVisible(true)}
+              >
+                +
+              </CreateTableButton>
+            )}
           </TableContainer>
         </PageHeader>
       </FlexContainer>
