@@ -1,24 +1,13 @@
-import { Empty, message, PageHeader } from 'antd';
+import { Empty, message } from 'antd';
 import { NextFunctionComponent } from 'next';
 import Head from 'next/head';
 import Router from 'next/router';
 import React from 'react';
-import styled from 'styled-components';
 import { CategoryAPI } from '../../api';
 import FlexContainer from '../../components/FlexContainer';
+import PageHeader from '../../components/PageHeader';
 import ProductCard from '../../components/ProductCard';
 import { Product } from '../../interfaces';
-
-const StyledPageHeader = styled(PageHeader)`
-  background-color: #fafafa;
-  border-radius: 7px;
-  flex: 1;
-
-  @media (max-width: 480px) {
-    border-radius: 0;
-    margin: 0;
-  }
-`;
 
 interface Props {
   products: Product[];
@@ -60,7 +49,7 @@ const CategoryPage: NextFunctionComponent<Props> = ({
         </title>
       </Head>
       <FlexContainer>
-        <StyledPageHeader
+        <PageHeader
           title={
             <h1>
               <strong>{categoryName}</strong>
@@ -84,7 +73,7 @@ const CategoryPage: NextFunctionComponent<Props> = ({
           >
             {data}
           </div>
-        </StyledPageHeader>
+        </PageHeader>
       </FlexContainer>
     </>
   );

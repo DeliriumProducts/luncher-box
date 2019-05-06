@@ -1,27 +1,16 @@
-import { message, PageHeader } from 'antd';
+import { message } from 'antd';
 import Head from 'next/head';
 import { Component } from 'react';
-import styled from 'styled-components';
 import { CategoryAPI } from '../../api';
 import EntityCard from '../../components/EntityCard';
 import EntityCardContainer from '../../components/EntityCardContainer';
 import EntityModal from '../../components/EntityModal';
 import FlexContainer from '../../components/FlexContainer';
+import PageHeader from '../../components/PageHeader';
 import { SocketContext } from '../../context';
 import { withAuth } from '../../hocs/';
 import { Category } from '../../interfaces';
 import { ActionTypes, EntityInstance, EntityTypes } from '../../types';
-
-const StyledPageHeader = styled(PageHeader)`
-  background-color: #fafafa;
-  border-radius: 7px;
-  flex: 1;
-
-  @media (max-width: 480px) {
-    border-radius: 0;
-    margin: 0;
-  }
-`;
 
 interface State {
   modalVisible: boolean;
@@ -208,7 +197,7 @@ class Index extends Component<any, State> {
           <title>Admin Home • LuncherBox</title>
         </Head>
         <FlexContainer>
-          <StyledPageHeader
+          <PageHeader
             title={
               <h1>
                 <strong>Categories</strong>
@@ -237,7 +226,7 @@ class Index extends Component<any, State> {
                   />
                 ))}
             </EntityCardContainer>
-          </StyledPageHeader>
+          </PageHeader>
         </FlexContainer>
         <EntityModal
           wrappedComponentRef={this.saveModalFormRef}

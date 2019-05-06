@@ -1,13 +1,13 @@
-import { message, PageHeader } from 'antd';
+import { message } from 'antd';
 import Head from 'next/head';
 import Router, { DefaultQuery } from 'next/router';
 import { Component } from 'react';
-import styled from 'styled-components';
 import { CategoryAPI, ProductAPI } from '../../api';
 import EntityCard from '../../components/EntityCard';
 import EntityCardContainer from '../../components/EntityCardContainer';
 import EntityModal from '../../components/EntityModal';
 import FlexContainer from '../../components/FlexContainer';
+import PageHeader from '../../components/PageHeader';
 import { withAuth, withRouter } from '../../hocs/';
 import { Category, Product } from '../../interfaces';
 import { ActionTypes, EntityInstance, EntityTypes } from '../../types';
@@ -30,11 +30,6 @@ interface State {
   actionType: ActionTypes;
   categoryName: string;
 }
-
-const StyledPageHeader = styled(PageHeader)`
-  background-color: #fafafa;
-  flex: 1;
-`;
 
 class CategoryPage extends Component<Props, State> {
   state: State = {
@@ -250,7 +245,7 @@ class CategoryPage extends Component<Props, State> {
           </title>
         </Head>
         <FlexContainer>
-          <StyledPageHeader
+          <PageHeader
             title={
               <h1>
                 <strong>{this.state.categoryName}</strong>
@@ -281,7 +276,7 @@ class CategoryPage extends Component<Props, State> {
                 />
               ))}
             </EntityCardContainer>
-          </StyledPageHeader>
+          </PageHeader>
           <EntityModal
             wrappedComponentRef={this.saveModalFormRef}
             visible={this.state.modalVisible}

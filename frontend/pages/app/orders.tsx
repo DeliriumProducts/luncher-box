@@ -1,21 +1,10 @@
-import { Empty, PageHeader } from 'antd';
+import { Empty } from 'antd';
 import Head from 'next/head';
 import React, { useContext } from 'react';
-import styled from 'styled-components';
 import FlexContainer from '../../components/FlexContainer';
 import Order from '../../components/OrderCard';
+import PageHeader from '../../components/PageHeader';
 import { CustomerContext } from '../../context';
-
-const StyledPageHeader = styled(PageHeader)`
-  background-color: #fafafa;
-  border-radius: 7px;
-  flex: 1;
-
-  @media (max-width: 480px) {
-    border-radius: 0;
-    margin: 0;
-  }
-`;
 
 export default () => {
   const { orderHistory } = useContext(CustomerContext);
@@ -39,7 +28,7 @@ export default () => {
         <title>Orders • LuncherBox</title>
       </Head>
       <FlexContainer>
-        <StyledPageHeader
+        <PageHeader
           title={
             <h1>
               <strong>My orders</strong>
@@ -52,7 +41,7 @@ export default () => {
           }
         >
           {data}
-        </StyledPageHeader>
+        </PageHeader>
       </FlexContainer>
     </>
   );

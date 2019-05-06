@@ -1,18 +1,10 @@
-import {
-  Button,
-  Card,
-  Empty,
-  Input,
-  message,
-  Modal,
-  PageHeader,
-  Tag
-} from 'antd';
+import { Button, Card, Empty, Input, message, Modal, Tag } from 'antd';
 import Head from 'next/head';
 import React from 'react';
 import styled from 'styled-components';
 import FlexContainer from '../../components/FlexContainer';
 import ItemCard from '../../components/ItemCard';
+import PageHeader from '../../components/PageHeader';
 import { CustomerContext, SocketContext } from '../../context';
 
 const { TextArea } = Input;
@@ -31,17 +23,6 @@ const StyledCard = styled(Card)`
   flex-direction: column;
   text-align: center;
   box-shadow: 0 2px 2px rgba(0, 0, 0, 0.12);
-`;
-
-const StyledPageHeader = styled(PageHeader)`
-  background-color: #fafafa;
-  border-radius: 7px;
-  flex: 1;
-
-  @media (max-width: 480px) {
-    border-radius: 0;
-    margin: 0;
-  }
 `;
 
 export default () => {
@@ -211,7 +192,7 @@ export default () => {
         </title>
       </Head>
       <FlexContainer>
-        <StyledPageHeader
+        <PageHeader
           title={
             <h1>
               <strong>Cart</strong>
@@ -224,7 +205,7 @@ export default () => {
           }
         >
           {data}
-        </StyledPageHeader>
+        </PageHeader>
       </FlexContainer>
     </>
   );

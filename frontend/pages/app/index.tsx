@@ -1,28 +1,18 @@
-import { Empty, message, PageHeader } from 'antd';
+import { Empty, message } from 'antd';
 import { NextFunctionComponent } from 'next';
 import Head from 'next/head';
 import React from 'react';
-import styled from 'styled-components';
 import { CategoryAPI } from '../../api';
 import CategoryCard from '../../components/CategoryCard';
 import FlexContainer from '../../components/FlexContainer';
+import PageHeader from '../../components/PageHeader';
 import { Category } from '../../interfaces';
-
-const StyledPageHeader = styled(PageHeader)`
-  background-color: #fafafa;
-  border-radius: 7px;
-  flex: 1;
-
-  @media (max-width: 480px) {
-    border-radius: 0;
-    margin: 0;
-  }
-`;
 
 interface Props {
   categories: Category[];
   err: string | null;
 }
+
 const Home: NextFunctionComponent<Props> = ({ err, categories }) => {
   let data: React.ReactNode[] | React.ReactNode;
 
@@ -49,7 +39,7 @@ const Home: NextFunctionComponent<Props> = ({ err, categories }) => {
         <title>Menu • LuncherBox</title>
       </Head>
       <FlexContainer>
-        <StyledPageHeader
+        <PageHeader
           title={
             <h1>
               <strong>Categories</strong>
@@ -70,7 +60,7 @@ const Home: NextFunctionComponent<Props> = ({ err, categories }) => {
           >
             {data}
           </div>
-        </StyledPageHeader>
+        </PageHeader>
       </FlexContainer>
     </>
   );
