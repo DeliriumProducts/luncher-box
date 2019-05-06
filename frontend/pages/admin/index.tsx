@@ -121,15 +121,15 @@ class Index extends Component<any, State> {
           categories: [...prevState.categories, category]
         }));
       } else {
-        const categories = [...this.state.categories];
-        const categoryIndex = categories.findIndex(
-          ({ id }: Category) => id === category.id
-        );
-
-        if (categoryIndex >= 0) {
-          categories[categoryIndex] = category;
-          this.setState({ categories });
-        }
+        this.setState(prevState => ({
+          categories: prevState.categories.map(c => {
+            if (c.id === category.id) {
+              return category;
+            } else {
+              return c;
+            }
+          })
+        }));
       }
 
       this.setState({ modalVisible: false, modalLoading: false });
@@ -151,6 +151,11 @@ class Index extends Component<any, State> {
   ) => {
     e.stopPropagation();
 
+    /**
+     * Get the latest Category before editing
+     */
+    entity = await CategoryAPI.getOne((entity as Category).id);
+
     this.showModal(entityType, 'edit', entity);
   };
 
@@ -162,18 +167,15 @@ class Index extends Component<any, State> {
 
     await CategoryAPI.delete(id as number);
 
-    const categories = [...this.state.categories];
-
-    const categoryIndex = categories.findIndex(
-      ({ id: categoryId }: Category) => categoryId === id
+    this.setState(
+      prevState => ({
+        categories: prevState.categories.filter(c => {
+          return c.id !== id;
+        })
+      }),
+      () => message.success(`Successfully deleted category ${name} 🎉`)
     );
-
-    if (categoryIndex >= 0) {
-      categories.splice(categoryIndex, 1);
-      this.setState({ categories }, () =>
-        message.success(`Successfully deleted category ${name} 🎉`)
-      );
-    }
+    // }
   };
 
   async componentDidMount() {
@@ -234,7 +236,7 @@ class Index extends Component<any, State> {
           wrappedComponentRef={this.saveModalFormRef}
           visible={this.state.modalVisible}
           onCancel={this.handleModalCancel}
-          onCreate={this.handleModalAction}
+          onConfirm={this.handleModalAction}
           entityType={this.state.entityType}
           actionType={this.state.actionType}
           entity={this.state.entity}

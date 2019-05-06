@@ -137,27 +137,22 @@ class CategoryPage extends Component<Props, State> {
             products: [...prevState.products, product]
           }));
         } else {
-          const products = [...this.state.products];
-          const productIndex = products.findIndex(
-            ({ id }: Product) => id === product.id
-          );
-
-          if (productIndex >= 0) {
-            products[productIndex] = product;
-            this.setState({ products });
-          }
+          this.setState(prevState => ({
+            products: prevState.products.map(p => {
+              if (p.id === product.id) {
+                return product;
+              } else {
+                return p;
+              }
+            })
+          }));
         }
       } else {
-        const products = [...this.state.products];
-
-        const productIndex = products.findIndex(
-          ({ id }: Product) => id === product.id
-        );
-
-        if (productIndex >= 0) {
-          products.splice(productIndex, 1);
-          this.setState({ products });
-        }
+        this.setState(prevState => ({
+          products: prevState.products.filter(p => {
+            return p.id !== product.id;
+          })
+        }));
       }
 
       this.setState({ modalVisible: false, modalLoading: false });
@@ -182,31 +177,28 @@ class CategoryPage extends Component<Props, State> {
     /**
      * Update current product with all categories
      */
-    entity = await ProductAPI.getOne(entity.id);
+    entity = await ProductAPI.getOne((entity as Product).id);
 
     this.showModal(entityType, 'edit', entity);
   };
 
   handleDeleteClick = async (
     e: React.FormEvent<HTMLButtonElement>,
-    { id, name }: EntityInstance
+    { id, name }: Product
   ) => {
     e.stopPropagation();
 
     await ProductAPI.delete(id);
 
-    const products = [...this.state.products];
-
-    const productIndex = products.findIndex(
-      ({ id: productId }: Product) => productId === id
+    this.setState(
+      prevState => ({
+        products: prevState.products.filter(p => {
+          return p.id !== id;
+        })
+      }),
+      () => message.success(`Successfully deleted product ${name} 🎉`)
     );
-
-    if (productIndex >= 0) {
-      products.splice(productIndex, 1);
-      this.setState({ products }, () =>
-        message.success(`Successfully deleted product ${name} 🎉`)
-      );
-    }
+    // }
   };
 
   async componentDidMount() {
@@ -281,7 +273,7 @@ class CategoryPage extends Component<Props, State> {
             wrappedComponentRef={this.saveModalFormRef}
             visible={this.state.modalVisible}
             onCancel={this.handleModalCancel}
-            onCreate={this.handleModalAction}
+            onConfirm={this.handleModalAction}
             entityType={this.state.entityType}
             actionType={this.state.actionType}
             entity={this.state.entity}
