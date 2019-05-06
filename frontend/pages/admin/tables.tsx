@@ -34,9 +34,12 @@ interface Props {
   err: string | null;
 }
 
-const Tables: NextFunctionComponent<Props> = ({ err, tables }) => {
+const Tables: NextFunctionComponent<Props> = ({ err, tables: t }) => {
+  const [tables, setTables] = React.useState(t);
   const [modalVisible, setModalVisible] = React.useState(false);
   let data: React.ReactNode[] | React.ReactNode;
+
+  let modalFormRef: any;
 
   if (tables.length && !err) {
     data = tables.map(table => (
@@ -59,6 +62,34 @@ const Tables: NextFunctionComponent<Props> = ({ err, tables }) => {
       message.error(`${err}`, 3);
     }
   }, []);
+
+  const saveFormRef = formRef => {
+    modalFormRef = formRef;
+  };
+
+  const handleCreateTable = () => {
+    const modalForm = modalFormRef.props.form;
+
+    modalForm.validateFields(async (errors: any, table: Table) => {
+      if (errors) {
+        return;
+      }
+
+      try {
+        const response = (await TableAPI.create(table)).data;
+
+        setTables(prevTables => [...prevTables, response]);
+
+        message.success(
+          `Successfully create a table with name ${table.name}🎉`
+        );
+      } catch (error) {
+        message.error(`Error: ${error}`, 3);
+      }
+
+      setModalVisible(false);
+    });
+  };
 
   return (
     <>
@@ -90,7 +121,9 @@ const Tables: NextFunctionComponent<Props> = ({ err, tables }) => {
         </PageHeader>
       </FlexContainer>
       <EntityModal
+        wrappedComponentRef={saveFormRef}
         visible={modalVisible}
+        onCreate={handleCreateTable}
         onCancel={() => setModalVisible(false)}
         entityType="table"
         actionType="create"
