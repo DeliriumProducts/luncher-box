@@ -36,7 +36,7 @@ interface Props {
 
 const Cart: NextFunctionComponent<Props> = ({ tables, err }) => {
   const socketContext = React.useContext(SocketContext);
-  const cartContext = React.useContext(CustomerContext);
+  const customerContext = React.useContext(CustomerContext);
 
   /**
    * Show only on cDM
@@ -48,19 +48,19 @@ const Cart: NextFunctionComponent<Props> = ({ tables, err }) => {
   }, []);
 
   const handleComment = (e: React.FormEvent<HTMLTextAreaElement>) => {
-    cartContext.actions.comment(e.currentTarget.value);
+    customerContext.actions.comment(e.currentTarget.value);
   };
 
   const handleTable = val => {
-    cartContext.actions.setTable({ name: val });
+    customerContext.actions.setTable({ name: val });
   };
 
   const placeOrder = () => {
-    if (cartContext.order.table.name) {
+    if (customerContext.order.table.name) {
       /**
        * Remove the actions and the totalAmount before sending to the backend
        */
-      const { order } = cartContext;
+      const { order } = customerContext;
 
       let totalSum = 0;
       Modal.warn({
@@ -80,7 +80,7 @@ const Cart: NextFunctionComponent<Props> = ({ tables, err }) => {
         centered: true,
         content: (
           <div>
-            {cartContext.order.products.map(orderProduct => {
+            {customerContext.order.products.map(orderProduct => {
               totalSum +=
                 orderProduct.product.price *
                 (orderProduct.quantity !== undefined
@@ -119,7 +119,7 @@ const Cart: NextFunctionComponent<Props> = ({ tables, err }) => {
               products: productsIdsAndQuantities
             });
 
-            cartContext.actions.clear();
+            customerContext.actions.clear();
           }
         },
         maskClosable: true
@@ -130,15 +130,23 @@ const Cart: NextFunctionComponent<Props> = ({ tables, err }) => {
   };
 
   let data: React.ReactNode[] | React.ReactNode;
+  let selectedTable: Table | [] = [];
+
+  for (const table of tables) {
+    if (table.name === customerContext.order.table.name) {
+      selectedTable = table;
+      break;
+    }
+  }
 
   /**
    * Check whether orders are still being fetched from localStorage
    */
-  if (cartContext.order && cartContext.order.products.length) {
+  if (customerContext.order && customerContext.order.products.length) {
     let totalSum = 0;
     data = (
       <>
-        {cartContext.order.products.map(orderProduct => {
+        {customerContext.order.products.map(orderProduct => {
           totalSum +=
             orderProduct.product.price *
             (orderProduct.quantity !== undefined ? orderProduct.quantity : 1);
@@ -162,7 +170,7 @@ const Cart: NextFunctionComponent<Props> = ({ tables, err }) => {
               placeholder="Write comments in case you are allergic to ingredients or want to exclude some. e.g. no onions, no mayo. "
               onChange={handleComment}
               rows={6}
-              defaultValue={cartContext.order.comment}
+              defaultValue={customerContext.order.comment}
               style={{ width: '100%', marginTop: '2%' }}
             />
             <div style={{ display: 'flex', justifyContent: 'center' }}>
@@ -170,12 +178,7 @@ const Cart: NextFunctionComponent<Props> = ({ tables, err }) => {
                 style={{ marginTop: '2%', width: '100%' }}
                 placeholder="Please select your table"
                 defaultValue={
-                  /**
-                   * Check if the remembered table still exists
-                   */
-                  tables.filter(t => {
-                    return t.name === cartContext.order.table.name;
-                  })[0].name
+                  selectedTable ? (selectedTable as Table).name : []
                 }
                 onChange={handleTable}
               >
@@ -206,7 +209,7 @@ const Cart: NextFunctionComponent<Props> = ({ tables, err }) => {
     );
   }
 
-  const { totalAmount: productsInCart } = cartContext;
+  const { totalAmount: productsInCart } = customerContext;
 
   return (
     <>

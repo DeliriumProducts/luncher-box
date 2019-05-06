@@ -1,6 +1,6 @@
 /* istanbul ignore file */
 import { TransformValidationOptions } from 'class-transformer-validator';
-import { Authorized, Get, JsonController, Param, Put } from 'routing-controllers';
+import { Authorized, Delete, Get, JsonController, Param, Put } from 'routing-controllers';
 import { MessageBody, OnMessage, SocketController, SocketId } from 'socket-controllers';
 import { getRepository, In, Repository } from 'typeorm';
 import { io } from '../config';
@@ -55,6 +55,24 @@ export class OrderController {
         placed: 'DESC'
       }
     });
+  }
+
+  /**
+   * DELETE /orders
+   *
+   * Deletes all orders
+   */
+  @Delete()
+  @Authorized()
+  async deleteAll() {
+    const orders = await this.orderRepository.find({
+      relations: ['products', 'products.product', 'table'],
+      order: {
+        placed: 'DESC'
+      }
+    });
+
+    return await this.orderRepository.delete(orders.map(o => o.id));
   }
 
   /**

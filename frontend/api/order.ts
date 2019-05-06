@@ -45,4 +45,10 @@ export class OrderAPI {
 
     return response;
   }
+
+  static async deleteAll() {
+    const response = await axios.delete(`${BACKEND_URL}/orders`, this.opts);
+
+    return response;
+  }
 }
