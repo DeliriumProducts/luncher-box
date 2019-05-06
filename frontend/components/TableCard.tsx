@@ -53,7 +53,7 @@ interface Props {
   isTaken: boolean;
 }
 
-const Table: React.FunctionComponent<Props> = ({
+const TableCard: React.FunctionComponent<Props> = ({
   name,
   currentOrdersAmount,
   isTaken
@@ -70,4 +70,4 @@ const Table: React.FunctionComponent<Props> = ({
   );
 };
 
-export default Table;
+export default TableCard;

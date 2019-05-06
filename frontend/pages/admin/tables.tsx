@@ -1,4 +1,4 @@
-import { message } from 'antd';
+import { message, Empty, Button } from 'antd';
 import { NextFunctionComponent } from 'next';
 import Head from 'next/head';
 import React from 'react';
@@ -16,12 +16,38 @@ const TableContainer = styled.div`
   align-items: center;
   justify-content: center;
 `;
+
+const CreateTableButton = styled(Button)`
+  background: #fff;
+  width: 12rem;
+  height: 8rem;
+  font-weight: 500;
+  font-size: 4rem;
+  box-shadow: 0 2px 2px rgba(0, 0, 0, 0.12);
+  border-radius: 7px;
+  border: none;
+`;
 interface Props {
-  tables: Table[] | [];
+  tables: Table[];
   err: string | null;
 }
 
 const Tables: NextFunctionComponent<Props> = ({ err, tables }) => {
+  let data: React.ReactNode[] | React.ReactNode;
+
+  if (tables.length && !err) {
+    data = tables.map(table => (
+      <TableCard
+        key={table.id}
+        name={table.name}
+        isTaken={table.isTaken!}
+        currentOrdersAmount={5}
+      />
+    ));
+  } else {
+    data = <Empty description="No entries found" />;
+  }
+
   /**
    * Show only on cDM
    */
@@ -50,26 +76,8 @@ const Tables: NextFunctionComponent<Props> = ({ err, tables }) => {
           }
         >
           <TableContainer>
-            <TableCard name="A10" currentOrdersAmount={50} isTaken={true} />
-            <TableCard />
-            <TableCard />
-            <TableCard />
-            <TableCard />
-            <TableCard />
-            <TableCard />
-            <TableCard />
-            <TableCard />
-            <TableCard />
-            <TableCard />
-            <TableCard />
-            <TableCard />
-            <TableCard />
-            <TableCard />
-            <TableCard />
-            <TableCard />
-            <TableCard />
-            <TableCard />
-            <TableCard />
+            {data}
+            <CreateTableButton type="ghost">+</CreateTableButton>
           </TableContainer>
         </PageHeader>
       </FlexContainer>
