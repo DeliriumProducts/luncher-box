@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
-import FullHeightContainer from '../../components/FullHeightContainer';
 import { withAuth } from '../../hocs';
 
 const FlexContainer = styled.div`
@@ -27,7 +26,7 @@ const FlexContainer = styled.div`
 
 class RestaurantLoad extends Component {
   render() {
-    return <FullHeightContainer>???????</FullHeightContainer>;
+    return <>???????</>;
   }
 }
 
