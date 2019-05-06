@@ -184,7 +184,7 @@ class CategoryPage extends Component<Props, State> {
 
   handleDeleteClick = async (
     e: React.FormEvent<HTMLButtonElement>,
-    { id, name }: Product
+    { id, name }: any
   ) => {
     e.stopPropagation();
 

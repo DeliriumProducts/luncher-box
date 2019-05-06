@@ -82,7 +82,8 @@ const TableCard: React.FunctionComponent<Props> = ({
 }) => {
   const table: Table = {
     id,
-    name
+    name,
+    isTaken
   };
 
   return (

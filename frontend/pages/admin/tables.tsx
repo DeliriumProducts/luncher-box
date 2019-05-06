@@ -81,17 +81,25 @@ const Tables: NextFunctionComponent<Props> = ({ err, tables: t }) => {
 
           message.success(`Successfully created table ${table.name}🎉`);
         } else {
-          const response = (await TableAPI.edit(table)).data;
+          if (currentTable) {
+            /**
+             * Attach missing properties
+             */
+            table.id = currentTable.id;
+            table.isTaken = currentTable.isTaken;
 
-          setTables(prevTables =>
-            prevTables.map(pt => {
-              if (pt.id === response.id) {
-                return response;
-              } else {
-                return pt;
-              }
-            })
-          );
+            const response = (await TableAPI.edit(table)).data;
+
+            setTables(prevTables =>
+              prevTables.map(pt => {
+                if (pt.id === response.id) {
+                  return response;
+                } else {
+                  return pt;
+                }
+              })
+            );
+          }
 
           message.success(`Successfully edited table ${table.name}🎉`);
         }
@@ -232,6 +240,7 @@ const Tables: NextFunctionComponent<Props> = ({ err, tables: t }) => {
         onCancel={handleModalCancel}
         entityType="table"
         actionType={actionType}
+        entity={currentTable}
       />
     </>
   );
