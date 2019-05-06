@@ -43,6 +43,8 @@ class Index extends Component<any, State> {
     actionType: ActionTypes,
     entity?: EntityInstance
   ) => {
+    this.modalFormRef.props.form.resetFields();
+
     if (entity) {
       this.setState({
         modalVisible: true,
@@ -76,9 +78,10 @@ class Index extends Component<any, State> {
     /**
      * We will need the entity from state when actionType == 'edit',
      * so we destructure it now and then we have to check
-     * if it's undefined, because it will be when actionType == 'create'
+     * if it's undefined, because it will be undefined if actionType == 'create'
      */
     const { entity: entityToEdit, actionType } = { ...this.state };
+
     modalForm.validateFields(async (err: any, entity: any) => {
       if (err) {
         return;
@@ -129,7 +132,6 @@ class Index extends Component<any, State> {
         }
       }
 
-      modalForm.resetFields();
       this.setState({ modalVisible: false, modalLoading: false });
     });
   };
@@ -158,7 +160,7 @@ class Index extends Component<any, State> {
   ) => {
     e.stopPropagation();
 
-    await CategoryAPI.delete(id);
+    await CategoryAPI.delete(id as number);
 
     const categories = [...this.state.categories];
 

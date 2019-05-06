@@ -50,6 +50,7 @@ class CategoryPage extends Component<Props, State> {
     actionType: ActionTypes,
     entity?: EntityInstance
   ) => {
+    this.modalFormRef.props.form.resetFields();
     if (entity) {
       this.setState({
         modalVisible: true,
@@ -159,7 +160,6 @@ class CategoryPage extends Component<Props, State> {
         }
       }
 
-      modalForm.resetFields();
       this.setState({ modalVisible: false, modalLoading: false });
     });
   };
