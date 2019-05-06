@@ -1,4 +1,4 @@
-import { Button, Empty, message } from 'antd';
+import { Button, Empty, message, Switch } from 'antd';
 import { NextFunctionComponent } from 'next';
 import Head from 'next/head';
 import React from 'react';
@@ -28,6 +28,7 @@ const CreateTableButton = styled(Button)`
   box-shadow: 0 2px 2px rgba(0, 0, 0, 0.12);
   border-radius: 7px;
   color: #000;
+  margin: 0.5rem;
   border: none;
 `;
 interface Props {
@@ -38,6 +39,7 @@ interface Props {
 const Tables: NextFunctionComponent<Props> = ({ err, tables: t }) => {
   const [tables, setTables] = React.useState(t);
   const [modalVisible, setModalVisible] = React.useState(false);
+  const [isEdting, setIsEditing] = React.useState(false);
   const adminContext = React.useContext(AdminContext);
   let data: React.ReactNode[] | React.ReactNode;
 
@@ -62,8 +64,6 @@ const Tables: NextFunctionComponent<Props> = ({ err, tables: t }) => {
       }
     });
 
-    console.log(tables);
-
     data = tables.map(table => (
       <TableCard
         key={table.id}
@@ -83,6 +83,10 @@ const Tables: NextFunctionComponent<Props> = ({ err, tables: t }) => {
   } else {
     data = <Empty description="No entries found" />;
   }
+
+  const handleSwitchChange = val => {
+    setIsEditing(val);
+  };
 
   /**
    * Show only on cDM
@@ -139,6 +143,7 @@ const Tables: NextFunctionComponent<Props> = ({ err, tables: t }) => {
             </h3>
           }
         >
+          <Switch checked={isEdting} onChange={handleSwitchChange} />
           <TableContainer>
             {data}
             <CreateTableButton

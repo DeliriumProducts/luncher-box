@@ -34,9 +34,7 @@ const EntityModal = Form.create()(
       this.setState({ categories });
     }
 
-    handleSearch = val => {
-      console.log(val);
-    };
+    handleSearch = val => {};
 
     render() {
       const {
