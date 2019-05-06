@@ -1,4 +1,4 @@
-import { message } from 'antd';
+import { message, PageHeader } from 'antd';
 import Head from 'next/head';
 import { Component } from 'react';
 import styled from 'styled-components';
@@ -11,25 +11,32 @@ import { withAuth } from '../../hocs/';
 import { Category } from '../../interfaces';
 import { ActionTypes, EntityInstance, EntityTypes } from '../../types';
 
+const StyledPageHeader = styled(PageHeader)`
+  background-color: #fafafa;
+  border-radius: 7px;
+  flex: 1;
+
+  @media (max-width: 480px) {
+    border-radius: 0;
+    margin: 0;
+  }
+`;
+
 const FlexContainer = styled.div`
   display: flex;
   flex-wrap: wrap;
-  justify-content: space-between;
-  width: 100%;
+  align-items: center;
+  justify-content: center;
+  background-color: #fafafa;
+  border-radius: 7px;
+  box-shadow: 0 20px 24px -18px rgba(0, 0, 0, 0.31);
 
-  .col {
-    flex: 1;
-    max-width: 70%;
-    height: 100%;
-    margin: auto;
-  }
+  margin-right: 10%;
+  margin-left: 10%;
 
-  @media (max-width: 768px) {
-    .col {
-      max-width: 100%;
-    }
-
-    flex-direction: column;
+  @media (max-width: 480px) {
+    border-radius: 0;
+    margin: 0;
   }
 `;
 
@@ -218,9 +225,19 @@ class Index extends Component<any, State> {
           <title>Admin Home • LuncherBox</title>
         </Head>
         <FlexContainer>
-          <div className="col">
+          <StyledPageHeader
+            title={
+              <h1>
+                <strong>Categories</strong>
+              </h1>
+            }
+            subTitle={
+              <h3>
+                <strong>({categories.length})</strong>
+              </h3>
+            }
+          >
             <EntityCardContainer
-              title={`Categories (${categories.length})`}
               entityType="category"
               loading={loading}
               handleNewClick={this.handleNewClick}
@@ -237,18 +254,18 @@ class Index extends Component<any, State> {
                   />
                 ))}
             </EntityCardContainer>
-            <EntityModal
-              wrappedComponentRef={this.saveModalFormRef}
-              visible={this.state.modalVisible}
-              onCancel={this.handleModalCancel}
-              onCreate={this.handleModalAction}
-              entityType={this.state.entityType}
-              actionType={this.state.actionType}
-              entity={this.state.entity}
-              loading={this.state.modalLoading}
-            />
-          </div>
+          </StyledPageHeader>
         </FlexContainer>
+        <EntityModal
+          wrappedComponentRef={this.saveModalFormRef}
+          visible={this.state.modalVisible}
+          onCancel={this.handleModalCancel}
+          onCreate={this.handleModalAction}
+          entityType={this.state.entityType}
+          actionType={this.state.actionType}
+          entity={this.state.entity}
+          loading={this.state.modalLoading}
+        />
       </>
     );
   }

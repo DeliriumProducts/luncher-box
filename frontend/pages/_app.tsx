@@ -4,7 +4,7 @@ import Head from 'next/head';
 import Router from 'next/router';
 import NProgress from 'nprogress';
 import React from 'react';
-import { createGlobalStyle } from 'styled-components';
+import styled, { createGlobalStyle } from 'styled-components';
 import '../assets/nprogress.less';
 import {
   AdminContextProvider,
@@ -78,6 +78,23 @@ const GlobalStyle = createGlobalStyle`
   }
 `;
 
+const FlexContainer = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  background-color: #fafafa;
+  border-radius: 7px;
+  box-shadow: 0 20px 24px -18px rgba(0, 0, 0, 0.31);
+
+  margin-right: 10%;
+  margin-left: 10%;
+
+  @media (max-width: 480px) {
+    border-radius: 0;
+  }
+`;
 export default class MyApp extends App {
   static async getInitialProps({ Component, ctx }: NextAppContext) {
     let pageProps = {};

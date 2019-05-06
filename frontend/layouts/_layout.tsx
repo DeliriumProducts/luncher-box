@@ -18,7 +18,6 @@ const StyledLayout = styled(AntDesignLayout)`
 
 const StyledContent = styled(Content)`
   padding: 50px;
-  margin-bottom: 47px;
   height: auto;
 
   @media (max-width: 480px) {

@@ -27,7 +27,7 @@ interface Props {
   user?: User | null;
 }
 
-const FlexContainer = styled.span`
+const TableContainer = styled.span`
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
@@ -44,6 +44,7 @@ const FlexContainer = styled.span`
   thead > tr > th {
     background-color: #f5f5f5;
   }
+
   .ant-table-row {
     background-color: #fff;
     & * {
@@ -340,9 +341,9 @@ const StaffMembers: NextFunctionComponent<Props> = ({ err, staff, user }) => {
       <Head>
         <title>Staff Members • LuncherBox</title>
       </Head>
-      <FlexContainer>
+      <TableContainer>
         <Table pagination={false} dataSource={staffList} columns={columns} />
-      </FlexContainer>
+      </TableContainer>
     </>
   );
 };

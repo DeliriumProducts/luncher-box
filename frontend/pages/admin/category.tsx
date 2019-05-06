@@ -1,4 +1,4 @@
-import { message } from 'antd';
+import { message, PageHeader } from 'antd';
 import Head from 'next/head';
 import Router, { DefaultQuery } from 'next/router';
 import { Component } from 'react';
@@ -10,28 +10,6 @@ import EntityModal from '../../components/EntityModal';
 import { withAuth, withRouter } from '../../hocs/';
 import { Category, Product } from '../../interfaces';
 import { ActionTypes, EntityInstance, EntityTypes } from '../../types';
-
-const FlexContainer = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  width: 100%;
-
-  .col {
-    flex: 1;
-    max-width: 70%;
-    height: 100%;
-    margin: auto;
-  }
-
-  @media (max-width: 768px) {
-    .col {
-      max-width: 100%;
-    }
-
-    flex-direction: column;
-  }
-`;
 
 interface CategoryQuery extends DefaultQuery {
   categoryId: string;
@@ -51,6 +29,29 @@ interface State {
   actionType: ActionTypes;
   categoryName: string;
 }
+
+const StyledPageHeader = styled(PageHeader)`
+  background-color: #fafafa;
+  flex: 1;
+`;
+
+const FlexContainer = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  background-color: #fafafa;
+  border-radius: 7px;
+  box-shadow: 0 20px 24px -18px rgba(0, 0, 0, 0.31);
+
+  margin-right: 10%;
+  margin-left: 10%;
+
+  @media (max-width: 480px) {
+    border-radius: 0;
+    margin: 0;
+  }
+`;
 
 class CategoryPage extends Component<Props, State> {
   state: State = {
@@ -266,9 +267,22 @@ class CategoryPage extends Component<Props, State> {
           </title>
         </Head>
         <FlexContainer>
-          <div className="col">
+          <StyledPageHeader
+            title={
+              <h1>
+                <strong>{this.state.categoryName}</strong>
+              </h1>
+            }
+            subTitle={
+              <h3>
+                <strong>({products.length})</strong>
+              </h3>
+            }
+            onBack={() => {
+              Router.back();
+            }}
+          >
             <EntityCardContainer
-              title={`Products (${products.length})`}
               entityType="product"
               loading={loading}
               handleNewClick={this.handleNewClick}
@@ -284,17 +298,17 @@ class CategoryPage extends Component<Props, State> {
                 />
               ))}
             </EntityCardContainer>
-            <EntityModal
-              wrappedComponentRef={this.saveModalFormRef}
-              visible={this.state.modalVisible}
-              onCancel={this.handleModalCancel}
-              onCreate={this.handleModalAction}
-              entityType={this.state.entityType}
-              actionType={this.state.actionType}
-              entity={this.state.entity}
-              loading={this.state.modalLoading}
-            />
-          </div>
+          </StyledPageHeader>
+          <EntityModal
+            wrappedComponentRef={this.saveModalFormRef}
+            visible={this.state.modalVisible}
+            onCancel={this.handleModalCancel}
+            onCreate={this.handleModalAction}
+            entityType={this.state.entityType}
+            actionType={this.state.actionType}
+            entity={this.state.entity}
+            loading={this.state.modalLoading}
+          />
         </FlexContainer>
       </>
     );

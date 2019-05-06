@@ -1,20 +1,38 @@
-import { Empty } from 'antd';
+import { Empty, PageHeader } from 'antd';
 import Head from 'next/head';
 import React from 'react';
 import styled from 'styled-components';
-import OrderContainer from '../../components/OrderContainer';
+import OrderCardContainer from '../../components/OrderCardContainer';
 import Spinner from '../../components/Spinner';
 import { AdminContext } from '../../context';
 import { withAuth } from '../../hocs';
 
-const FlexContainer = styled.div`
+const StyledPageHeader = styled(PageHeader)`
   background-color: #fafafa;
-  padding: 2rem;
   border-radius: 7px;
-  box-shadow: 0 20px 24px -18px rgba(0, 0, 0, 0.31);
+  flex: 1;
 
   @media (max-width: 480px) {
     border-radius: 0;
+    margin: 0;
+  }
+`;
+
+const FlexContainer = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  background-color: #fafafa;
+  border-radius: 7px;
+  box-shadow: 0 20px 24px -18px rgba(0, 0, 0, 0.31);
+
+  margin-right: 10%;
+  margin-left: 10%;
+
+  @media (max-width: 480px) {
+    border-radius: 0;
+    margin: 0;
   }
 `;
 
@@ -26,7 +44,7 @@ const Orders: React.FunctionComponent = () => {
     data = <Spinner />;
   } else {
     if (state.orders.length) {
-      data = <OrderContainer orders={state.orders} />;
+      data = <OrderCardContainer orders={state.orders} />;
     } else {
       data = <Empty description="No orders placed yet!" />;
     }
@@ -47,7 +65,22 @@ const Orders: React.FunctionComponent = () => {
           • LuncherBox
         </title>
       </Head>
-      <FlexContainer>{data}</FlexContainer>
+      <FlexContainer>
+        <StyledPageHeader
+          title={
+            <h1>
+              <strong>Orders</strong>
+            </h1>
+          }
+          subTitle={
+            <h3>
+              <strong>({state.orders.length})</strong>
+            </h3>
+          }
+        >
+          {data}
+        </StyledPageHeader>
+      </FlexContainer>
     </>
   );
 };
