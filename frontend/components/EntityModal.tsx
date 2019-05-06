@@ -2,7 +2,6 @@ import { Form, Icon, Input, Modal, Select } from 'antd';
 import { FormComponentProps } from 'antd/lib/form';
 import React from 'react';
 import { CategoryAPI } from '../api';
-import { SocketContext } from '../context';
 import { Category, Product } from '../interfaces';
 import { ActionTypes, EntityInstance, EntityTypes } from '../types';
 
@@ -22,9 +21,6 @@ interface State {
 
 const EntityModal = Form.create()(
   class extends React.Component<Props, State> {
-    static contextType = SocketContext;
-    context!: React.ContextType<typeof SocketContext>;
-
     state = {
       categories: []
     };
@@ -37,6 +33,11 @@ const EntityModal = Form.create()(
 
       this.setState({ categories });
     }
+
+    handleSearch = val => {
+      console.log(val);
+    };
+
     render() {
       const {
         visible,
@@ -203,6 +204,7 @@ const EntityModal = Form.create()(
                   <Select
                     mode="multiple"
                     style={{ width: '100%' }}
+                    onSearch={this.handleSearch}
                     placeholder="Please select a category"
                   >
                     {categories &&

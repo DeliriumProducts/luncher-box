@@ -1,12 +1,16 @@
-import { Button, Card, Empty, Input, message, Modal, Tag } from 'antd';
+import { Button, Card, Empty, Input, message, Modal, Select, Tag } from 'antd';
+import { NextFunctionComponent } from 'next';
 import Head from 'next/head';
 import React from 'react';
 import styled from 'styled-components';
+import { TableAPI } from '../../api';
 import FlexContainer from '../../components/FlexContainer';
 import ItemCard from '../../components/ItemCard';
 import PageHeader from '../../components/PageHeader';
 import { CustomerContext, SocketContext } from '../../context';
+import { Table } from '../../interfaces';
 
+const { Option } = Select;
 const { TextArea } = Input;
 
 const StyledCard = styled(Card)`
@@ -25,16 +29,30 @@ const StyledCard = styled(Card)`
   box-shadow: 0 2px 2px rgba(0, 0, 0, 0.12);
 `;
 
-export default () => {
+interface Props {
+  tables: Table[];
+  err: string | null;
+}
+
+const Cart: NextFunctionComponent<Props> = ({ tables, err }) => {
   const socketContext = React.useContext(SocketContext);
   const cartContext = React.useContext(CustomerContext);
+
+  /**
+   * Show only on cDM
+   */
+  React.useEffect(() => {
+    if (err) {
+      message.error(`${err}`, 3);
+    }
+  }, []);
 
   const handleComment = (e: React.FormEvent<HTMLTextAreaElement>) => {
     cartContext.actions.comment(e.currentTarget.value);
   };
 
-  const handleTable = (e: React.FormEvent<HTMLInputElement>) => {
-    cartContext.actions.setTable({ name: e.currentTarget.value });
+  const handleTable = val => {
+    cartContext.actions.setTable({ name: val });
   };
 
   const placeOrder = () => {
@@ -112,6 +130,7 @@ export default () => {
   };
 
   let data: React.ReactNode[] | React.ReactNode;
+
   /**
    * Check whether orders are still being fetched from localStorage
    */
@@ -146,14 +165,17 @@ export default () => {
               defaultValue={cartContext.order.comment}
               style={{ width: '100%', marginTop: '2%' }}
             />
-            <div style={{ display: 'flex' }}>
-              <Input
-                defaultValue={cartContext.order.table.name}
-                placeholder="Enter table e.g. A1, A2 etc."
+            <div style={{ display: 'flex', justifyContent: 'center' }}>
+              <Select
+                style={{ marginTop: '2%', width: '100%' }}
+                placeholder="Please select your table"
+                defaultValue={cartContext.order.table.name || []}
                 onChange={handleTable}
-                style={{ marignLeft: '1%', marginTop: '2%' }}
-                size="large"
-              />
+              >
+                {tables.map(t => (
+                  <Option value={t.name}>{t.name}</Option>
+                ))}
+              </Select>
             </div>
             <Button
               type="primary"
@@ -210,3 +232,35 @@ export default () => {
     </>
   );
 };
+
+Cart.getInitialProps = async () => {
+  try {
+    let tables: Table[] = [];
+
+    tables = await TableAPI.getAll();
+
+    tables = tables.map(s => ({
+      ...s,
+      key: s.id
+    }));
+
+    if (tables) {
+      return {
+        tables,
+        err: null
+      };
+    }
+  } catch (err) {
+    return {
+      tables: [],
+      err: `Network Error, Please try again later!`
+    };
+  }
+
+  return {
+    tables: [],
+    err: null
+  };
+};
+
+export default Cart;

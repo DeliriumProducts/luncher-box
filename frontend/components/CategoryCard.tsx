@@ -31,6 +31,7 @@ const StyledDiv: any = styled.div`
     justify-content: center;
     align-items: center;
     font-size: 3rem;
+    font-weight: 500;
     transition: all 0.25s;
   }
 
