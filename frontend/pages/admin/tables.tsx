@@ -5,9 +5,17 @@ import React from 'react';
 import { TableAPI } from '../../api';
 import FlexContainer from '../../components/FlexContainer';
 import PageHeader from '../../components/PageHeader';
+import TableCard from '../../components/TableCard';
 import { withAuth } from '../../hocs';
 import { Table } from '../../interfaces';
+import styled from 'styled-components';
 
+const TableContainer = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+`;
 interface Props {
   tables: Table[] | [];
   err: string | null;
@@ -41,7 +49,28 @@ const Tables: NextFunctionComponent<Props> = ({ err, tables }) => {
             </h3>
           }
         >
-          asdf
+          <TableContainer>
+            <TableCard name="A10" currentOrdersAmount={50} isTaken={true} />
+            <TableCard />
+            <TableCard />
+            <TableCard />
+            <TableCard />
+            <TableCard />
+            <TableCard />
+            <TableCard />
+            <TableCard />
+            <TableCard />
+            <TableCard />
+            <TableCard />
+            <TableCard />
+            <TableCard />
+            <TableCard />
+            <TableCard />
+            <TableCard />
+            <TableCard />
+            <TableCard />
+            <TableCard />
+          </TableContainer>
         </PageHeader>
       </FlexContainer>
     </>
