@@ -49,6 +49,10 @@ export class TableAPI {
   }
 
   static async create(table: Table) {
+    /**
+     * Set default value for isTaken, because it is not passed
+     */
+    table.isTaken = false;
     const response = await axios.post(
       `${BACKEND_URL}/tables`,
       table,
