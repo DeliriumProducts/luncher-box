@@ -1,15 +1,16 @@
-import { message, Empty, Button } from 'antd';
+import { Button, Empty, message } from 'antd';
 import { NextFunctionComponent } from 'next';
 import Head from 'next/head';
 import React from 'react';
+import styled from 'styled-components';
 import { TableAPI } from '../../api';
-import FlexContainer from '../../components/FlexContainer';
 import EntityModal from '../../components/EntityModal';
+import FlexContainer from '../../components/FlexContainer';
 import PageHeader from '../../components/PageHeader';
 import TableCard from '../../components/TableCard';
+import { AdminContext } from '../../context';
 import { withAuth } from '../../hocs';
 import { Table } from '../../interfaces';
-import styled from 'styled-components';
 
 const TableContainer = styled.div`
   display: flex;
@@ -37,17 +38,29 @@ interface Props {
 const Tables: NextFunctionComponent<Props> = ({ err, tables: t }) => {
   const [tables, setTables] = React.useState(t);
   const [modalVisible, setModalVisible] = React.useState(false);
+  const adminContext = React.useContext(AdminContext);
   let data: React.ReactNode[] | React.ReactNode;
 
   let modalFormRef: any;
 
   if (tables.length && !err) {
+    const ordersAmount: { [key: string]: number } = {};
+
+    adminContext.state.orders.forEach(o => {
+      const table = o.table.name;
+      if (!ordersAmount[table]) {
+        ordersAmount[table] = 1;
+      } else {
+        ordersAmount[table]++;
+      }
+    });
+
     data = tables.map(table => (
       <TableCard
         key={table.id}
         name={table.name}
         isTaken={table.isTaken!}
-        currentOrdersAmount={5}
+        currentOrdersAmount={ordersAmount[table.name] || 0}
       />
     ));
   } else {
