@@ -7,7 +7,7 @@
     "start": "cross-env NODE_ENV=production node server.js",
     "prod": "npm run build && cross-env NODE_ENV=production pm2 start server.js --name luncherbox-frontend --update-env",
     "snyk-protect": "snyk protect",
-    "prepublish": "npm run snyk-protect"
+    "prepublish": "npm run snyk-protect",
     "prod:docker": "npm run build && cross-env NODE_ENV=production node server.js",
     "type-check": "tsc"
   },
