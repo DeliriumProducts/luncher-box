@@ -43,8 +43,8 @@ const Tables: NextFunctionComponent<Props> = ({ err, tables: t }) => {
   const [modalVisible, setModalVisible] = React.useState(false);
   const [isEdting, setIsEditing] = React.useState(false);
   const [actionType, setActionType] = React.useState('create');
-
   const adminContext = React.useContext(AdminContext);
+
   let data: React.ReactNode[] | React.ReactNode;
 
   const modalFormRef: any = React.useRef(null);
@@ -139,6 +139,16 @@ const Tables: NextFunctionComponent<Props> = ({ err, tables: t }) => {
           return pt.id !== table.id;
         })
       );
+
+      /**
+       * Update the orders (remove all the orders with the deleted table)
+       */
+      adminContext.dispatch({
+        type: 'setOrders',
+        payload: adminContext.state.orders.filter(o => {
+          return o.table.id !== table.id;
+        })
+      });
 
       message.success(`Successfully deleted table ${table.name} 🎉`);
     } catch (error) {
