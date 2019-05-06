@@ -3,25 +3,11 @@ import { NextFunctionComponent } from 'next';
 import Head from 'next/head';
 import Router from 'next/router';
 import React from 'react';
-import styled from 'styled-components';
 import { CategoryAPI } from '../../api';
+import FlexContainer from '../../components/FlexContainer';
+import PageHeader from '../../components/PageHeader';
 import ProductCard from '../../components/ProductCard';
 import { Product } from '../../interfaces';
-
-const FlexContainer = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  background-color: #fafafa;
-  padding: 2rem;
-  border-radius: 7px;
-
-  @media (max-width: 480px) {
-    border-radius: 0;
-  }
-
-  box-shadow: 0 20px 24px -18px rgba(0, 0, 0, 0.31);
-`;
 
 interface Props {
   products: Product[];
@@ -59,11 +45,36 @@ const CategoryPage: NextFunctionComponent<Props> = ({
     <>
       <Head>
         <title>
-          {categoryName === '' ? 'Category' : categoryName}{' '}
-           • LuncherBox
+          {categoryName === '' ? 'Category' : categoryName} • LuncherBox
         </title>
       </Head>
-      <FlexContainer>{data}</FlexContainer>
+      <FlexContainer>
+        <PageHeader
+          title={
+            <h1>
+              <strong>{categoryName}</strong>
+            </h1>
+          }
+          subTitle={
+            <h3>
+              <strong>({products.length})</strong>
+            </h3>
+          }
+          onBack={() => {
+            Router.back();
+          }}
+        >
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'center',
+              flexWrap: 'wrap'
+            }}
+          >
+            {data}
+          </div>
+        </PageHeader>
+      </FlexContainer>
     </>
   );
 };

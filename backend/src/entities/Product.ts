@@ -1,7 +1,7 @@
 import { Allow, IsNumber, IsUrl, Length, Max, Min } from 'class-validator';
 import { Column, Entity, JoinTable, ManyToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { EntityError } from '../types';
-import { DuplicateEntityError, EntityNotFoundError, EntityNotValidError } from '../utils';
+import { EntityNotFoundError, EntityNotValidError } from '../utils';
 import { Category } from './Category';
 
 @Entity()
@@ -28,7 +28,7 @@ export class Product {
   @Max(1000)
   price: number;
 
-  @ManyToMany(() => Category, category => category.products, {
+  @ManyToMany(() => Category, c => c.products, {
     cascade: false
   })
   @Allow()

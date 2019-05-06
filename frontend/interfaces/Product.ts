@@ -10,5 +10,4 @@ export interface Product {
   image: string;
   price: number;
   categories?: Category[];
-  quantity?: number;
 }

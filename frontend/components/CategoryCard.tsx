@@ -12,7 +12,7 @@ const StyledDiv: any = styled.div`
   color: white;
   border-radius: 7px;
   font-size: 3rem;
-  margin: 8px;
+  margin: 0.5rem;
   width: 16rem;
   height: 16rem;
   user-select: none;

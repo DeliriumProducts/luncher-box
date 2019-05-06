@@ -2,9 +2,10 @@ import { Button, Card, Empty, Input, message, Modal, Tag } from 'antd';
 import Head from 'next/head';
 import React from 'react';
 import styled from 'styled-components';
+import FlexContainer from '../../components/FlexContainer';
 import ItemCard from '../../components/ItemCard';
+import PageHeader from '../../components/PageHeader';
 import { CustomerContext, SocketContext } from '../../context';
-import { Product } from '../../interfaces';
 
 const { TextArea } = Input;
 
@@ -24,26 +25,6 @@ const StyledCard = styled(Card)`
   box-shadow: 0 2px 2px rgba(0, 0, 0, 0.12);
 `;
 
-const FlexContainer = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  flex-direction: column;
-  padding: 2rem;
-  background-color: #fafafa;
-  border-radius: 7px;
-  box-shadow: 0 20px 24px -18px rgba(0, 0, 0, 0.31);
-
-  @media (min-width: 768px) {
-    margin: auto;
-    width: 70%;
-  }
-
-  @media (max-width: 480px) {
-    border-radius: 0;
-  }
-`;
-
 export default () => {
   const socketContext = React.useContext(SocketContext);
   const cartContext = React.useContext(CustomerContext);
@@ -53,11 +34,11 @@ export default () => {
   };
 
   const handleTable = (e: React.FormEvent<HTMLInputElement>) => {
-    cartContext.actions.setTable(e.currentTarget.value);
+    cartContext.actions.setTable({ name: e.currentTarget.value });
   };
 
   const placeOrder = () => {
-    if (cartContext.order.table) {
+    if (cartContext.order.table.name) {
       /**
        * Remove the actions and the totalAmount before sending to the backend
        */
@@ -81,18 +62,20 @@ export default () => {
         centered: true,
         content: (
           <div>
-            {cartContext.order.products.map((product: Product) => {
+            {cartContext.order.products.map(orderProduct => {
               totalSum +=
-                product.price *
-                (product.quantity !== undefined ? product.quantity : 1);
+                orderProduct.product.price *
+                (orderProduct.quantity !== undefined
+                  ? orderProduct.quantity
+                  : 1);
               return (
                 <div
-                  key={product.id}
+                  key={orderProduct.product.id}
                   style={{ display: 'flex', justifyContent: 'space-between' }}
                 >
-                  <p>{product.name}</p>
+                  <p>{orderProduct.product.name}</p>
                   <p>
-                    {product.price} x {product.quantity}
+                    {orderProduct.product.price} x {orderProduct.quantity}
                   </p>
                 </div>
               );
@@ -106,9 +89,9 @@ export default () => {
              * Instead of sending every product, send only the product id
              */
             const productsIdsAndQuantities = order.products.reduce(
-              (accumulator: any, { id, quantity }: Product) => [
+              (accumulator: any, { product, quantity }) => [
                 ...accumulator,
-                { id, quantity }
+                { id: product.id, quantity }
               ],
               []
             );
@@ -136,20 +119,20 @@ export default () => {
     let totalSum = 0;
     data = (
       <>
-        {cartContext.order.products.map((product: Product) => {
+        {cartContext.order.products.map(orderProduct => {
           totalSum +=
-            product.price *
-            (product.quantity !== undefined ? product.quantity : 1);
+            orderProduct.product.price *
+            (orderProduct.quantity !== undefined ? orderProduct.quantity : 1);
           return (
             <ItemCard
               interactive
-              id={product.id}
-              key={product.id}
-              name={product.name}
-              description={product.description}
-              image={product.image}
-              price={product.price}
-              quantity={product.quantity}
+              id={orderProduct.product.id}
+              key={orderProduct.product.id}
+              name={orderProduct.product.name}
+              description={orderProduct.product.description}
+              image={orderProduct.product.image}
+              price={orderProduct.product.price}
+              quantity={orderProduct.quantity}
             />
           );
         })}
@@ -165,7 +148,7 @@ export default () => {
             />
             <div style={{ display: 'flex' }}>
               <Input
-                defaultValue={cartContext.table}
+                defaultValue={cartContext.order.table.name}
                 placeholder="Enter table e.g. A1, A2 etc."
                 onChange={handleTable}
                 style={{ marignLeft: '1%', marginTop: '2%' }}
@@ -208,7 +191,22 @@ export default () => {
           Cart • LuncherBox
         </title>
       </Head>
-      <FlexContainer>{data}</FlexContainer>
+      <FlexContainer>
+        <PageHeader
+          title={
+            <h1>
+              <strong>Cart</strong>
+            </h1>
+          }
+          subTitle={
+            <h3>
+              <strong>({productsInCart})</strong>
+            </h3>
+          }
+        >
+          {data}
+        </PageHeader>
+      </FlexContainer>
     </>
   );
 };

@@ -1,0 +1,43 @@
+version: "3"
+services:
+  backend:
+    build: ./backend
+    command: ""
+    environment:
+      NODE_ENV: test
+      SESSION_SECRET:
+      DB_PORT:
+      DB_HOST:
+      DB_USER:
+      DB_PASS:
+      REDIS_HOST:
+      REDIS_PORT:
+      OWNER_EMAIL:
+      OWNER_PASS:
+      VERIFIER_EMAIL:
+      FRONTEND_PORT:
+      BACKEND_PORT:
+      FRONTEND_URL:
+      BACKEND_URL:
+      SOCKET_URL:
+    ports:
+      - 8000:8000
+    restart: always
+    depends_on:
+      - db
+      - redis
+  db:
+    image: mariadb
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_PASS}
+      MYSQL_DATABASE: luncherbox_test
+    volumes:
+      - ./sql:/docker-entrypoint-initdb.d
+      - ./data-sql:/var/lib/mysql
+    restart: always
+  redis:
+    image: redis
+    command: ["redis-server", "--appendonly", "yes"]
+    restart: always
+    volumes:
+      - ./data-redis:/data

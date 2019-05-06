@@ -10,7 +10,6 @@ const { Search } = Input;
 
 const StyledCard = styled(Card)`
   border-radius: 7px;
-  box-shadow: 0 20px 24px -18px rgba(0, 0, 0, 0.31);
   background: #fafafa;
 
   @media (max-width: 480px) {
@@ -64,7 +63,6 @@ const StyledCard = styled(Card)`
 `;
 
 interface Props {
-  title: string;
   entityType: EntityTypes;
   children: React.ReactNode[];
   loading: boolean;
@@ -94,7 +92,7 @@ class EntityCardContainer extends Component<Props, State> {
   };
 
   render() {
-    const { children, title, handleNewClick, loading, entityType } = this.props;
+    const { children, handleNewClick, loading, entityType } = this.props;
 
     let data: React.ReactNode[] | React.ReactNode;
 
@@ -124,7 +122,6 @@ class EntityCardContainer extends Component<Props, State> {
 
     return (
       <StyledCard
-        title={title}
         extra={[
           <Search
             key="search"

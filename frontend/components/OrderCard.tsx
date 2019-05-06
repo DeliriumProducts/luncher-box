@@ -3,7 +3,7 @@ import distanceInWords from 'date-fns/distance_in_words';
 import React, { FunctionComponent } from 'react';
 import styled from 'styled-components';
 import { THEME_VARIABLES } from '../config';
-import { Order, Product } from '../interfaces';
+import { Order, OrderProduct } from '../interfaces';
 
 const Step = Steps.Step;
 
@@ -107,13 +107,13 @@ const StyledCard: any = styled(Card)`
 `;
 
 interface ProductListProps {
-  products: Partial<Product>[];
+  products: OrderProduct[];
 }
 
 const ProductList: FunctionComponent<ProductListProps> = ({ products }) => {
   return (
     <div className="product-list">
-      {products.map((product, index) => {
+      {products.map(({ product }, index) => {
         return (
           <Avatar
             src={product.image}
@@ -212,10 +212,9 @@ const OrderCard: FunctionComponent<OrderProps> = ({ order }) => {
       ),
       content: (
         <div>
-          {order.products!.map(product => {
+          {order.products!.map(({ product, quantity }) => {
             totalSum +=
-              product.price! *
-              (product.quantity !== undefined ? product.quantity : 1);
+              product.price! * (quantity !== undefined ? quantity : 1);
             return (
               <div
                 key={product.id}
@@ -223,14 +222,14 @@ const OrderCard: FunctionComponent<OrderProps> = ({ order }) => {
               >
                 <p>{product.name}</p>
                 <p>
-                  {product.price} x {product.quantity}
+                  {product.price} x {quantity}
                 </p>
               </div>
             );
           })}
           <div style={{ display: 'flex', justifyContent: 'space-between' }}>
             <strong>Total price: $ {totalSum.toFixed(2)}</strong>
-            <strong>Table №: {order.table}</strong>
+            <strong>Table №: {order.table.name}</strong>
           </div>
           <div style={{ marginTop: 8 }}>
             {order.state !== undefined && order.state !== 3 ? (

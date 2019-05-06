@@ -6,9 +6,10 @@ import Link from 'next/link';
 import Router from 'next/router';
 import React, { Component } from 'react';
 import styled from 'styled-components';
-import { AuthAPI } from '../api';
+import { StaffAPI } from '../api';
 import CenteredDiv from '../components/CenteredDiv';
 import { HandleLogin } from '../types';
+import { User } from '../interfaces';
 
 const FormItem = Form.Item;
 
@@ -45,26 +46,29 @@ interface State {
 
 class LoginForm extends Component<Props, State> {
   static async getInitialProps({ req, res }: NextContext) {
-    let isAuthenticated = false;
+    let auth: { user: User | null; isAuthenticated: boolean } = {
+      user: null,
+      isAuthenticated: false
+    };
 
     /**
      * Check wheter authentication is happening server-side or client-side based on received context
      */
     if (req && res) {
       if (req.headers.cookie) {
-        isAuthenticated = await AuthAPI.isAuthenticated(req.headers.cookie);
+        auth = await StaffAPI.isAuthenticated(req.headers.cookie);
       }
 
-      if (isAuthenticated) {
+      if (auth.isAuthenticated) {
         res.writeHead(302, {
           Location: '/admin'
         });
         res.end();
       }
     } else {
-      isAuthenticated = await AuthAPI.isAuthenticated();
+      auth = await StaffAPI.isAuthenticated();
 
-      if (isAuthenticated) {
+      if (auth.isAuthenticated) {
         Router.replace('/admin');
       }
     }
@@ -87,7 +91,7 @@ class LoginForm extends Component<Props, State> {
 
         this.setState({ loading: true });
         try {
-          await AuthAPI.login(credentials);
+          await StaffAPI.login(credentials);
           message.success(
             'You successfully logged in! Redirecting you to dashboard...',
             3,

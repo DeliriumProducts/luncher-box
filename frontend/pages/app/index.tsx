@@ -2,30 +2,17 @@ import { Empty, message } from 'antd';
 import { NextFunctionComponent } from 'next';
 import Head from 'next/head';
 import React from 'react';
-import styled from 'styled-components';
 import { CategoryAPI } from '../../api';
 import CategoryCard from '../../components/CategoryCard';
+import FlexContainer from '../../components/FlexContainer';
+import PageHeader from '../../components/PageHeader';
 import { Category } from '../../interfaces';
-
-const FlexContainer = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  background-color: #fafafa;
-  padding: 2rem;
-  border-radius: 7px;
-
-  @media (max-width: 480px) {
-    border-radius: 0;
-  }
-
-  box-shadow: 0 20px 24px -18px rgba(0, 0, 0, 0.31);
-`;
 
 interface Props {
   categories: Category[];
   err: string | null;
 }
+
 const Home: NextFunctionComponent<Props> = ({ err, categories }) => {
   let data: React.ReactNode[] | React.ReactNode;
 
@@ -51,7 +38,30 @@ const Home: NextFunctionComponent<Props> = ({ err, categories }) => {
       <Head>
         <title>Menu • LuncherBox</title>
       </Head>
-      <FlexContainer>{data}</FlexContainer>
+      <FlexContainer>
+        <PageHeader
+          title={
+            <h1>
+              <strong>Categories</strong>
+            </h1>
+          }
+          subTitle={
+            <h3>
+              <strong>({categories.length})</strong>
+            </h3>
+          }
+        >
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'center',
+              flexWrap: 'wrap'
+            }}
+          >
+            {data}
+          </div>
+        </PageHeader>
+      </FlexContainer>
     </>
   );
 };
@@ -67,7 +77,6 @@ Home.getInitialProps = async () => {
       };
     }
   } catch (err) {
-    console.log(err);
     return {
       categories: [],
       err: `Network Error, Please try again later!`

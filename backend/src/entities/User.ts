@@ -1,17 +1,21 @@
 import bcrypt from 'bcryptjs';
-import { IsEmail, Length, Matches, IsUrl } from 'class-validator';
+import { IsEmail, Length, Matches, IsUrl, IsIn } from 'class-validator';
 import { BeforeInsert, Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
-import { EntityError } from '../types';
+import { EntityError, Role } from '../types';
 import { DuplicateEntityError, EntityNotFoundError, EntityNotValidError } from '../utils';
 
 @Entity()
 export class User {
   @PrimaryGeneratedColumn('uuid')
-  id: number;
+  id: string;
 
   @Column('text')
   @Length(1)
   name: string;
+
+  @Column('text')
+  @IsIn(['Admin', 'Waiter', 'Cook'])
+  role: Role = 'Waiter';
 
   @Column({ length: 255, unique: true })
   @IsEmail()

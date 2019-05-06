@@ -1,22 +1,22 @@
 import faker from 'faker';
 import { Server } from 'http';
 import request from 'supertest';
-import { Connection, getRepository, Repository } from 'typeorm';
+import { getRepository, Repository } from 'typeorm';
 import { initServer } from '../src';
-import { dbConnection as getDbConnection, redisConnection } from '../src/connections';
+import { INITIAL_ADMIN_PASS } from '../src/config';
+import { redisConnection } from '../src/connections';
 import { User } from '../src/entities';
+import { createInitialAdmin } from '../src/utils';
 
 let server: Server;
 let userRepository: Repository<User>;
-let dbConnection: Connection | undefined;
 
 beforeAll(async () => {
   server = await initServer();
-  dbConnection = await getDbConnection();
   userRepository = getRepository(User);
 });
 
-describe('POST /auth/register', () => {
+describe('POST /staff/auth/register', () => {
   it('adds a valid user to the database when registering', async () => {
     const user: Partial<User> = {
       email: 'validuser' + faker.internet.exampleEmail(),
@@ -25,7 +25,7 @@ describe('POST /auth/register', () => {
     };
 
     await request(server)
-      .post('/auth/register')
+      .post('/staff/auth/register')
       .send(user)
       .expect(200);
 
@@ -36,6 +36,45 @@ describe('POST /auth/register', () => {
     expect(userQuery).toMatchObject(userWithoutPassword);
   });
 
+  it('sets the default role to waiter, when none is passed', async () => {
+    const user: Partial<User> = {
+      email: 'set-waiter' + faker.internet.exampleEmail(),
+      name: faker.name.findName(),
+      password: 'FAKEpassword123SET-WAITER'
+    };
+
+    await request(server)
+      .post('/staff/auth/register')
+      .send(user)
+      .expect(200);
+
+    const { password, ...userWithoutPassword } = user;
+
+    const userQuery = await userRepository.findOne({ where: { ...userWithoutPassword } });
+
+    expect(userQuery).toMatchObject({ ...userWithoutPassword, role: 'Waiter' });
+  });
+
+  it('sets the default role to waiter, when any is passed', async () => {
+    const user: Partial<User> = {
+      email: 'set-waiter-any' + faker.internet.exampleEmail(),
+      name: faker.name.findName(),
+      role: 'Admin',
+      password: 'FAKEpassword123SET-WAITER-ANY'
+    };
+
+    await request(server)
+      .post('/staff/auth/register')
+      .send(user)
+      .expect(200);
+
+    const { password, role, ...userWithoutPassword } = user;
+
+    const userQuery = await userRepository.findOne({ where: { ...userWithoutPassword } });
+
+    expect(userQuery).toMatchObject({ ...userWithoutPassword, role: 'Waiter' });
+  });
+
   it('throws an error when registering a user with an invalid email', async () => {
     const user: Partial<User> = {
       email: 'this_is-not_an_email123',
@@ -44,7 +83,7 @@ describe('POST /auth/register', () => {
     };
 
     const { body } = await request(server)
-      .post('/auth/register')
+      .post('/staff/auth/register')
       .send(user)
       .expect(400);
 
@@ -69,7 +108,7 @@ describe('POST /auth/register', () => {
     };
 
     const { body } = await request(server)
-      .post('/auth/register')
+      .post('/staff/auth/register')
       .send(user)
       .expect(400);
 
@@ -97,7 +136,7 @@ describe('POST /auth/register', () => {
     };
 
     const { body } = await request(server)
-      .post('/auth/register')
+      .post('/staff/auth/register')
       .send(user)
       .expect(400);
 
@@ -127,7 +166,7 @@ describe('POST /auth/register', () => {
     };
 
     await request(server)
-      .post('/auth/register')
+      .post('/staff/auth/register')
       .send(user)
       .expect(200);
 
@@ -137,7 +176,7 @@ describe('POST /auth/register', () => {
     };
 
     const { body } = await request(server)
-      .post('/auth/register')
+      .post('/staff/auth/register')
       .send(duplicateUser)
       .expect(422);
 
@@ -154,7 +193,83 @@ describe('POST /auth/register', () => {
   });
 });
 
+describe('GET /staff', () => {
+  let cookie: string;
+
+  beforeAll(async () => {
+    await createInitialAdmin();
+
+    const user: Partial<User> = {
+      email: 'admin@deliriumproducts.me',
+      password: INITIAL_ADMIN_PASS
+    };
+
+    const { header } = await request(server)
+      .post('/staff/auth/login')
+      .send(user);
+
+    cookie = header['set-cookie'][0].split(/,(?=\S)/).map((item: string) => item.split(';')[0]);
+  });
+
+  it('gets all the staff members', async () => {
+    const { body } = await request(server)
+      .get('/staff')
+      .set('Cookie', cookie)
+      .expect(200);
+
+    const staffQuery = await userRepository.find();
+
+    expect(staffQuery).toMatchObject(body);
+  });
+
+  it('gets all the staff members on a given page', async () => {
+    const { body } = await request(server)
+      .get('/staff?page=1')
+      .set('Cookie', cookie)
+      .expect(200);
+
+    const staffQuery = await userRepository.find({
+      skip: 0,
+      take: 0
+    });
+
+    expect(staffQuery).toMatchObject(body);
+  });
+
+  it('gets all the staff members with a limit', async () => {
+    const { body } = await request(server)
+      .get('/staff?limit=1')
+      .set('Cookie', cookie)
+      .expect(200);
+
+    expect(body).toHaveLength(1);
+
+    const staffQuery = await userRepository.find({
+      take: 1
+    });
+
+    expect(staffQuery).toMatchObject(body);
+  });
+});
+
 describe('GET /confirm/:tokenId', () => {
+  let cookie: string;
+
+  beforeAll(async () => {
+    await createInitialAdmin();
+
+    const user: Partial<User> = {
+      email: 'admin@deliriumproducts.me',
+      password: INITIAL_ADMIN_PASS
+    };
+
+    const { header } = await request(server)
+      .post('/staff/auth/login')
+      .send(user);
+
+    cookie = header['set-cookie'][0].split(/,(?=\S)/).map((item: string) => item.split(';')[0]);
+  });
+
   it('confirms the user in the database', async () => {
     const user: Partial<User> = {
       name: faker.name.findName(),
@@ -163,7 +278,7 @@ describe('GET /confirm/:tokenId', () => {
     };
 
     const { body: confirmationURL } = await request(server)
-      .post('/auth/register')
+      .post('/staff/auth/register')
       .send(user)
       .expect(200);
 
@@ -178,7 +293,8 @@ describe('GET /confirm/:tokenId', () => {
 
     await request(server)
       .get(confirmationURL)
-      .expect(302);
+      .set('Cookie', cookie)
+      .expect(200);
 
     const userQuery1 = await userRepository.findOne({ where: { ...userWithoutPassword } });
 
@@ -187,41 +303,36 @@ describe('GET /confirm/:tokenId', () => {
       isVerified: true
     });
   });
-
-  it('deletes the token from Redis after confirmation', async () => {
-    const user: Partial<User> = {
-      name: faker.name.findName(),
-      email: 'DELETE' + faker.internet.exampleEmail(),
-      password: 'FAKEpassword123REDIS-DELETE'
-    };
-
-    const { body: confirmationURL } = await request(server)
-      .post('/auth/register')
-      .send(user)
-      .expect(200);
-
-    await request(server)
-      .get(confirmationURL)
-      .expect(302);
-
-    const token = confirmationURL.split('/')[2];
-
-    expect(await redisConnection.get(token)).toEqual(null);
-  });
 });
 
-describe('POST /auth/login', () => {
+describe('POST /staff/auth/login', () => {
   const registeredUser: Partial<User> = {
     name: faker.name.findName(),
     email: 'REGISTERLOGIN' + faker.internet.exampleEmail(),
     password: 'FAKEpassword123REGISTERAUTH'
   };
+  let adminCookie: string;
 
   beforeAll(async () => {
     await request(server)
-      .post('/auth/register')
+      .post('/staff/auth/register')
       .send(registeredUser)
       .expect(200);
+
+    await createInitialAdmin();
+
+    const user: Partial<User> = {
+      email: 'admin@deliriumproducts.me',
+      password: INITIAL_ADMIN_PASS
+    };
+
+    const { header } = await request(server)
+      .post('/staff/auth/login')
+      .send(user);
+
+    adminCookie = header['set-cookie'][0]
+      .split(/,(?=\S)/)
+      .map((item: string) => item.split(';')[0]);
   });
 
   it('logs a user in after confirming token', async () => {
@@ -232,16 +343,17 @@ describe('POST /auth/login', () => {
     };
 
     const { body: confirmationURL } = await request(server)
-      .post('/auth/register')
+      .post('/staff/auth/register')
       .send(user)
       .expect(200);
 
     await request(server)
       .get(confirmationURL)
-      .expect(302);
+      .set('Cookie', adminCookie)
+      .expect(200);
 
     const { body, header } = await request(server)
-      .post('/auth/login')
+      .post('/staff/auth/login')
       .send(user)
       .expect(200);
 
@@ -252,16 +364,16 @@ describe('POST /auth/login', () => {
       .map((item: string) => item.split(';')[0]);
 
     const { body: isLoggedIn } = await request(server)
-      .get('/auth')
+      .get('/staff/auth')
       .set('Cookie', cookie)
       .expect(200);
 
-    expect(isLoggedIn).toEqual(true);
+    expect(isLoggedIn.isAuthenticated).toEqual(true);
   });
 
   it('throws an error when logging in with an unconfirmed user', async () => {
     const { text } = await request(server)
-      .post('/auth/login')
+      .post('/staff/auth/login')
       .send(registeredUser)
       .expect(401);
 
@@ -270,7 +382,7 @@ describe('POST /auth/login', () => {
 
   it('throws an error when logging in with an incorrect password', async () => {
     const { text } = await request(server)
-      .post('/auth/login')
+      .post('/staff/auth/login')
       .send({ ...registeredUser, password: 'WRONGpassword123' })
       .expect(401);
 
@@ -285,7 +397,7 @@ describe('POST /auth/login', () => {
     };
 
     const { text } = await request(server)
-      .post('/auth/login')
+      .post('/staff/auth/login')
       .send(user)
       .expect(401);
 
@@ -293,26 +405,43 @@ describe('POST /auth/login', () => {
   });
 });
 
-describe('GET /auth/logout', () => {
+describe('GET /staff/auth/logout', () => {
   const registeredUser: Partial<User> = {
     name: faker.name.findName(),
     email: 'logout' + faker.internet.exampleEmail(),
     password: 'FAKEpassword123LOGOUT-LOGIN'
   };
+
   let cookie: string;
 
   beforeAll(async () => {
     const { body: confirmationURL } = await request(server)
-      .post('/auth/register')
+      .post('/staff/auth/register')
       .send(registeredUser)
       .expect(200);
 
+    await createInitialAdmin();
+
+    const user: Partial<User> = {
+      email: 'admin@deliriumproducts.me',
+      password: INITIAL_ADMIN_PASS
+    };
+
+    const { header: adminHeader } = await request(server)
+      .post('/staff/auth/login')
+      .send(user);
+
+    const adminCookie = adminHeader['set-cookie'][0]
+      .split(/,(?=\S)/)
+      .map((item: string) => item.split(';')[0]);
+
     await request(server)
       .get(confirmationURL)
-      .expect(302);
+      .set('Cookie', adminCookie)
+      .expect(200);
 
     const { header } = await request(server)
-      .post('/auth/login')
+      .post('/staff/auth/login')
       .send(registeredUser)
       .expect(200);
 
@@ -321,7 +450,7 @@ describe('GET /auth/logout', () => {
 
   it('logs a user out after logging in', async () => {
     const { body } = await request(server)
-      .get('/auth/logout')
+      .get('/staff/auth/logout')
       .set('Cookie', cookie)
       .expect(200);
 
@@ -330,7 +459,7 @@ describe('GET /auth/logout', () => {
 
   it('throws an error when logging out without logging in', async () => {
     const { body } = await request(server)
-      .get('/auth/logout')
+      .get('/staff/auth/logout')
       .expect(200);
 
     expect(body).toEqual('Login to logout!');
@@ -339,5 +468,4 @@ describe('GET /auth/logout', () => {
 
 afterAll(async () => {
   await redisConnection.quit();
-  await dbConnection!.close();
 });
