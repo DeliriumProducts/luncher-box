@@ -86,6 +86,7 @@ const StyledLogout = styled(Exit)`
 const MenuBar: React.FunctionComponent<Props> = ({ selectedKey, type }) => {
   const customerContext = React.useContext(CustomerContext);
   const adminContext = React.useContext(AdminContext);
+  const role = adminContext.state.user.role;
 
   const handleClick = async (e: any) => {
     const { key } = e;
@@ -141,17 +142,27 @@ const MenuBar: React.FunctionComponent<Props> = ({ selectedKey, type }) => {
             <Menu.Item key="/admin/orders">
               <Link href="/admin/orders">
                 <StyledAnchor>
-                  <Icon type="table" className="menu-item-icon" />
+                  <Icon type="database" className="menu-item-icon" />
                   <span className="menu-item-title">Orders</span>
                 </StyledAnchor>
               </Link>
             </Menu.Item>
-            {adminContext.state.user.role === 'Admin' ? (
+            {role === 'Admin' ? (
               <Menu.Item key="/admin/staff-members">
                 <Link href="/admin/staff-members">
                   <StyledAnchor>
                     <Icon type="idcard" className="menu-item-icon" />
                     <span className="menu-item-title">Staff Members</span>
+                  </StyledAnchor>
+                </Link>
+              </Menu.Item>
+            ) : null}
+            {role === 'Admin' || role === 'Waiter' ? (
+              <Menu.Item key="/admin/tables">
+                <Link href="/admin/tables">
+                  <StyledAnchor>
+                    <Icon type="table" className="menu-item-icon" />
+                    <span className="menu-item-title">Tables</span>
                   </StyledAnchor>
                 </Link>
               </Menu.Item>
