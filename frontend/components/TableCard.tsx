@@ -9,6 +9,7 @@ const Card: any = styled.div`
   height: 8rem;
   flex-direction: column;
   box-shadow: 0 2px 2px rgba(0, 0, 0, 0.12);
+  cursor: pointer;
   border-radius: 7px;
   margin: 0.5rem;
 
