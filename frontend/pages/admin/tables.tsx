@@ -35,6 +35,11 @@ const Tables: NextFunctionComponent<Props> = ({ err, tables }) => {
               <strong>Tables</strong>
             </h1>
           }
+          subTitle={
+            <h3>
+              <strong>({tables.length})</strong>
+            </h3>
+          }
         >
           asdf
         </PageHeader>
