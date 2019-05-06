@@ -66,7 +66,7 @@ const TableCard: React.FunctionComponent<Props> = ({
         <div className="table-status" />
       </div>
       <div className="table-current-order-amount">{currentOrdersAmount}</div>
-      <div>ongoing {currentOrdersAmount === 1 ? 'order' : 'orders'}</div>
+      <div>{currentOrdersAmount === 1 ? 'order' : 'orders'} in progress</div>
     </Card>
   );
 };
