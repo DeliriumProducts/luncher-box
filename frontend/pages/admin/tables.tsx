@@ -99,6 +99,23 @@ const Tables: NextFunctionComponent<Props> = ({ err, tables: t }) => {
                 }
               })
             );
+
+            /**
+             * Update the orders
+             */
+            adminContext.dispatch({
+              type: 'setOrders',
+              payload: adminContext.state.orders.map(o => {
+                if (o.table.id === table.id) {
+                  return {
+                    ...o,
+                    table
+                  };
+                } else {
+                  return o;
+                }
+              })
+            });
           }
 
           message.success(`Successfully edited table ${table.name}🎉`);
