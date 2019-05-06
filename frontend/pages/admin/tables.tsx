@@ -47,11 +47,13 @@ const Tables: NextFunctionComponent<Props> = ({ err, tables: t }) => {
     const ordersAmount: { [key: string]: number } = {};
 
     adminContext.state.orders.forEach(o => {
-      const table = o.table.name;
-      if (!ordersAmount[table]) {
-        ordersAmount[table] = 1;
-      } else {
-        ordersAmount[table]++;
+      if (o.state === 1) {
+        const table = o.table.name;
+        if (!ordersAmount[table]) {
+          ordersAmount[table] = 1;
+        } else {
+          ordersAmount[table]++;
+        }
       }
     });
 
