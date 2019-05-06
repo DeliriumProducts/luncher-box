@@ -4,6 +4,7 @@ import Head from 'next/head';
 import React from 'react';
 import { TableAPI } from '../../api';
 import FlexContainer from '../../components/FlexContainer';
+import EntityModal from '../../components/EntityModal';
 import PageHeader from '../../components/PageHeader';
 import TableCard from '../../components/TableCard';
 import { withAuth } from '../../hocs';
@@ -25,6 +26,7 @@ const CreateTableButton = styled(Button)`
   font-size: 4rem;
   box-shadow: 0 2px 2px rgba(0, 0, 0, 0.12);
   border-radius: 7px;
+  color: #000;
   border: none;
 `;
 interface Props {
@@ -33,6 +35,7 @@ interface Props {
 }
 
 const Tables: NextFunctionComponent<Props> = ({ err, tables }) => {
+  const [modalVisible, setModalVisible] = React.useState(false);
   let data: React.ReactNode[] | React.ReactNode;
 
   if (tables.length && !err) {
@@ -77,10 +80,21 @@ const Tables: NextFunctionComponent<Props> = ({ err, tables }) => {
         >
           <TableContainer>
             {data}
-            <CreateTableButton type="ghost">+</CreateTableButton>
+            <CreateTableButton
+              type="ghost"
+              onClick={() => setModalVisible(true)}
+            >
+              +
+            </CreateTableButton>
           </TableContainer>
         </PageHeader>
       </FlexContainer>
+      <EntityModal
+        visible={modalVisible}
+        onCancel={() => setModalVisible(false)}
+        entityType="table"
+        actionType="create"
+      />
     </>
   );
 };

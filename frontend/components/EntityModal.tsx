@@ -125,29 +125,34 @@ const EntityModal = Form.create()(
                 )}
               </Form.Item>
             )}
-            <Form.Item>
-              {getFieldDecorator('image', {
-                rules: [
-                  {
-                    type: 'url',
-                    message: 'Invalid url'
-                  },
-                  {
-                    required: true,
-                    message: 'Image field cannot be empty'
-                  }
-                ],
-                initialValue: entity && entity.image
-              })(
-                <Input
-                  prefix={
-                    <Icon type="picture" style={{ color: 'rgba(0,0,0,.25)' }} />
-                  }
-                  type="text"
-                  placeholder="Image"
-                />
-              )}
-            </Form.Item>
+            {entityType !== 'table' && (
+              <Form.Item>
+                {getFieldDecorator('image', {
+                  rules: [
+                    {
+                      type: 'url',
+                      message: 'Invalid url'
+                    },
+                    {
+                      required: true,
+                      message: 'Image field cannot be empty'
+                    }
+                  ],
+                  initialValue: entity && entity.image
+                })(
+                  <Input
+                    prefix={
+                      <Icon
+                        type="picture"
+                        style={{ color: 'rgba(0,0,0,.25)' }}
+                      />
+                    }
+                    type="text"
+                    placeholder="Image"
+                  />
+                )}
+              </Form.Item>
+            )}
             {entityType === 'product' && (
               <Form.Item>
                 {getFieldDecorator('price', {
