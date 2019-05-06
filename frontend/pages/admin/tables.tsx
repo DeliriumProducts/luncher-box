@@ -44,25 +44,40 @@ const Tables: NextFunctionComponent<Props> = ({ err, tables: t }) => {
   let modalFormRef: any;
 
   if (tables.length && !err) {
-    const ordersAmount: { [key: string]: number } = {};
+    const ordersAndTablesMap: {
+      [key: string]: { isTaken: boolean; amount: number };
+    } = {};
 
     adminContext.state.orders.forEach(o => {
-      if (o.state === 1) {
-        const table = o.table.name;
-        if (!ordersAmount[table]) {
-          ordersAmount[table] = 1;
-        } else {
-          ordersAmount[table]++;
-        }
+      const table = o.table.name;
+      if (!ordersAndTablesMap[table]) {
+        ordersAndTablesMap[table] = {
+          amount: 0,
+          isTaken: o.table.isTaken!
+        };
+      }
+
+      if (o.state! === 1) {
+        ordersAndTablesMap[table].amount++;
       }
     });
+
+    console.log(tables);
 
     data = tables.map(table => (
       <TableCard
         key={table.id}
         name={table.name}
-        isTaken={table.isTaken!}
-        currentOrdersAmount={ordersAmount[table.name] || 0}
+        isTaken={
+          ordersAndTablesMap[table.name]
+            ? ordersAndTablesMap[table.name].isTaken
+            : table.isTaken!
+        }
+        currentOrdersAmount={
+          ordersAndTablesMap[table.name]
+            ? ordersAndTablesMap[table.name].amount
+            : 0
+        }
       />
     ));
   } else {
