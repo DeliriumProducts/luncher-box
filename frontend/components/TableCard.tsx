@@ -11,11 +11,15 @@ const Card: any = styled.div`
   width: 12rem;
   height: 8rem;
   flex-direction: column;
-  box-shadow: 0 2px 2px rgba(0, 0, 0, 0.12);
   box-shadow: 0 20px 24px -18px rgba(0, 0, 0, 0.31);
   cursor: pointer;
   border-radius: 7px;
   margin: 0.5rem;
+  transition: all 0.3s;
+
+  &:hover {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.09);
+  }
 
   & > * {
     flex: 1;

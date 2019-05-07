@@ -26,11 +26,16 @@ const CreateTableButton = styled(Button)`
   height: 8rem;
   font-weight: 500;
   font-size: 4rem;
-  box-shadow: 0 2px 2px rgba(0, 0, 0, 0.12);
+  box-shadow: 0 20px 24px -18px rgba(0, 0, 0, 0.31);
   border-radius: 7px;
   color: #000;
   margin: 0.5rem;
   border: none;
+  transition: all 0.3s;
+
+  &:hover {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.09);
+  }
 `;
 interface Props {
   tables: Table[];
