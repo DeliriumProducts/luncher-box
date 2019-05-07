@@ -186,7 +186,6 @@ const Tables: NextFunctionComponent<Props> = ({ err, tables: t }) => {
     const ordersAndTablesMap: {
       [key: string]: { isTaken: boolean; amount: number };
     } = {};
-
     adminContext.state.orders.forEach(o => {
       const table = o.table.name;
       if (!ordersAndTablesMap[table]) {

@@ -98,15 +98,10 @@ export class OrderController {
     if (order) {
       order.state = 1;
       order.accepted = new Date();
-      order.table = {
-        ...order.table,
-        isTaken: false
-      };
 
       const { products, table, ...orderWithoutRelations } = order;
 
       await this.orderRepository.save(orderWithoutRelations);
-      await this.tableRepository.save(table);
     } else {
       throw new OrderNotFoundError();
     }
@@ -135,8 +130,22 @@ export class OrderController {
       order.declined = new Date();
 
       const { products, table, ...orderWithoutRelations } = order;
-
       await this.orderRepository.save(orderWithoutRelations);
+
+      const orders = await this.orderRepository.find({
+        where: {
+          table: {
+            id: order.table.id
+          }
+        }
+      });
+
+      if (orders.every(o => o.state > 1)) {
+        await this.tableRepository.save({
+          ...order.table,
+          isTaken: false
+        });
+      }
     } else {
       throw new OrderNotFoundError();
     }
@@ -166,15 +175,24 @@ export class OrderController {
     if (order) {
       order.state = 2;
       order.finished = new Date();
-      order.table = {
-        ...order.table,
-        isTaken: false
-      };
 
       const { products, table, ...orderWithoutRelations } = order;
-
       await this.orderRepository.save(orderWithoutRelations);
-      await this.tableRepository.save(table);
+
+      const orders = await this.orderRepository.find({
+        where: {
+          table: {
+            id: order.table.id
+          }
+        }
+      });
+
+      if (orders.every(o => o.state > 1)) {
+        await this.tableRepository.save({
+          ...order.table,
+          isTaken: false
+        });
+      }
     } else {
       throw new OrderNotFoundError();
     }
