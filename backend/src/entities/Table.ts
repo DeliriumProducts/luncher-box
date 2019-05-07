@@ -11,7 +11,7 @@ export class Table {
 
   @Column({ length: 255, unique: true })
   @IsString()
-  @Length(2)
+  @Length(2, 50)
   name: string;
 
   @Column()

@@ -10,7 +10,7 @@ export class Product {
   id: number;
 
   @Column()
-  @Length(3, 50)
+  @Length(2, 50)
   name: string;
 
   @Column('text')

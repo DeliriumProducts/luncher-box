@@ -75,6 +75,10 @@ const EntityModal = Form.create()(
                     message: 'Name must be at least 2 characters long'
                   },
                   {
+                    max: 50,
+                    message: 'Name must be shorter than 50 characters'
+                  },
+                  {
                     required: true,
                     message: 'Name field cannot be empty'
                   }
@@ -103,6 +107,10 @@ const EntityModal = Form.create()(
                       message: 'Description must be at least 5 characters long'
                     },
                     {
+                      max: 255,
+                      message: 'Description must be shorter than 255 characters'
+                    },
+                    {
                       required: true,
                       message: 'Description field cannot be empty'
                     }
@@ -129,6 +137,14 @@ const EntityModal = Form.create()(
                     {
                       type: 'url',
                       message: 'Invalid url'
+                    },
+                    {
+                      min: 5,
+                      message: 'Image URL must be at least 5 characters long'
+                    },
+                    {
+                      max: 255,
+                      message: 'Image URL must be shorter than 255 characters'
                     },
                     {
                       required: true,
