@@ -31,7 +31,7 @@ const Orders: React.FunctionComponent = () => {
     data = <Spinner />;
   } else {
     if (orders.length) {
-      data = <OrderCardContainer orders={orders} />;
+      data = <OrderCardContainer orders={orders} role={state.user.role} />;
     } else {
       data = <Empty description="No orders placed yet!" />;
     }

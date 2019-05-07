@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import { OrderAPI } from '../api';
 import { THEME_VARIABLES } from '../config';
 import { Order } from '../interfaces';
-import { OrderState } from '../types';
+import { OrderState, Role } from '../types';
 import ItemCard from './ItemCard';
 
 const customPanelStyle = {
@@ -49,12 +49,14 @@ interface ItemCardHeaderProps {
   orderId: string;
   orderTable: string;
   orderState?: OrderState;
+  role?: Role;
 }
 
 const ItemCardHeader: React.FunctionComponent<ItemCardHeaderProps> = ({
   orderId,
   orderState,
-  orderTable
+  orderTable,
+  role
 }) => {
   const handleAccept = async (e: React.FormEvent<HTMLButtonElement>) => {
     e.stopPropagation();
@@ -106,13 +108,15 @@ const ItemCardHeader: React.FunctionComponent<ItemCardHeaderProps> = ({
       <>
         <span className="title">Table № {orderTable} </span>
         <span className="right">
-          <Button
-            shape="circle"
-            onClick={handleFinish}
-            type="default"
-            icon="flag"
-            size="large"
-          />
+          {role === 'Admin' || role === 'Cook' ? (
+            <Button
+              shape="circle"
+              onClick={handleFinish}
+              type="default"
+              icon="flag"
+              size="large"
+            />
+          ) : null}
         </span>
       </>
     );
@@ -127,10 +131,12 @@ const ItemCardHeader: React.FunctionComponent<ItemCardHeaderProps> = ({
 
 interface OrderContainerProps {
   orders: Order[];
+  role?: Role;
 }
 
 const OrderContainer: React.FunctionComponent<OrderContainerProps> = ({
-  orders
+  orders,
+  role
 }) => {
   return (
     <Collapse bordered={false} style={{ background: '#fafafa' }}>
@@ -145,6 +151,7 @@ const OrderContainer: React.FunctionComponent<OrderContainerProps> = ({
                   orderId={order.id!}
                   orderTable={order.table.name}
                   orderState={order.state && order.state}
+                  role={role}
                 />
               }
               style={customPanelStyle}

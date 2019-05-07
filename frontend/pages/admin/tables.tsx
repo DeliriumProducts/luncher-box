@@ -203,10 +203,17 @@ const Tables: NextFunctionComponent<Props> = ({ err, tables: t }) => {
   ) => {
     setOrdersModalVisible(true);
     setCurrentOrdersTable(table);
-    setCurrentOrdersFromTable(
-      adminContext.state.orders.filter(o => o.table.id === table.id)
-    );
   };
+
+  React.useEffect(() => {
+    if (currentOrdersTable) {
+      setCurrentOrdersFromTable(
+        adminContext.state.orders.filter(
+          o => o.table.id === currentOrdersTable!.id
+        )
+      );
+    }
+  }, [currentOrdersTable, adminContext.state.orders]);
 
   if (tables.length && !err) {
     const ordersAndTablesMap: {
@@ -332,7 +339,10 @@ const Tables: NextFunctionComponent<Props> = ({ err, tables: t }) => {
         }}
       >
         {currentOrdersFromTable.length > 0 ? (
-          <OrderContainer orders={currentOrdersFromTable} />
+          <OrderContainer
+            orders={currentOrdersFromTable}
+            role={adminContext.state.user.role}
+          />
         ) : (
           <Empty description="No orders placed on this table yet!" />
         )}
