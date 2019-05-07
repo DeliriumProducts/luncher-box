@@ -2182,7 +2182,8 @@ describe('Authorization', () => {
   it('throws an error when creating a table when not logged in', async () => {
     const table: Partial<Table> = {
       name: 'asdfjklwe',
-      isTaken: false
+      isTaken: false,
+      orders: []
     };
 
     const { body } = await request(server)
@@ -2205,7 +2206,8 @@ describe('Authorization', () => {
   it('throws an error when editing a table when not logged in', async () => {
     const table: Partial<Table> = {
       name: 'B55',
-      isTaken: false
+      isTaken: false,
+      orders: []
     };
 
     const {
@@ -2239,7 +2241,8 @@ describe('Authorization', () => {
   it('throws an error when deleting a table when not logged in', async () => {
     const table: Partial<Table> = {
       name: 'f999',
-      isTaken: false
+      isTaken: false,
+      orders: []
     };
 
     const {

@@ -11,6 +11,6 @@ export const authorizationChecker = ({ request: req }: Action, r: Role[]) => {
   if (!r.length) {
     return req.isAuthenticated();
   } else {
-    return (user.role === 'Admin' || r.includes(user.role)) && req.isAuthenticated();
+    return user && (user.role === 'Admin' || r.includes(user.role)) && req.isAuthenticated();
   }
 };
