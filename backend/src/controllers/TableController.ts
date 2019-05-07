@@ -11,7 +11,7 @@ import {
   QueryParam
 } from 'routing-controllers';
 import { getRepository, MoreThan, Repository } from 'typeorm';
-import { Table, TableNotFoundError, TableNotValidError } from '../entities';
+import { Table, TableNotFoundError, TableNotValidError, DuplicateTableError } from '../entities';
 import { QueryResponse, TransformAndValidateTuple } from '../types';
 import { transformAndValidate } from '../utils';
 
@@ -99,6 +99,13 @@ export class TableController {
   @Post()
   @Authorized()
   async create(@Body() tableJSON: Table) {
+    /**
+     * Check if there is a table with the same name already
+     */
+    if (await this.tableRepository.findOne({ where: { name: tableJSON.name } })) {
+      throw new DuplicateTableError();
+    }
+
     const [table, tableErr] = await this.transformAndValidateTable(tableJSON);
 
     if (tableErr.length) {
@@ -124,6 +131,12 @@ export class TableController {
     const oldTable: QueryResponse<Table> = await this.tableRepository.findOne(id);
 
     if (oldTable) {
+      /**
+       * Check if there is a table with the same name already
+       */
+      if (oldTable.name === newTableJSON.name) {
+        throw new DuplicateTableError();
+      }
       const [newTable, tableErr] = await this.transformAndValidateTable(newTableJSON);
 
       if (tableErr.length) {

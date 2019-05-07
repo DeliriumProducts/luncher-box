@@ -2,7 +2,7 @@ import { IsBoolean, IsString, Length } from 'class-validator';
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn, Unique } from 'typeorm';
 import { Order } from '.';
 import { EntityError } from '../types';
-import { EntityNotFoundError, EntityNotValidError } from '../utils';
+import { EntityNotFoundError, EntityNotValidError, DuplicateEntityError } from '../utils';
 
 @Entity()
 export class Table {
@@ -31,5 +31,11 @@ export class TableNotFoundError extends EntityNotFoundError<Table> {
 export class TableNotValidError extends EntityNotValidError<Table> {
   constructor(errors: EntityError) {
     super('Table', errors);
+  }
+}
+
+export class DuplicateTableError extends DuplicateEntityError<Table> {
+  constructor() {
+    super('Table');
   }
 }

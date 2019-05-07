@@ -75,9 +75,9 @@ const Tables: NextFunctionComponent<Props> = ({ err, tables: t }) => {
 
       try {
         if (actionType === 'create') {
-          const response = (await TableAPI.create(table)).data;
+          const response = await TableAPI.create(table);
 
-          setTables(prevTables => [...prevTables, response]);
+          setTables(prevTables => [...prevTables, response.data]);
 
           message.success(`Successfully created table ${table.name}🎉`);
         } else {
@@ -121,7 +121,11 @@ const Tables: NextFunctionComponent<Props> = ({ err, tables: t }) => {
           message.success(`Successfully edited table ${table.name}🎉`);
         }
       } catch (error) {
-        message.error(`Error: ${error}`, 3);
+        if (error.response.status === 422) {
+          message.error(`A table with the same name already exists`, 3);
+        } else {
+          message.error(`${error}`, 3);
+        }
       }
 
       setModalVisible(false);
