@@ -189,6 +189,8 @@ const Tables: NextFunctionComponent<Props> = ({ err, tables: t }) => {
 
       if (o.state! === 1) {
         ordersAndTablesMap[table].amount++;
+      } else if (o.state! === 2) {
+        ordersAndTablesMap[table].isTaken = false;
       }
     });
 

@@ -64,6 +64,7 @@ const Orders: React.FunctionComponent = () => {
           }
           extra={[
             <Popconfirm
+              key="popconfirm-delete-all"
               title={`Are you sure?`}
               placement="bottom"
               okText="Yes"
