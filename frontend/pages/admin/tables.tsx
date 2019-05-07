@@ -228,7 +228,7 @@ const Tables: NextFunctionComponent<Props> = ({ err, tables: t }) => {
         };
       }
 
-      if (o.state! < 2) {
+      if (o.state! < 1) {
         ordersAndTablesMap[table].amount++;
       }
 

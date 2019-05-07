@@ -111,9 +111,7 @@ const TableCard: React.FunctionComponent<Props> = ({
           <div className="table-current-order-amount">
             {currentOrdersAmount}
           </div>
-          <div>
-            {currentOrdersAmount === 1 ? 'order' : 'orders'} in progress
-          </div>
+          <div>{currentOrdersAmount === 1 ? 'new order' : 'new orders'}</div>
         </>
       )}
       {editable && (
