@@ -108,7 +108,7 @@ const useAdminOrders = () => {
         </h2>
       ),
       onClick() {
-        Router.push('/admin/orders');
+        Router.replace('/admin/orders');
       },
       description: (
         <>

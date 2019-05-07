@@ -72,6 +72,13 @@ export class OrderController {
       }
     });
 
+    /**
+     * Set isTaken to false on all of the tables that have orders placed
+     */
+    await Promise.all(
+      orders.map(({ table }) => this.tableRepository.save({ ...table, isTaken: false }))
+    );
+
     return await this.orderRepository.delete(orders.map(o => o.id));
   }
 
@@ -91,10 +98,15 @@ export class OrderController {
     if (order) {
       order.state = 1;
       order.accepted = new Date();
+      order.table = {
+        ...order.table,
+        isTaken: false
+      };
 
       const { products, table, ...orderWithoutRelations } = order;
 
       await this.orderRepository.save(orderWithoutRelations);
+      await this.tableRepository.save(table);
     } else {
       throw new OrderNotFoundError();
     }
@@ -154,19 +166,15 @@ export class OrderController {
     if (order) {
       order.state = 2;
       order.finished = new Date();
+      order.table = {
+        ...order.table,
+        isTaken: false
+      };
 
-      const table = await this.tableRepository.findOne(order.table.id);
-
-      if (table) {
-        table.isTaken = false;
-      }
-
-      const { products, table: _, ...orderWithoutRelations } = order;
+      const { products, table, ...orderWithoutRelations } = order;
 
       await this.orderRepository.save(orderWithoutRelations);
-      await this.tableRepository.save(table!);
-
-      order.table = table!;
+      await this.tableRepository.save(table);
     } else {
       throw new OrderNotFoundError();
     }
