@@ -38,6 +38,19 @@ const Cart: NextFunctionComponent<Props> = ({ tables, err }) => {
   const socketContext = React.useContext(SocketContext);
   const customerContext = React.useContext(CustomerContext);
 
+  React.useEffect(() => {
+    let hasFoundTable = false;
+    for (const table of tables) {
+      if (table.name === customerContext.order.table.name) {
+        hasFoundTable = true;
+      }
+    }
+
+    if (!hasFoundTable) {
+      customerContext.actions.setTable({ name: '' });
+    }
+  }, [customerContext.hasFinishedSyncing]);
+
   /**
    * Show only on cDM
    */
@@ -130,21 +143,6 @@ const Cart: NextFunctionComponent<Props> = ({ tables, err }) => {
   };
 
   let data: React.ReactNode[] | React.ReactNode;
-  let selectedTable: Table | [] = [];
-
-  React.useEffect(() => {
-    for (const table of tables) {
-      if (table.name === customerContext.order.table.name) {
-        selectedTable = table;
-        break;
-      }
-    }
-
-    if (Array.isArray(selectedTable)) {
-      console.log(selectedTable);
-      customerContext.actions.setTable({ id: '', name: '' });
-    }
-  }, []);
 
   /**
    * Check whether orders are still being fetched from localStorage
@@ -184,9 +182,7 @@ const Cart: NextFunctionComponent<Props> = ({ tables, err }) => {
               <Select
                 style={{ marginTop: '2%', width: '100%' }}
                 placeholder="Please select your table"
-                defaultValue={
-                  selectedTable ? (selectedTable as Table).name : []
-                }
+                value={customerContext.order.table.name || []}
                 onChange={handleTable}
               >
                 {tables.map(t => (
