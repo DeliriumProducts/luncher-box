@@ -132,12 +132,19 @@ const Cart: NextFunctionComponent<Props> = ({ tables, err }) => {
   let data: React.ReactNode[] | React.ReactNode;
   let selectedTable: Table | [] = [];
 
-  for (const table of tables) {
-    if (table.name === customerContext.order.table.name) {
-      selectedTable = table;
-      break;
+  React.useEffect(() => {
+    for (const table of tables) {
+      if (table.name === customerContext.order.table.name) {
+        selectedTable = table;
+        break;
+      }
     }
-  }
+
+    if (Array.isArray(selectedTable)) {
+      console.log(selectedTable);
+      customerContext.actions.setTable({ id: '', name: '' });
+    }
+  }, []);
 
   /**
    * Check whether orders are still being fetched from localStorage
@@ -183,7 +190,9 @@ const Cart: NextFunctionComponent<Props> = ({ tables, err }) => {
                 onChange={handleTable}
               >
                 {tables.map(t => (
-                  <Option value={t.name}>{t.name}</Option>
+                  <Option key={t.id} value={t.name}>
+                    {t.name}
+                  </Option>
                 ))}
               </Select>
             </div>
