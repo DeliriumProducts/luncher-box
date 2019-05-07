@@ -11,7 +11,7 @@ import {
   QueryParam
 } from 'routing-controllers';
 import { getRepository, MoreThan, Repository } from 'typeorm';
-import { Table, TableNotFoundError, TableNotValidError, DuplicateTableError } from '../entities';
+import { DuplicateTableError, Table, TableNotFoundError, TableNotValidError } from '../entities';
 import { QueryResponse, TransformAndValidateTuple } from '../types';
 import { transformAndValidate } from '../utils';
 
@@ -97,7 +97,7 @@ export class TableController {
    * @param tableJSON
    */
   @Post()
-  @Authorized()
+  @Authorized('Admin')
   async create(@Body() tableJSON: Table) {
     /**
      * Check if there is a table with the same name already
@@ -123,7 +123,7 @@ export class TableController {
    * @param newTableJSON
    */
   @Put('/:tableId')
-  @Authorized()
+  @Authorized('Admin')
   async update(@Param('tableId') id: number, @Body() newTableJSON: Table) {
     /**
      * Check if the table exists before updating it
@@ -159,7 +159,7 @@ export class TableController {
    * @param id
    */
   @Delete('/:tableId')
-  @Authorized()
+  @Authorized('Admin')
   async delete(@Param('tableId') id: number) {
     /**
      * Check if the table exists before deleting it

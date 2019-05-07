@@ -11,7 +11,7 @@ import PageHeader from '../../components/PageHeader';
 import TableCard from '../../components/TableCard';
 import { AdminContext } from '../../context';
 import { withAuth } from '../../hocs';
-import { Table } from '../../interfaces';
+import { Order, Table } from '../../interfaces';
 import { ActionTypes } from '../../types';
 
 const TableContainer = styled.div`
@@ -49,14 +49,20 @@ const Tables: NextFunctionComponent<Props> = ({ err, tables: t }) => {
     currentTableForModifying,
     setCurrentTableForModifying
   ] = React.useState<Table | null>(null);
+  const [modifyingModalVisible, setModifyingModalVisible] = React.useState(
+    false
+  );
+  const [isEdting, setIsEditing] = React.useState(false);
+  const [actionType, setActionType] = React.useState('create');
+  const [ordersModalVisible, setOrdersModalVisible] = React.useState(false);
+  const [currentOrdersFromTable, setCurrentOrdersFromTable] = React.useState<
+    Order[]
+  >([]);
   const [
     currentOrdersTable,
     setCurrentOrdersTable
   ] = React.useState<Table | null>(null);
-  const [entityModalVisible, setEntityModalVisible] = React.useState(false);
-  const [isEdting, setIsEditing] = React.useState(false);
-  const [actionType, setActionType] = React.useState('create');
-  const [ordersModalVisible, setOrdersModalVisible] = React.useState(false);
+
   const adminContext = React.useContext(AdminContext);
 
   let data: React.ReactNode[] | React.ReactNode;
@@ -71,7 +77,7 @@ const Tables: NextFunctionComponent<Props> = ({ err, tables: t }) => {
     modalFormRef.current.props.form.resetFields();
 
     setActionType(a);
-    setEntityModalVisible(true);
+    setModifyingModalVisible(true);
     setCurrentTableForModifying(table || null);
   };
 
@@ -142,12 +148,12 @@ const Tables: NextFunctionComponent<Props> = ({ err, tables: t }) => {
         }
       }
 
-      setEntityModalVisible(false);
+      setModifyingModalVisible(false);
     });
   };
 
   const handleModalCancel = () => {
-    setEntityModalVisible(false);
+    setModifyingModalVisible(false);
   };
 
   const handleCreateClick = (e: React.FormEvent<HTMLButtonElement>) => {
@@ -197,6 +203,9 @@ const Tables: NextFunctionComponent<Props> = ({ err, tables: t }) => {
   ) => {
     setOrdersModalVisible(true);
     setCurrentOrdersTable(table);
+    setCurrentOrdersFromTable(
+      adminContext.state.orders.filter(o => o.table.id === table.id)
+    );
   };
 
   if (tables.length && !err) {
@@ -269,15 +278,19 @@ const Tables: NextFunctionComponent<Props> = ({ err, tables: t }) => {
               <strong>Tables</strong>
             </h1>
           }
-          extra={[
-            <Switch
-              onClick={handleEditToggle}
-              checked={isEdting}
-              checkedChildren={<Icon type="edit" />}
-              key="1"
-              unCheckedChildren={<Icon type="inbox" />}
-            />
-          ]}
+          extra={
+            adminContext.state.user.role === 'Admin'
+              ? [
+                  <Switch
+                    onClick={handleEditToggle}
+                    checked={isEdting}
+                    checkedChildren={<Icon type="edit" />}
+                    key="1"
+                    unCheckedChildren={<Icon type="inbox" />}
+                  />
+                ]
+              : []
+          }
           subTitle={
             <h3>
               <strong>({tables.length})</strong>
@@ -296,7 +309,7 @@ const Tables: NextFunctionComponent<Props> = ({ err, tables: t }) => {
       </FlexContainer>
       <EntityModal
         wrappedComponentRef={saveFormRef}
-        visible={entityModalVisible}
+        visible={modifyingModalVisible}
         onConfirm={handleModalConfirm}
         onCancel={handleModalCancel}
         entityType="table"
@@ -318,12 +331,10 @@ const Tables: NextFunctionComponent<Props> = ({ err, tables: t }) => {
           setOrdersModalVisible(false);
         }}
       >
-        {currentOrdersTable && (
-          <OrderContainer
-            orders={adminContext.state.orders.filter(
-              o => o.table.id === currentOrdersTable!.id
-            )}
-          />
+        {currentOrdersFromTable.length > 0 ? (
+          <OrderContainer orders={currentOrdersFromTable} />
+        ) : (
+          <Empty description="No orders placed on this table yet!" />
         )}
       </Modal>
     </>
