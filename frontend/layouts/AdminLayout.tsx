@@ -1,9 +1,10 @@
-import { notification } from 'antd';
+import { Button, Modal, notification } from 'antd';
 import Router from 'next/router';
 import React, { ReactNode } from 'react';
 import { OrderAPI } from '../api';
 import { AdminContext, SocketContext } from '../context';
 import { Order } from '../interfaces';
+import { Role } from '../types';
 import Layout from './_layout';
 
 interface Props {
@@ -15,6 +16,14 @@ interface Props {
 const useAdminOrders = () => {
   const adminContext = React.useContext(AdminContext);
   const socketContext = React.useContext(SocketContext);
+  const role = React.useRef<Role>(adminContext.state.user.role!);
+
+  /**
+   * We need access to the "freshest" role value
+   */
+  React.useEffect(() => {
+    role.current = adminContext.state.user.role!;
+  }, [adminContext.state.user.role]);
 
   /**
    * Fetch the newest orders
@@ -45,27 +54,30 @@ const useAdminOrders = () => {
 
   const fetchOrders = async () => {
     const incomingOrders = await OrderAPI.getAll();
+
     adminContext.dispatch({ type: 'setOrders', payload: incomingOrders });
     adminContext.dispatch({ type: 'setLoading', payload: false });
   };
 
   const handlePlacedOrder = (order: Order) => {
     adminContext.dispatch({ type: 'pushOrder', payload: order });
-    showNotifOnPlacedOrder(order);
+    showNotifOnOrderUpdate(order);
   };
 
-  const setAcceptedOrder = ({ id }) => {
+  const setAcceptedOrder = (order: Order) => {
     adminContext.dispatch({
       type: 'setOrderState',
-      payload: { id, orderState: 1 }
+      payload: { id: order.id, orderState: 1 }
     });
+    showNotifOnOrderUpdate(order);
   };
 
-  const setFinishedOrder = ({ id }) => {
+  const setFinishedOrder = (order: Order) => {
     adminContext.dispatch({
       type: 'setOrderState',
-      payload: { id, orderState: 2 }
+      payload: { id: order.id, orderState: 2 }
     });
+    showNotifOnOrderUpdate(order);
   };
 
   const setDeclindedOrder = ({ id }) => {
@@ -75,48 +87,88 @@ const useAdminOrders = () => {
     });
   };
 
-  const showNotifOnPlacedOrder = (order: Order) => {
-    const ProductList = (
-      <div>
-        {order.products.map(({ product, quantity }) => {
-          return (
-            <div
-              key={product.id}
-              style={{ display: 'flex', justifyContent: 'space-between' }}
-            >
-              <p>
-                {quantity} x {product.name}
-              </p>
-            </div>
-          );
-        })}
-      </div>
-    );
+  const showNotifOnOrderUpdate = (order: Order) => {
+    let data: React.ReactNode | React.ReactNode[];
+    let modalType: 'info' | 'error' | 'success' | 'warning' = 'info';
 
-    notification.info({
-      message: (
-        <h2
-          style={{
-            color: '#000000a6',
-            margin: 0,
-            marginBottom: 12,
-            fontSize: '1.2rem',
-            fontWeight: 525
-          }}
-        >
-          New order has been placed on table {order.table.name}
-        </h2>
-      ),
-      onClick() {
-        Router.replace('/admin/orders');
-      },
-      description: (
+    if (order.state === 0) {
+      data = (
         <>
-          {ProductList}
-          <strong>Click here to go to the orders page now!</strong>
+          An order on table <strong>{order.table.name}</strong> has been placed!
+          🍽
         </>
-      )
-    });
+      );
+
+      modalType = 'info';
+    } else if (order.state === 1) {
+      data = (
+        <>
+          An order on table <strong>{order.table.name}</strong> has been
+          accepted! 🎉
+        </>
+      );
+
+      modalType = 'success';
+    } else if (order.state === 2) {
+      data = (
+        <>
+          <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+            <p>
+              An order on table <strong>{order.table.name}</strong> has been
+              finished! 🍚
+            </p>
+          </div>
+          <div>
+            {order.products.map(({ product, quantity }) => {
+              return (
+                <div
+                  key={product.id}
+                  style={{ display: 'flex', justifyContent: 'space-between' }}
+                >
+                  <p>
+                    {quantity} x {product.name}
+                  </p>
+                </div>
+              );
+            })}
+          </div>
+        </>
+      );
+
+      modalType = 'success';
+    }
+
+    if (role.current === 'Waiter') {
+      if (order.state === 2) {
+        Modal[modalType]({
+          title: 'New order status!',
+          content: data
+        });
+      } else if (order.state === 0) {
+        notification[modalType]({
+          message: 'New order status!',
+          key: order.id,
+          btn: (
+            <Button
+              type="primary"
+              onClick={() => {
+                Router.replace('/admin/tables');
+                notification.close(order.id!);
+              }}
+            >
+              Go check it!
+            </Button>
+          ),
+          description: <>{data}</>
+        });
+      }
+    } else if (role.current === 'Cook') {
+      if (order.state === 1) {
+        notification[modalType]({
+          message: data
+        });
+      }
+    }
   };
 };
 

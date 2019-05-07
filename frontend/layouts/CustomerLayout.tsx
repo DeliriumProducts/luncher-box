@@ -81,7 +81,7 @@ const useCustomerOrders = () => {
       data = (
         <>
           {ProductList}
-          <strong>You order has been placed! 🍽</strong>
+          <strong>Your order has been placed! 🍽</strong>
         </>
       );
 
@@ -90,7 +90,7 @@ const useCustomerOrders = () => {
       data = (
         <>
           {ProductList}
-          <strong>You order has been accepted! 🎉</strong>
+          <strong>Your order has been accepted! 🎉</strong>
         </>
       );
 
