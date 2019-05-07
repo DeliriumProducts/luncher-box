@@ -306,7 +306,9 @@ const Tables: NextFunctionComponent<Props> = ({ err, tables: t }) => {
       <Modal
         visible={ordersModalVisible}
         title={
-          currentOrdersTable && `Orders for table ${currentOrdersTable.name}`
+          currentOrdersTable && (
+            <strong>Orders for table {currentOrdersTable.name}</strong>
+          )
         }
         centered
         onCancel={() => {
