@@ -244,14 +244,9 @@ class CustomerContextProvider extends Component<Props, State> {
    */
   pushOrderHistory = (order: Order) => {
     this.setState(
-      prevState => {
-        const { orderHistory } = { ...prevState };
-        orderHistory.unshift(order);
-
-        return {
-          orderHistory
-        };
-      },
+      prevState => ({
+        orderHistory: [order, ...prevState.orderHistory]
+      }),
       async () => {
         localForage.setItem('orderHistory', this.state.orderHistory);
       }

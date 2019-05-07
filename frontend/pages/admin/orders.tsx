@@ -62,17 +62,21 @@ const Orders: React.FunctionComponent = () => {
               <strong>({state.orders.length})</strong>
             </h3>
           }
-          extra={[
-            <Popconfirm
-              key="popconfirm-delete-all"
-              title={`Are you sure?`}
-              placement="bottom"
-              okText="Yes"
-              onConfirm={handleDeleteAllClick}
-            >
-              <ActionButton icon="delete">Delete All</ActionButton>
-            </Popconfirm>
-          ]}
+          extra={
+            state.user.role === 'Admin'
+              ? [
+                  <Popconfirm
+                    key="popconfirm-delete-all"
+                    title={`Are you sure?`}
+                    placement="bottom"
+                    okText="Yes"
+                    onConfirm={handleDeleteAllClick}
+                  >
+                    <ActionButton icon="delete">Delete All</ActionButton>
+                  </Popconfirm>
+                ]
+              : []
+          }
         >
           {data}
         </PageHeader>

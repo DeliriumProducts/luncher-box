@@ -1,3 +1,4 @@
+import PageTransition from 'next-page-transitions';
 import App, { Container, NextAppContext } from 'next/app';
 import Head from 'next/head';
 import Router from 'next/router';
@@ -71,10 +72,30 @@ export default class MyApp extends App {
   }
 
   render() {
-    const { Component, pageProps } = this.props;
+    const {
+      Component,
+      pageProps,
+      router: { route }
+    } = this.props;
     let type: 'admin' | 'customer';
 
-    type = this.props.router.route.startsWith('/admin') ? 'admin' : 'customer';
+    if (route === '/login' || route === '/register' || route === '/') {
+      return (
+        <>
+          <Head>
+            <title>LuncherBox • Place orders from your phone!</title>
+          </Head>
+          <Container>
+            <GlobalStyle />
+            <PageTransition timeout={150} classNames="page-transition">
+              <Component key={route} {...pageProps} />
+            </PageTransition>
+          </Container>
+        </>
+      );
+    }
+
+    type = route.startsWith('/admin') ? 'admin' : 'customer';
 
     return (
       <>
@@ -86,8 +107,10 @@ export default class MyApp extends App {
             <CustomerContextProvider>
               <Container>
                 <GlobalStyle />
-                <CustomerLayout type="customer" route={this.props.router.route}>
-                  <Component key={this.props.router.route} {...pageProps} />
+                <CustomerLayout type="customer" route={route}>
+                  <PageTransition timeout={150} classNames="page-transition">
+                    <Component key={route} {...pageProps} />
+                  </PageTransition>
                 </CustomerLayout>
               </Container>
             </CustomerContextProvider>
@@ -95,8 +118,10 @@ export default class MyApp extends App {
             <AdminContextProvider>
               <Container>
                 <GlobalStyle />
-                <AdminLayout type="admin" route={this.props.router.route}>
-                  <Component key={this.props.router.route} {...pageProps} />
+                <AdminLayout type="admin" route={route}>
+                  <PageTransition timeout={150} classNames="page-transition">
+                    <Component key={route} {...pageProps} />
+                  </PageTransition>
                 </AdminLayout>
               </Container>
             </AdminContextProvider>
