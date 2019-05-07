@@ -2235,7 +2235,9 @@ describe('Authorization', () => {
 
     const tableQuery = await tableRepository.findOne(id);
 
-    expect(tableQuery).toEqual(table);
+    const { orders, ...tableWithoutOrders } = table;
+
+    expect(tableQuery).toEqual(tableWithoutOrders);
   });
 
   it('throws an error when deleting a table when not logged in', async () => {
