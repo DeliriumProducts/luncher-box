@@ -70,6 +70,8 @@ interface Props {
     table: Table
   ) => void;
 
+  onClick: (e: React.FormEvent<HTMLDivElement>, table: Table) => void;
+
   handleDeleteClick: (
     e: React.FormEvent<HTMLButtonElement>,
     table: Table
@@ -83,7 +85,8 @@ const TableCard: React.FunctionComponent<Props> = ({
   isTaken,
   editable,
   handleDeleteClick,
-  handleEditClick
+  handleEditClick,
+  onClick
 }) => {
   const table: Table = {
     id,
@@ -92,7 +95,13 @@ const TableCard: React.FunctionComponent<Props> = ({
   };
 
   return (
-    <Card isTaken={isTaken} editable={editable}>
+    <Card
+      isTaken={isTaken}
+      editable={editable}
+      onClick={(e: any) => {
+        onClick(e, table);
+      }}
+    >
       <div className="table-name-and-status">
         <div className="table-name">{name}</div>
         {!editable && <div className="table-status" />}

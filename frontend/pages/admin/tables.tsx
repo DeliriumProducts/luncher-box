@@ -1,4 +1,4 @@
-import { Button, Empty, Icon, message, Switch } from 'antd';
+import { Button, Empty, Icon, message, Modal, Switch } from 'antd';
 import { NextFunctionComponent } from 'next';
 import Head from 'next/head';
 import React from 'react';
@@ -6,6 +6,7 @@ import styled from 'styled-components';
 import { TableAPI } from '../../api';
 import EntityModal from '../../components/EntityModal';
 import FlexContainer from '../../components/FlexContainer';
+import OrderContainer from '../../components/OrderCardContainer';
 import PageHeader from '../../components/PageHeader';
 import TableCard from '../../components/TableCard';
 import { AdminContext } from '../../context';
@@ -44,10 +45,18 @@ interface Props {
 
 const Tables: NextFunctionComponent<Props> = ({ err, tables: t }) => {
   const [tables, setTables] = React.useState(t);
-  const [currentTable, setCurrentTable] = React.useState<Table | null>(null);
-  const [modalVisible, setModalVisible] = React.useState(false);
+  const [
+    currentTableForModifying,
+    setCurrentTableForModifying
+  ] = React.useState<Table | null>(null);
+  const [
+    currentOrdersTable,
+    setCurrentOrdersTable
+  ] = React.useState<Table | null>(null);
+  const [entityModalVisible, setEntityModalVisible] = React.useState(false);
   const [isEdting, setIsEditing] = React.useState(false);
   const [actionType, setActionType] = React.useState('create');
+  const [ordersModalVisible, setOrdersModalVisible] = React.useState(false);
   const adminContext = React.useContext(AdminContext);
 
   let data: React.ReactNode[] | React.ReactNode;
@@ -58,12 +67,12 @@ const Tables: NextFunctionComponent<Props> = ({ err, tables: t }) => {
     setIsEditing(val);
   };
 
-  const showModal = (a: ActionTypes, table?: Table) => {
+  const showEntityModal = (a: ActionTypes, table?: Table) => {
     modalFormRef.current.props.form.resetFields();
 
     setActionType(a);
-    setModalVisible(true);
-    setCurrentTable(table || null);
+    setEntityModalVisible(true);
+    setCurrentTableForModifying(table || null);
   };
 
   const saveFormRef = formRef => {
@@ -86,12 +95,12 @@ const Tables: NextFunctionComponent<Props> = ({ err, tables: t }) => {
 
           message.success(`Successfully created table ${table.name}🎉`);
         } else {
-          if (currentTable) {
+          if (currentTableForModifying) {
             /**
              * Attach missing properties
              */
-            table.id = currentTable.id;
-            table.isTaken = currentTable.isTaken;
+            table.id = currentTableForModifying.id;
+            table.isTaken = currentTableForModifying.isTaken;
 
             const response = (await TableAPI.edit(table)).data;
 
@@ -133,22 +142,22 @@ const Tables: NextFunctionComponent<Props> = ({ err, tables: t }) => {
         }
       }
 
-      setModalVisible(false);
+      setEntityModalVisible(false);
     });
   };
 
   const handleModalCancel = () => {
-    setModalVisible(false);
+    setEntityModalVisible(false);
   };
 
   const handleCreateClick = (e: React.FormEvent<HTMLButtonElement>) => {
     e.stopPropagation();
-    showModal('create');
+    showEntityModal('create');
   };
 
   const handleEditClick = (e: React.FormEvent<HTMLButtonElement>, table) => {
     e.stopPropagation();
-    showModal('edit', table);
+    showEntityModal('edit', table);
   };
 
   const handleDeleteClick = async (
@@ -182,6 +191,14 @@ const Tables: NextFunctionComponent<Props> = ({ err, tables: t }) => {
     }
   };
 
+  const handleTableClick = (
+    e: React.FormEvent<HTMLDivElement>,
+    table: Table
+  ) => {
+    setOrdersModalVisible(true);
+    setCurrentOrdersTable(table);
+  };
+
   if (tables.length && !err) {
     const ordersAndTablesMap: {
       [key: string]: { isTaken: boolean; amount: number };
@@ -209,6 +226,7 @@ const Tables: NextFunctionComponent<Props> = ({ err, tables: t }) => {
           key={table.id}
           id={table.id!}
           name={table.name}
+          onClick={handleTableClick}
           handleDeleteClick={handleDeleteClick}
           handleEditClick={handleEditClick}
           isTaken={
@@ -278,13 +296,34 @@ const Tables: NextFunctionComponent<Props> = ({ err, tables: t }) => {
       </FlexContainer>
       <EntityModal
         wrappedComponentRef={saveFormRef}
-        visible={modalVisible}
+        visible={entityModalVisible}
         onConfirm={handleModalConfirm}
         onCancel={handleModalCancel}
         entityType="table"
         actionType={actionType}
-        entity={currentTable}
+        entity={currentTableForModifying}
       />
+      <Modal
+        visible={ordersModalVisible}
+        title={
+          currentOrdersTable && `Orders for table ${currentOrdersTable.name}`
+        }
+        centered
+        onCancel={() => {
+          setOrdersModalVisible(false);
+        }}
+        onOk={() => {
+          setOrdersModalVisible(false);
+        }}
+      >
+        {currentOrdersTable && (
+          <OrderContainer
+            orders={adminContext.state.orders.filter(
+              o => o.table.id === currentOrdersTable!.id
+            )}
+          />
+        )}
+      </Modal>
     </>
   );
 };
