@@ -2192,8 +2192,8 @@ describe('Authorization', () => {
       .expect(403);
 
     expect(body).toEqual({
-      name: 'AuthorizationRequiredError',
-      message: 'Authorization is required for request on POST /tables'
+      name: 'AccessDeniedError',
+      message: 'Access is denied for request on POST /tables'
     });
 
     const tableQuery = await tableRepository.findOne({
@@ -2229,8 +2229,8 @@ describe('Authorization', () => {
       .expect(403);
 
     expect(body).toEqual({
-      name: 'AuthorizationRequiredError',
-      message: `Authorization is required for request on PUT /tables/${id}`
+      name: 'AccessDeniedError',
+      message: `Access is denied for request on PUT /tables/${id}`
     });
 
     const tableQuery = await tableRepository.findOne(id);
@@ -2258,8 +2258,8 @@ describe('Authorization', () => {
       .expect(403);
 
     expect(body).toEqual({
-      name: 'AuthorizationRequiredError',
-      message: `Authorization is required for request on DELETE /tables/${id}`
+      name: 'AccessDeniedError',
+      message: `Access is denied for request on DELETE /tables/${id}`
     });
 
     const tableQuery = await tableRepository.findOne(id);
