@@ -139,14 +139,16 @@ const MenuBar: React.FunctionComponent<Props> = ({ selectedKey, type }) => {
                 </StyledAnchor>
               </Link>
             </Menu.Item>
-            <Menu.Item key="/admin/orders">
-              <Link href="/admin/orders">
-                <StyledAnchor>
-                  <Icon type="database" className="menu-item-icon" />
-                  <span className="menu-item-title">Orders</span>
-                </StyledAnchor>
-              </Link>
-            </Menu.Item>
+            {role === 'Admin' || role === 'Cook' ? (
+              <Menu.Item key="/admin/orders">
+                <Link href="/admin/orders">
+                  <StyledAnchor>
+                    <Icon type="database" className="menu-item-icon" />
+                    <span className="menu-item-title">Orders</span>
+                  </StyledAnchor>
+                </Link>
+              </Menu.Item>
+            ) : null}
             {role === 'Admin' ? (
               <Menu.Item key="/admin/staff-members">
                 <Link href="/admin/staff-members">

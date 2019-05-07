@@ -371,4 +371,4 @@ Tables.getInitialProps = async () => {
   };
 };
 
-export default withAuth(Tables, ['Admin', 'Waiter']);
+export default withAuth(Tables, ['Waiter']);
