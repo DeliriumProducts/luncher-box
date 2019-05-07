@@ -128,15 +128,23 @@ export class TableController {
     /**
      * Check if the table exists before updating it
      */
+
     const oldTable: QueryResponse<Table> = await this.tableRepository.findOne(id);
 
     if (oldTable) {
       /**
        * Check if there is a table with the same name already
        */
-      if (oldTable.name === newTableJSON.name) {
+      const tablesWithSameName: QueryResponse<Table[]> = await this.tableRepository.find({
+        where: {
+          name: newTableJSON.name
+        }
+      });
+
+      if (tablesWithSameName.length > 1) {
         throw new DuplicateTableError();
       }
+
       const [newTable, tableErr] = await this.transformAndValidateTable(newTableJSON);
 
       if (tableErr.length) {

@@ -57,7 +57,7 @@ describe('Category controller', () => {
 
     it('throws an error when creating a category with an invalid name', async () => {
       const category: Partial<Category> = {
-        name: 'Bu',
+        name: 'B',
         image: 'https://image.com/image.com'
       };
 
@@ -68,7 +68,7 @@ describe('Category controller', () => {
         .expect(400);
 
       expect(body).toEqual({
-        errors: ['name must be longer than or equal to 3 characters'],
+        errors: ['name must be longer than or equal to 2 characters'],
         name: 'NotValidError',
         message: 'Category not valid!'
       });
@@ -101,7 +101,7 @@ describe('Category controller', () => {
 
     it('throws an error when creating a category with all fields invalid', async () => {
       const category: Partial<Category> = {
-        name: 'ba',
+        name: 'b',
         image: 'anoter-not-a-url'
       };
 
@@ -113,7 +113,7 @@ describe('Category controller', () => {
 
       expect(body).toEqual({
         errors: [
-          'name must be longer than or equal to 3 characters',
+          'name must be longer than or equal to 2 characters',
           'image must be an URL address'
         ],
         name: 'NotValidError',
@@ -332,7 +332,7 @@ describe('Category controller', () => {
         .expect(400);
 
       expect(body).toEqual({
-        errors: ['name must be longer than or equal to 3 characters'],
+        errors: ['name must be longer than or equal to 2 characters'],
         message: 'Category not valid!',
         name: 'NotValidError'
       });
@@ -399,7 +399,7 @@ describe('Category controller', () => {
 
       const editedCategory: Partial<Category> = {
         ...oldCategory,
-        name: 'bf',
+        name: 'b',
         image: 'VERY-bad-URL'
       };
 
@@ -411,7 +411,7 @@ describe('Category controller', () => {
 
       expect(body).toEqual({
         errors: [
-          'name must be longer than or equal to 3 characters',
+          'name must be longer than or equal to 2 characters',
           'image must be an URL address'
         ],
         message: 'Category not valid!',
@@ -700,7 +700,7 @@ describe('Product controller', () => {
 
     it('throws an errors when creating a product with an invalid name', async () => {
       const product: Partial<Product> = {
-        name: 'ab',
+        name: 'a',
         description: `It's invalid, sorta`,
         image: 'https://image.com/product.com',
         price: 5.0,
@@ -715,7 +715,7 @@ describe('Product controller', () => {
         .expect(400);
 
       expect(body).toEqual({
-        errors: ['name must be longer than or equal to 3 characters'],
+        errors: ['name must be longer than or equal to 2 characters'],
         name: 'NotValidError',
         message: 'Product not valid!'
       });
@@ -873,7 +873,7 @@ describe('Product controller', () => {
 
     it('throws an errors when creating a product with all fields invalid', async () => {
       const product: Partial<Product> = {
-        name: 'Ab',
+        name: 'A',
         description: 'Ab',
         image: 'not-a-url',
         // @ts-ignore
@@ -896,7 +896,7 @@ describe('Product controller', () => {
 
       expect(body).toEqual({
         errors: [
-          'name must be longer than or equal to 3 characters',
+          'name must be longer than or equal to 2 characters',
           'description must be longer than or equal to 5 characters',
           'image must be an URL address',
           'price must not be greater than 1000',
@@ -1186,7 +1186,7 @@ describe('Product controller', () => {
 
       const editedProduct: Partial<Product> = {
         ...oldProduct,
-        name: 'ab',
+        name: 'a',
         description: 'new desc',
         image: 'https://iamge.com/thesequel',
         price: 999.0,
@@ -1201,7 +1201,7 @@ describe('Product controller', () => {
         .expect(400);
 
       expect(body).toEqual({
-        errors: ['name must be longer than or equal to 3 characters'],
+        errors: ['name must be longer than or equal to 2 characters'],
         name: 'NotValidError',
         message: 'Product not valid!'
       });
@@ -1457,7 +1457,7 @@ describe('Product controller', () => {
 
       expect(body).toEqual({
         errors: [
-          'name must be longer than or equal to 3 characters',
+          'name must be longer than or equal to 2 characters',
           'description must be longer than or equal to 5 characters',
           'image must be an URL address',
           'price must not be greater than 1000',
@@ -1590,7 +1590,7 @@ describe('Table controller', () => {
 
       expect(body).toEqual({
         errors: [
-          'name must be longer than or equal to 2 and shorter than or equal to undefined characters',
+          'name must be longer than or equal to 2 and shorter than or equal to 50 characters',
           'name must be a string'
         ],
         name: 'NotValidError',
@@ -1644,7 +1644,7 @@ describe('Table controller', () => {
 
       expect(body).toEqual({
         errors: [
-          'name must be longer than or equal to 2 and shorter than or equal to undefined characters',
+          'name must be longer than or equal to 2 and shorter than or equal to 50 characters',
           'name must be a string',
           'isTaken must be a boolean value'
         ],
@@ -1814,7 +1814,7 @@ describe('Table controller', () => {
 
       expect(body).toEqual({
         errors: [
-          'name must be longer than or equal to 2 and shorter than or equal to undefined characters',
+          'name must be longer than or equal to 2 and shorter than or equal to 50 characters',
           'name must be a string'
         ],
         message: 'Table not valid!',
@@ -1826,7 +1826,7 @@ describe('Table controller', () => {
       expect(oldTableQuery).not.toEqual(editedTable);
     });
 
-    it('throws an error when editing a category with an invalid isTaken', async () => {
+    it('throws an error when editing a table with an invalid isTaken', async () => {
       const oldTable: Partial<Table> = {
         name: 'valid-id-ok',
         isTaken: false
@@ -1863,7 +1863,7 @@ describe('Table controller', () => {
       expect(oldTableQuery).not.toEqual(editedTable);
     });
 
-    it('throws an error when editing a category with a all fields invalid', async () => {
+    it('throws an error when editing a table with a all fields invalid', async () => {
       const oldTable: Partial<Table> = {
         name: 'valid-id-ok-again',
         isTaken: false
@@ -1893,7 +1893,7 @@ describe('Table controller', () => {
 
       expect(body).toEqual({
         errors: [
-          'name must be longer than or equal to 2 and shorter than or equal to undefined characters',
+          'name must be longer than or equal to 2 and shorter than or equal to 50 characters',
           'name must be a string',
           'isTaken must be a boolean value'
         ],
@@ -1905,7 +1905,7 @@ describe('Table controller', () => {
       expect(oldTableQuery).not.toEqual(editedTable);
     });
 
-    it('throws an error when editing a non-existing category', async () => {
+    it('throws an error when editing a non-existing table', async () => {
       const { body } = await request(server)
         .put(`/tables/${-420}`)
         .set('Cookie', cookie)
@@ -2181,7 +2181,7 @@ describe('Authorization', () => {
 
   it('throws an error when creating a table when not logged in', async () => {
     const table: Partial<Table> = {
-      name: 'A3',
+      name: 'asdfjklwe',
       isTaken: false
     };
 
@@ -2222,7 +2222,7 @@ describe('Authorization', () => {
       .put(`/tables/${id}`)
       .send({
         ...table,
-        name: 'F098'
+        name: 'Fasdf098'
       })
       .expect(401);
 
