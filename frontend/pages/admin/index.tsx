@@ -200,38 +200,38 @@ class Index extends Component<any, State> {
         <Head>
           <title>Admin Home • LuncherBox</title>
         </Head>
-        {/* <FlexContainer> */}
-        <PageHeader
-          title={
-            <h1>
-              <strong>Categories</strong>
-            </h1>
-          }
-          subTitle={
-            <h3>
-              <strong>({categories.length})</strong>
-            </h3>
-          }
-        >
-          <EntityCardContainer
-            entityType="category"
-            loading={loading}
-            handleNewClick={this.handleNewClick}
+        <FlexContainer>
+          <PageHeader
+            title={
+              <h1>
+                <strong>Categories</strong>
+              </h1>
+            }
+            subTitle={
+              <h3>
+                <strong>({categories.length})</strong>
+              </h3>
+            }
           >
-            {categories &&
-              categories.map((category: Category) => (
-                <EntityCard
-                  key={category.id}
-                  {...category}
-                  hoverable={true}
-                  entityType="category"
-                  handleEditClick={this.handleEditClick}
-                  handleDeleteClick={this.handleDeleteClick}
-                />
-              ))}
-          </EntityCardContainer>
-        </PageHeader>
-        {/* </FlexContainer> */}
+            <EntityCardContainer
+              entityType="category"
+              loading={loading}
+              handleNewClick={this.handleNewClick}
+            >
+              {categories &&
+                categories.map((category: Category) => (
+                  <EntityCard
+                    key={category.id}
+                    {...category}
+                    hoverable={true}
+                    entityType="category"
+                    handleEditClick={this.handleEditClick}
+                    handleDeleteClick={this.handleDeleteClick}
+                  />
+                ))}
+            </EntityCardContainer>
+          </PageHeader>
+        </FlexContainer>
         <EntityModal
           wrappedComponentRef={this.saveModalFormRef}
           visible={this.state.modalVisible}

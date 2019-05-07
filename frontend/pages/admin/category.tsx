@@ -236,50 +236,50 @@ class CategoryPage extends Component<Props, State> {
             • LuncherBox
           </title>
         </Head>
-        {/* <FlexContainer> */}
-        <PageHeader
-          title={
-            <h1>
-              <strong>{this.state.categoryName}</strong>
-            </h1>
-          }
-          subTitle={
-            <h3>
-              <strong>({products.length})</strong>
-            </h3>
-          }
-          onBack={() => {
-            Router.back();
-          }}
-        >
-          <EntityCardContainer
-            entityType="product"
-            loading={loading}
-            handleNewClick={this.handleNewClick}
+        <FlexContainer>
+          <PageHeader
+            title={
+              <h1>
+                <strong>{this.state.categoryName}</strong>
+              </h1>
+            }
+            subTitle={
+              <h3>
+                <strong>({products.length})</strong>
+              </h3>
+            }
+            onBack={() => {
+              Router.back();
+            }}
           >
-            {products.map(product => (
-              <EntityCard
-                key={product.id}
-                {...product}
-                hoverable={true}
-                entityType="product"
-                handleEditClick={this.handleEditClick}
-                handleDeleteClick={this.handleDeleteClick}
-              />
-            ))}
-          </EntityCardContainer>
-        </PageHeader>
-        <EntityModal
-          wrappedComponentRef={this.saveModalFormRef}
-          visible={this.state.modalVisible}
-          onCancel={this.handleModalCancel}
-          onConfirm={this.handleModalAction}
-          entityType={this.state.entityType}
-          actionType={this.state.actionType}
-          entity={this.state.entity}
-          loading={this.state.modalLoading}
-        />
-        {/* </FlexContainer> */}
+            <EntityCardContainer
+              entityType="product"
+              loading={loading}
+              handleNewClick={this.handleNewClick}
+            >
+              {products.map(product => (
+                <EntityCard
+                  key={product.id}
+                  {...product}
+                  hoverable={true}
+                  entityType="product"
+                  handleEditClick={this.handleEditClick}
+                  handleDeleteClick={this.handleDeleteClick}
+                />
+              ))}
+            </EntityCardContainer>
+          </PageHeader>
+          <EntityModal
+            wrappedComponentRef={this.saveModalFormRef}
+            visible={this.state.modalVisible}
+            onCancel={this.handleModalCancel}
+            onConfirm={this.handleModalAction}
+            entityType={this.state.entityType}
+            actionType={this.state.actionType}
+            entity={this.state.entity}
+            loading={this.state.modalLoading}
+          />
+        </FlexContainer>
       </>
     );
   }

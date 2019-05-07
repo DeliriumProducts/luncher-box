@@ -1,4 +1,4 @@
-import PageTransition from 'next-page-transitions';
+import { PageTransition } from 'next-page-transitions';
 import App, { Container, NextAppContext } from 'next/app';
 import Head from 'next/head';
 import Router from 'next/router';
