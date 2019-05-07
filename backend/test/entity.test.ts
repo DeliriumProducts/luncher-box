@@ -2189,7 +2189,7 @@ describe('Authorization', () => {
     const { body } = await request(server)
       .post('/tables')
       .send(table)
-      .expect(401);
+      .expect(403);
 
     expect(body).toEqual({
       name: 'AuthorizationRequiredError',
@@ -2226,7 +2226,7 @@ describe('Authorization', () => {
         ...table,
         name: 'Fasdf098'
       })
-      .expect(401);
+      .expect(403);
 
     expect(body).toEqual({
       name: 'AuthorizationRequiredError',
@@ -2255,7 +2255,7 @@ describe('Authorization', () => {
 
     const { body } = await request(server)
       .delete(`/tables/${id}`)
-      .expect(401);
+      .expect(403);
 
     expect(body).toEqual({
       name: 'AuthorizationRequiredError',
