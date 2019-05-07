@@ -1,4 +1,3 @@
-import { PageTransition } from 'next-page-transitions';
 import App, { Container, NextAppContext } from 'next/app';
 import Head from 'next/head';
 import Router from 'next/router';
@@ -58,24 +57,6 @@ const GlobalStyle = createGlobalStyle`
     height: 100%;
     min-height: 100%;
   }
-
-  .page-transition-enter {
-    opacity: 0;
-  }
-
-  .page-transition-enter-active {
-    opacity: 1;
-    transition: opacity 100ms;
-  }
-
-  .page-transition-exit {
-    opacity: 1;
-  }
-
-  .page-transition-exit-active {
-    opacity: 0;
-    transition: opacity 100ms;
-  }
 `;
 
 export default class MyApp extends App {
@@ -106,9 +87,7 @@ export default class MyApp extends App {
               <Container>
                 <GlobalStyle />
                 <CustomerLayout type="customer" route={this.props.router.route}>
-                  <PageTransition timeout={150} classNames="page-transition">
-                    <Component key={this.props.router.route} {...pageProps} />
-                  </PageTransition>
+                  <Component key={this.props.router.route} {...pageProps} />
                 </CustomerLayout>
               </Container>
             </CustomerContextProvider>
@@ -117,9 +96,7 @@ export default class MyApp extends App {
               <Container>
                 <GlobalStyle />
                 <AdminLayout type="admin" route={this.props.router.route}>
-                  <PageTransition timeout={150} classNames="page-transition">
-                    <Component key={this.props.router.route} {...pageProps} />
-                  </PageTransition>
+                  <Component key={this.props.router.route} {...pageProps} />
                 </AdminLayout>
               </Container>
             </AdminContextProvider>

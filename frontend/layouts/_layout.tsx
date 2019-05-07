@@ -2,6 +2,7 @@ import { Affix, Layout as AntDesignLayout } from 'antd';
 import React, { ReactNode } from 'react';
 import styled from 'styled-components';
 import MenuBar from '../components/MenuBar';
+import FlexContainer from '../components/FlexContainer';
 
 const { Content } = AntDesignLayout;
 
@@ -36,7 +37,9 @@ const Layout: React.FunctionComponent<Props> = props => {
       <Affix offsetTop={0}>
         <MenuBar type={type} selectedKey={props.route} />
       </Affix>
-      <StyledContent>{props.children}</StyledContent>
+      <StyledContent>
+        <FlexContainer>{props.children}</FlexContainer>
+      </StyledContent>
     </StyledLayout>
   );
 };
