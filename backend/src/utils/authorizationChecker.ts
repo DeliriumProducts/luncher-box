@@ -7,10 +7,13 @@ import { Role } from '../types';
  */
 export const authorizationChecker = ({ request: req }: Action, r: Role[]) => {
   const user: User = req.user;
+  if (!user) {
+    return false;
+  }
 
   if (!r.length) {
     return req.isAuthenticated();
   } else {
-    return user && (user.role === 'Admin' || r.includes(user.role)) && req.isAuthenticated();
+    return (user.role === 'Admin' || r.includes(user.role)) && req.isAuthenticated();
   }
 };
