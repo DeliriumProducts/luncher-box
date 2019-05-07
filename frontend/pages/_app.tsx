@@ -90,10 +90,30 @@ export default class MyApp extends App {
   }
 
   render() {
-    const { Component, pageProps } = this.props;
+    const {
+      Component,
+      pageProps,
+      router: { route }
+    } = this.props;
     let type: 'admin' | 'customer';
 
-    type = this.props.router.route.startsWith('/admin') ? 'admin' : 'customer';
+    if (route === '/login' || route === '/register' || route === '/') {
+      return (
+        <>
+          <Head>
+            <title>LuncherBox • Place orders from your phone!</title>
+          </Head>
+          <Container>
+            <GlobalStyle />
+            <PageTransition timeout={150} classNames="page-transition">
+              <Component key={route} {...pageProps} />
+            </PageTransition>
+          </Container>
+        </>
+      );
+    }
+
+    type = route.startsWith('/admin') ? 'admin' : 'customer';
 
     return (
       <>
@@ -105,9 +125,9 @@ export default class MyApp extends App {
             <CustomerContextProvider>
               <Container>
                 <GlobalStyle />
-                <CustomerLayout type="customer" route={this.props.router.route}>
+                <CustomerLayout type="customer" route={route}>
                   <PageTransition timeout={150} classNames="page-transition">
-                    <Component key={this.props.router.route} {...pageProps} />
+                    <Component key={route} {...pageProps} />
                   </PageTransition>
                 </CustomerLayout>
               </Container>
@@ -116,9 +136,9 @@ export default class MyApp extends App {
             <AdminContextProvider>
               <Container>
                 <GlobalStyle />
-                <AdminLayout type="admin" route={this.props.router.route}>
+                <AdminLayout type="admin" route={route}>
                   <PageTransition timeout={150} classNames="page-transition">
-                    <Component key={this.props.router.route} {...pageProps} />
+                    <Component key={route} {...pageProps} />
                   </PageTransition>
                 </AdminLayout>
               </Container>

@@ -63,7 +63,7 @@ export class OrderController {
    * Deletes all orders
    */
   @Delete()
-  @Authorized()
+  @Authorized('Admin')
   async deleteAll() {
     const orders = await this.orderRepository.find({
       relations: ['products', 'products.product', 'table'],
