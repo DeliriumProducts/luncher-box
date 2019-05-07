@@ -187,11 +187,11 @@ const Tables: NextFunctionComponent<Props> = ({ err, tables: t }) => {
         };
       }
 
-      if (o.state! === 1) {
+      if (o.state! < 2) {
         ordersAndTablesMap[table].amount++;
-      } else if (o.state! === 2) {
-        ordersAndTablesMap[table].isTaken = false;
       }
+
+      ordersAndTablesMap[table].isTaken = !!ordersAndTablesMap[table].amount;
     });
 
     data = tables.map(table => {

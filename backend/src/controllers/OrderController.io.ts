@@ -155,9 +155,18 @@ export class OrderController {
       order.state = 2;
       order.finished = new Date();
 
-      const { products, table, ...orderWithoutRelations } = order;
+      const table = await this.tableRepository.findOne(order.table.id);
+
+      if (table) {
+        table.isTaken = false;
+      }
+
+      const { products, table: _, ...orderWithoutRelations } = order;
 
       await this.orderRepository.save(orderWithoutRelations);
+      await this.tableRepository.save(table!);
+
+      order.table = table!;
     } else {
       throw new OrderNotFoundError();
     }
