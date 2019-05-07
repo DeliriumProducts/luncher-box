@@ -39,15 +39,17 @@ const Cart: NextFunctionComponent<Props> = ({ tables, err }) => {
   const customerContext = React.useContext(CustomerContext);
 
   React.useEffect(() => {
-    let hasFoundTable = false;
-    for (const table of tables) {
-      if (table.name === customerContext.order.table.name) {
-        hasFoundTable = true;
+    if (customerContext.hasFinishedSyncing) {
+      let hasFoundTable = false;
+      for (const table of tables) {
+        if (table.name === customerContext.order.table.name) {
+          hasFoundTable = true;
+        }
       }
-    }
 
-    if (!hasFoundTable) {
-      customerContext.actions.setTable({ name: '' });
+      if (!hasFoundTable) {
+        customerContext.actions.setTable({ name: '' });
+      }
     }
   }, [customerContext.hasFinishedSyncing]);
 
