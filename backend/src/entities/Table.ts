@@ -1,15 +1,15 @@
 import { IsBoolean, IsString, Length } from 'class-validator';
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn, Unique } from 'typeorm';
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { Order } from '.';
 import { EntityError } from '../types';
-import { EntityNotFoundError, EntityNotValidError, DuplicateEntityError } from '../utils';
+import { DuplicateEntityError, EntityNotFoundError, EntityNotValidError } from '../utils';
 
 @Entity()
 export class Table {
   @PrimaryGeneratedColumn()
   id: string;
 
-  @Column({ length: 255, unique: true })
+  @Column({ length: 50, unique: true })
   @IsString()
   @Length(2, 50)
   name: string;
