@@ -76,7 +76,7 @@ export class OrderController {
      * Set isTaken to false on all of the tables that have orders placed
      */
     await Promise.all(
-      orders.map(({ table }) => this.tableRepository.save({ ...table, isTaken: false }))
+      orders.map(async ({ table }) => await this.tableRepository.save({ ...table, isTaken: false }))
     );
 
     return await this.orderRepository.delete(orders.map(o => o.id));
