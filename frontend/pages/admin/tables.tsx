@@ -168,6 +168,8 @@ const Tables: NextFunctionComponent<Props> = ({ err, tables: t }) => {
     showEntityModal('edit', table);
   };
 
+  const handleOrderContainerSelectChange = v => {};
+
   const handleDeleteClick = async (
     e: React.FormEvent<HTMLButtonElement>,
     table: Table
@@ -340,29 +342,15 @@ const Tables: NextFunctionComponent<Props> = ({ err, tables: t }) => {
           setOrdersModalVisible(false);
         }}
       >
-        <strong>Show</strong>
-        <Select
-          defaultValue={adminContext.state.preferences.showLast.toString()}
-          allowClear={false}
-          onChange={v => {
-            const value = Number(v);
-            adminContext.dispatch({
-              type: 'setPreferences',
-              payload: { showLast: value }
-            });
-          }}
-          style={{ width: 70, marginLeft: 5 }}
-        >
-          <Select.Option value="0">All</Select.Option>
-          <Select.Option value="5">5</Select.Option>
-          <Select.Option value="10">10</Select.Option>
-          <Select.Option value="15">15</Select.Option>
-          <Select.Option value="20">20</Select.Option>
-          <Select.Option value="25">25</Select.Option>
-          <Select.Option value="30">30</Select.Option>
-        </Select>
         {currentOrdersFromTable.length > 0 ? (
           <OrderContainer
+            onSelectChange={v => {
+              const value = Number(v);
+              adminContext.dispatch({
+                type: 'setPreferences',
+                payload: { showLast: value }
+              });
+            }}
             orders={currentOrdersFromTable}
             role={adminContext.state.user.role}
             showLast={adminContext.state.preferences.showLast}

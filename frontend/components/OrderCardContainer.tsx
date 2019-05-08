@@ -1,4 +1,4 @@
-import { Alert, Button, Collapse, message, Tag } from 'antd';
+import { Alert, Button, Collapse, message, Tag, Select } from 'antd';
 import React from 'react';
 import styled from 'styled-components';
 import { OrderAPI } from '../api';
@@ -133,12 +133,14 @@ interface OrderContainerProps {
   orders: Order[];
   role?: Role;
   showLast?: number;
+  onSelectChange: (v: string) => void;
 }
 
 const OrderContainer: React.FunctionComponent<OrderContainerProps> = ({
   orders: o,
   role,
-  showLast
+  showLast,
+  onSelectChange
 }) => {
   const [orders, setOrders] = React.useState<Order[]>(o);
 
@@ -149,83 +151,104 @@ const OrderContainer: React.FunctionComponent<OrderContainerProps> = ({
   }, [showLast, o]);
 
   return (
-    <Collapse bordered={false} style={{ background: '#fafafa' }}>
-      {orders.length > 0 &&
-        orders.map(order => {
-          let totalSum = 0;
-          return (
-            <Collapse.Panel
-              key={order.id!.toString()}
-              header={
-                <ItemCardHeader
-                  orderId={order.id!}
-                  orderTable={order.table.name}
-                  orderState={order.state && order.state}
-                  role={role}
-                />
-              }
-              style={customPanelStyle}
-            >
-              {orders.length &&
-                order.products.map(({ product, quantity }) => {
-                  totalSum +=
-                    product.price * (quantity !== undefined ? quantity : 1);
-                  return (
-                    <ItemCard
-                      key={product.id}
-                      id={product.id}
-                      name={product.name}
-                      description={product.description}
-                      image={product.image}
-                      price={product.price}
-                      quantity={quantity}
-                      interactive={false}
-                    />
-                  );
-                })}
-              {order.comment && (
-                <StyledAlert
-                  message="Comment"
-                  description={order.comment}
-                  type="info"
-                  showIcon
-                  style={{ marginTop: '8px' }}
-                />
-              )}
-              {order.state === 2 && (
-                <StyledAlert
-                  message="Success!"
-                  type="success"
-                  showIcon
-                  description={
-                    totalSum > 0 && (
-                      <Tag color="green">
-                        Total price: $ {totalSum.toFixed(2)}
-                      </Tag>
-                    )
-                  }
-                  style={{ marginTop: '8px' }}
-                />
-              )}
-              {order.state === 3 && (
-                <StyledAlert
-                  message="Declined!"
-                  type="error"
-                  showIcon
-                  description={
-                    totalSum > 0 && (
-                      <Tag color="red">
-                        Total price: $ {totalSum.toFixed(2)}
-                      </Tag>
-                    )
-                  }
-                  style={{ marginTop: '8px' }}
-                />
-              )}
-            </Collapse.Panel>
-          );
-        })}
-    </Collapse>
+    <>
+      {showLast ? (
+        <>
+          <strong>Show</strong>
+          <Select
+            defaultValue={showLast.toString()}
+            allowClear={false}
+            onChange={onSelectChange}
+            style={{ width: 70, marginLeft: 5 }}
+          >
+            <Select.Option value="0">All</Select.Option>
+            <Select.Option value="5">5</Select.Option>
+            <Select.Option value="10">10</Select.Option>
+            <Select.Option value="15">15</Select.Option>
+            <Select.Option value="20">20</Select.Option>
+            <Select.Option value="25">25</Select.Option>
+            <Select.Option value="30">30</Select.Option>
+          </Select>
+        </>
+      ) : null}
+      <Collapse bordered={false} style={{ background: '#fafafa' }}>
+        {orders.length > 0 &&
+          orders.map(order => {
+            let totalSum = 0;
+            return (
+              <Collapse.Panel
+                key={order.id!.toString()}
+                header={
+                  <ItemCardHeader
+                    orderId={order.id!}
+                    orderTable={order.table.name}
+                    orderState={order.state && order.state}
+                    role={role}
+                  />
+                }
+                style={customPanelStyle}
+              >
+                {orders.length &&
+                  order.products.map(({ product, quantity }) => {
+                    totalSum +=
+                      product.price * (quantity !== undefined ? quantity : 1);
+                    return (
+                      <ItemCard
+                        key={product.id}
+                        id={product.id}
+                        name={product.name}
+                        description={product.description}
+                        image={product.image}
+                        price={product.price}
+                        quantity={quantity}
+                        interactive={false}
+                      />
+                    );
+                  })}
+                {order.comment && (
+                  <StyledAlert
+                    message="Comment"
+                    description={order.comment}
+                    type="info"
+                    showIcon
+                    style={{ marginTop: '8px' }}
+                  />
+                )}
+                {order.state === 2 && (
+                  <StyledAlert
+                    message="Success!"
+                    type="success"
+                    showIcon
+                    description={
+                      totalSum > 0 && (
+                        <Tag color="green">
+                          Total price: $ {totalSum.toFixed(2)}
+                        </Tag>
+                      )
+                    }
+                    style={{ marginTop: '8px' }}
+                  />
+                )}
+                {order.state === 3 && (
+                  <StyledAlert
+                    message="Declined!"
+                    type="error"
+                    showIcon
+                    description={
+                      totalSum > 0 && (
+                        <Tag color="red">
+                          Total price: $ {totalSum.toFixed(2)}
+                        </Tag>
+                      )
+                    }
+                    style={{ marginTop: '8px' }}
+                  />
+                )}
+              </Collapse.Panel>
+            );
+          })}
+      </Collapse>
+    </>
   );
 };
 
