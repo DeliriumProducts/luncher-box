@@ -1,8 +1,8 @@
+import localForage from 'localforage';
 import React from 'react';
 import { AdminContext } from '..';
 import { Order, User } from '../../interfaces';
 import { OrderState } from '../../types';
-import localForage from 'localforage';
 
 interface Props {
   children: React.ReactNode;
@@ -36,10 +36,10 @@ const handlers = {
       user
     };
   },
-  setPreferences(state, { showLast }) {
+  setPreferences(state, preferences) {
     return {
       ...state,
-      preferences: { showLast }
+      preferences
     };
   },
   setOrderState(
@@ -95,7 +95,9 @@ const AdminContextProvider = (props: Props) => {
     let preferences: {} = {};
 
     localForage.getItem('preferences').then(pref => {
-      preferences = pref;
+      if (pref) {
+        preferences = pref;
+      }
 
       dispatch({ type: 'setPreferences', payload: preferences });
     });
@@ -105,7 +107,9 @@ const AdminContextProvider = (props: Props) => {
     let currentPreferencesFromLocalForage: {} = {};
 
     localForage.getItem('preferences').then(pref => {
-      currentPreferencesFromLocalForage = pref;
+      if (pref) {
+        currentPreferencesFromLocalForage = pref;
+      }
 
       if (
         JSON.stringify(currentPreferencesFromLocalForage) !==
