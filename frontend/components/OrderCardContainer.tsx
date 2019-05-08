@@ -133,7 +133,7 @@ interface OrderContainerProps {
   orders: Order[];
   role?: Role;
   showLast?: number;
-  onSelectChange: (v: string) => void;
+  onSelectChange?: (v: string) => void;
 }
 
 const OrderContainer: React.FunctionComponent<OrderContainerProps> = ({
@@ -152,7 +152,7 @@ const OrderContainer: React.FunctionComponent<OrderContainerProps> = ({
 
   return (
     <>
-      {showLast ? (
+      {showLast !== undefined && showLast >= 0 ? (
         <>
           <strong>Show</strong>
           <Select

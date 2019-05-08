@@ -168,7 +168,14 @@ const Tables: NextFunctionComponent<Props> = ({ err, tables: t }) => {
     showEntityModal('edit', table);
   };
 
-  const handleOrderContainerSelectChange = v => {};
+  const handleOrderContainerSelectChange = v => {
+    const value = Number(v);
+
+    adminContext.dispatch({
+      type: 'setPreferences',
+      payload: { showLast: value }
+    });
+  };
 
   const handleDeleteClick = async (
     e: React.FormEvent<HTMLButtonElement>,
@@ -344,13 +351,7 @@ const Tables: NextFunctionComponent<Props> = ({ err, tables: t }) => {
       >
         {currentOrdersFromTable.length > 0 ? (
           <OrderContainer
-            onSelectChange={v => {
-              const value = Number(v);
-              adminContext.dispatch({
-                type: 'setPreferences',
-                payload: { showLast: value }
-              });
-            }}
+            onSelectChange={handleOrderContainerSelectChange}
             orders={currentOrdersFromTable}
             role={adminContext.state.user.role}
             showLast={adminContext.state.preferences.showLast}
