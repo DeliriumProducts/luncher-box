@@ -9,7 +9,7 @@ export class Table {
   @PrimaryGeneratedColumn()
   id: string;
 
-  @Column({ length: 50, unique: true })
+  @Column({ length: 255, unique: true })
   @IsString()
   @Length(2, 50)
   name: string;

@@ -101,9 +101,9 @@ const MenuBar: React.FunctionComponent<Props> = ({ selectedKey, type }) => {
     if (role === 'Admin') {
       icon = <Icon type="user" className="menu-item-icon" />;
     } else if (role === 'Cook') {
-      icon = <Icon type="rest" className="menu-item-icon" />;
-    } else if (role === 'Waiter') {
       icon = <StyledSpoonKnife size={14} />;
+    } else if (role === 'Waiter') {
+      icon = <Icon type="rest" className="menu-item-icon" />;
     }
   }
 
