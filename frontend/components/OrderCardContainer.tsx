@@ -132,21 +132,21 @@ const ItemCardHeader: React.FunctionComponent<ItemCardHeaderProps> = ({
 interface OrderContainerProps {
   orders: Order[];
   role?: Role;
-  limit?: number;
+  showLast?: number;
 }
 
 const OrderContainer: React.FunctionComponent<OrderContainerProps> = ({
   orders: o,
   role,
-  limit
+  showLast
 }) => {
   const [orders, setOrders] = React.useState<Order[]>(o);
 
   React.useEffect(() => {
-    if (limit) {
-      setOrders(o.slice(0, limit));
+    if (showLast) {
+      setOrders(o.slice(0, showLast));
     }
-  }, [limit, o]);
+  }, [showLast, o]);
 
   return (
     <Collapse bordered={false} style={{ background: '#fafafa' }}>

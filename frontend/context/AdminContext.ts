@@ -4,6 +4,9 @@ import { Order, User } from '../interfaces';
 interface Values {
   state: {
     user: Partial<User>;
+    preferences: {
+      showLast: number;
+    };
     orders: Order[];
     loading: boolean;
   };
@@ -18,6 +21,9 @@ export const AdminContext = React.createContext<Values>({
     user: {
       name: '',
       role: 'Waiter'
+    },
+    preferences: {
+      showLast: 10
     },
     orders: [],
     loading: true

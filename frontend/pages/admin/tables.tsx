@@ -1,13 +1,4 @@
-import {
-  Button,
-  Empty,
-  Icon,
-  message,
-  Modal,
-  Switch,
-  Cascader,
-  Select
-} from 'antd';
+import { Button, Empty, Icon, message, Modal, Switch, Select } from 'antd';
 import { NextFunctionComponent } from 'next';
 import Head from 'next/head';
 import React from 'react';
@@ -351,10 +342,14 @@ const Tables: NextFunctionComponent<Props> = ({ err, tables: t }) => {
       >
         <strong>Show</strong>
         <Select
-          defaultValue="10"
+          defaultValue={adminContext.state.preferences.showLast.toString()}
           allowClear={false}
-          onChange={value => {
-            setOrdersPerTable(Number(value));
+          onChange={v => {
+            const value = Number(v);
+            adminContext.dispatch({
+              type: 'setPreferences',
+              payload: { showLast: value }
+            });
           }}
           style={{ width: 70, marginLeft: 5 }}
         >
@@ -370,7 +365,7 @@ const Tables: NextFunctionComponent<Props> = ({ err, tables: t }) => {
           <OrderContainer
             orders={currentOrdersFromTable}
             role={adminContext.state.user.role}
-            limit={ordersPerTable}
+            showLast={adminContext.state.preferences.showLast}
           />
         ) : (
           <Empty description="No orders placed on this table yet!" />

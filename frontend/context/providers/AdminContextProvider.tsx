@@ -2,6 +2,7 @@ import React from 'react';
 import { AdminContext } from '..';
 import { Order, User } from '../../interfaces';
 import { OrderState } from '../../types';
+import localForage from 'localforage';
 
 interface Props {
   children: React.ReactNode;
@@ -9,6 +10,9 @@ interface Props {
 
 interface State {
   user: Partial<User>;
+  preferences: {
+    showLast: number;
+  };
   orders: Order[];
   loading: boolean;
 }
@@ -17,6 +21,9 @@ const initalState: State = {
   user: {
     name: '',
     role: 'Waiter'
+  },
+  preferences: {
+    showLast: 10
   },
   orders: [],
   loading: true
@@ -27,6 +34,12 @@ const handlers = {
     return {
       ...state,
       user
+    };
+  },
+  setPreferences(state, { showLast }) {
+    return {
+      ...state,
+      preferences: { showLast }
     };
   },
   setOrderState(
@@ -77,6 +90,31 @@ const reducer = (state = initalState, { type, payload }): State => {
 
 const AdminContextProvider = (props: Props) => {
   const [state, dispatch] = React.useReducer(reducer, initalState);
+
+  React.useEffect(() => {
+    let preferences: {} = {};
+
+    localForage.getItem('preferences').then(pref => {
+      preferences = pref;
+
+      dispatch({ type: 'setPreferences', payload: preferences });
+    });
+  }, []);
+
+  React.useEffect(() => {
+    let currentPreferencesFromLocalForage: {} = {};
+
+    localForage.getItem('preferences').then(pref => {
+      currentPreferencesFromLocalForage = pref;
+
+      if (
+        JSON.stringify(currentPreferencesFromLocalForage) !==
+        JSON.stringify(state.preferences)
+      ) {
+        localForage.setItem('preferences', state.preferences);
+      }
+    });
+  }, [state.preferences]);
 
   return (
     <AdminContext.Provider value={{ state, dispatch }}>
