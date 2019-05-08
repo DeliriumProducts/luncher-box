@@ -338,6 +338,7 @@ const Tables: NextFunctionComponent<Props> = ({ err, tables: t }) => {
           setOrdersModalVisible(false);
         }}
       >
+        Hi
         {currentOrdersFromTable.length > 0 ? (
           <OrderContainer
             orders={currentOrdersFromTable}
