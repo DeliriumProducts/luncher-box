@@ -1,4 +1,13 @@
-import { Button, Empty, Icon, message, Modal, Switch } from 'antd';
+import {
+  Button,
+  Empty,
+  Icon,
+  message,
+  Modal,
+  Switch,
+  Cascader,
+  Select
+} from 'antd';
 import { NextFunctionComponent } from 'next';
 import Head from 'next/head';
 import React from 'react';
@@ -38,6 +47,7 @@ const CreateTableButton = styled(Button)`
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.09);
   }
 `;
+
 interface Props {
   tables: Table[];
   err: string | null;
@@ -62,6 +72,7 @@ const Tables: NextFunctionComponent<Props> = ({ err, tables: t }) => {
     currentOrdersTable,
     setCurrentOrdersTable
   ] = React.useState<Table | null>(null);
+  const [ordersPerTable, setOrdersPerTable] = React.useState<number>(10);
 
   const adminContext = React.useContext(AdminContext);
 
@@ -338,11 +349,28 @@ const Tables: NextFunctionComponent<Props> = ({ err, tables: t }) => {
           setOrdersModalVisible(false);
         }}
       >
-        Hi
+        <strong>Show</strong>
+        <Select
+          defaultValue="10"
+          allowClear={false}
+          onChange={value => {
+            setOrdersPerTable(Number(value));
+          }}
+          style={{ width: 70, marginLeft: 5 }}
+        >
+          <Select.Option value="0">All</Select.Option>
+          <Select.Option value="5">5</Select.Option>
+          <Select.Option value="10">10</Select.Option>
+          <Select.Option value="15">15</Select.Option>
+          <Select.Option value="20">20</Select.Option>
+          <Select.Option value="25">25</Select.Option>
+          <Select.Option value="30">30</Select.Option>
+        </Select>
         {currentOrdersFromTable.length > 0 ? (
           <OrderContainer
             orders={currentOrdersFromTable}
             role={adminContext.state.user.role}
+            limit={ordersPerTable}
           />
         ) : (
           <Empty description="No orders placed on this table yet!" />
