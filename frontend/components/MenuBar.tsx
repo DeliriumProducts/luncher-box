@@ -4,9 +4,11 @@ import Router from 'next/router';
 import React from 'react';
 import styled from 'styled-components';
 import { Exit } from 'styled-icons/icomoon/Exit';
+import { SpoonKnife } from 'styled-icons/icomoon/SpoonKnife';
 import { StaffAPI } from '../api';
 import { THEME_VARIABLES } from '../config';
 import { AdminContext, CustomerContext } from '../context';
+import { Role } from '../types';
 
 interface Props {
   selectedKey: string;
@@ -83,10 +85,27 @@ const StyledLogout = styled(Exit)`
   margin-right: 10px;
 `;
 
+const StyledSpoonKnife = styled(SpoonKnife)`
+  margin-right: 10px;
+`;
+
 const MenuBar: React.FunctionComponent<Props> = ({ selectedKey, type }) => {
   const customerContext = React.useContext(CustomerContext);
   const adminContext = React.useContext(AdminContext);
-  const role = adminContext.state.user.role;
+
+  let role: Role = 'Waiter';
+  let icon: any = null;
+
+  if (adminContext) {
+    role = adminContext.state.user.role!;
+    if (role === 'Admin') {
+      icon = <Icon type="user" className="menu-item-icon" />;
+    } else if (role === 'Cook') {
+      icon = <Icon type="rest" className="menu-item-icon" />;
+    } else if (role === 'Waiter') {
+      icon = <StyledSpoonKnife size={14} />;
+    }
+  }
 
   const handleClick = async (e: any) => {
     const { key } = e;
@@ -188,7 +207,7 @@ const MenuBar: React.FunctionComponent<Props> = ({ selectedKey, type }) => {
             <Menu.SubMenu
               title={
                 <span>
-                  <Icon type="user" className="menu-item-icon" />
+                  {icon}
                   <span className="menu-item-title">
                     {adminContext.state.user.name &&
                       `Hello, ${adminContext.state.user.name}!`}
