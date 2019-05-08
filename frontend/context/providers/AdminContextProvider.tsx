@@ -39,7 +39,10 @@ const handlers = {
   setPreferences(state, preferences) {
     return {
       ...state,
-      preferences
+      preferences: {
+        ...state.preferences,
+        ...preferences
+      }
     };
   },
   setOrderState(
