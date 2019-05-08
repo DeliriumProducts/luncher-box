@@ -32,7 +32,7 @@ const GlobalStyle = createGlobalStyle`
     min-height: 100%;
     scroll-behavior: smooth;
 
-    & .ant-input {
+    & .ant-input, .ant-btn {
       border: none;
       box-shadow: 0 2px 2px rgba(0, 0, 0, 0.12);
     }
