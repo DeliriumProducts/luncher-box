@@ -160,7 +160,7 @@ class LoginForm extends Component<Props, State> {
                     }
                   ]
                 })(
-                  <Input
+                  <Input.Password
                     prefix={
                       <Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />
                     }
