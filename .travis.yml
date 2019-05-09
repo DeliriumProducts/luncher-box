@@ -3,7 +3,7 @@ language: generic
 
 install:
   - docker-compose -f docker-compose.travis.yaml build backend
-  - docker-compose -f docker-compose.travis.yaml start db
-  - docker-compose -f docker-compose.travis.yaml start redis
+  - docker-compose -f docker-compose.travis.yaml run db
+  - docker-compose -f docker-compose.travis.yaml run redis
 script:
   - docker-compose -f docker-compose.travis.yaml run backend
