@@ -1,4 +1,4 @@
-import { IsBoolean, IsString, Length } from 'class-validator';
+import { IsBoolean, Length } from 'class-validator';
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { Order } from '.';
 import { EntityError } from '../types';
@@ -10,7 +10,6 @@ export class Table {
   id: string;
 
   @Column({ length: 255, unique: true })
-  @IsString()
   @Length(2, 50)
   name: string;
 

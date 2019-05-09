@@ -1577,7 +1577,7 @@ describe('Table controller', () => {
     it('throws an errors when creating a table with an invalid name', async () => {
       const table: Partial<Table> = {
         // @ts-ignore
-        name: 123123123,
+        name: '1',
         isTaken: false,
         orders: []
       };
@@ -1589,10 +1589,7 @@ describe('Table controller', () => {
         .expect(400);
 
       expect(body).toEqual({
-        errors: [
-          'name must be longer than or equal to 2 and shorter than or equal to 50 characters',
-          'name must be a string'
-        ],
+        errors: ['name must be longer than or equal to 2 characters'],
         name: 'NotValidError',
         message: 'Table not valid!'
       });
@@ -1606,7 +1603,6 @@ describe('Table controller', () => {
       const table: Partial<Table> = {
         name: 'A2',
         // @ts-ignore
-        isTaken: 'not-valid',
         orders: []
       };
 
@@ -1630,9 +1626,8 @@ describe('Table controller', () => {
     it('throws an errors when creating a table with all fields invalid ', async () => {
       const table: Partial<Table> = {
         // @ts-ignore
-        name: 234,
+        name: '2',
         // @ts-ignore
-        isTaken: 'not-valid',
         orders: []
       };
 
@@ -1644,8 +1639,7 @@ describe('Table controller', () => {
 
       expect(body).toEqual({
         errors: [
-          'name must be longer than or equal to 2 and shorter than or equal to 50 characters',
-          'name must be a string',
+          'name must be longer than or equal to 2 characters',
           'isTaken must be a boolean value'
         ],
         name: 'NotValidError',
@@ -1750,7 +1744,7 @@ describe('Table controller', () => {
   describe('PUT /tables/:id', () => {
     it('edits a valid table from the database', async () => {
       const oldTable: Partial<Table> = {
-        name: 'test-ahaha',
+        name: 'A2',
         isTaken: false
       };
 
@@ -1764,7 +1758,7 @@ describe('Table controller', () => {
 
       const editedTable: Partial<Table> = {
         ...oldTable,
-        name: 'ahahhahaha',
+        name: 'A98',
         isTaken: true
       };
 
@@ -1800,7 +1794,7 @@ describe('Table controller', () => {
       const editedTable: Partial<Table> = {
         ...oldTable,
         // @ts-ignore
-        name: 343,
+        name: 'A',
         isTaken: false
       };
 
@@ -1813,10 +1807,7 @@ describe('Table controller', () => {
       editedTable.id = id;
 
       expect(body).toEqual({
-        errors: [
-          'name must be longer than or equal to 2 and shorter than or equal to 50 characters',
-          'name must be a string'
-        ],
+        errors: ['name must be longer than or equal to 2 characters'],
         message: 'Table not valid!',
         name: 'NotValidError'
       });
@@ -1843,7 +1834,7 @@ describe('Table controller', () => {
       const editedTable: Partial<Table> = {
         ...oldTable,
         // @ts-ignore
-        isTaken: 'invalid-is-Taken'
+        isTaken: undefined
       };
 
       const { body } = await request(server)
@@ -1880,9 +1871,8 @@ describe('Table controller', () => {
       const editedTable: Partial<Table> = {
         ...oldTable,
         // @ts-ignore
-        name: 23432,
+        name: 'A'
         // @ts-ignore
-        isTaken: 'asdf'
       };
 
       const { body } = await request(server)
@@ -1892,11 +1882,7 @@ describe('Table controller', () => {
         .expect(400);
 
       expect(body).toEqual({
-        errors: [
-          'name must be longer than or equal to 2 and shorter than or equal to 50 characters',
-          'name must be a string',
-          'isTaken must be a boolean value'
-        ],
+        errors: ['name must be longer than or equal to 2 characters'],
         name: 'NotValidError',
         message: 'Table not valid!'
       });

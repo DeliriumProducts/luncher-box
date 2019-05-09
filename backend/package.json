@@ -42,8 +42,8 @@
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.18.3",
     "chai": "^4.2.0",
-    "class-transformer": "^0.2.0",
-    "class-transformer-validator": "^0.6.0",
+    "class-transformer": "^0.2.2",
+    "class-transformer-validator": "^0.7.1",
     "class-validator": "^0.9.1",
     "compression": "^1.7.3",
     "connect-redis": "^3.4.0",
@@ -73,7 +73,6 @@
     "tslint": "^5.13.1",
     "typedi": "^0.8.0",
     "typeorm": "^0.2.14",
-    "typeorm-routing-controllers-extensions": "^0.2.0",
     "uuid": "^3.3.2"
   },
   "scripts": {
@@ -83,9 +82,9 @@
     "debug": "cross-env NODE_ENV=development nodemon --exec ts-node src/index.ts",
     "precoverage": "cross-env NODE_ENV=test ts-node test/utils/initTestDbConnection.ts",
     "pretest": "cross-env NODE_ENV=test ts-node test/utils/initTestDbConnection.ts",
-    "pretest-debug": "cross-env NODE_ENV=test ts-node test/utils/initTestDbConnection.ts",
+    "pretest:debug": "cross-env NODE_ENV=test ts-node test/utils/initTestDbConnection.ts",
     "test": "cross-env NODE_ENV=test jest --forceExit --detectOpenHandles --verbose=true",
-    "test-debug": "cross-env NODE_ENV=test jest --forceExit --detectOpenHandles --verbose=false",
+    "test:debug": "cross-env NODE_ENV=test jest --forceExit --detectOpenHandles --verbose=false",
     "coverage": "cross-env NODE_ENV=test jest --forceExit --detectOpenHandles --verbose=true --coverage"
   },
   "husky": {

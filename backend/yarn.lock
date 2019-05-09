@@ -1377,20 +1377,20 @@ ci-info@^2.0.0:
   resolved "https://registry.yarnpkg.com/ci-info/-/ci-info-2.0.0.tgz#67a9e964be31a51e15e5010d58e6f12834002f46"
   integrity sha512-5tK7EtrZ0N+OLFMthtqOj4fI2Jeb88C4CAZPu25LDVUgXJ0A3Js4PMGqrn0JU1W0Mh1/Z8wZzYPxqUrXeBboCQ==
 
-class-transformer-validator@^0.6.0:
-  version "0.6.0"
-  resolved "https://registry.yarnpkg.com/class-transformer-validator/-/class-transformer-validator-0.6.0.tgz#495d714948dea47af468e6d2cb90653a015b4002"
-  integrity sha512-jlJqyZaGB1IO59OZYRNrMg8Xq5R1R6LtR79N5uQh13NrX1GUd4rHtkAXVUSa90FUJ0IMG37XX9TVoxgA2PROwQ==
+class-transformer-validator@^0.7.1:
+  version "0.7.1"
+  resolved "https://registry.yarnpkg.com/class-transformer-validator/-/class-transformer-validator-0.7.1.tgz#9aba789a66d4857c8003bb641678b72407a38401"
+  integrity sha512-s9jREk2EjwKSTRsJUXDbvBfZ9qAq2tsiw6wSgCAI5zEEUWpdxVRBssjvuuaGqI23IP97CZturI4HiL7j+9jPCQ==
 
 class-transformer@^0.1.6, class-transformer@^0.1.9:
   version "0.1.10"
   resolved "https://registry.yarnpkg.com/class-transformer/-/class-transformer-0.1.10.tgz#350f168ebb4c1f87edb18b98dd973681fc20fff7"
   integrity sha512-QiNdUxEvTBiUtc0KiapGVHhgaqGQVEhOfL9UEBnb9xRfcwmDJT5ijIDwcwJUTwXaT/kGvZZB4JCGsiuR5adX6g==
 
-class-transformer@^0.2.0:
-  version "0.2.0"
-  resolved "https://registry.yarnpkg.com/class-transformer/-/class-transformer-0.2.0.tgz#e54b34112e8ef7f913ef938c81fed8ed949fc9c7"
-  integrity sha512-6N/5WkEmLZCKxyC2CAPYQIJt3pDZzDFag7AExpyWRm7CjaS/U62VDRU+Z2AUrQaNpnuiXRlli0so4PJUqGSVZQ==
+class-transformer@^0.2.2:
+  version "0.2.2"
+  resolved "https://registry.yarnpkg.com/class-transformer/-/class-transformer-0.2.2.tgz#8f35a7ee6f46a184e238250b0b49c5be2ef9d3fd"
+  integrity sha512-wRKNNvdrSTOYut0ksO1/PTXFPTscbuGRB5R85FfdUuydGI+nXGPYeAByoifrfHFwadI2G4a7IQ5MXp9gnWNjFQ==
 
 class-utils@^0.3.5:
   version "0.3.6"
@@ -6122,11 +6122,6 @@ typedi@^0.8.0:
   version "0.8.0"
   resolved "https://registry.yarnpkg.com/typedi/-/typedi-0.8.0.tgz#d8e203bd1d41a96e2b0a5c6295147d74b2b2d03e"
   integrity sha512-/c7Bxnm6eh5kXx2I+mTuO+2OvoWni5+rXA3PhXwVWCtJRYmz3hMok5s1AKLzoDvNAZqj/Q/acGstN0ri5aQoOA==
-
-typeorm-routing-controllers-extensions@^0.2.0:
-  version "0.2.0"
-  resolved "https://registry.yarnpkg.com/typeorm-routing-controllers-extensions/-/typeorm-routing-controllers-extensions-0.2.0.tgz#05745f448f47061b1cda711b5b50bcba5a2952b9"
-  integrity sha512-nIRlu6cgz1V6M1MQsp3kPYa7JNyJZ3Lqc5FaNAZH7NpkEgppk5ouvObVNiHwTNxHYzN3uTd8ihqUjkgh029EnA==
 
 typeorm@^0.2.14:
   version "0.2.16"
