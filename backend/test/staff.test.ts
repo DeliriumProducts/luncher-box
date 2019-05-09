@@ -491,6 +491,46 @@ describe('Staff controller', () => {
         isVerified: true
       });
     });
+
+    it('throws an error when trying to confirm a non existing user', async () => {
+      const { body } = await request(server)
+        .get(`/confirm/${-420}`)
+        .set('Cookie', adminCookie)
+        .expect(404);
+
+      expect(body).toEqual({
+        message: 'User not found!',
+        name: 'NotFoundError'
+      });
+    });
+
+    it('throws an error when trying to confirm an already confirmed user', async () => {
+      const user: Partial<User> = {
+        name: faker.name.findName(),
+        email: 'CONFIRM-ALREADY' + faker.internet.exampleEmail(),
+        password: 'FAKEpassword123CONFIRM-ALREADY'
+      };
+
+      const { body: confirmationURL } = await request(server)
+        .post('/staff/auth/register')
+        .send(user)
+        .expect(200);
+
+      await request(server)
+        .get(confirmationURL)
+        .set('Cookie', adminCookie)
+        .expect(200);
+
+      const { body } = await request(server)
+        .get(confirmationURL)
+        .set('Cookie', adminCookie)
+        .expect(400);
+
+      expect(body).toEqual({
+        message: 'User already verified',
+        name: 'BadRequestError'
+      });
+    });
   });
 
   describe('POST /staff/auth/login', () => {
