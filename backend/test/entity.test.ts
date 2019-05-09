@@ -527,6 +527,7 @@ describe('Category controller', () => {
       expect(productQuery1).not.toBeDefined();
     });
 
+    // tslint:disable-next-line
     it('deletes an existing category with products that only some of which belong to it from the database', async () => {
       const category: Partial<Category> = {
         name: 'to-be-deleted-again-again',
