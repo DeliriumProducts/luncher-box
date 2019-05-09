@@ -23,10 +23,9 @@ export const dbConnection = async (dropSchema?: boolean, synchronize?: boolean) 
     }
   }
 
-  return createConnection({
-    ...dbConfig,
-    name: 'default',
-    dropSchema,
-    synchronize
-  });
+  try {
+    return createConnection({ ...dbConfig, name: 'default', dropSchema, synchronize });
+  } catch (error) {
+    return error;
+  }
 };

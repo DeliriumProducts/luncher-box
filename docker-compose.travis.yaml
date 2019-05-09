@@ -2,7 +2,7 @@ version: "3"
 services:
   backend:
     build: ./backend
-    command: ""
+    command: yarn test --no-cache
     environment:
       SESSION_SECRET:
       DB_PORT:

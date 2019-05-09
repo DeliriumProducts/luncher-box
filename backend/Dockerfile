@@ -9,4 +9,4 @@ RUN yarn
 COPY . .
 
 EXPOSE 8000
-CMD yarn prod:docker
+# CMD yarn prod:docker
