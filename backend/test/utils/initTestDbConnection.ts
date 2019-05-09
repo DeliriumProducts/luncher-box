@@ -23,4 +23,4 @@ const initTestDbConnection = async () => {
   }
 };
 
-initTestDbConnection();
+initTestDbConnection().then(() => process.exit(0));
