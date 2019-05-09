@@ -2,6 +2,7 @@ version: "3"
 services:
   backend:
     build: ./backend
+    command: yarn test
     environment:
       SESSION_SECRET:
       DB_PORT:
