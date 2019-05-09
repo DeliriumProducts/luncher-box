@@ -249,6 +249,134 @@ describe('GET /staff', () => {
   });
 });
 
+describe('PUT /staff', () => {
+  it('should update the role of a registered user', async () => {
+    const user: Partial<User> = {
+      name: faker.name.findName(),
+      email: 'UPDATE-ROLE' + faker.internet.exampleEmail(),
+      password: 'FAKEpassword123UPDATE-ROLE'
+    };
+
+    await request(server)
+      .post('/staff/auth/register')
+      .send(user)
+      .expect(200);
+
+    const { password, ...userWithoutPassword } = user;
+
+    const userQuery = await userRepository.findOne({ where: { ...userWithoutPassword } });
+    if (userQuery) {
+      const { id } = userQuery;
+
+      await request(server)
+        .put(`/staff/${id}`)
+        .send({
+          role: 'Admin'
+        })
+        .set('Cookie', adminCookie)
+        .expect(200);
+
+      const userQuery1 = await userRepository.findOne(id);
+
+      expect(userQuery1).toEqual({
+        ...userQuery,
+        role: 'Admin'
+      });
+    }
+  });
+
+  it('should throw an error when trying to update the role of a non-existing user', async () => {
+    const { body } = await request(server)
+      .put(`/staff/${-420}`)
+      .send({
+        role: 'Admin'
+      })
+      .set('Cookie', adminCookie)
+      .expect(404);
+
+    expect(body).toEqual({
+      message: 'User not found!',
+      name: 'NotFoundError'
+    });
+  });
+
+  it('should throw an error when trying to update the role of a themselves', async () => {
+    const adminQuery = await userRepository.findOne({
+      where: {
+        email: 'admin@deliriumproducts.me'
+      }
+    });
+
+    if (adminQuery) {
+      const { body } = await request(server)
+        .put(`/staff/${adminQuery.id}`)
+        .send({
+          role: 'Waiter'
+        })
+        .set('Cookie', adminCookie)
+        .expect(400);
+      expect(body).toEqual({
+        errors: ['cannot edit own role'],
+        message: 'User not valid!',
+        name: 'NotValidError'
+      });
+
+      const adminQuery1 = await userRepository.findOne({
+        where: {
+          email: 'admin@deliriumproducts.me'
+        }
+      });
+
+      expect(adminQuery1).not.toEqual({
+        ...adminQuery,
+        role: 'Waiter'
+      });
+    }
+  });
+
+  it(`should throw an error when trying to update the role to a one that doesn't exist`, async () => {
+    const user: Partial<User> = {
+      name: faker.name.findName(),
+      email: 'INVALID-UPDATE-ROLE' + faker.internet.exampleEmail(),
+      password: 'FAKEpassword123INVALID-UPDATE-ROLE'
+    };
+
+    await request(server)
+      .post('/staff/auth/register')
+      .send(user)
+      .expect(200);
+
+    const { password, ...userWithoutPassword } = user;
+
+    const userQuery = await userRepository.findOne({ where: { ...userWithoutPassword } });
+
+    if (userQuery) {
+      const { id } = userQuery;
+
+      const { body } = await request(server)
+        .put(`/staff/${id}`)
+        .send({
+          role: 'BAD-ROLE'
+        })
+        .set('Cookie', adminCookie)
+        .expect(400);
+
+      expect(body).toEqual({
+        errors: ['role must be one of the following values: Admin,Waiter,Cook'],
+        message: 'User not valid!',
+        name: 'NotValidError'
+      });
+
+      const userQuery1 = await userRepository.findOne(id);
+
+      expect(userQuery1).not.toEqual({
+        ...userQuery,
+        role: 'BAD-ROLE'
+      });
+    }
+  });
+});
+
 describe('GET /confirm/:tokenId', () => {
   it('confirms the user in the database', async () => {
     const user: Partial<User> = {
@@ -383,13 +511,6 @@ describe('GET /staff/auth/logout', () => {
       .post('/staff/auth/register')
       .send(registeredUser)
       .expect(200);
-
-    await createInitialAdmin();
-
-    const user: Partial<User> = {
-      email: 'admin@deliriumproducts.me',
-      password: INITIAL_ADMIN_PASS
-    };
 
     await request(server)
       .get(confirmationURL)
