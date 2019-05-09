@@ -99,7 +99,9 @@ const TableCard: React.FunctionComponent<Props> = ({
       isTaken={isTaken}
       editable={editable}
       onClick={(e: any) => {
-        onClick(e, table);
+        if (!editable) {
+          onClick(e, table);
+        }
       }}
     >
       <div className="table-name-and-status">

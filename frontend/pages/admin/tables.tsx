@@ -1,4 +1,4 @@
-import { Button, Empty, Icon, message, Modal, Switch, Select } from 'antd';
+import { Button, Empty, Icon, message, Modal, Switch } from 'antd';
 import { NextFunctionComponent } from 'next';
 import Head from 'next/head';
 import React from 'react';
@@ -63,7 +63,6 @@ const Tables: NextFunctionComponent<Props> = ({ err, tables: t }) => {
     currentOrdersTable,
     setCurrentOrdersTable
   ] = React.useState<Table | null>(null);
-  const [ordersPerTable, setOrdersPerTable] = React.useState<number>(10);
 
   const adminContext = React.useContext(AdminContext);
 
