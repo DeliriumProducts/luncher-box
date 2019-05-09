@@ -431,7 +431,7 @@ describe('Staff controller', () => {
       const userQuery = await userRepository.findOne({ where: { ...userWithoutPassword } });
 
       if (userQuery) {
-        const { id } = user;
+        const { id } = userQuery;
 
         await request(server)
           .delete(`/staff/${id}`)
