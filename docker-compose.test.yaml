@@ -4,7 +4,7 @@ services:
     build: ./backend
     command: yarn test
     environment:
-      NODE_ENV: test
+      NODE_ENV: "test"
       SESSION_SECRET: ${SESSION_SECRET}
       DB_PORT: ${DB_PORT}
       DB_HOST: ${DB_HOST}

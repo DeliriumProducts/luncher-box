@@ -4,7 +4,6 @@ services:
     build: ./backend
     command: ""
     environment:
-      NODE_ENV: test
       SESSION_SECRET:
       DB_PORT:
       DB_HOST:
