@@ -3,12 +3,10 @@ import compression from 'compression';
 import createRedisStore from 'connect-redis';
 import cors from 'cors';
 import express, { Application } from 'express';
-import rateLimit from 'express-rate-limit';
 import session, { Store } from 'express-session';
 import expressValidator from 'express-validator';
 import lusca from 'lusca';
 import passport from 'passport';
-import rateLimitRedisStore from 'rate-limit-redis';
 import { InternalServerError } from 'routing-controllers';
 import { redisConnection } from '../connections';
 import { ENV, FRONTEND_URL, IS_DEV, SESSION_SECRET } from './env';
@@ -17,7 +15,6 @@ import { ENV, FRONTEND_URL, IS_DEV, SESSION_SECRET } from './env';
  * During tests, we use the default MemoryStore
  */
 let store: Store | undefined;
-let rateLimitStore: rateLimit.Store | undefined;
 
 if (ENV !== 'test') {
   const RedisStore = createRedisStore(session);
@@ -25,26 +22,12 @@ if (ENV !== 'test') {
   store = new RedisStore({
     client: redisConnection as any
   });
-
-  rateLimitStore = new rateLimitRedisStore({
-    client: redisConnection
-  });
 }
 
 /**
  * Create express app
  */
 const app: Application = express();
-
-if (ENV !== 'test') {
-  app.use(
-    new rateLimit({
-      store: rateLimitStore,
-      windowMs: 60 * 1000, // 60 seconds
-      max: 100
-    })
-  );
-}
 
 /**
  * Configure express app
