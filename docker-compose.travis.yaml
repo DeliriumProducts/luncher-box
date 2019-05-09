@@ -2,7 +2,6 @@ version: "3"
 services:
   backend:
     build: ./backend
-    command: yarn test --no-cache
     environment:
       SESSION_SECRET:
       DB_PORT:
@@ -21,7 +20,6 @@ services:
       SOCKET_URL:
     ports:
       - 8000:8000
-    restart: always
     depends_on:
       - db
       - redis

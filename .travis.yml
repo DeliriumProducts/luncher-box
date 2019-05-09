@@ -3,5 +3,6 @@ language: generic
 
 install:
   - docker-compose -f docker-compose.travis.yaml build backend
-script:
   - docker-compose -f docker-compose.travis.yaml up -d
+script:
+  - docker-compose exec backend sh -c "yarn test"
