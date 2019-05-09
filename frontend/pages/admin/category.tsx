@@ -2,37 +2,15 @@ import { message } from 'antd';
 import Head from 'next/head';
 import Router, { DefaultQuery } from 'next/router';
 import { Component } from 'react';
-import styled from 'styled-components';
 import { CategoryAPI, ProductAPI } from '../../api';
 import EntityCard from '../../components/EntityCard';
 import EntityCardContainer from '../../components/EntityCardContainer';
 import EntityModal from '../../components/EntityModal';
-import withAuth from '../../components/withAuth';
-import withRouter from '../../components/withRouter';
+import FlexContainer from '../../components/FlexContainer';
+import PageHeader from '../../components/PageHeader';
+import { withAuth, withRouter } from '../../hocs/';
 import { Category, Product } from '../../interfaces';
 import { ActionTypes, EntityInstance, EntityTypes } from '../../types';
-
-const FlexContainer = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  width: 100%;
-
-  .col {
-    flex: 1;
-    max-width: 70%;
-    height: 100%;
-    margin: auto;
-  }
-
-  @media (max-width: 768px) {
-    .col {
-      max-width: 100%;
-    }
-
-    flex-direction: column;
-  }
-`;
 
 interface CategoryQuery extends DefaultQuery {
   categoryId: string;
@@ -72,6 +50,7 @@ class CategoryPage extends Component<Props, State> {
     actionType: ActionTypes,
     entity?: EntityInstance
   ) => {
+    this.modalFormRef.props.form.resetFields();
     if (entity) {
       this.setState({
         modalVisible: true,
@@ -158,30 +137,24 @@ class CategoryPage extends Component<Props, State> {
             products: [...prevState.products, product]
           }));
         } else {
-          const products = [...this.state.products];
-          const productIndex = products.findIndex(
-            ({ id }: Product) => id === product.id
-          );
-
-          if (productIndex >= 0) {
-            products[productIndex] = product;
-            this.setState({ products });
-          }
+          this.setState(prevState => ({
+            products: prevState.products.map(p => {
+              if (p.id === product.id) {
+                return product;
+              } else {
+                return p;
+              }
+            })
+          }));
         }
       } else {
-        const products = [...this.state.products];
-
-        const productIndex = products.findIndex(
-          ({ id }: Product) => id === product.id
-        );
-
-        if (productIndex >= 0) {
-          products.splice(productIndex, 1);
-          this.setState({ products });
-        }
+        this.setState(prevState => ({
+          products: prevState.products.filter(p => {
+            return p.id !== product.id;
+          })
+        }));
       }
 
-      modalForm.resetFields();
       this.setState({ modalVisible: false, modalLoading: false });
     });
   };
@@ -204,31 +177,28 @@ class CategoryPage extends Component<Props, State> {
     /**
      * Update current product with all categories
      */
-    entity = await ProductAPI.getOne(entity.id);
+    entity = await ProductAPI.getOne((entity as Product).id);
 
     this.showModal(entityType, 'edit', entity);
   };
 
   handleDeleteClick = async (
     e: React.FormEvent<HTMLButtonElement>,
-    { id, name }: EntityInstance
+    { id, name }: any
   ) => {
     e.stopPropagation();
 
     await ProductAPI.delete(id);
 
-    const products = [...this.state.products];
-
-    const productIndex = products.findIndex(
-      ({ id: productId }: Product) => productId === id
+    this.setState(
+      prevState => ({
+        products: prevState.products.filter(p => {
+          return p.id !== id;
+        })
+      }),
+      () => message.success(`Successfully deleted product ${name} 🎉`)
     );
-
-    if (productIndex >= 0) {
-      products.splice(productIndex, 1);
-      this.setState({ products }, () =>
-        message.success(`Successfully deleted product ${name} 🎉`)
-      );
-    }
+    // }
   };
 
   async componentDidMount() {
@@ -267,9 +237,22 @@ class CategoryPage extends Component<Props, State> {
           </title>
         </Head>
         <FlexContainer>
-          <div className="col">
+          <PageHeader
+            title={
+              <h1>
+                <strong>{this.state.categoryName}</strong>
+              </h1>
+            }
+            subTitle={
+              <h3>
+                <strong>({products.length})</strong>
+              </h3>
+            }
+            onBack={() => {
+              Router.back();
+            }}
+          >
             <EntityCardContainer
-              title={`Products (${products.length})`}
               entityType="product"
               loading={loading}
               handleNewClick={this.handleNewClick}
@@ -285,17 +268,17 @@ class CategoryPage extends Component<Props, State> {
                 />
               ))}
             </EntityCardContainer>
-            <EntityModal
-              wrappedComponentRef={this.saveModalFormRef}
-              visible={this.state.modalVisible}
-              onCancel={this.handleModalCancel}
-              onCreate={this.handleModalAction}
-              entityType={this.state.entityType}
-              actionType={this.state.actionType}
-              entity={this.state.entity}
-              loading={this.state.modalLoading}
-            />
-          </div>
+          </PageHeader>
+          <EntityModal
+            wrappedComponentRef={this.saveModalFormRef}
+            visible={this.state.modalVisible}
+            onCancel={this.handleModalCancel}
+            onConfirm={this.handleModalAction}
+            entityType={this.state.entityType}
+            actionType={this.state.actionType}
+            entity={this.state.entity}
+            loading={this.state.modalLoading}
+          />
         </FlexContainer>
       </>
     );

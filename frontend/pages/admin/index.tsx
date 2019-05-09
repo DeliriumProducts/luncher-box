@@ -1,37 +1,16 @@
 import { message } from 'antd';
 import Head from 'next/head';
 import { Component } from 'react';
-import styled from 'styled-components';
 import { CategoryAPI } from '../../api';
 import EntityCard from '../../components/EntityCard';
 import EntityCardContainer from '../../components/EntityCardContainer';
 import EntityModal from '../../components/EntityModal';
-import withAuth from '../../components/withAuth';
+import FlexContainer from '../../components/FlexContainer';
+import PageHeader from '../../components/PageHeader';
 import { SocketContext } from '../../context';
+import { withAuth } from '../../hocs/';
 import { Category } from '../../interfaces';
 import { ActionTypes, EntityInstance, EntityTypes } from '../../types';
-
-const FlexContainer = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  width: 100%;
-
-  .col {
-    flex: 1;
-    max-width: 70%;
-    height: 100%;
-    margin: auto;
-  }
-
-  @media (max-width: 768px) {
-    .col {
-      max-width: 100%;
-    }
-
-    flex-direction: column;
-  }
-`;
 
 interface State {
   modalVisible: boolean;
@@ -64,6 +43,8 @@ class Index extends Component<any, State> {
     actionType: ActionTypes,
     entity?: EntityInstance
   ) => {
+    this.modalFormRef.props.form.resetFields();
+
     if (entity) {
       this.setState({
         modalVisible: true,
@@ -97,9 +78,10 @@ class Index extends Component<any, State> {
     /**
      * We will need the entity from state when actionType == 'edit',
      * so we destructure it now and then we have to check
-     * if it's undefined, because it will be when actionType == 'create'
+     * if it's undefined, because it will be undefined if actionType == 'create'
      */
     const { entity: entityToEdit, actionType } = { ...this.state };
+
     modalForm.validateFields(async (err: any, entity: any) => {
       if (err) {
         return;
@@ -139,18 +121,17 @@ class Index extends Component<any, State> {
           categories: [...prevState.categories, category]
         }));
       } else {
-        const categories = [...this.state.categories];
-        const categoryIndex = categories.findIndex(
-          ({ id }: Category) => id === category.id
-        );
-
-        if (categoryIndex >= 0) {
-          categories[categoryIndex] = category;
-          this.setState({ categories });
-        }
+        this.setState(prevState => ({
+          categories: prevState.categories.map(c => {
+            if (c.id === category.id) {
+              return category;
+            } else {
+              return c;
+            }
+          })
+        }));
       }
 
-      modalForm.resetFields();
       this.setState({ modalVisible: false, modalLoading: false });
     });
   };
@@ -170,6 +151,11 @@ class Index extends Component<any, State> {
   ) => {
     e.stopPropagation();
 
+    /**
+     * Get the latest Category before editing
+     */
+    entity = await CategoryAPI.getOne((entity as Category).id);
+
     this.showModal(entityType, 'edit', entity);
   };
 
@@ -179,20 +165,17 @@ class Index extends Component<any, State> {
   ) => {
     e.stopPropagation();
 
-    await CategoryAPI.delete(id);
+    await CategoryAPI.delete(id as number);
 
-    const categories = [...this.state.categories];
-
-    const categoryIndex = categories.findIndex(
-      ({ id: categoryId }: Category) => categoryId === id
+    this.setState(
+      prevState => ({
+        categories: prevState.categories.filter(c => {
+          return c.id !== id;
+        })
+      }),
+      () => message.success(`Successfully deleted category ${name} 🎉`)
     );
-
-    if (categoryIndex >= 0) {
-      categories.splice(categoryIndex, 1);
-      this.setState({ categories }, () =>
-        message.success(`Successfully deleted category ${name} 🎉`)
-      );
-    }
+    // }
   };
 
   async componentDidMount() {
@@ -218,9 +201,19 @@ class Index extends Component<any, State> {
           <title>Admin Home • LuncherBox</title>
         </Head>
         <FlexContainer>
-          <div className="col">
+          <PageHeader
+            title={
+              <h1>
+                <strong>Categories</strong>
+              </h1>
+            }
+            subTitle={
+              <h3>
+                <strong>({categories.length})</strong>
+              </h3>
+            }
+          >
             <EntityCardContainer
-              title={`Categories (${categories.length})`}
               entityType="category"
               loading={loading}
               handleNewClick={this.handleNewClick}
@@ -237,18 +230,18 @@ class Index extends Component<any, State> {
                   />
                 ))}
             </EntityCardContainer>
-            <EntityModal
-              wrappedComponentRef={this.saveModalFormRef}
-              visible={this.state.modalVisible}
-              onCancel={this.handleModalCancel}
-              onCreate={this.handleModalAction}
-              entityType={this.state.entityType}
-              actionType={this.state.actionType}
-              entity={this.state.entity}
-              loading={this.state.modalLoading}
-            />
-          </div>
+          </PageHeader>
         </FlexContainer>
+        <EntityModal
+          wrappedComponentRef={this.saveModalFormRef}
+          visible={this.state.modalVisible}
+          onCancel={this.handleModalCancel}
+          onConfirm={this.handleModalAction}
+          entityType={this.state.entityType}
+          actionType={this.state.actionType}
+          entity={this.state.entity}
+          loading={this.state.modalLoading}
+        />
       </>
     );
   }

@@ -6,9 +6,13 @@ import NProgress from 'nprogress';
 import React from 'react';
 import { createGlobalStyle } from 'styled-components';
 import '../assets/nprogress.less';
-import CustomerContextProvider from '../components/CustomerContextProvider';
-import Layout from '../components/Layout';
-import SocketContextProvider from '../components/SocketContextProvider';
+import {
+  AdminContextProvider,
+  CustomerContextProvider,
+  SocketContextProvider
+} from '../context';
+import { AdminLayout } from '../layouts';
+import { CustomerLayout } from '../layouts/';
 
 /**
  * https://github.com/zeit/next.js/tree/canary/examples/with-loading
@@ -27,6 +31,11 @@ const GlobalStyle = createGlobalStyle`
     height: auto;
     min-height: 100%;
     scroll-behavior: smooth;
+
+    & .ant-input, .ant-btn {
+      border: none;
+      box-shadow: 0 2px 2px rgba(0, 0, 0, 0.12);
+    }
   }
 
   body {
@@ -54,24 +63,6 @@ const GlobalStyle = createGlobalStyle`
     height: 100%;
     min-height: 100%;
   }
-
-  .page-transition-enter {
-    opacity: 0;
-  }
-
-  .page-transition-enter-active {
-    opacity: 1;
-    transition: opacity 100ms;
-  }
-
-  .page-transition-exit {
-    opacity: 1;
-  }
-
-  .page-transition-exit-active {
-    opacity: 0;
-    transition: opacity 100ms;
-  }
 `;
 
 export default class MyApp extends App {
@@ -86,10 +77,30 @@ export default class MyApp extends App {
   }
 
   render() {
-    const { Component, pageProps } = this.props;
+    const {
+      Component,
+      pageProps,
+      router: { route }
+    } = this.props;
     let type: 'admin' | 'customer';
 
-    type = this.props.router.route.startsWith('/admin') ? 'admin' : 'customer';
+    if (route === '/login' || route === '/register' || route === '/') {
+      return (
+        <>
+          <Head>
+            <title>LuncherBox • Place orders from your phone!</title>
+          </Head>
+          <Container>
+            <GlobalStyle />
+            <PageTransition timeout={150} classNames="page-transition">
+              <Component key={route} {...pageProps} />
+            </PageTransition>
+          </Container>
+        </>
+      );
+    }
+
+    type = route.startsWith('/admin') ? 'admin' : 'customer';
 
     return (
       <>
@@ -101,22 +112,24 @@ export default class MyApp extends App {
             <CustomerContextProvider>
               <Container>
                 <GlobalStyle />
-                <Layout type="customer" route={this.props.router.route}>
+                <CustomerLayout type="customer" route={route}>
                   <PageTransition timeout={150} classNames="page-transition">
-                    <Component key={this.props.router.route} {...pageProps} />
+                    <Component key={route} {...pageProps} />
                   </PageTransition>
-                </Layout>
+                </CustomerLayout>
               </Container>
             </CustomerContextProvider>
           ) : (
-            <Container>
-              <GlobalStyle />
-              <Layout type="admin" route={this.props.router.route}>
-                <PageTransition timeout={150} classNames="page-transition">
-                  <Component key={this.props.router.route} {...pageProps} />
-                </PageTransition>
-              </Layout>
-            </Container>
+            <AdminContextProvider>
+              <Container>
+                <GlobalStyle />
+                <AdminLayout type="admin" route={route}>
+                  <PageTransition timeout={150} classNames="page-transition">
+                    <Component key={route} {...pageProps} />
+                  </PageTransition>
+                </AdminLayout>
+              </Container>
+            </AdminContextProvider>
           )}
         </SocketContextProvider>
       </>

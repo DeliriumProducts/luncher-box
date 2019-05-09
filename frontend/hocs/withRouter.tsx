@@ -5,7 +5,7 @@ import React, { Component, ComponentType } from 'react';
 /**
  * Alternative to the withRouter from next/router, until it gets migrated to the new context API.
  */
-const withRouter = <T extends object>(
+export const withRouter = <T extends object>(
   C: NextFunctionComponent<T> | NextComponentClass<T>
 ): ComponentType<T & { router: SingletonRouter }> =>
   class extends Component<T & { router: SingletonRouter }> {
@@ -29,5 +29,3 @@ const withRouter = <T extends object>(
       return <C {...this.props} />;
     }
   };
-
-export default withRouter;

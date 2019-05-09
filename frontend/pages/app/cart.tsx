@@ -1,11 +1,16 @@
-import { Button, Card, Empty, Input, message, Modal, Tag } from 'antd';
+import { Button, Card, Empty, Input, message, Modal, Select, Tag } from 'antd';
+import { NextFunctionComponent } from 'next';
 import Head from 'next/head';
 import React from 'react';
 import styled from 'styled-components';
+import { TableAPI } from '../../api';
+import FlexContainer from '../../components/FlexContainer';
 import ItemCard from '../../components/ItemCard';
+import PageHeader from '../../components/PageHeader';
 import { CustomerContext, SocketContext } from '../../context';
-import { Product } from '../../interfaces';
+import { Table } from '../../interfaces';
 
+const { Option } = Select;
 const { TextArea } = Input;
 
 const StyledCard = styled(Card)`
@@ -24,44 +29,53 @@ const StyledCard = styled(Card)`
   box-shadow: 0 2px 2px rgba(0, 0, 0, 0.12);
 `;
 
-const FlexContainer = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  flex-direction: column;
-  padding: 2rem;
-  background-color: #fafafa;
-  border-radius: 7px;
-  box-shadow: 0 20px 24px -18px rgba(0, 0, 0, 0.31);
+interface Props {
+  tables: Table[];
+  err: string | null;
+}
 
-  @media (min-width: 768px) {
-    margin: auto;
-    width: 70%;
-  }
-
-  @media (max-width: 480px) {
-    border-radius: 0;
-  }
-`;
-
-export default () => {
+const Cart: NextFunctionComponent<Props> = ({ tables, err }) => {
   const socketContext = React.useContext(SocketContext);
-  const cartContext = React.useContext(CustomerContext);
+  const customerContext = React.useContext(CustomerContext);
+
+  React.useEffect(() => {
+    if (customerContext.hasFinishedSyncing) {
+      let hasFoundTable = false;
+      for (const table of tables) {
+        if (table.name === customerContext.order.table.name) {
+          hasFoundTable = true;
+        }
+      }
+
+      if (!hasFoundTable) {
+        customerContext.actions.setTable({ name: '' });
+      }
+    }
+  }, [customerContext.hasFinishedSyncing]);
+
+  /**
+   * Show only on cDM
+   */
+  React.useEffect(() => {
+    if (err) {
+      message.error(`${err}`, 3);
+    }
+  }, []);
 
   const handleComment = (e: React.FormEvent<HTMLTextAreaElement>) => {
-    cartContext.actions.comment(e.currentTarget.value);
+    customerContext.actions.comment(e.currentTarget.value);
   };
 
-  const handleTable = (e: React.FormEvent<HTMLInputElement>) => {
-    cartContext.actions.setTable(e.currentTarget.value);
+  const handleTable = val => {
+    customerContext.actions.setTable({ name: val });
   };
 
   const placeOrder = () => {
-    if (cartContext.order.table) {
+    if (customerContext.order.table.name) {
       /**
        * Remove the actions and the totalAmount before sending to the backend
        */
-      const { order } = cartContext;
+      const { order } = customerContext;
 
       let totalSum = 0;
       Modal.warn({
@@ -81,18 +95,20 @@ export default () => {
         centered: true,
         content: (
           <div>
-            {cartContext.order.products.map((product: Product) => {
+            {customerContext.order.products.map(orderProduct => {
               totalSum +=
-                product.price *
-                (product.quantity !== undefined ? product.quantity : 1);
+                orderProduct.product.price *
+                (orderProduct.quantity !== undefined
+                  ? orderProduct.quantity
+                  : 1);
               return (
                 <div
-                  key={product.id}
+                  key={orderProduct.product.id}
                   style={{ display: 'flex', justifyContent: 'space-between' }}
                 >
-                  <p>{product.name}</p>
+                  <p>{orderProduct.product.name}</p>
                   <p>
-                    {product.price} x {product.quantity}
+                    {orderProduct.product.price} x {orderProduct.quantity}
                   </p>
                 </div>
               );
@@ -106,9 +122,9 @@ export default () => {
              * Instead of sending every product, send only the product id
              */
             const productsIdsAndQuantities = order.products.reduce(
-              (accumulator: any, { id, quantity }: Product) => [
+              (accumulator: any, { product, quantity }) => [
                 ...accumulator,
-                { id, quantity }
+                { id: product.id, quantity }
               ],
               []
             );
@@ -118,7 +134,7 @@ export default () => {
               products: productsIdsAndQuantities
             });
 
-            cartContext.actions.clear();
+            customerContext.actions.clear();
           }
         },
         maskClosable: true
@@ -129,27 +145,28 @@ export default () => {
   };
 
   let data: React.ReactNode[] | React.ReactNode;
+
   /**
    * Check whether orders are still being fetched from localStorage
    */
-  if (cartContext.order && cartContext.order.products.length) {
+  if (customerContext.order && customerContext.order.products.length) {
     let totalSum = 0;
     data = (
       <>
-        {cartContext.order.products.map((product: Product) => {
+        {customerContext.order.products.map(orderProduct => {
           totalSum +=
-            product.price *
-            (product.quantity !== undefined ? product.quantity : 1);
+            orderProduct.product.price *
+            (orderProduct.quantity !== undefined ? orderProduct.quantity : 1);
           return (
             <ItemCard
               interactive
-              id={product.id}
-              key={product.id}
-              name={product.name}
-              description={product.description}
-              image={product.image}
-              price={product.price}
-              quantity={product.quantity}
+              id={orderProduct.product.id}
+              key={orderProduct.product.id}
+              name={orderProduct.product.name}
+              description={orderProduct.product.description}
+              image={orderProduct.product.image}
+              price={orderProduct.product.price}
+              quantity={orderProduct.quantity}
             />
           );
         })}
@@ -160,17 +177,22 @@ export default () => {
               placeholder="Write comments in case you are allergic to ingredients or want to exclude some. e.g. no onions, no mayo. "
               onChange={handleComment}
               rows={6}
-              defaultValue={cartContext.order.comment}
+              defaultValue={customerContext.order.comment}
               style={{ width: '100%', marginTop: '2%' }}
             />
-            <div style={{ display: 'flex' }}>
-              <Input
-                defaultValue={cartContext.table}
-                placeholder="Enter table e.g. A1, A2 etc."
+            <div style={{ display: 'flex', justifyContent: 'center' }}>
+              <Select
+                style={{ marginTop: '2%', width: '100%' }}
+                placeholder="Please select your table"
+                value={customerContext.order.table.name || []}
                 onChange={handleTable}
-                style={{ marignLeft: '1%', marginTop: '2%' }}
-                size="large"
-              />
+              >
+                {tables.map(t => (
+                  <Option key={t.id} value={t.name}>
+                    {t.name}
+                  </Option>
+                ))}
+              </Select>
             </div>
             <Button
               type="primary"
@@ -194,7 +216,7 @@ export default () => {
     );
   }
 
-  const { totalAmount: productsInCart } = cartContext;
+  const { totalAmount: productsInCart } = customerContext;
 
   return (
     <>
@@ -208,7 +230,54 @@ export default () => {
           Cart • LuncherBox
         </title>
       </Head>
-      <FlexContainer>{data}</FlexContainer>
+      <FlexContainer>
+        <PageHeader
+          title={
+            <h1>
+              <strong>Cart</strong>
+            </h1>
+          }
+          subTitle={
+            <h3>
+              <strong>({productsInCart})</strong>
+            </h3>
+          }
+        >
+          {data}
+        </PageHeader>
+      </FlexContainer>
     </>
   );
 };
+
+Cart.getInitialProps = async () => {
+  try {
+    let tables: Table[] = [];
+
+    tables = await TableAPI.getAll();
+
+    tables = tables.map(s => ({
+      ...s,
+      key: s.id
+    }));
+
+    if (tables) {
+      return {
+        tables,
+        err: null
+      };
+    }
+  } catch (err) {
+    return {
+      tables: [],
+      err: `Network Error, Please try again later!`
+    };
+  }
+
+  return {
+    tables: [],
+    err: null
+  };
+};
+
+export default Cart;

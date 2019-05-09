@@ -1,4 +1,4 @@
-import { Card, Icon, Popconfirm } from 'antd';
+import { Card, Popconfirm } from 'antd';
 import Router from 'next/router';
 import React from 'react';
 import styled from 'styled-components';
@@ -71,11 +71,13 @@ interface Props {
   categories?: Category[];
   entityType: EntityTypes;
   hoverable?: boolean;
+
   handleEditClick: (
     e: React.FormEvent<HTMLButtonElement>,
     entityType: EntityTypes,
     entity: EntityInstance
   ) => void;
+
   handleDeleteClick: (
     e: React.FormEvent<HTMLButtonElement>,
     entity: EntityInstance
@@ -142,19 +144,10 @@ const EntityCard: React.FunctionComponent<Props> = props => {
           Edit
         </ActionButton>,
         <Popconfirm
-          title={`Are you sure you want to delete this ${entityType}?`}
+          title={`Are you sure?`}
           onConfirm={(e: any) => handleDeleteClick(e, entity)}
           onCancel={(e: any) => e.stopPropagation()}
-          icon={
-            <Icon
-              type="question-circle-o"
-              style={{
-                color: 'red'
-              }}
-            />
-          }
           okText="Yes"
-          cancelText="No"
         >
           <ActionButton
             key="delete"

@@ -12,7 +12,7 @@ const StyledDiv: any = styled.div`
   color: white;
   border-radius: 7px;
   font-size: 3rem;
-  margin: 8px;
+  margin: 0.5rem;
   width: 16rem;
   height: 16rem;
   user-select: none;
@@ -31,6 +31,7 @@ const StyledDiv: any = styled.div`
     justify-content: center;
     align-items: center;
     font-size: 3rem;
+    font-weight: 500;
     transition: all 0.25s;
   }
 

@@ -1,7 +1,7 @@
 import React from 'react';
 import io from 'socket.io-client';
-import { SOCKET_URL } from '../config';
-import { SocketContext } from '../context';
+import { SocketContext } from '..';
+import { SOCKET_URL } from '../../config';
 
 interface Props {
   children: React.ReactNode;
@@ -21,7 +21,4 @@ const SocketContextProvider = (props: Props) => {
   );
 };
 
-const SocketConsumer = SocketContext.Consumer;
-
-export default SocketContextProvider;
-export { SocketConsumer };
+export { SocketContextProvider };

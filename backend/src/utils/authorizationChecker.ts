@@ -1,7 +1,19 @@
-import { Request } from 'express';
 import { Action } from 'routing-controllers';
+import { User } from '../entities';
+import { Role } from '../types';
 
-export const authorizationChecker = async (action: Action) => {
-  const req: Request = action.request;
-  return req.isAuthenticated();
+/**
+ * Checks if a user is logged in AND checks their role
+ */
+export const authorizationChecker = ({ request: req }: Action, r: Role[]) => {
+  const user: User = req.user;
+  if (!user) {
+    return false;
+  }
+
+  if (!r.length) {
+    return req.isAuthenticated();
+  } else {
+    return (user.role === 'Admin' || r.includes(user.role)) && req.isAuthenticated();
+  }
 };

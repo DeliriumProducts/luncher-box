@@ -1,4 +1,4 @@
 /**
  * Used for showing the right modal
  */
-export type EntityTypes = 'product' | 'category';
+export type EntityTypes = 'product' | 'category' | 'table';

@@ -10,7 +10,7 @@ export class Category {
   id: number;
 
   @Column('text')
-  @Length(3, 50)
+  @Length(2, 50)
   name: string;
 
   @Column('text')
@@ -18,7 +18,7 @@ export class Category {
   @Length(5, 255)
   image: string;
 
-  @ManyToMany(() => Product, product => product.categories)
+  @ManyToMany(() => Product, p => p.categories)
   products: Product[];
 }
 

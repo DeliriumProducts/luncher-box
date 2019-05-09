@@ -2,7 +2,6 @@ import { Form, Icon, Input, Modal, Select } from 'antd';
 import { FormComponentProps } from 'antd/lib/form';
 import React from 'react';
 import { CategoryAPI } from '../api';
-import { SocketContext } from '../context';
 import { Category, Product } from '../interfaces';
 import { ActionTypes, EntityInstance, EntityTypes } from '../types';
 
@@ -13,7 +12,7 @@ interface Props extends FormComponentProps {
   actionType: ActionTypes;
   loading: boolean;
   onCancel: (e: React.FormEvent<HTMLElement>) => void;
-  onCreate: (e: React.FormEvent<HTMLElement>) => void;
+  onConfirm: (e: React.FormEvent<HTMLElement>) => void;
 }
 
 interface State {
@@ -22,9 +21,6 @@ interface State {
 
 const EntityModal = Form.create()(
   class extends React.Component<Props, State> {
-    static contextType = SocketContext;
-    context!: React.ContextType<typeof SocketContext>;
-
     state = {
       categories: []
     };
@@ -37,11 +33,12 @@ const EntityModal = Form.create()(
 
       this.setState({ categories });
     }
+
     render() {
       const {
         visible,
         onCancel,
-        onCreate,
+        onConfirm,
         form,
         entityType,
         loading,
@@ -61,7 +58,7 @@ const EntityModal = Form.create()(
           okText={`${actionType}`}
           okButtonProps={{ loading }}
           onCancel={onCancel}
-          onOk={onCreate}
+          onOk={onConfirm}
           centered
           destroyOnClose
         >
@@ -76,6 +73,10 @@ const EntityModal = Form.create()(
                   {
                     min: 2,
                     message: 'Name must be at least 2 characters long'
+                  },
+                  {
+                    max: 50,
+                    message: 'Name must be shorter than 50 characters'
                   },
                   {
                     required: true,
@@ -106,6 +107,10 @@ const EntityModal = Form.create()(
                       message: 'Description must be at least 5 characters long'
                     },
                     {
+                      max: 255,
+                      message: 'Description must be shorter than 255 characters'
+                    },
+                    {
                       required: true,
                       message: 'Description field cannot be empty'
                     }
@@ -125,29 +130,42 @@ const EntityModal = Form.create()(
                 )}
               </Form.Item>
             )}
-            <Form.Item>
-              {getFieldDecorator('image', {
-                rules: [
-                  {
-                    type: 'url',
-                    message: 'Invalid url'
-                  },
-                  {
-                    required: true,
-                    message: 'Image field cannot be empty'
-                  }
-                ],
-                initialValue: entity && entity.image
-              })(
-                <Input
-                  prefix={
-                    <Icon type="picture" style={{ color: 'rgba(0,0,0,.25)' }} />
-                  }
-                  type="text"
-                  placeholder="Image"
-                />
-              )}
-            </Form.Item>
+            {entityType !== 'table' && (
+              <Form.Item>
+                {getFieldDecorator('image', {
+                  rules: [
+                    {
+                      type: 'url',
+                      message: 'Invalid url'
+                    },
+                    {
+                      min: 5,
+                      message: 'Image URL must be at least 5 characters long'
+                    },
+                    {
+                      max: 255,
+                      message: 'Image URL must be shorter than 255 characters'
+                    },
+                    {
+                      required: true,
+                      message: 'Image field cannot be empty'
+                    }
+                  ],
+                  initialValue: entity && (entity as Product | Category).image
+                })(
+                  <Input
+                    prefix={
+                      <Icon
+                        type="picture"
+                        style={{ color: 'rgba(0,0,0,.25)' }}
+                      />
+                    }
+                    type="text"
+                    placeholder="Image"
+                  />
+                )}
+              </Form.Item>
+            )}
             {entityType === 'product' && (
               <Form.Item>
                 {getFieldDecorator('price', {

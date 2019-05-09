@@ -6,6 +6,7 @@
     "build": "next build",
     "start": "cross-env NODE_ENV=production node server.js",
     "prod": "npm run build && cross-env NODE_ENV=production pm2 start server.js --name luncherbox-frontend --update-env",
+    "prod:docker": "npm run build && cross-env NODE_ENV=production node server.js",
     "type-check": "tsc"
   },
   "dependencies": {
@@ -27,7 +28,7 @@
     "localforage": "^1.7.3",
     "next": "^8.0.3",
     "next-offline": "^3.3.6",
-    "next-page-transitions": "^1.0.0-alpha.6",
+    "next-page-transitions": "^1.0.0-beta.2",
     "next-size": "^2.0.2",
     "nprogress": "^0.2.0",
     "pm2": "^3.3.1",
