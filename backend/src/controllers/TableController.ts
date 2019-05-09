@@ -99,6 +99,7 @@ export class TableController {
   @Post()
   @Authorized('Admin')
   async create(@Body() tableJSON: Table) {
+    console.log(tableJSON);
     /**
      * Check if there is a table with the same name already
      */
@@ -107,6 +108,8 @@ export class TableController {
     }
 
     const [table, tableErr] = await this.transformAndValidateTable(tableJSON);
+    console.log(table);
+    console.log(tableErr);
 
     if (tableErr.length) {
       throw new TableNotValidError(tableErr);
