@@ -2,6 +2,8 @@
 
 :poultry_leg: Cheap to setup web application for making orders without having to wait for waiters.
 
+![screenshot](images/screenshot.png)
+
 ## Getting started!
 
 You can read the [wiki](https://github.com/DeliriumProducts/luncher-box/wiki) on how to set the project up.
