@@ -229,6 +229,7 @@ const Cart: NextFunctionComponent<Props> = ({ tables, err }) => {
             : ''}{' '}
           Cart • LuncherBox
         </title>
+        <script src="https://js.stripe.com/v3/" />
       </Head>
       <FlexContainer>
         <PageHeader
