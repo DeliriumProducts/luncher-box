@@ -7,8 +7,10 @@ import { TableAPI } from '../../api';
 import FlexContainer from '../../components/FlexContainer';
 import ItemCard from '../../components/ItemCard';
 import PageHeader from '../../components/PageHeader';
+import StripeCheckoutForm from '../../components/StripeCheckoutForm';
 import { CustomerContext, SocketContext } from '../../context';
 import { Table } from '../../interfaces';
+import { Elements, StripeProvider } from 'react-stripe-elements';
 
 const { Option } = Select;
 const { TextArea } = Input;
@@ -89,7 +91,7 @@ const Cart: NextFunctionComponent<Props> = ({ tables, err }) => {
               fontWeight: 525
             }}
           >
-            Are you sure you want to place this order?
+            Proceed to checkout page!
           </h2>
         ),
         centered: true,
@@ -229,7 +231,6 @@ const Cart: NextFunctionComponent<Props> = ({ tables, err }) => {
             : ''}{' '}
           Cart • LuncherBox
         </title>
-        <script src="https://js.stripe.com/v3/" />
       </Head>
       <FlexContainer>
         <PageHeader
