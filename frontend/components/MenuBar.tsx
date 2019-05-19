@@ -118,7 +118,6 @@ const MenuBar: React.FunctionComponent<Props> = ({ selectedKey, type }) => {
         Router.replace('/login');
         break;
       case 'settings':
-        console.log('test');
         setSettingsModalVisible(true);
         break;
       default:
