@@ -1,6 +1,5 @@
 import { Document, Page, StyleSheet, Text, View } from '@react-pdf/renderer';
 import React from 'react';
-import { CategoryAPI, ProductAPI } from '../api';
 import { Category, Product } from '../interfaces';
 
 const styles = StyleSheet.create({
@@ -16,36 +15,27 @@ const styles = StyleSheet.create({
 });
 
 interface Props {
-  setLoading: () => void;
+  categories: Category[];
+  products: Product[];
 }
 
 // Create Document Component
-const PaperMenu: React.FunctionComponent<Props> = ({ setLoading }) => {
-  const [categories, setCategories] = React.useState<Category[]>([]);
-  const [products, setProducts] = React.useState<Product[]>([]);
-
-  React.useEffect(() => {
-    fetchEntities();
-  }, []);
-
-  const fetchEntities = async () => {
-    const allCategories = await CategoryAPI.getAll();
-    const allProducts = await ProductAPI.getAll();
-
-    setCategories(allCategories);
-    setProducts(allProducts);
-  };
-
+const PaperMenu: React.FunctionComponent<Props> = ({
+  categories,
+  products
+}) => {
   return (
-    <Document onRender={setLoading}>
+    <Document>
       <Page size="A4" style={styles.page}>
         <View style={styles.section}>
           {categories.map(c => {
-            return <Text>{c.name}</Text>;
+            return <Text key={c.id}>{c.name}</Text>;
           })}
         </View>
         <View style={styles.section}>
-          <Text>Section #2</Text>
+          {products.map(p => {
+            return <Text key={p.id}>{p.name}</Text>;
+          })}
         </View>
       </Page>
     </Document>
