@@ -13,11 +13,6 @@ const SettingsModal: React.FunctionComponent<ModalProps> = props => {
   const [categories, setCategories] = React.useState<Category[]>([]);
   const [products, setProducts] = React.useState<Product[]>([]);
   const [loading, setLoading] = React.useState(true);
-
-  React.useEffect(() => {
-    fetchEntities();
-  }, []);
-
   const fetchEntities = async () => {
     const allCategories = await CategoryAPI.getAll();
     const allProducts = await ProductAPI.getAll();
@@ -34,7 +29,8 @@ const SettingsModal: React.FunctionComponent<ModalProps> = props => {
       <Modal {...props} title="Settings" centered>
         <Button
           type="primary"
-          onClick={() => {
+          onClick={async () => {
+            await fetchEntities();
             setPaperMenuModalVisible(true);
           }}
         >
