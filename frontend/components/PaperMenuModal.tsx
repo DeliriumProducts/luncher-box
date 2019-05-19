@@ -21,7 +21,7 @@ const PaperMenuModal: React.FunctionComponent<ModalProps & Props> = ({
       <Container>
         <PDFDownloadLink
           document={<PaperMenu categories={categories} products={products} />}
-          fileName={`${Date.now().toLocaleString()}.pdf`}
+          fileName={`${new Date().toLocaleDateString()}.pdf`}
         >
           {({ blob, url, loading, error }) => {
             if (loading) {
