@@ -89,7 +89,6 @@ export default class MyApp extends App {
         <>
           <Head>
             <title>LuncherBox • Place orders from your phone!</title>
-            <script src="https://js.stripe.com/v3/" />
           </Head>
           <Container>
             <GlobalStyle />
