@@ -49,7 +49,7 @@ const Orders: React.FunctionComponent = () => {
 
   const newOrders = state.orders.reduce((total, current) => {
     /**
-     * Admins should see the total amonut of orders and cooks - only the accepted ones
+     * Admins should see the amonut of placed orders and cooks - only the accepted ones
      */
     if (state.user.role === 'Admin') {
       return total + (current.state === 0 ? 1 : 0);
@@ -77,7 +77,10 @@ const Orders: React.FunctionComponent = () => {
           }
           subTitle={
             <h3>
-              <strong>({newOrders})</strong>
+              <strong>
+                ({state.user.role === 'Admin' ? state.orders.length : newOrders}
+                )
+              </strong>
             </h3>
           }
           extra={
