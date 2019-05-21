@@ -351,7 +351,14 @@ const Tables: NextFunctionComponent<Props> = ({ err, tables: t }) => {
         {currentOrdersFromTable.length > 0 ? (
           <OrderContainer
             onSelectChange={handleOrderContainerSelectChange}
-            orders={currentOrdersFromTable}
+            orders={
+              adminContext.state.preferences.showLast
+                ? currentOrdersFromTable.slice(
+                    0,
+                    adminContext.state.preferences.showLast
+                  )
+                : currentOrdersFromTable
+            }
             role={adminContext.state.user.role}
             showLast={adminContext.state.preferences.showLast}
           />

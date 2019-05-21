@@ -9,29 +9,25 @@ import PageHeader from '../../components/PageHeader';
 import Spinner from '../../components/Spinner';
 import { AdminContext } from '../../context';
 import { withAuth } from '../../hocs';
-import { Order } from '../../interfaces';
 
 const Orders: React.FunctionComponent = () => {
   const { state, dispatch } = React.useContext(AdminContext);
-  const [orders, setOrders] = React.useState<Order[]>([]);
-
-  React.useEffect(() => {
-    /**
-     * Cooks should only see the accepted orders and nothing else
-     */
-    if (state.user.role === 'Cook') {
-      setOrders(state.orders.filter(o => o.state === 1));
-    } else {
-      setOrders(state.orders);
-    }
-  }, [state.orders]);
 
   let data: React.ReactNode | React.ReactNode[];
   if (state.loading) {
     data = <Spinner />;
   } else {
-    if (orders.length) {
-      data = <OrderCardContainer orders={orders} role={state.user.role} />;
+    if (state.orders.length) {
+      data = (
+        <OrderCardContainer
+          orders={
+            state.user.role === 'Admin'
+              ? state.orders
+              : state.orders.filter(o => o.state === 1)
+          }
+          role={state.user.role}
+        />
+      );
     } else {
       data = <Empty description="No orders placed yet!" />;
     }
@@ -48,7 +44,7 @@ const Orders: React.FunctionComponent = () => {
     }
   };
 
-  const newOrders = orders.reduce(
+  const newOrders = state.orders.reduce(
     (total, current) => total + (current.state === 0 ? 1 : 0),
     0
   );
@@ -72,7 +68,7 @@ const Orders: React.FunctionComponent = () => {
           }
           subTitle={
             <h3>
-              <strong>({orders.length})</strong>
+              <strong>({state.orders.length})</strong>
             </h3>
           }
           extra={

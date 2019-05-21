@@ -1,4 +1,4 @@
-import { Alert, Button, Collapse, message, Tag, Select } from 'antd';
+import { Alert, Button, Collapse, message, Select, Tag } from 'antd';
 import React from 'react';
 import styled from 'styled-components';
 import { OrderAPI } from '../api';
@@ -137,19 +137,11 @@ interface OrderContainerProps {
 }
 
 const OrderContainer: React.FunctionComponent<OrderContainerProps> = ({
-  orders: o,
+  orders,
   role,
   showLast,
   onSelectChange
 }) => {
-  const [orders, setOrders] = React.useState<Order[]>(o);
-
-  React.useEffect(() => {
-    if (showLast) {
-      setOrders(o.slice(0, showLast));
-    }
-  }, [showLast, o]);
-
   return (
     <>
       {showLast !== undefined && showLast >= 0 ? (
