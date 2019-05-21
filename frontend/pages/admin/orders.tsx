@@ -17,7 +17,7 @@ const Orders: React.FunctionComponent = () => {
   if (state.loading) {
     data = <Spinner />;
   } else {
-    if (state.orders.length) {
+    if (state.user.role === 'Admin' || state.orders.some(o => o.state === 1)) {
       data = (
         <OrderCardContainer
           orders={
