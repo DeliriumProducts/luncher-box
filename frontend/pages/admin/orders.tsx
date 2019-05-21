@@ -21,6 +21,9 @@ const Orders: React.FunctionComponent = () => {
       data = (
         <OrderCardContainer
           orders={
+            /**
+             * Admins should see all orders and cooks should only see accepted orders
+             */
             state.user.role === 'Admin'
               ? state.orders
               : state.orders.filter(o => o.state === 1)
@@ -44,10 +47,16 @@ const Orders: React.FunctionComponent = () => {
     }
   };
 
-  const newOrders = state.orders.reduce(
-    (total, current) => total + (current.state === 0 ? 1 : 0),
-    0
-  );
+  const newOrders = state.orders.reduce((total, current) => {
+    /**
+     * Admins should see the total amonut of orders and cooks - only the accepted ones
+     */
+    if (state.user.role === 'Admin') {
+      return total + (current.state === 0 ? 1 : 0);
+    } else {
+      return total + (current.state === 1 ? 1 : 0);
+    }
+  }, 0);
 
   return (
     <>
@@ -68,7 +77,7 @@ const Orders: React.FunctionComponent = () => {
           }
           subTitle={
             <h3>
-              <strong>({state.orders.length})</strong>
+              <strong>({newOrders})</strong>
             </h3>
           }
           extra={
