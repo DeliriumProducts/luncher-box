@@ -39,6 +39,7 @@
     "typescript": "^3.4.1"
   },
   "dependencies": {
+    "@types/socket.io-redis": "^1.0.25",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.18.3",
     "chai": "^4.2.0",
@@ -67,6 +68,7 @@
     "routing-controllers": "^0.7.7",
     "socket-controllers": "^0.0.5",
     "socket.io": "^2.2.0",
+    "socket.io-redis": "^5.2.0",
     "supertest": "^3.4.2",
     "tslint": "^5.13.1",
     "typedi": "^0.8.0",
