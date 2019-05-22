@@ -8,7 +8,9 @@ interface Props {
 }
 
 const SocketContextProvider = (props: Props) => {
-  const [socket] = React.useState(io(`${SOCKET_URL}`));
+  const [socket] = React.useState(io(`${SOCKET_URL}`, {
+  transports: ['websocket']
+}));
 
   return (
     <SocketContext.Provider
