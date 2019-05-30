@@ -225,26 +225,35 @@ const Tables: NextFunctionComponent<Props> = ({ err, tables: t }) => {
     }
   }, [currentOrdersTable, adminContext.state.orders]);
 
-  if (tables.length && !err) {
-    const ordersAndTablesMap: {
+  const ordersAndTablesMap: {
+    [key: string]: { isTaken: boolean; amount: number };
+  } = React.useMemo(() => {
+    const temp: {
       [key: string]: { isTaken: boolean; amount: number };
     } = {};
-    adminContext.state.orders.forEach(o => {
-      const table = o.table.name;
-      if (!ordersAndTablesMap[table]) {
-        ordersAndTablesMap[table] = {
-          amount: 0,
-          isTaken: o.table.isTaken!
-        };
-      }
 
-      if (o.state! < 1) {
-        ordersAndTablesMap[table].amount++;
-      }
+    if (tables.length) {
+      adminContext.state.orders.forEach(o => {
+        const table = o.table.name;
+        if (!temp[table]) {
+          temp[table] = {
+            amount: 0,
+            isTaken: o.table.isTaken!
+          };
+        }
 
-      ordersAndTablesMap[table].isTaken = !!ordersAndTablesMap[table].amount;
-    });
+        if (o.state! < 1) {
+          temp[table].amount++;
+        }
 
+        temp[table].isTaken = !!temp[table].amount;
+      });
+    }
+
+    return temp;
+  }, [adminContext.state.orders, tables]);
+
+  if (tables.length && !err) {
     data = tables.map(table => {
       return (
         <TableCard
