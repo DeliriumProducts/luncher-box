@@ -14,22 +14,28 @@ const Orders: React.FunctionComponent = () => {
   const { state, dispatch } = React.useContext(AdminContext);
 
   let data: React.ReactNode | React.ReactNode[];
+
+  const filteredOrders = React.useMemo(
+    () =>
+      state.orders.filter(o => {
+        /**
+         * Admins should see the all orders and cooks - only the accepted ones
+         */
+        if (state.user.role === 'Admin') {
+          return true;
+        } else {
+          return o.state === 1;
+        }
+      }),
+    [state.orders]
+  );
+
   if (state.loading) {
     data = <Spinner />;
   } else {
-    if (state.user.role === 'Admin' || state.orders.some(o => o.state === 1)) {
+    if (filteredOrders.length) {
       data = (
-        <OrderCardContainer
-          orders={
-            /**
-             * Admins should see all orders and cooks should only see accepted orders
-             */
-            state.user.role === 'Admin'
-              ? state.orders
-              : state.orders.filter(o => o.state === 1)
-          }
-          role={state.user.role}
-        />
+        <OrderCardContainer orders={filteredOrders} role={state.user.role} />
       );
     } else {
       data = <Empty description="No orders placed yet!" />;
@@ -47,23 +53,14 @@ const Orders: React.FunctionComponent = () => {
     }
   };
 
-  const newOrders = state.orders.reduce((total, current) => {
-    /**
-     * Admins should see the amonut of placed orders and cooks - only the accepted ones
-     */
-    if (state.user.role === 'Admin') {
-      return total + (current.state === 0 ? 1 : 0);
-    } else {
-      return total + (current.state === 1 ? 1 : 0);
-    }
-  }, 0);
-
   return (
     <>
       <Head>
         <title>
-          {newOrders > 0
-            ? `(${newOrders}) New ${newOrders === 1 ? 'Order' : 'Orders'}`
+          {filteredOrders.length > 0 && state.user.role === 'Cook'
+            ? `(${filteredOrders}) New ${
+                filteredOrders.length === 1 ? 'Order' : 'Orders'
+              }`
             : 'Orders'}{' '}
           • LuncherBox
         </title>
@@ -77,10 +74,7 @@ const Orders: React.FunctionComponent = () => {
           }
           subTitle={
             <h3>
-              <strong>
-                ({state.user.role === 'Admin' ? state.orders.length : newOrders}
-                )
-              </strong>
+              <strong>({filteredOrders.length})</strong>
             </h3>
           }
           extra={

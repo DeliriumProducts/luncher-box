@@ -198,7 +198,6 @@ class CategoryPage extends Component<Props, State> {
       }),
       () => message.success(`Successfully deleted product ${name} 🎉`)
     );
-    // }
   };
 
   async componentDidMount() {
