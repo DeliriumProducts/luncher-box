@@ -80,6 +80,7 @@ export default class MyDocument extends Document {
             name="msapplication-TileColor"
             content={THEME_VARIABLES['@primary-color']}
           />
+          <script src="https://js.stripe.com/v3/" />
         </Head>
         <body>
           <Main />
