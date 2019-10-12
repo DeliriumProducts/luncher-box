@@ -295,10 +295,7 @@ export class OrderController {
      * Remove circular references
      */
     // @ts-ignore
-    order.products = order.products.map(op => {
-      const { order: o, ...opWithOutOrder } = op;
-      return opWithOutOrder;
-    });
+    order.products = order.products.map(({ order: o, ...op }) => op);
 
     io.emit('placed-order-admin', order);
     io.to(order.customerId).emit('placed-order', order);
@@ -323,13 +320,7 @@ export class OrderController {
     });
 
     await this.orderRepository.save(
-      orders.map(o => {
-        const { products, table, ...orderWithoutRelations } = o;
-        return {
-          ...orderWithoutRelations,
-          customerId
-        };
-      })
+      orders.map(({ products, table, ...o }) => ({ ...o, customerId }))
     );
 
     io.to(customerId).emit('updated-customerId', orders);
