@@ -9,11 +9,7 @@ import { StaffAPI } from '../api';
 import { THEME_VARIABLES } from '../config';
 import { AdminContext, CustomerContext } from '../context';
 import { Role } from '../types';
-
-interface Props {
-  selectedKey: string;
-  type: 'admin' | 'customer';
-}
+import SettingsModal from './SettingsModal';
 
 const MenuContainer = styled.div`
   z-index: 5000;
@@ -89,9 +85,15 @@ const StyledSpoonKnife = styled(SpoonKnife)`
   margin-right: 10px;
 `;
 
+interface Props {
+  selectedKey: string;
+  type: 'admin' | 'customer';
+}
+
 const MenuBar: React.FunctionComponent<Props> = ({ selectedKey, type }) => {
   const customerContext = React.useContext(CustomerContext);
   const adminContext = React.useContext(AdminContext);
+  const [settingsModalVisible, setSettingsModalVisible] = React.useState(false);
 
   let role: Role = 'Waiter';
   let icon: any = null;
@@ -114,6 +116,9 @@ const MenuBar: React.FunctionComponent<Props> = ({ selectedKey, type }) => {
       case 'logout':
         await StaffAPI.logout();
         Router.replace('/login');
+        break;
+      case 'settings':
+        setSettingsModalVisible(true);
         break;
       default:
         break;
@@ -227,6 +232,16 @@ const MenuBar: React.FunctionComponent<Props> = ({ selectedKey, type }) => {
               </Menu.Item>
             </Menu.SubMenu>
           </StyledMenu>
+          <SettingsModal
+            title="Settings"
+            visible={settingsModalVisible}
+            onCancel={() => {
+              setSettingsModalVisible(false);
+            }}
+            onOk={() => {
+              setSettingsModalVisible(false);
+            }}
+          />
         </>
       ) : (
         <>
