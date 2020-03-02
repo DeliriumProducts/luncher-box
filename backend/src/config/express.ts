@@ -54,6 +54,7 @@ app.use(
     resave: false,
     saveUninitialized: false,
     cookie: {
+      domain: FRONTEND_URL,
       maxAge: 60 * 60 * 24 * 1000
     }
   })
