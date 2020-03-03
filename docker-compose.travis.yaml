@@ -18,6 +18,7 @@ services:
       BACKEND_PORT:
       FRONTEND_URL:
       BACKEND_URL:
+      COOKIE_URL:
       SOCKET_URL:
     ports:
       - 8000:8000
