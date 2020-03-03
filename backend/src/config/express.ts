@@ -9,7 +9,7 @@ import lusca from 'lusca';
 import passport from 'passport';
 import { InternalServerError } from 'routing-controllers';
 import { redisConnection } from '../connections';
-import { ENV, FRONTEND_URL, IS_DEV, SESSION_SECRET } from './env';
+import { ENV, FRONTEND_URL, IS_DEV, SESSION_SECRET, COOKIE_URL } from './env';
 
 /**
  * During tests, we use the default MemoryStore
@@ -54,7 +54,7 @@ app.use(
     resave: false,
     saveUninitialized: false,
     cookie: {
-      domain: FRONTEND_URL,
+      domain: COOKIE_URL,
       maxAge: 60 * 60 * 24 * 1000
     }
   })
