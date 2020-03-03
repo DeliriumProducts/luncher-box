@@ -64,6 +64,11 @@ export const INITIAL_ADMIN_PASS = process.env.INITIAL_ADMIN_PASS || 'FAKEpasswor
 export const FRONTEND_URL = process.env.FRONTEND_URL || 'http://localhost:3000';
 
 /**
+ * Cookie url
+ */
+export const COOKIE_URL = process.env.COOKIE_URL || 'localhost';
+
+/**
  * Backend url
  */
 export const BACKEND_URL = process.env.BACKEND_URL || 'http://localhost:8000';
@@ -89,6 +94,7 @@ export default {
   VERIFIER_EMAIL,
   INITIAL_ADMIN_PASS,
   FRONTEND_URL,
+  COOKIE_URL,
   BACKEND_URL,
   SOCKET_URL
 };
