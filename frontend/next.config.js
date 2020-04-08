@@ -1,4 +1,3 @@
-const withTypescript = require('@zeit/next-typescript');
 const withCss = require('@zeit/next-css');
 const withLess = require('@zeit/next-less');
 const withSass = require('@zeit/next-sass');
@@ -26,7 +25,6 @@ module.exports = withSize(
   withOffline(
     withLess(
       withSass(
-        withTypescript(
           withCss({
             webpack(config) {
               // Fixes npm packages that depend on `fs` module
@@ -67,8 +65,7 @@ module.exports = withSize(
             env: {
               THEME_VARIABLES: themeVariables
             }
-          })
-        )
+         })
       )
     )
   )
