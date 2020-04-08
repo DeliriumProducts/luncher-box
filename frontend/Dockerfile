@@ -9,5 +9,11 @@ RUN yarn
 
 COPY . .
 
+ARG FRONTEND_URL
+ARG BACKEND_URL
+ARG SOCKET_URL
+
+RUN yarn build
+
 EXPOSE 3000
-CMD yarn prod:docker
+CMD node server.js
