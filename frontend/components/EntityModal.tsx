@@ -5,7 +5,7 @@ import { CategoryAPI } from '../api';
 import { Category, Product } from '../interfaces';
 import { ActionTypes, EntityInstance, EntityTypes } from '../types';
 
-interface Props extends FormComponentProps {
+interface Props {
   visible: boolean;
   entity?: EntityInstance;
   entityType: EntityTypes;
@@ -20,7 +20,7 @@ interface State {
 }
 
 const EntityModal = Form.create()(
-  class extends React.Component<Props, State> {
+  class extends React.Component<Props & FormComponentProps, State> {
     state = {
       categories: []
     };
