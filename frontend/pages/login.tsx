@@ -191,4 +191,4 @@ class LoginForm extends Component<Props, State> {
   }
 }
 
-export default Form.Create<Props>()(LoginForm);
+export default Form.create<Props>()(LoginForm);

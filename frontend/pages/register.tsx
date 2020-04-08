@@ -178,4 +178,4 @@ class RegisterForm extends React.Component<Props, State> {
   }
 }
 
-export default Form.Create<Props>()(RegisterForm);
+export default Form.create<Props>()(RegisterForm);
