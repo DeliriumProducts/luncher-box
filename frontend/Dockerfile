@@ -16,4 +16,4 @@ ARG SOCKET_URL
 RUN yarn build
 
 EXPOSE 3000
-CMD node server.js
+CMD NODE_ENV=production node server.js
