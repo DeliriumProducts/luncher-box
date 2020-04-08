@@ -1,7 +1,6 @@
 const withCss = require('@zeit/next-css');
 const withLess = require('@zeit/next-less');
 const withSass = require('@zeit/next-sass');
-const withSize = require('next-size');
 const withOffline = require('next-offline');
 const webpack = require('webpack');
 const TerserPlugin = require('terser-webpack-plugin');
@@ -21,8 +20,7 @@ if (typeof require !== 'undefined') {
   require.extensions['.less'] = file => {};
 }
 
-module.exports = withSize(
-  withOffline(
+module.exports = withOffline(
     withLess(
       withSass(
           withCss({
@@ -68,5 +66,4 @@ module.exports = withSize(
          })
       )
     )
-  )
 );
