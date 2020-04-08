@@ -13,7 +13,7 @@ export const withAuth = <T extends object>(
   class extends Component<T & { router: SingletonRouter; user: User }> {
     static contextType = AdminContext;
 
-    static async getInitialProps(ctx: NextContext) {
+    static async getInitialProps(ctx: NextPageContext) {
       const { req, res } = ctx;
 
       let auth: { user: User | null; isAuthenticated: boolean } = {
