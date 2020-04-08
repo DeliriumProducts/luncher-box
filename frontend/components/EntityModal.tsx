@@ -19,7 +19,9 @@ interface State {
   categories: Category[];
 }
 
+// @ts-ignore
 const EntityModal = Form.create<Props>()(
+   // @ts-ignore
   class extends React.Component<Props, State> {
     state = {
       categories: []
