@@ -1,4 +1,4 @@
-import { NextComponentClass, NextContext, NextFunctionComponent } from 'next';
+import { NextPageContext, NextPage } from 'next';
 import { SingletonRouter } from 'next/router';
 import React, { Component, ComponentType } from 'react';
 
@@ -6,10 +6,10 @@ import React, { Component, ComponentType } from 'react';
  * Alternative to the withRouter from next/router, until it gets migrated to the new context API.
  */
 export const withRouter = <T extends object>(
-  C: NextFunctionComponent<T> | NextComponentClass<T>
+  C: NextPage<T>
 ): ComponentType<T & { router: SingletonRouter }> =>
   class extends Component<T & { router: SingletonRouter }> {
-    static async getInitialProps(ctx: NextContext) {
+    static async getInitialProps(ctx: NextPageContext) {
       const { query } = ctx;
 
       /**
