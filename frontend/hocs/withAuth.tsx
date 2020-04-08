@@ -1,4 +1,4 @@
-import { NextPage, NextAppContext } from 'next';
+import { NextPage, NextPageContext } from 'next';
 import Router, { SingletonRouter } from 'next/router';
 import React, { Component, ComponentType } from 'react';
 import { StaffAPI } from '../api';
