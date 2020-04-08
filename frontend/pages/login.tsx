@@ -191,4 +191,5 @@ class LoginForm extends Component<Props, State> {
   }
 }
 
+// @ts-ignore
 export default Form.create<Props>()(LoginForm);
