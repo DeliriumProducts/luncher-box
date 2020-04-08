@@ -342,7 +342,8 @@ const StaffMembers: NextPage<Props> = ({ err, staff, user }) => {
         <title>Staff Members • LuncherBox</title>
       </Head>
       <TableContainer>
-        {/* //@ts-ignore */}
+        {/* 
+        // @ts-ignore */}
         <Table pagination={false} dataSource={staffList} columns={columns} />
       </TableContainer>
     </>
