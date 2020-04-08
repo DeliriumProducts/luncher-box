@@ -1,5 +1,5 @@
 import { Empty, message } from 'antd';
-import { NextFunctionComponent } from 'next';
+import { NextPage } from 'next';
 import Head from 'next/head';
 import Router from 'next/router';
 import React from 'react';
@@ -15,11 +15,7 @@ interface Props {
   categoryName: string;
 }
 
-const CategoryPage: NextFunctionComponent<Props> = ({
-  products,
-  err,
-  categoryName
-}) => {
+const CategoryPage: NextPage<Props> = ({ products, err, categoryName }) => {
   let data: React.ReactNode[] | React.ReactNode;
 
   React.useEffect(() => {

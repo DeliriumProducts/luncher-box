@@ -1,6 +1,6 @@
 import { Button, Form, Icon, Input, message } from 'antd';
 import { FormComponentProps } from 'antd/lib/form';
-import { NextContext } from 'next';
+import { NextPageContext } from 'next';
 import Head from 'next/head';
 import Link from 'next/link';
 import Router from 'next/router';
@@ -8,8 +8,8 @@ import React, { Component } from 'react';
 import styled from 'styled-components';
 import { StaffAPI } from '../api';
 import CenteredDiv from '../components/CenteredDiv';
-import { HandleLogin } from '../types';
 import { User } from '../interfaces';
+import { HandleLogin } from '../types';
 
 const FormItem = Form.Item;
 
@@ -45,7 +45,7 @@ interface State {
 }
 
 class LoginForm extends Component<Props, State> {
-  static async getInitialProps({ req, res }: NextContext) {
+  static async getInitialProps({ req, res }: NextPageContext) {
     let auth: { user: User | null; isAuthenticated: boolean } = {
       user: null,
       isAuthenticated: false

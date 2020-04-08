@@ -1,5 +1,5 @@
 import { Button, Empty, Icon, message, Modal, Switch } from 'antd';
-import { NextFunctionComponent } from 'next';
+import { NextPage } from 'next';
 import Head from 'next/head';
 import React from 'react';
 import styled from 'styled-components';
@@ -44,7 +44,7 @@ interface Props {
   err: string | null;
 }
 
-const Tables: NextFunctionComponent<Props> = ({ err, tables: t }) => {
+const Tables: NextPage<Props> = ({ err, tables: t }) => {
   const [tables, setTables] = React.useState(t);
   const [
     currentTableForModifying,

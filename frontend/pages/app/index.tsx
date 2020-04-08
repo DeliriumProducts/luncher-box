@@ -1,5 +1,5 @@
 import { Empty, message } from 'antd';
-import { NextFunctionComponent } from 'next';
+import { NextPage } from 'next';
 import Head from 'next/head';
 import React from 'react';
 import { CategoryAPI } from '../../api';
@@ -13,7 +13,7 @@ interface Props {
   err: string | null;
 }
 
-const Home: NextFunctionComponent<Props> = ({ err, categories }) => {
+const Home: NextPage<Props> = ({ err, categories }) => {
   let data: React.ReactNode[] | React.ReactNode;
 
   /**
