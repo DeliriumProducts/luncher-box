@@ -1,6 +1,7 @@
 import { message } from 'antd';
 import Head from 'next/head';
-import Router, { DefaultQuery } from 'next/router';
+import Router, from 'next/router';
+import { ParsedUrlQuery } from 'querystring'
 import { Component } from 'react';
 import { CategoryAPI, ProductAPI } from '../../api';
 import EntityCard from '../../components/EntityCard';
@@ -12,7 +13,7 @@ import { withAuth, withRouter } from '../../hocs/';
 import { Category, Product } from '../../interfaces';
 import { ActionTypes, EntityInstance, EntityTypes } from '../../types';
 
-interface CategoryQuery extends DefaultQuery {
+interface CategoryQuery extends ParsedUrlQuery {
   categoryId: string;
 }
 
