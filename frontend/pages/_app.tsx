@@ -1,5 +1,5 @@
 import { PageTransition } from 'next-page-transitions';
-import App, { Container } from 'next/app';
+import App, { Container, NextAppContext } from 'next/app';
 import Head from 'next/head';
 import Router from 'next/router';
 import NProgress from 'nprogress';
@@ -66,6 +66,16 @@ const GlobalStyle = createGlobalStyle`
 `;
 
 export default class MyApp extends App {
+  static async getInitialProps({ Component, ctx }: NextAppContext) {
+    let pageProps = {};
+
+    if (Component.getInitialProps) {
+      pageProps = await Component.getInitialProps(ctx);
+    }
+
+    return { pageProps };
+  }
+
   render() {
     const {
       Component,

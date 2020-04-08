@@ -10,7 +10,7 @@ import {
 } from 'antd';
 import { RadioChangeEvent } from 'antd/lib/radio';
 import RadioGroup from 'antd/lib/radio/group';
-import { NextPageContext, NextPage } from 'next';
+import { NextContext, NextFunctionComponent } from 'next';
 import Head from 'next/head';
 import React from 'react';
 import styled from 'styled-components';
@@ -64,7 +64,7 @@ const TableContainer = styled.span`
   }
 `;
 
-const StaffMembers: NextPage<Props> = ({ err, staff, user }) => {
+const StaffMembers: NextFunctionComponent<Props> = ({ err, staff, user }) => {
   const [staffList, setStaffList] = React.useState(staff);
   const [selectedStaffRole, setSelectedStaffRole] = React.useState<Role>(
     'Waiter'
@@ -342,15 +342,13 @@ const StaffMembers: NextPage<Props> = ({ err, staff, user }) => {
         <title>Staff Members • LuncherBox</title>
       </Head>
       <TableContainer>
-        {/* 
-        // @ts-ignore */}
         <Table pagination={false} dataSource={staffList} columns={columns} />
       </TableContainer>
     </>
   );
 };
 
-StaffMembers.getInitialProps = async ({ req, res }: NextPageContext) => {
+StaffMembers.getInitialProps = async ({ req, res }: NextContext) => {
   try {
     let staff: User[] = [];
 

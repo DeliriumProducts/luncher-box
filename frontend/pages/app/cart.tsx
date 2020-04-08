@@ -1,5 +1,5 @@
 import { Button, Card, Empty, Input, message, Modal, Select, Tag } from 'antd';
-import { NextPage } from 'next';
+import { NextFunctionComponent } from 'next';
 import Head from 'next/head';
 import React from 'react';
 import styled from 'styled-components';
@@ -34,7 +34,7 @@ interface Props {
   err: string | null;
 }
 
-const Cart: NextPage<Props> = ({ tables, err }) => {
+const Cart: NextFunctionComponent<Props> = ({ tables, err }) => {
   const socketContext = React.useContext(SocketContext);
   const customerContext = React.useContext(CustomerContext);
 

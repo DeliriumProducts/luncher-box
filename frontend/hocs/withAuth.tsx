@@ -1,4 +1,4 @@
-import { NextPage, NextPageContext } from 'next';
+import { NextComponentClass, NextContext, NextFunctionComponent } from 'next';
 import Router, { SingletonRouter } from 'next/router';
 import React, { Component, ComponentType } from 'react';
 import { StaffAPI } from '../api';
@@ -7,13 +7,13 @@ import { User } from '../interfaces';
 import { Role } from '../types';
 
 export const withAuth = <T extends object>(
-  C: NextPage<T>,
+  C: NextFunctionComponent<T> | NextComponentClass<T>,
   roles: Role[] = []
 ): ComponentType<T & { router: SingletonRouter; user: User }> =>
   class extends Component<T & { router: SingletonRouter; user: User }> {
     static contextType = AdminContext;
 
-    static async getInitialProps(ctx: NextPageContext) {
+    static async getInitialProps(ctx: NextContext) {
       const { req, res } = ctx;
 
       let auth: { user: User | null; isAuthenticated: boolean } = {

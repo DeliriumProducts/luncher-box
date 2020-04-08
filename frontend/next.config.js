@@ -1,3 +1,4 @@
+const withTypescript = require('@zeit/next-typescript');
 const withCss = require('@zeit/next-css');
 const withLess = require('@zeit/next-less');
 const withSass = require('@zeit/next-sass');
@@ -23,6 +24,7 @@ if (typeof require !== 'undefined') {
 module.exports = withOffline(
     withLess(
       withSass(
+        withTypescript(
           withCss({
             webpack(config) {
               // Fixes npm packages that depend on `fs` module
@@ -63,7 +65,8 @@ module.exports = withOffline(
             env: {
               THEME_VARIABLES: themeVariables
             }
-         })
-      )
-    )
+          })
+        )
+     )
+  )
 );
