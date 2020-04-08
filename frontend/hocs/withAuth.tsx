@@ -1,4 +1,4 @@
-import { NextComponentClass, NextContext, NextFunctionComponent } from 'next';
+import { NextPage, NextContext } from 'next';
 import Router, { SingletonRouter } from 'next/router';
 import React, { Component, ComponentType } from 'react';
 import { StaffAPI } from '../api';
@@ -7,7 +7,7 @@ import { User } from '../interfaces';
 import { Role } from '../types';
 
 export const withAuth = <T extends object>(
-  C: NextFunctionComponent<T> | NextComponentClass<T>,
+  C: NextPage<T>,
   roles: Role[] = []
 ): ComponentType<T & { router: SingletonRouter; user: User }> =>
   class extends Component<T & { router: SingletonRouter; user: User }> {
