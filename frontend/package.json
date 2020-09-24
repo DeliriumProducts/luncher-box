@@ -33,7 +33,7 @@
     "pm2": "^3.3.1",
     "react": "^16.8.4",
     "react-dom": "^16.8.4",
-    "react-scroll-to": "^2.0.5",
+    "react-scroll-to": "^2.0.10",
     "react-spring": "^8.0.15",
     "socket.io-client": "^2.2.0",
     "styled-components": "^4.1.3",
