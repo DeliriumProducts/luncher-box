@@ -72,7 +72,7 @@
     "supertest": "^3.4.2",
     "tslint": "^5.13.1",
     "typedi": "^0.8.0",
-    "typeorm": "^0.2.14",
+    "typeorm": "^0.2.27",
     "uuid": "^3.3.2"
   },
   "scripts": {
