@@ -427,7 +427,6 @@ export default () => {
                 it will be processed through the app.
                 <br />
                 <br />
-                <a href="/static/lpaper.pdf">LuncherBox Paper 2019</a>
               </StyledH2>
             </div>
           </Topic>
