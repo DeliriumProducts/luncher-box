@@ -23,7 +23,7 @@ export const PORT = Number(process.env.BACKEND_PORT) || 8000;
  * Database host and port
  */
 export const DB_HOST = process.env.DB_HOST || 'localhost';
-export const DB_PORT = Number(process.env.DB_PORT) || 3306;
+export const DB_PORT = Number(process.env.DB_PORT) || 5432;
 
 /**
  * Database credentials

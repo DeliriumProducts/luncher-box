@@ -1,0 +1,94 @@
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: ${DB_USER:-postgres}
+      POSTGRES_PASSWORD: ${DB_PASS:-postgres}
+      POSTGRES_DB: luncherbox_development
+    volumes:
+      - ./sql/init-postgres.sql:/docker-entrypoint-initdb.d/init.sql
+      - postgres-data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-postgres} -d luncherbox_development"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    command: ["redis-server", "--appendonly", "yes"]
+    volumes:
+      - redis-data:/data
+    ports:
+      - "6379:6379"
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build: ./backend
+    command: yarn dev
+    environment:
+      NODE_ENV: development
+      SESSION_SECRET: ${SESSION_SECRET:-example-secret}
+      DB_PORT: 5432
+      DB_HOST: db
+      DB_USER: ${DB_USER:-postgres}
+      DB_PASS: ${DB_PASS:-postgres}
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      OWNER_EMAIL: ${OWNER_EMAIL:-}
+      OWNER_PASS: ${OWNER_PASS:-}
+      VERIFIER_EMAIL: ${VERIFIER_EMAIL:-}
+      INITIAL_ADMIN_PASS: ${INITIAL_ADMIN_PASS:-FAKEpassword123}
+      FRONTEND_PORT: 3000
+      BACKEND_PORT: 8000
+      FRONTEND_URL: ${FRONTEND_URL:-http://localhost:3000}
+      COOKIE_URL: ${COOKIE_URL:-localhost}
+      BACKEND_URL: ${BACKEND_URL:-http://localhost:8000}
+      SOCKET_URL: ${SOCKET_URL:-http://localhost:8000}
+    ports:
+      - "8000:8000"
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    volumes:
+      - ./backend:/usr/app
+      - /usr/app/node_modules
+
+  frontend:
+    build:
+      context: ./frontend
+      args:
+        FRONTEND_URL: ${FRONTEND_URL:-http://localhost:3000}
+        BACKEND_URL: ${BACKEND_URL:-http://localhost:8000}
+        SOCKET_URL: ${SOCKET_URL:-http://localhost:8000}
+    command: yarn dev
+    environment:
+      NODE_ENV: development
+      FRONTEND_PORT: 3000
+      FRONTEND_URL: ${FRONTEND_URL:-http://localhost:3000}
+      BACKEND_URL: ${BACKEND_URL:-http://localhost:8000}
+      SOCKET_URL: ${SOCKET_URL:-http://localhost:8000}
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+    restart: unless-stopped
+    volumes:
+      - ./frontend:/usr/app
+      - /usr/app/node_modules
+      - /usr/app/.next
+
+volumes:
+  postgres-data:
+  redis-data:

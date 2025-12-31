@@ -11,13 +11,13 @@ interface DbConfigs {
 
 const dbConfigs: DbConfigs = {
   development: {
-    type: 'mariadb',
+    type: 'postgres',
     host: DB_HOST,
     port: DB_PORT,
     username: DB_USER,
     password: DB_PASS,
     database: 'luncherbox_development',
-    synchronize: IS_DEV,
+    synchronize: false,
     logging: false,
     entities: ['src/entities/*.ts'],
     cache: {
@@ -26,13 +26,13 @@ const dbConfigs: DbConfigs = {
     }
   },
   production: {
-    type: 'mariadb',
+    type: 'postgres',
     host: DB_HOST,
     port: DB_PORT,
     username: DB_USER,
     password: DB_PASS,
     database: 'luncherbox_production',
-    synchronize: IS_DEV,
+    synchronize: false,
     logging: false,
     entities: ['src/entities/*.ts'],
     migrations: ['src/migration/*.ts'],
@@ -45,7 +45,7 @@ const dbConfigs: DbConfigs = {
     }
   },
   test: {
-    type: 'mariadb',
+    type: 'postgres',
     host: DB_HOST,
     port: DB_PORT,
     username: DB_USER,

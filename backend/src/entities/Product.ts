@@ -22,7 +22,7 @@ export class Product {
   @Length(5, 255)
   image: string;
 
-  @Column('double')
+  @Column('decimal', { precision: 10, scale: 2 })
   @IsNumber()
   @Min(0)
   @Max(1000)
