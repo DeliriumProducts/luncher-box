@@ -21,7 +21,7 @@
     "date-fns": "^1.30.1",
     "dotenv": "^6.2.0",
     "dotenv-webpack": "^1.7.0",
-    "express": "^4.16.4",
+    "express": "^4.19.2",
     "isomorphic-unfetch": "^3.0.0",
     "less": "^3.9.0",
     "less-vars-to-js": "^1.3.0",
