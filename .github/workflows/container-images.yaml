@@ -1,0 +1,67 @@
+name: Build and publish container images
+on:
+  workflow_dispatch:
+  push:
+    branches: [master]
+    paths:
+      - backend/**
+      - frontend/**
+      - .github/workflows/container-images.yaml
+permissions:
+  contents: read
+  packages: write
+jobs:
+  image:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        component: [backend, frontend]
+    services:
+      redis:
+        image: quay.io/opstree/redis:v7.2.16@sha256:68d3bb380d755dc5ec1c8656af24aaa801a16b3aa1cf9ed137087cfc89f26b62
+        env:
+          REDIS_PASSWORD: smoke-test-only-password
+        ports:
+          - 6379:6379
+        options: >-
+          --health-cmd "redis-cli -a smoke-test-only-password ping"
+          --health-interval 5s --health-timeout 3s --health-retries 10
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+      - name: Build
+        env:
+          COMPONENT: ${{ matrix.component }}
+        run: |
+          docker build --platform linux/amd64 \
+            --build-arg FRONTEND_URL=https://luncherbox.deliprods.com \
+            --build-arg BACKEND_URL=https://luncherbox-api.deliprods.com \
+            --build-arg SOCKET_URL=https://luncherbox-api.deliprods.com \
+            --label "org.opencontainers.image.source=https://github.com/${GITHUB_REPOSITORY}" \
+            --label "org.opencontainers.image.revision=${GITHUB_SHA}" \
+            -t "ghcr.io/deliriumproducts/luncher-box-${COMPONENT}:${GITHUB_SHA}" "${COMPONENT}"
+      - name: Verify Redis authentication
+        if: matrix.component == 'backend'
+        run: |
+          docker run --rm --network host --read-only --tmpfs /tmp \
+            --cap-drop ALL --security-opt no-new-privileges \
+            -e REDIS_HOST=127.0.0.1 -e REDIS_PASSWORD=smoke-test-only-password \
+            "ghcr.io/deliriumproducts/luncher-box-backend:${GITHUB_SHA}" \
+            node -r ts-node/register/transpile-only test/redis-auth-smoke.cjs
+      - name: Verify frontend HTTP
+        if: matrix.component == 'frontend'
+        run: |
+          docker run -d --name frontend-smoke --read-only --tmpfs /tmp \
+            --cap-drop ALL --security-opt no-new-privileges -p 127.0.0.1:13000:3000 \
+            "ghcr.io/deliriumproducts/luncher-box-frontend:${GITHUB_SHA}"
+          trap 'docker rm -f frontend-smoke' EXIT
+          curl --fail --retry 12 --retry-all-errors --retry-connrefused --retry-delay 2 http://127.0.0.1:13000/ -o /dev/null
+          curl --fail http://127.0.0.1:13000/login -o /dev/null
+      - name: Publish
+        env:
+          COMPONENT: ${{ matrix.component }}
+          REGISTRY_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          printf '%s' "$REGISTRY_TOKEN" | docker login ghcr.io -u "$GITHUB_ACTOR" --password-stdin
+          docker push "ghcr.io/deliriumproducts/luncher-box-${COMPONENT}:${GITHUB_SHA}"

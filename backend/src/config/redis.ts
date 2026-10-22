@@ -1,5 +1,5 @@
 import { RedisOptions } from 'ioredis';
-import { ENV, REDIS_HOST, REDIS_PORT } from './env';
+import { ENV, REDIS_HOST, REDIS_PORT, REDIS_PASSWORD } from './env';
 
 let db: 0 | 1 | 2;
 
@@ -23,5 +23,6 @@ switch (ENV) {
 export const redisConfig: RedisOptions = {
   host: REDIS_HOST,
   port: REDIS_PORT,
+  password: REDIS_PASSWORD,
   db
 };

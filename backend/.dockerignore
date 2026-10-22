@@ -1,4 +1,7 @@
-dist/
 node_modules/
 .next/
 build/
+dist/
+.env
+.env.*
+yarn-error.log
